@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-export type Locale = "en" | "fr" | "es" | "ru" | "de"
+export type Locale = "en" | "fr" | "es" | "ru" | "de" | "ch" | "na" | "id"
 
 // Liste des locales supportées
-export const locales: Locale[] = ["en", "fr", "es", "ru", "de"]
+export const locales: Locale[] = ["en", "fr", "es", "ru", "de", "ch", "na", "id"]
 
 // Locale par défaut
 export const defaultLocale: Locale = "en"

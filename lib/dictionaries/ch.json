@@ -1,0 +1,177 @@
+{
+	"common": {
+	  "appName": "乒乓大师",
+	  "login": "登录",
+	  "register": "注册",
+	  "freeRegister": "免费注册",
+	  "statistics": "数据统计",
+	  "dashboard": "控制面板",
+	  "back": "返回",
+	  "copyright": "© 2025 乒乓大师企业版 版权所有"
+	},
+	"landing": {
+	  "hero": {
+		"title": "乒乓大师企业版",
+		"subtitle": "面向企业和竞技玩家的专业乒乓球平台",
+		"cta": "立即开玩"
+	  },
+	  "features": {
+		"title": "特色功能",
+		"gameModes": {
+		  "title": "游戏模式",
+		  "description": "经典模式、自定义规则或锦标赛模式，自由选择玩法挑战对手"
+		},
+		"chat": {
+		  "title": "实时聊天",
+		  "description": "与玩家实时交流，组织比赛并在公共聊天室分享战术策略"
+		},
+		"elo": {
+		  "title": "ELO积分追踪",
+		  "description": "通过ELO排名系统追踪成长轨迹，量化竞技水平"
+		}
+	  },
+	  "cta": {
+		"title": "准备好征战球场了吗？",
+		"subtitle": "加入职业玩家社区，即刻开启进阶之路"
+	  }
+	},
+	"auth": {
+	  "login": {
+		"title": "用户登录",
+		"description": "登录您的乒乓大师账号",
+		"email": "电子邮箱",
+		"password": "密码",
+		"forgotPassword": "忘记密码？",
+		"continueWithGoogle": "谷歌账号登录",
+		"submit": "登录"
+	  },
+	  "register": {
+		"title": "账号注册",
+		"description": "创建账号开启乒乓大师之旅",
+		"username": "用户名",
+		"email": "电子邮箱",
+		"password": "密码",
+		"continueWithGoogle": "谷歌账号注册",
+		"submit": "创建账号"
+	  }
+	},
+	"dashboard": {
+	  "profile": {
+		"title": "个人资料",
+		"edit": "编辑资料",
+		"wins": "胜场",
+		"losses": "败场",
+		"tournaments": "锦标赛",
+		"level": "等级"
+	  },
+	  "colleagues": {
+		"title": "球友列表",
+		"online": "在线",
+		"offline": "离线",
+		"add": "添加球友"
+	  },
+	  "game": {
+		"quickMatch": "快速比赛",
+		"customGame": "自定义比赛",
+		"tournament": "锦标赛",
+		"quickMatchDesc": "随机匹配对手进行经典乒乓球对决",
+		"customGameDesc": "自定义规则创建比赛或加入现有房间",
+		"tournamentDesc": "参与锦标赛赢取丰厚奖励",
+		"readyToPlay": "准备开战？",
+		"startDesc": "点击下方按钮立即开始",
+		"start": "开始快速比赛",
+		"create": "创建房间",
+		"join": "加入房间",
+		"availableGames": "可用房间",
+		"players": "玩家",
+		"createTournament": "创建锦标赛",
+		"createTournamentDesc": "组织专属锦标赛并邀请选手参赛",
+		"activeTournaments": "进行中锦标赛",
+		"activeTournamentsDesc": "加入正在进行的锦标赛与其他玩家较量",
+		"view": "查看详情",
+		"upcomingTournaments": "即将开赛",
+		"register": "报名参赛"
+	  },
+	  "chat": {
+		"title": "公共聊天室",
+		"placeholder": "输入消息内容..."
+	  }
+	},
+	"game": {
+	  "back": "返回控制面板",
+	  "info": {
+		"title": "比赛信息",
+		"gameMode": "游戏模式",
+		"rules": "比赛规则",
+		"firstToFive": "五局三胜制",
+		"players": "参赛选手",
+		"player1": "玩家1",
+		"player2": "玩家2"
+	  },
+	  "controls": {
+		"player1": "玩家1操作：",
+		"player1Keys": "W(上)/S(下)",
+		"player2": "玩家2操作：",
+		"player2Keys": "↑(上)/↓(下)",
+		"playAgain": "再战一局"
+	  },
+	  "chat": {
+		"title": "比赛聊天"
+	  },
+	  "winner": "获胜！",
+	  "finalScore": "最终比分："
+	},
+	"stats": {
+	  "title": "数据统计与ELO排名",
+	  "period": "统计周期",
+	  "lastMonth": "最近一月",
+	  "lastQuarter": "最近季度",
+	  "lastYear": "最近一年",
+	  "all": "全部数据",
+	  "profile": {
+		"title": "个人资料",
+		"wins": "胜场数",
+		"losses": "败场数",
+		"tournaments": "锦标赛",
+		"elo": "ELO积分",
+		"rank": "全球排名"
+	  },
+	  "statistics": {
+		"title": "核心数据",
+		"gamesPlayed": "总场次",
+		"winRate": "胜率",
+		"pointsScored": "得分总数",
+		"pointsConceded": "失分总数",
+		"bestStreak": "最长连胜",
+		"tournamentsWon": "锦标赛夺冠次数"
+	  },
+	  "elo": {
+		"title": "ELO趋势图",
+		"description": "查看您的ELO积分历史变化曲线",
+		"progression": "周期内成长值",
+		"bestElo": "历史最高分"
+	  },
+	  "matches": {
+		"title": "近期赛况",
+		"description": "查看最近比赛记录及ELO变动情况",
+		"date": "比赛日期",
+		"opponent": "对手",
+		"result": "赛果",
+		"score": "比分",
+		"eloChange": "ELO变动",
+		"victory": "胜利",
+		"defeat": "失利"
+	  },
+	  "ranking": {
+		"title": "全球排行榜",
+		"description": "查看您在世界玩家中的排名位置",
+		"rank": "名次",
+		"player": "玩家",
+		"elo": "ELO",
+		"games": "场次",
+		"winRate": "胜率%",
+		"you": "您"
+	  }
+	}
+  }
+

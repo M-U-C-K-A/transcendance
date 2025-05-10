@@ -14,6 +14,9 @@ const languageNames: Record<string, string> = {
   es: "Español",
   ru: "Русский",
   de: "Deutsch",
+  ch: "Chinesse",
+  na: "Na'vi",
+  id: "Indien",
 }
 
 // Drapeaux des langues (codes emoji)
@@ -23,6 +26,9 @@ const languageFlags: Record<string, string> = {
   es: "🇪🇸",
   ru: "🇷🇺",
   de: "🇩🇪",
+  ch: "🇨🇳",
+  na: "🌌",
+  id: "🇮🇳",
 }
 
 export function LanguageSwitcher() {
