@@ -1,0 +1,176 @@
+{
+	"common": {
+	  "appName": "PongMaster",
+	  "login": "Iniciar sesión",
+	  "register": "Registrarse",
+	  "freeRegister": "Registrarse gratis",
+	  "statistics": "Estadísticas",
+	  "dashboard": "Panel de control",
+	  "back": "Volver",
+	  "copyright": "© 2025 PongMaster Enterprise. Todos los derechos reservados."
+	},
+	"landing": {
+	  "hero": {
+		"title": "PongMaster Enterprise",
+		"subtitle": "La plataforma profesional de Pong para empresas y jugadores competitivos.",
+		"cta": "Empezar a jugar"
+	  },
+	  "features": {
+		"title": "Características",
+		"gameModes": {
+		  "title": "Modos de juego",
+		  "description": "Clásico, personalizado o torneo. Elige tu forma de jugar y desafía a tus oponentes."
+		},
+		"chat": {
+		  "title": "Chat en tiempo real",
+		  "description": "Chatea con otros jugadores, organiza partidos y comparte tus estrategias en nuestro chat general."
+		},
+		"elo": {
+		  "title": "Seguimiento ELO",
+		  "description": "Sigue tu progreso con nuestro sistema de clasificación ELO y compara tu rendimiento."
+		}
+	  },
+	  "cta": {
+		"title": "¿Listo para jugar?",
+		"subtitle": "Únete a nuestra comunidad de jugadores profesionales y comienza a mejorar ahora."
+	  }
+	},
+	"auth": {
+	  "login": {
+		"title": "Iniciar sesión",
+		"description": "Inicia sesión para acceder a tu cuenta PongMaster",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"forgotPassword": "¿Olvidaste tu contraseña?",
+		"continueWithGoogle": "Continuar con Google",
+		"submit": "Iniciar sesión"
+	  },
+	  "register": {
+		"title": "Registrarse",
+		"description": "Crea una cuenta para empezar a jugar a PongMaster",
+		"username": "Nombre de usuario",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"continueWithGoogle": "Registrarse con Google",
+		"submit": "Crear cuenta"
+	  }
+	},
+	"dashboard": {
+	  "profile": {
+		"title": "Perfil",
+		"edit": "Editar perfil",
+		"wins": "Victorias",
+		"losses": "Derrotas",
+		"tournaments": "Torneos",
+		"level": "Nivel"
+	  },
+	  "colleagues": {
+		"title": "Colegas",
+		"online": "En línea",
+		"offline": "Desconectado",
+		"add": "Añadir colega"
+	  },
+	  "game": {
+		"quickMatch": "Partida rápida",
+		"customGame": "Partida personalizada",
+		"tournament": "Torneo",
+		"quickMatchDesc": "Juega una partida clásica de Pong contra un oponente aleatorio",
+		"customGameDesc": "Crea una partida con tus propias reglas o únete a una partida existente",
+		"tournamentDesc": "Participa en torneos y gana recompensas",
+		"readyToPlay": "¿Listo para jugar?",
+		"startDesc": "Haz clic en el botón de abajo para comenzar",
+		"start": "Comenzar una partida rápida",
+		"create": "Crear",
+		"join": "Unirse",
+		"availableGames": "Partidas disponibles",
+		"players": "jugadores",
+		"createTournament": "Crear torneo",
+		"createTournamentDesc": "Organiza tu propio torneo e invita a participantes",
+		"activeTournaments": "Torneos activos",
+		"activeTournamentsDesc": "Únete a un torneo en curso y compite contra otros jugadores",
+		"view": "Ver",
+		"upcomingTournaments": "Próximos torneos",
+		"register": "Inscribirse"
+	  },
+	  "chat": {
+		"title": "Chat general",
+		"placeholder": "Escribe un mensaje..."
+	  }
+	},
+	"game": {
+	  "back": "Volver al panel de control",
+	  "info": {
+		"title": "Información",
+		"gameMode": "Modo de juego",
+		"rules": "Reglas",
+		"firstToFive": "Primero en llegar a 5 puntos",
+		"players": "Jugadores",
+		"player1": "Jugador 1",
+		"player2": "Jugador 2"
+	  },
+	  "controls": {
+		"player1": "Controles Jugador 1:",
+		"player1Keys": "W (arriba) / S (abajo)",
+		"player2": "Controles Jugador 2:",
+		"player2Keys": "↑ (arriba) / ↓ (abajo)",
+		"playAgain": "Jugar de nuevo"
+	  },
+	  "chat": {
+		"title": "Chat de partida"
+	  },
+	  "winner": "ha ganado!",
+	  "finalScore": "Puntuación final:"
+	},
+	"stats": {
+	  "title": "Estadísticas y Clasificación ELO",
+	  "period": "Período",
+	  "lastMonth": "Último mes",
+	  "lastQuarter": "Último trimestre",
+	  "lastYear": "Último año",
+	  "all": "Todo",
+	  "profile": {
+		"title": "Perfil",
+		"wins": "Victorias",
+		"losses": "Derrotas",
+		"tournaments": "Torneos",
+		"elo": "ELO",
+		"rank": "Rango"
+	  },
+	  "statistics": {
+		"title": "Estadísticas",
+		"gamesPlayed": "Partidas jugadas",
+		"winRate": "Porcentaje de victorias",
+		"pointsScored": "Puntos anotados",
+		"pointsConceded": "Puntos concedidos",
+		"bestStreak": "Mejor racha",
+		"tournamentsWon": "Torneos ganados"
+	  },
+	  "elo": {
+		"title": "Evolución de tu ELO",
+		"description": "Sigue la evolución de tu clasificación ELO a lo largo del tiempo",
+		"progression": "Progresión en el período",
+		"bestElo": "Mejor ELO alcanzado"
+	  },
+	  "matches": {
+		"title": "Historial de partidas recientes",
+		"description": "Consulta tus partidas recientes y su impacto en tu ELO",
+		"date": "Fecha",
+		"opponent": "Oponente",
+		"result": "Resultado",
+		"score": "Puntuación",
+		"eloChange": "Δ ELO",
+		"victory": "Victoria",
+		"defeat": "Derrota"
+	  },
+	  "ranking": {
+		"title": "Clasificación global",
+		"description": "Descubre tu posición en la clasificación de los mejores jugadores",
+		"rank": "Rango",
+		"player": "Jugador",
+		"elo": "ELO",
+		"games": "Partidas",
+		"winRate": "% Victorias",
+		"you": "Tú"
+	  }
+	}
+  }
