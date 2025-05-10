@@ -68,7 +68,7 @@ export default function AuthClient({
               <CardDescription>{dict.auth.login.description}</CardDescription>
             </CardHeader>
             <form onSubmit={handleLogin}>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 py-2">
                 <div className="space-y-2">
                   <Label htmlFor="email">{dict.auth.login.email}</Label>
                   <div className="relative">
@@ -127,12 +127,12 @@ export default function AuthClient({
               <CardDescription>{dict.auth.register.description}</CardDescription>
             </CardHeader>
             <form onSubmit={handleRegister}>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 py-2">
                 <div className="space-y-2">
                   <Label htmlFor="username">{dict.auth.register.username}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="username" placeholder="your_username" className="pl-10" required />
+                    <Input id="username" placeholder="@rbardet-" className="pl-10" required />
                   </div>
                 </div>
                 <div className="space-y-2">

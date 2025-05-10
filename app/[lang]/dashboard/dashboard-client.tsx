@@ -8,11 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Activity, BarChart, LogOut, MessageCircle, PlayCircle, Settings, Trophy, User, Users } from "lucide-react"
+import { Activity, BarChart, LogOut, MessageCircle, PlayCircle, Settings, Trophy, Users } from "lucide-react"
 import { ChatComponent } from "@/components/chat"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import type { Locale } from "@/middleware"
+import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 
 export default function DashboardClient({ dict, lang }: { dict: any; lang: Locale }) {
   const [activeTab, setActiveTab] = useState("quickMatch")
@@ -79,9 +80,12 @@ export default function DashboardClient({ dict, lang }: { dict: any; lang: Local
                 </div>
               </div>
               <Badge className="bg-primary/20 text-primary mb-4">{dict.dashboard.profile.level} 8</Badge>
-              <Button variant="outline" className="w-full">
-                <User className="mr-2 h-4 w-4" /> {dict.dashboard.profile.edit}
-              </Button>
+              <ProfileEditDialog
+                username="John Doe"
+                email="john.doe@example.com"
+                bio="Joueur passionné de Pong depuis 2023."
+                onSave={(data) => console.log("Profile updated:", data)}
+              />
             </CardContent>
           </Card>
 
