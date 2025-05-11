@@ -12,7 +12,7 @@ import { Activity, BarChart, LogOut, MessageCircle, PlayCircle, Settings, Trophy
 import { ChatComponent } from "@/components/chat"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
-import type { Locale } from "@/middleware"
+import type { Locale } from "@/i18n-config"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 
