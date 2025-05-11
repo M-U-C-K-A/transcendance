@@ -14,6 +14,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import type { Locale } from "@/middleware"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function DashboardClient({ dict, lang }: { dict: any; lang: Locale }) {
   const [activeTab, setActiveTab] = useState("quickMatch")
@@ -51,7 +52,7 @@ export default function DashboardClient({ dict, lang }: { dict: any; lang: Local
         </div>
       </header>
 
-      <div className="container mx-auto py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="container mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Sidebar - User Profile */}
         <div className="lg:col-span-3">
           <Card className="bg-card border shadow-sm">
@@ -102,7 +103,7 @@ export default function DashboardClient({ dict, lang }: { dict: any; lang: Local
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2">
-                        <AvatarFallback>{friend.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${friend}`} alt={friend} />
                       </Avatar>
                       <div>
                         <p className="text-sm font-medium">{friend}</p>
@@ -310,6 +311,7 @@ export default function DashboardClient({ dict, lang }: { dict: any; lang: Local
           </Card>
         </div>
       </div>
+
     </div>
   )
 }
