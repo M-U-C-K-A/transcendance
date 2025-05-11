@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/test.sqlite"
+}
+
+model UserInfo {
+  id            Int     @id @default(autoincrement())
+  username      String // Supprimé @db.Text
+  alias         String? // Supprimé @db.Text
+  email         String  @unique // Supprimé @db.Text
+  pass          String // Supprimé @db.Text
+  avatar        Bytes?
+  bio           String? // Supprimé @db.Text
+  onlineStatus  Boolean @default(false)
+  elo           Int     @default(1200)
+  win           Int     @default(0)
+  lose          Int     @default(0)
+  tournamentWon Int     @default(0)
+  pointScored   Int     @default(0)
+  pointConcede  Int     @default(0)
+
+  matchesAsP1       Match[]             @relation("P1Matches")
+  matchesAsP2       Match[]             @relation("P2Matches")
+  wonMatches        Match[]             @relation("WonMatches")
+  hostedTournaments Tournament[]        @relation("HostedTournaments")
+  tournamentWins    Tournament[]        @relation("TournamentWins")
+  matchHistory      MatchHistory[]
+  tournamentHistory TournamentHistory[]
+  achievements      Achievement?
+  friendsAsUser1    Friends[]           @relation("User1Friends")
+  friendsAsUser2    Friends[]           @relation("User2Friends")
+
+  @@map("UserInfo")
+}
+
+model Match {
+  id        Int       @id @default(autoincrement())
+  p1Id      Int
+  p2Id      Int
+  p1Elo     Int
+  p2Elo     Int
+  winnerId  Int?
+  p1Score   Int
+  p2Score   Int
+  p1EloGain Int
+  p2EloGain Int
+  mDate     DateTime  @default(now()) @map("MDate")
+  matchType MatchType
+
+  player1      UserInfo       @relation("P1Matches", fields: [p1Id], references: [id])
+  player2      UserInfo       @relation("P2Matches", fields: [p2Id], references: [id])
+  winner       UserInfo?      @relation("WonMatches", fields: [winnerId], references: [id])
+  matchHistory MatchHistory[]
+
+  @@map("Match")
+}
+
+enum MatchType {
+  Local
+  Quickplay
+  Custom
+  Tournament
+}
+
+model Tournament {
+  id       Int      @id @default(autoincrement())
+  hostId   Int
+  slot     Int      @default(4)
+  winnerId Int?
+  tDate    DateTime @default(now()) @map("TDate")
+
+  host         UserInfo            @relation("HostedTournaments", fields: [hostId], references: [id])
+  winner       UserInfo?           @relation("TournamentWins", fields: [winnerId], references: [id])
+  participants TournamentHistory[]
+
+  @@map("Tournament")
+}
+
+model TournamentHistory {
+  userId       Int
+  tournamentId Int
+
+  user       UserInfo   @relation(fields: [userId], references: [id])
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
+
+  @@id([userId, tournamentId])
+  @@map("TournamentHistory")
+}
+
+model MatchHistory {
+  userId  Int
+  matchId Int
+
+  user  UserInfo @relation(fields: [userId], references: [id])
+  match Match    @relation(fields: [matchId], references: [id])
+
+  @@id([userId, matchId])
+  @@map("MatchHistory")
+}
+
+model Achievement {
+  id            Int     @id
+  beginner      Boolean @default(false)
+  humiliation   Boolean @default(false)
+  shamefullLose Boolean @default(false)
+  rivality      Boolean @default(false)
+  fairPlay      Boolean @default(false)
+  lastSecond    Boolean @default(false)
+  comeback      Boolean @default(false)
+  longGame      Boolean @default(false)
+  winTournament Boolean @default(false)
+  friendly      Boolean @default(false)
+  rank1         Boolean @default(false)
+  looser        Boolean @default(false)
+  winner        Boolean @default(false)
+  scorer        Boolean @default(false)
+  emoji         Boolean @default(false)
+  rage          Boolean @default(false)
+
+  user UserInfo @relation(fields: [id], references: [id])
+
+  @@map("Achievement")
+}
+
+model Friends {
+  id1 Int
+  id2 Int
+
+  user1 UserInfo @relation("User1Friends", fields: [id1], references: [id])
+  user2 UserInfo @relation("User2Friends", fields: [id2], references: [id])
+
+  @@id([id1, id2])
+  @@map("Friends")
+}
