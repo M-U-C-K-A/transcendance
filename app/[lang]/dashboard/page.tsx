@@ -3,10 +3,12 @@ import type { Locale } from "@/i18n-config"
 import DashboardClient from "./dashboard-client"
 
 export default async function DashboardPage({
-  params: { lang },
+  params,
 }: {
   params: { lang: Locale }
 }) {
+  // First destructure after awaiting
+  const { lang } = params
   const dict = await getDictionary(lang)
 
   return <DashboardClient dict={dict} lang={lang} />
