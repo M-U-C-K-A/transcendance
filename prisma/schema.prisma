@@ -14,9 +14,9 @@ datasource db {
 // --  | |_| /\__/ / |___| |\ \
 // --   \___/\____/\____/\_| \_|
 
-model UserInfo {
+model User {
 	id				Int			@id @default(autoincrement())
-	username		String @unique // Supprimé @db.Text
+	username		String		@unique // Supprimé @db.Text
 	alias			String? // Supprimé @db.Text
 	email			String  @unique // Supprimé @db.Text
 	pass			String // Supprimé @db.Text
@@ -46,15 +46,15 @@ model UserInfo {
 	recipientId			Invitation[]		@relation("recipientId")
 	messageSenderId		Message[]			@relation("senderId")
 	messageRecipientId	Message[]			@relation("recipientId")
-	@@map("UserInfo")
+	@@map("User")
 }
 
 model Friends {
 	id1	Int
 	id2	Int
 
-	user1	UserInfo @relation("User1Friends", fields: [id1], references: [id])
-	user2	UserInfo @relation("User2Friends", fields: [id2], references: [id])
+	user1	User @relation("User1Friends", fields: [id1], references: [id])
+	user2	User @relation("User2Friends", fields: [id2], references: [id])
 
 	@@id([id1, id2])
 	@@map("Friends")
@@ -64,8 +64,8 @@ model Block {
 	id1	Int
 	id2	Int
 
-	user1	UserInfo @relation("User1Block", fields: [id1], references: [id])
-	user2	UserInfo @relation("User2Block", fields: [id2], references: [id])
+	user1	User @relation("User1Block", fields: [id1], references: [id])
+	user2	User @relation("User2Block", fields: [id2], references: [id])
 
 	@@id([id1, id2])
 	@@map("Block")
@@ -90,7 +90,7 @@ model Achievement {
 	emoji			Boolean	@default(false)
 	rage			Boolean	@default(false)
 
-	user UserInfo @relation(fields: [id], references: [id])
+	user User @relation(fields: [id], references: [id])
 
 	@@map("Achievement")
 }
@@ -110,8 +110,8 @@ model Tournament {
 	winnerId	Int?
 	tDate		DateTime	@default(now()) @map("TDate")
 
-	host			UserInfo			@relation("HostedTournaments", fields: [hostId], references: [id])
-	winner			UserInfo?			@relation("TournamentWins", fields: [winnerId], references: [id])
+	host			User			@relation("HostedTournaments", fields: [hostId], references: [id])
+	winner			User?			@relation("TournamentWins", fields: [winnerId], references: [id])
 	participants	TournamentHistory[]
 
 	@@map("Tournament")
@@ -121,7 +121,7 @@ model TournamentHistory {
 	userId			Int
 	tournamentId	Int
 
-	user		UserInfo	@relation(fields: [userId], references: [id])
+	user		User	@relation(fields: [userId], references: [id])
 	tournament	Tournament	@relation(fields: [tournamentId], references: [id])
 
 	@@id([userId, tournamentId])
@@ -149,9 +149,9 @@ model Match {
 	mDate		DateTime	@default(now()) @map("MDate")
 	matchType   String   @default("Quickplay") // Remplace MatchType enum
 
-	player1		UserInfo		@relation("P1Matches", fields: [p1Id], references: [id])
-	player2		UserInfo		@relation("P2Matches", fields: [p2Id], references: [id])
-	winner		UserInfo?		@relation("WonMatches", fields: [winnerId], references: [id])
+	player1		User		@relation("P1Matches", fields: [p1Id], references: [id])
+	player2		User		@relation("P2Matches", fields: [p2Id], references: [id])
+	winner		User?		@relation("WonMatches", fields: [winnerId], references: [id])
 	matchHistory MatchHistory[]
 
 	@@map("Match")
@@ -161,7 +161,7 @@ model MatchHistory {
 	userId	Int
 	matchId	Int
 
-	user	UserInfo	@relation(fields: [userId], references: [id])
+	user	User	@relation(fields: [userId], references: [id])
 	match	Match		@relation(fields: [matchId], references: [id])
 
 	@@id([userId, matchId])
@@ -183,8 +183,8 @@ model Invitation {
 	createdAt	DateTime	@default(now())
 	expireAt	DateTime
 
-	sender			UserInfo		@relation("senderId", fields: [senderId], references: [id])
-	recipient		UserInfo		@relation("recipientId", fields: [recipientId], references: [id])
+	sender			User		@relation("senderId", fields: [senderId], references: [id])
+	recipient		User		@relation("recipientId", fields: [recipientId], references: [id])
 }
 
 model Message {
@@ -197,6 +197,6 @@ model Message {
 	status		Boolean // define if the message is private or not
 	messageType String @default("Message")
 
-	sender			UserInfo		@relation("senderId", fields: [senderId], references: [id])
-	recipient		UserInfo		@relation("recipientId", fields: [recipientId], references: [id])
+	sender			User		@relation("senderId", fields: [senderId], references: [id])
+	recipient		User		@relation("recipientId", fields: [recipientId], references: [id])
 }

@@ -14,7 +14,7 @@ def reset_matches(conn):
 
 def get_user_ids(conn):
     cursor = conn.cursor()
-    cursor.execute("SELECT id FROM UserInfo")
+    cursor.execute("SELECT id FROM User")
     return [row[0] for row in cursor.fetchall()]
 
 def generate_random_matches(conn, user_ids, count=10):
