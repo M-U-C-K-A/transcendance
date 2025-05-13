@@ -21,7 +21,7 @@ type Message = {
 const initialMessages: Message[] = [
   {
     id: 1,
-    user: { name: "Alice", avatar: "/placeholder.svg?height=40&width=40" },
+    user: { name: "Alice", avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Alice" },
     text: "Bonjour à tous ! Qui est disponible pour une partie ?",
     timestamp: new Date(Date.now() - 1000 * 60 * 15),
   },
@@ -33,7 +33,7 @@ const initialMessages: Message[] = [
   },
   {
     id: 3,
-    user: { name: "Charlie", avatar: "/placeholder.svg?height=40&width=40" },
+    user: { name: "Charlie", avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Bob" },
     text: "Je viens de terminer un tournoi, c'était intéressant.",
     timestamp: new Date(Date.now() - 1000 * 60 * 5),
   },
@@ -68,7 +68,7 @@ export function ChatComponent({ placeholder = "Écrivez un message..." }: ChatCo
 
     const message: Message = {
       id: messages.length + 1,
-      user: { name: "John Doe", avatar: "/placeholder.svg?height=40&width=40" },
+      user: { name: "John Doe", avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" },
       text: newMessage,
       timestamp: new Date(),
     }
@@ -87,7 +87,7 @@ export function ChatComponent({ placeholder = "Écrivez un message..." }: ChatCo
         {messages.map((message) => (
           <div key={message.id} className="flex items-start gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={message.user.avatar || "/placeholder.svg"} />
+              <AvatarImage src={message.user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
               <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1">

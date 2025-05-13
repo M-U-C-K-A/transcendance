@@ -17,7 +17,7 @@ const profilesData = {
 	johndoe: {
 		name: "John Doe",
 		username: "johndoe",
-		avatar: "/placeholder.svg?height=96&width=96",
+		avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=johndoe",
 		elo: 1600,
 		rank: 4,
 		wins: 24,
@@ -30,7 +30,7 @@ const profilesData = {
 	alice: {
 		name: "Alice",
 		username: "alice",
-		avatar: "/placeholder.svg?height=96&width=96",
+		avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=alice",
 		elo: 1850,
 		rank: 1,
 		wins: 82,
@@ -43,7 +43,7 @@ const profilesData = {
 	bob: {
 		name: "Bob",
 		username: "bob",
-		avatar: "/placeholder.svg?height=96&width=96",
+		avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=bob",
 		elo: 1780,
 		rank: 2,
 		wins: 68,
@@ -56,7 +56,7 @@ const profilesData = {
 	charlie: {
 		name: "Charlie",
 		username: "charlie",
-		avatar: "/placeholder.svg?height=96&width=96",
+		avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=charlie",
 		elo: 1720,
 		rank: 3,
 		wins: 71,
@@ -69,7 +69,7 @@ const profilesData = {
 	david: {
 		name: "David",
 		username: "david",
-		avatar: "/placeholder.svg?height=96&width=96",
+		avatar: "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=david",
 		elo: 1580,
 		rank: 5,
 		wins: 43,
@@ -126,7 +126,7 @@ export default function ProfilePage() {
 							</Button>
 						</Link>
 						<Avatar>
-							<AvatarImage src="/placeholder.svg?height=40&width=40" />
+							<AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" />
 							<AvatarFallback>JD</AvatarFallback>
 						</Avatar>
 					</div>
@@ -152,7 +152,7 @@ export default function ProfilePage() {
 							</CardHeader>
 							<CardContent className="flex flex-col items-center">
 								<Avatar className="h-24 w-24 mb-4">
-									<AvatarImage src={profileData.avatar || "/placeholder.svg"} />
+									<AvatarImage src={profileData.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
 									<AvatarFallback className="text-2xl">{profileData.name.charAt(0)}</AvatarFallback>
 								</Avatar>
 								<h2 className="text-xl font-bold mb-1">{profileData.name}</h2>
