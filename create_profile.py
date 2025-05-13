@@ -37,13 +37,14 @@ def generate_user():
 def clear_userinfo_table(conn):
     cursor = conn.cursor()
     cursor.execute("DELETE FROM UserInfo")
-    cursor.execute("DELETE FROM sqlite_sequence WHERE name='UserInfo'")  # reset autoincrement
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='UserInfo'")
     conn.commit()
     print("🗑️ Table UserInfo vidée et ID réinitialisé.")
 
 def generate_random_matches(conn, user_ids, count=10):
     cursor = conn.cursor()
     print("🎮 Génération de matchs aléatoires...")
+
     for _ in range(count):
         p1, p2 = random.sample(user_ids, 2)
         p1Elo, p2Elo = random.randint(800, 1600), random.randint(800, 1600)
@@ -52,14 +53,21 @@ def generate_random_matches(conn, user_ids, count=10):
         p1EloGain = random.randint(-10, 30)
         p2EloGain = random.randint(-10, 30)
         matchType = "Quickplay"
+
         cursor.execute("""
             INSERT INTO Match (
                 p1Id, p2Id, p1Elo, p2Elo, winnerId,
                 p1Score, p2Score, p1EloGain, p2EloGain, matchType
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (p1, p2, p1Elo, p2Elo, winnerId, p1Score, p2Score, p1EloGain, p2EloGain, matchType))
+        match_id = cursor.lastrowid
+
+        # Insert into MatchHistory
+        cursor.execute("INSERT INTO MatchHistory (userId, matchId) VALUES (?, ?)", (p1, match_id))
+        cursor.execute("INSERT INTO MatchHistory (userId, matchId) VALUES (?, ?)", (p2, match_id))
+
     conn.commit()
-    print("✅ Matchs générés.")
+    print("✅ Matchs et historique générés.")
 
 def insert_users(n=10):
     if not os.path.exists(DB_PATH):
@@ -68,7 +76,6 @@ def insert_users(n=10):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Demande à l'utilisateur
     clear = input("❓ Supprimer les anciens profils ? (y/n): ").strip().lower()
     if clear == 'y':
         clear_userinfo_table(conn)
@@ -94,11 +101,12 @@ def insert_users(n=10):
 
     conn.commit()
 
-    generate_matches = input("❓ Générer des matchs aléatoires ? (y/n): ").strip().lower()
-    if generate_matches == 'y' and len(user_ids) >= 2:
-        generate_random_matches(conn, user_ids, count=100)
+    if len(user_ids) >= 2:
+        generate_matches = input("❓ Générer des matchs aléatoires ? (y/n): ").strip().lower()
+        if generate_matches == 'y':
+            generate_random_matches(conn, user_ids, count=10)
 
     conn.close()
 
 if __name__ == "__main__":
-    insert_users(n=200)
+    insert_users(n=20)
