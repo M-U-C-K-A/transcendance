@@ -16,7 +16,7 @@ datasource db {
 
 model UserInfo {
 	id				Int			@id @default(autoincrement())
-	username		String // Supprimé @db.Text
+	username		String @unique // Supprimé @db.Text
 	alias			String? // Supprimé @db.Text
 	email			String  @unique // Supprimé @db.Text
 	pass			String // Supprimé @db.Text
