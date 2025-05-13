@@ -36,10 +36,10 @@ def generate_user():
 
 def clear_userinfo_table(conn):
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM UserInfo")
-    cursor.execute("DELETE FROM sqlite_sequence WHERE name='UserInfo'")
+    cursor.execute("DELETE FROM User")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='User'")
     conn.commit()
-    print("🗑️ Table UserInfo vidée et ID réinitialisé.")
+    print("🗑️ Table User vidée et ID réinitialisé.")
 
 def generate_random_matches(conn, user_ids, count=10):
     cursor = conn.cursor()
@@ -85,7 +85,7 @@ def insert_users(n=10):
         user = generate_user()
         try:
             cursor.execute("""
-                INSERT INTO UserInfo (
+                INSERT INTO User (
                     username, alias, email, pass, avatar, bio,
                     onlineStatus, elo, win, lose, tournamentWon,
                     pointScored, pointConcede

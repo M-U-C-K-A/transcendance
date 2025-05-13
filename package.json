@@ -7,13 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dev:server": "mkdir -p data && tsx watch server/index.ts",
+    "dev:server": "mkdir -p data && tsx watch server/server.ts",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:studio": "prisma studio",
     "build:server": "tsc --project tsconfig.server.json",
     "start:server": "node server/dist/index.js"
   },
   "dependencies": {
+    "@fastify/cors": "^11.0.1",
     "@fastify/jwt": "^9.1.0",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.2",
