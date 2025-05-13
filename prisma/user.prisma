@@ -1,0 +1,90 @@
+generator client {
+	provider	=	"prisma-client-js"
+}
+
+datasource db {
+	provider	=	"sqlite"
+	url			=	"file:./data/test.sqlite"
+}
+
+
+model UserInfo {
+	id				Int			@id @default(autoincrement())
+	username		String // Supprimé @db.Text
+	alias			String? // Supprimé @db.Text
+	email			String  @unique // Supprimé @db.Text
+	pass			String // Supprimé @db.Text
+	avatar			Bytes?
+	bio				String? // Supprimé @db.Text
+	onlineStatus	Boolean	@default(false)
+	elo				Int			@default(1200)
+	win				Int			@default(0)
+	lose			Int			@default(0)
+	tournamentWon	Int			@default(0)
+	pointScored		Int			@default(0)
+	pointConcede	Int			@default(0)
+
+	matchesAsP1			Match[]				@relation("P1Matches")
+	matchesAsP2			Match[]				@relation("P2Matches")
+	wonMatches			Match[]				@relation("WonMatches")
+	hostedTournaments	Tournament[]		@relation("HostedTournaments")
+	tournamentWins		Tournament[]		@relation("TournamentWins")
+	matchHistory		MatchHistory[]
+	tournamentHistory	TournamentHistory[]
+	achievements		Achievement?
+	friendsAsUser1		Friends[]			@relation("User1Friends")
+	friendsAsUser2		Friends[]			@relation("User2Friends")
+	User1Block			Block[]				@relation("User1Block")
+	User2Block			Block[]				@relation("User2Block")
+	senderId			Invitation[]		@relation("senderId")
+	recipientId			Invitation[]		@relation("recipientId")
+	messageSenderId		Message[]			@relation("senderId")
+	messageRecipientId	Message[]			@relation("recipientId")
+	@@map("UserInfo")
+}
+
+model Friends {
+	id1	Int
+	id2	Int
+
+	user1	UserInfo @relation("User1Friends", fields: [id1], references: [id])
+	user2	UserInfo @relation("User2Friends", fields: [id2], references: [id])
+
+	@@id([id1, id2])
+	@@map("Friends")
+}
+
+model Block {
+	id1	Int
+	id2	Int
+
+	user1	UserInfo @relation("User1Block", fields: [id1], references: [id])
+	user2	UserInfo @relation("User2Block", fields: [id2], references: [id])
+
+	@@id([id1, id2])
+	@@map("Block")
+}
+
+model Achievement {
+	id				Int		@id
+	beginner		Boolean	@default(false)
+	humiliation		Boolean	@default(false)
+	shamefullLose	Boolean	@default(false)
+	rivality		Boolean	@default(false)
+	fairPlay		Boolean	@default(false)
+	lastSecond		Boolean	@default(false)
+	comeback		Boolean	@default(false)
+	longGame		Boolean	@default(false)
+	winTournament	Boolean	@default(false)
+	friendly		Boolean	@default(false)
+	rank1			Boolean	@default(false)
+	looser			Boolean	@default(false)
+	winner			Boolean	@default(false)
+	scorer			Boolean	@default(false)
+	emoji			Boolean	@default(false)
+	rage			Boolean	@default(false)
+
+	user UserInfo @relation(fields: [id], references: [id])
+
+	@@map("Achievement")
+}
