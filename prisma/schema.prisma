@@ -147,7 +147,7 @@ model Match {
 	p1EloGain	Int
 	p2EloGain	Int
 	mDate		DateTime	@default(now()) @map("MDate")
-	matchType MatchType
+	matchType   String   @default("Quickplay") // Remplace MatchType enum
 
 	player1		UserInfo		@relation("P1Matches", fields: [p1Id], references: [id])
 	player2		UserInfo		@relation("P2Matches", fields: [p2Id], references: [id])
@@ -156,14 +156,6 @@ model Match {
 
 	@@map("Match")
 }
-
-enum MatchType {
-	Local
-	Quickplay
-	Custom
-	Tournament
-}
-
 
 model MatchHistory {
 	userId	Int
@@ -187,7 +179,7 @@ model Invitation {
 	id			Int			@id @default(autoincrement())
 	senderId	Int
 	recipientId	Int
-	matchType	MatchType
+	matchType   String   @default("Quickplay") // Remplace MatchType enum
 	createdAt	DateTime	@default(now())
 	expireAt	DateTime
 
@@ -203,13 +195,8 @@ model Message {
 	sendAt		DateTime	@default(now())
 	readStatus	Boolean
 	status		Boolean // define if the message is private or not
-	messageType	messageType
+	messageType String @default("Message")
 
 	sender			UserInfo		@relation("senderId", fields: [senderId], references: [id])
 	recipient		UserInfo		@relation("recipientId", fields: [recipientId], references: [id])
-}
-
-enum messageType {
-	Message
-	Invitation
 }
