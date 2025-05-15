@@ -1,4 +1,7 @@
 export default {
+  "page_not_found": "Page non trouvée",
+  "page_not_found_description": "La page que vous recherchez n'existe pas.",
+  "back_to_home": "Retour à l'accueil",
   "common": {
     "appName": "PongMaster",
     "login": "Se connecter",
@@ -56,6 +59,8 @@ export default {
     }
   },
   "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue",
     "profile": {
       "title": "Profil",
       "edit": "Éditer le profil",

@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { getProfileData } from './profile.service'
+import statsRoutes from './routes/stats'
 
 export async function profileRoutes(fastify: FastifyInstance) {
   // Route health check
@@ -17,4 +18,7 @@ export async function profileRoutes(fastify: FastifyInstance) {
       }
     }
   )
+
+  // Enregistrer les routes de statistiques
+  await fastify.register(statsRoutes)
 }
