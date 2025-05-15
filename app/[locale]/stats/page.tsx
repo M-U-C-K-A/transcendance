@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Trophy, Activity } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Header } from "@/components/dashboard/Header"
 
 // Données fictives pour les graphiques
 const eloData = [
@@ -66,26 +67,7 @@ export default function StatsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
-        <div className="container mx-auto py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Activity className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">PongMaster</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/dashboard">
-              <Button variant="outline" size="sm">
-                Tableau de bord
-              </Button>
-            </Link>
-            <Avatar>
-              <AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
