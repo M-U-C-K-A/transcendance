@@ -11,10 +11,10 @@ export default function Home() {
         <div className="container max-w-6xl">
           <div className="flex flex-col items-center justify-center space-y-8">
             <h1 className="text-4xl md:text-6xl font-bold text-white text-center">
-              Creative solutions for modern challenges
+              ft_transcendence: Le Pong Ultime
             </h1>
             <p className="text-xl text-pink-300 text-center max-w-2xl">
-              We build beautiful digital experiences that help businesses grow and thrive in the digital landscape.
+              Un projet final de l'École 42 qui transforme le légendaire Pong en une expérience multijoueur moderne avec WebSocket, NextJS et React.
             </p>
 
             <div className="w-full max-w-3xl aspect-video mt-8 mb-12">
@@ -26,13 +26,13 @@ export default function Home() {
                 href="#contact"
                 className="px-8 py-3 bg-pink-500 hover:bg-pink-600 text-white font-medium rounded-md transition-colors"
               >
-                Login
+                ./login.sh
               </a>
               <a
                 href="#portfolio"
                 className="px-8 py-3 bg-transparent hover:bg-pink-500/10 text-pink-500 border border-pink-500 font-medium rounded-md transition-colors"
               >
-                Register
+                make register
               </a>
             </div>
           </div>
@@ -43,29 +43,29 @@ export default function Home() {
         <div className="w-full px-4">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">MODES DE JEU</h2>
           <p className="text-pink-300 text-center max-w-2xl mx-auto mb-12">
-            Affrontez vos amis ou des joueurs du monde entier dans différents modes de jeu
+            Explorez différents niveaux de difficulté comme dans la piscine de 42, mais cette fois-ci avec Pong!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-12">
             {[
               {
-                title: "QUICKMATCH",
+                title: "QUICK MATCH",
                 description:
-                  "Trouvez un adversaire instantanément et commencez à jouer en quelques secondes. Parfait pour une partie rapide.",
+                  "Une partie rapide et propre, respectant toutes les règles. Parfait pour s'entraîner avant les grands défis.",
                 icon: "⚡",
                 color: "from-pink-500 to-purple-600",
               },
               {
-                title: "TOURNOIS",
+                title: "TOURNAMENT MODE",
                 description:
-                  "Participez à des tournois quotidiens et hebdomadaires avec des prix à gagner. Grimpez dans le classement mondial.",
+                  "Comme un rush à 42 - 24h de tournois intensifs. Grimpez dans le classement et devenez le meilleur joueur du cluster.",
                 icon: "🏆",
                 color: "from-yellow-400 to-orange-500",
               },
               {
-                title: "CUSTOM",
+                title: "CUSTOM MODE",
                 description:
-                  "Créez votre propre partie avec vos règles. Modifiez la vitesse, la taille des raquettes et invitez vos amis.",
+                  "Votre environnement de test personnel. Modifiez les paramètres, invitez des amis et expérimentez comme dans votre VM.",
                 icon: "🎮",
                 color: "from-blue-400 to-indigo-600",
               },
@@ -81,7 +81,7 @@ export default function Home() {
                   <p className="text-white/80 mb-6">{mode.description}</p>
                   <div className="mt-auto">
                     <button className="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-md transition-colors backdrop-blur-sm">
-                      Jouer maintenant
+                      ./play.sh
                     </button>
                   </div>
                 </div>
