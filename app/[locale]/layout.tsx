@@ -1,8 +1,8 @@
 // app/[lang]/layout.tsx
-import { ThemeProvider } from '@/components/theme-provider'
 import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme-provider'
 import {ThemePersistence} from '@/components/theme-persistence'
-
+import { Provider } from './provider'
 // Load font outside component
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -13,12 +13,11 @@ const inter = Inter({
 export default async function RootLayout({
   children,
   params,
-}: {
-  children: React.ReactNode
-  params: { lang: string }
-}) {
-  const { lang } = await params
+}: Readonly<{
+  children: React.ReactNode;
+  params: { locale: string };
 
+}>) {
   return (
     <ThemeProvider
       attribute="class"
@@ -26,8 +25,10 @@ export default async function RootLayout({
       enableSystem
       disableTransitionOnChange
     >
-      <ThemePersistence lang={lang} />
+      <Provider locale={params.locale}>
+      <ThemePersistence lang={params.locale} />
       {children}
+      </Provider>
     </ThemeProvider>
   )
 }
