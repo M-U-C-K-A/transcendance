@@ -1,16 +1,14 @@
-import { getDictionary } from "@/lib/dictionary"
-import type { Locale } from "@/middleware"
 import AuthClient from "./auth-client"
 
 export default async function AuthPage({
-  params: { lang },
+  params,
   searchParams,
 }: {
-  params: { lang: Locale }
+  params: { locale: string }
   searchParams: { register?: string }
 }) {
-  const dict = await getDictionary(lang)
+  const { locale } = await Promise.resolve(params)
   const isRegister = searchParams.register === "true"
 
-  return <AuthClient dict={dict} isRegister={isRegister} lang={lang} />
+  return <AuthClient isRegister={isRegister} lang={locale} />
 }

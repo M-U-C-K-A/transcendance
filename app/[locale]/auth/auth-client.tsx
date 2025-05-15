@@ -22,7 +22,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sonner } from '@/components/ui/sonner'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LanguageSwitcher } from '@/components/language-switcher'
-import type { Locale } from '@/middleware'
 
 // Schémas de validation
 const loginSchema = z.object({
