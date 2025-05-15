@@ -3,38 +3,37 @@
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Check, Globe, ChevronDown } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { locales, type Locale } from "@/i18n-config" // Importez le type Locale
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-// Typage fort pour les données de langue
-interface LanguageData {
-  name: string
-  flag: string
-}
+// Liste manuelle des langues supportées
+const locales = ["en", "fr"] as const
+type Locale = (typeof locales)[number]
 
-const languageData: Record<Locale, LanguageData> = {
+const languageData: Record<Locale, { name: string; flag: string }> = {
   en: { name: "English", flag: "🇬🇧" },
   fr: { name: "Français", flag: "🇫🇷" },
-  es: { name: "Español", flag: "🇪🇸" },
-  ru: { name: "Русский", flag: "🇷🇺" },
-  de: { name: "Deutsch", flag: "🇩🇪" },
-  ch: { name: "中文", flag: "🇨🇳" }, // Correction: "Chinois" au lieu de "Chinesse"
-  na: { name: "Na'vi", flag: "🌌" },
-  id: { name: "Bahasa Indonesia", flag: "🇮🇩" }, // Correction: Drapeau indonésien
 }
 
 export function LanguageSwitcher() {
   const router = useRouter()
   const pathname = usePathname()
-  const currentLang = pathname.split('/')[1] as Locale
+
+  if (!pathname) return null
+
+  const pathSegments = pathname.split("/")
+  const currentLang = pathSegments[1] as Locale
 
   const switchLanguage = (newLocale: Locale) => {
     if (!locales.includes(newLocale)) return
 
-    // Construction du nouveau chemin
-    const segments = pathname.split('/')
-    segments[1] = newLocale // Remplace la locale actuelle
-    const newPath = segments.join('/')
+    const newPathSegments = [...pathSegments]
+    newPathSegments[1] = newLocale
+    const newPath = newPathSegments.join("/")
 
     router.push(newPath)
   }
@@ -44,7 +43,9 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center gap-1">
           <Globe className="h-4 w-4" />
-          <span className="hidden md:inline">{languageData[currentLang]?.name}</span>
+          <span className="hidden md:inline">
+            {languageData[currentLang]?.name ?? currentLang}
+          </span>
           <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
@@ -56,8 +57,8 @@ export function LanguageSwitcher() {
             onClick={() => switchLanguage(locale)}
             disabled={locale === currentLang}
           >
-            <span className="mr-1">{languageData[locale]?.flag}</span>
-            {languageData[locale]?.name}
+            <span className="mr-1">{languageData[locale].flag}</span>
+            {languageData[locale].name}
             {locale === currentLang && <Check className="h-4 w-4 ml-auto" />}
           </DropdownMenuItem>
         ))}
