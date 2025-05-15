@@ -1,35 +1,40 @@
-// app/[lang]/layout.tsx
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
-import {ThemePersistence} from '@/components/theme-persistence'
+import { ThemePersistence } from '@/components/theme-persistence'
 import { Provider } from './provider'
-// Load font outside component
+
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
   display: 'swap'
 })
 
+// ✅ Important : rendre la fonction async pour await `params`
 export default async function RootLayout({
   children,
   params,
-}: Readonly<{
-  children: React.ReactNode;
-  params: { locale: string };
+}: {
+  children: React.ReactNode
+  params: { locale: string }
+}) {
+  // ✅ Extra sécuritaire : forcer l'attente si c’est une proxy object
+  const { locale } = await Promise.resolve(params)
 
-}>) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Provider locale={params.locale}>
-      <ThemePersistence lang={params.locale} />
-      {children}
-      </Provider>
-    </ThemeProvider>
+    <html lang={locale} className={inter.variable}>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Provider locale={locale}>
+            <ThemePersistence lang={locale} />
+            {children}
+          </Provider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }
-
