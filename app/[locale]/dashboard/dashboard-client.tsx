@@ -12,22 +12,22 @@ export default function DashboardClient({ locale }: { locale: string }) {
       <Header locale={locale} />
       
       <div className="container mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Sidebar - User Profile */}
+        {/* Left Sidebar */}
         <div className="lg:col-span-3">
           <UserProfile />
           <ColleaguesList />
         </div>
 
-        {/* Main Content - Game Modes */}
+        {/* Main Content */}
         <div className="lg:col-span-6">
           <GameTabs locale={locale} />
         </div>
 
-        {/* Right Sidebar - Chat */}
+        {/* Right Sidebar */}
         <div className="lg:col-span-3">
           <ChatSection />
         </div>
       </div>
     </div>
-  )
+  );
 }
