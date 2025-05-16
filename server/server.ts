@@ -1,11 +1,26 @@
 import fastify from 'fastify'
-import { profileRoutes } from './routes'
+import { registerRoutes } from './routes'
 import { PrismaClient } from '@prisma/client'
 
 // Créer une instance du client Prisma
 const prisma = new PrismaClient()
-// Créer une instance du serveur Fastify
-const server = fastify({ logger: true })
+
+// Créer une instance du serveur Fastify avec une configuration de log améliorée
+const server = fastify({
+  logger: {
+    level: 'info',
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'SYS:standard',
+        ignore: 'pid,hostname',
+        messageFormat: '{msg}',
+        levelFirst: true
+      }
+    }
+  }
+})
 
 // Enregistrer le plugin CORS
 server.register(require('@fastify/cors'), {
@@ -15,15 +30,15 @@ server.register(require('@fastify/cors'), {
 })
 
 // Enregistrer les routes
-server.register(profileRoutes)
+server.register(registerRoutes)
 
 // Démarrer le serveur
 const start = async () => {
   try {
     await server.listen({ port: 3001 })
-    console.log(`Server running on http://localhost:3001`)
+    server.log.info({ port: 3001 }, 'Server running on http://localhost:3001')
   } catch (err) {
-    console.error(err)
+    server.log.error({ err }, 'Error starting server')
     process.exit(1)
   }
 }

@@ -1,24 +1,13 @@
 import { FastifyInstance } from 'fastify'
-import { getProfileData } from './profile.service'
+import healthRoutes from './routes/health'
+import profileRoutes from './routes/profile'
 import statsRoutes from './routes/stats'
 
-export async function profileRoutes(fastify: FastifyInstance) {
-  // Route health check
-  fastify.get('/health', async () => ({ status: 'OK' }))
-
-  // Route profile
-  fastify.get<{ Params: { username: string } }>(
-    '/profile/:username',
-    async (request, reply) => {
-      try {
-        const data = await getProfileData(request.params.username)
-        return reply.send(data)
-      } catch (error) {
-        return reply.status(404).send({ error: 'Profile not found' })
-      }
-    }
-  )
-
-  // Enregistrer les routes de statistiques
+export async function registerRoutes(fastify: FastifyInstance) {
+  // Enregistrer toutes les routes
+  await fastify.register(healthRoutes)
+  await fastify.register(profileRoutes)
   await fastify.register(statsRoutes)
+  
+  fastify.log.info('All routes registered successfully')
 }
