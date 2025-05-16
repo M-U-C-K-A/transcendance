@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, BarChart, LogOut, MessageCircle, Settings, Trophy, Activity } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
+import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 
 // Données fictives pour les profils
 const profilesData = {
@@ -96,10 +97,23 @@ const matchData = [
 export default function ProfilePage() {
 	const params = useParams()
 	const username = (params.username as string).toLowerCase()
+	const locale = params.locale as string
 	const [activeTab, setActiveTab] = useState("overview")
+	const [isLoading, setIsLoading] = useState(true)
+
+	// Simuler un chargement
+	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false)
+		}, 2000)
+	}, [])
 
 	// Récupérer les données du profil en fonction du nom d'utilisateur
 	const profileData = profilesData[username as keyof typeof profilesData] || profilesData.johndoe
+
+	if (isLoading) {
+		return <ProfileSkeleton locale={locale} />
+	}
 
 	return (
 		<div className="bg-background min-h-screen">
