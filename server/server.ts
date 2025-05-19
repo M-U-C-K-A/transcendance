@@ -22,10 +22,11 @@ const loggerConfig = {
 
 const app = Fastify({ logger: loggerConfig });
 
-app.register(cors, {
-	origin: true, // Autorise toutes les origines (à restreindre en production)
-	methods: ['GET', 'POST', 'PUT', 'DELETE'] // Autorise ces méthodes
-});
+app.register(require('@fastify/cors'), {
+	origin: 'http://localhost:3000', // Autorisez seulement votre frontend
+	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
+	credentials: true // Si vous utilisez des cookies/sessions
+  })
 
 async function main() {
 	const server = Fastify();

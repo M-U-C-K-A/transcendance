@@ -17,11 +17,11 @@ export default async function RootLayout({
   children: React.ReactNode
   params: { locale: string }
 }) {
-  // ✅ Extra sécuritaire : forcer l'attente si c’est une proxy object
+  // ✅ Extra sécuritaire : forcer l'attente si c'est une proxy object
   const { locale } = await Promise.resolve(params)
 
   return (
-    <html lang={locale} className={inter.variable}>
+    <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <body>
         <ThemeProvider
           attribute="class"
