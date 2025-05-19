@@ -5,7 +5,7 @@ info:
   description: API pour le projet Transcendance
 
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3001
     description: Serveur de développement
 
 paths:
