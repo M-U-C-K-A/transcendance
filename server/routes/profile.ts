@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import getUserInfo from '../request/userProfile/getUserInfo'
+import getMessage from '../request/chat/getMessage'
 
 export default async function profileRoute(server: FastifyInstance) {
 	server.get('/profile/:username', async function (request, reply) {

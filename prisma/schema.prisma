@@ -191,13 +191,13 @@ model Invitation {
 model Message {
 	id			Int			@id @default(autoincrement())
 	senderId	Int
-	recipientId	Int
+	recipientId	Int?
 	content		String
 	sendAt		DateTime	@default(now())
-	readStatus	Boolean
+	readStatus	Boolean		@default(false)
 	status		Boolean // define if the message is private or not
 	messageType String @default("Message")
 
 	sender			User		@relation("senderId", fields: [senderId], references: [id])
-	recipient		User		@relation("recipientId", fields: [recipientId], references: [id])
+	recipient		User?		@relation("recipientId", fields: [recipientId], references: [id])
 }
