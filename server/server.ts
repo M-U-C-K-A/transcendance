@@ -3,7 +3,9 @@ import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import profileRoute from './routes/profile';
 import health from './routes/health';
+import chat from './routes/chat';
 import { registerRoute, loginRoute } from './routes/connection';
+import { Sevillana } from 'next/font/google';
 
 const loggerConfig = {
 	transport: {
@@ -33,6 +35,7 @@ async function main() {
 	await server.register(health);
 	await server.register(registerRoute);
 	await server.register(loginRoute);
+	await server.register(chat)
 
 	server.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
