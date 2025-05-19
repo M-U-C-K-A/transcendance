@@ -6,8 +6,7 @@ const server = fastify()
 server.get('/dashboard', async (request, reply) => {
 	const { username } = request.query as { username: string }
 
-	if (!username)
-	{
+	if (!username) {
 		console.log('No username passed as parameter in dashboardRoute')
 		return reply.code(400).send({ error: 'Username is required' })
 	}
