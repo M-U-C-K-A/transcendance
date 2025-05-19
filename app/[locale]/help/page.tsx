@@ -18,35 +18,53 @@ export default function GraphPage() {
 
   const testEndpoint = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      
+      setLoading(true);
+      setError(null);
+      setResponse(null);
+
+      // Validation de l'URL
+      if (!endpoint.includes('://')) {
+        setEndpoint(`http://${endpoint}`); // Ajoute http:// si manquant
+      }
+
       const options: RequestInit = {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        }
+        headers: { 'Content-Type': 'application/json' },
+      };
+
+      if (method !== 'GET' && body) {
+        options.body = body;
       }
 
-      if (method !== "GET" && body) {
-        options.body = body
+      const startTime = Date.now();
+      const res = await fetch(endpoint, options);
+      const responseTime = Date.now() - startTime;
+
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(`HTTP ${res.status} - ${errorData || 'No error message'}`);
       }
 
-      const res = await fetch(endpoint, options)
-      const data = await res.json()
-      setResponse(data)
+      const data = await res.json();
+      setResponse({
+        data,
+        status: res.status,
+        headers: Object.fromEntries(res.headers.entries()),
+        responseTime
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue")
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Fetch error:', err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Statistiques et Tests API <ThemeToggle /></h1>
-      
-      
+
+
       <Tabs defaultValue="graphs" className="w-full">
         <TabsList className="grid grid-cols-2 mb-6">
           <TabsTrigger value="graphs">Graphiques</TabsTrigger>
@@ -75,7 +93,7 @@ export default function GraphPage() {
 
                 <div>
                   <label className="block mb-2">Méthode</label>
-                  <select 
+                  <select
                     className="w-full p-2 border rounded"
                     value={method}
                     onChange={(e) => setMethod(e.target.value)}
@@ -100,7 +118,7 @@ export default function GraphPage() {
                   </div>
                 )}
 
-                <Button 
+                <Button
                   onClick={testEndpoint}
                   disabled={loading || !endpoint}
                 >
@@ -138,3 +156,4 @@ export default function GraphPage() {
     </div>
   )
 }
+
