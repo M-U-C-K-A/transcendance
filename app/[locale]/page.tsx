@@ -23,13 +23,13 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <a
-                href="#contact"
+                href="/auth"
                 className="px-8 py-3 bg-pink-500 hover:bg-pink-600 text-white font-medium rounded-md transition-colors"
               >
                 ./login.sh
               </a>
               <a
-                href="#portfolio"
+                href="/auth"
                 className="px-8 py-3 bg-transparent hover:bg-pink-500/10 text-pink-500 border border-pink-500 font-medium rounded-md transition-colors"
               >
                 make register

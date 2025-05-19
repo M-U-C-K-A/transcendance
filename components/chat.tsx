@@ -73,13 +73,29 @@ const initialMessages: Message[] = [
     recipient: "John Doe",
     isRead: false
   },
- { id: 7,
+  { id: 7,
+   user: { name: "Robz" },
+   text: "salut bg !",
+   timestamp: new Date(Date.now() - 1000 * 30),
+   isPrivate: true,
+   recipient: "John Doe",
+   isRead: false
+ },
+ { id: 8,
   user: { name: "Robz" },
-  text: "Je peux t'aider à t'améliorer si tu veux, j'ai beaucoup d'expérience dans ce jeu et je peux te donner des conseils personnalisés.",
+  text: "j'ai une question un peut bizzare 👉👈",
   timestamp: new Date(Date.now() - 1000 * 30),
   isPrivate: true,
   recipient: "John Doe",
   isRead: false
+},
+{ id: 9,
+ user: { name: "Robz" },
+ text: "tu peux m'envoyer une photo de tes pied ? 🥵 🦶🏾🦶🏾",
+ timestamp: new Date(Date.now() - 1000 * 30),
+ isPrivate: true,
+ recipient: "John Doe",
+ isRead: false
 }
 ]
 
