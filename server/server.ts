@@ -1,7 +1,13 @@
 import Fastify from 'fastify';
 import getUserInfo from './request/userProfile/getUserInfo'
+import cors from '@fastify/cors';
 
 const app = Fastify();
+
+app.register(cors, {
+	origin: true, // Autorise toutes les origines (à restreindre en production)
+	methods: ['GET', 'POST', 'PUT', 'DELETE'] // Autorise ces méthodes
+  });
 
 const port = 3001;
 
