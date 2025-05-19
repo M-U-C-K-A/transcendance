@@ -137,20 +137,21 @@ model TournamentHistory {
 
 model Match {
 	id			Int			@id	@default(autoincrement())
+	name		String
 	p1Id		Int
-	p2Id		Int
+	p2Id		Int?
 	p1Elo		Int
-	p2Elo		Int
+	p2Elo		Int?
 	winnerId	Int?
-	p1Score		Int			@default(0)
-	p2Score		Int			@default(0)
-	p1EloGain	Int
-	p2EloGain	Int
+	p1Score		Int?		@default(0)
+	p2Score		Int?		@default(0)
+	p1EloGain	Int?
+	p2EloGain	Int?
 	mDate		DateTime	@default(now()) @map("MDate")
-	matchType   String   @default("Quickplay") // Remplace MatchType enum
+	matchType   String  	@default("Quickplay") // Remplace MatchType enum
 
 	player1		User		@relation("P1Matches", fields: [p1Id], references: [id])
-	player2		User		@relation("P2Matches", fields: [p2Id], references: [id])
+	player2		User?		@relation("P2Matches", fields: [p2Id], references: [id])
 	winner		User?		@relation("WonMatches", fields: [winnerId], references: [id])
 	matchHistory MatchHistory[]
 
@@ -161,7 +162,7 @@ model MatchHistory {
 	userId	Int
 	matchId	Int
 
-	user	User	@relation(fields: [userId], references: [id])
+	user	User		@relation(fields: [userId], references: [id])
 	match	Match		@relation(fields: [matchId], references: [id])
 
 	@@id([userId, matchId])
