@@ -1,11 +1,12 @@
 import {fastify} from 'fastify'
-import dashboard from '../request/dashboard'
+import createMatch from '../request/match/createMatch'
 
 const server = fastify()
 
-server.get('/dashboard', async (request, reply) => {
+server.get('/game/custom/:lobbyname', async (request, reply) => {
     const { username } = request.query as { username: string }
-  
+    const { matchName } = request.query as { matchName: string}
+
     if (!username)
     {
         console.log('No username passed as parameter in dashboardRoute')
@@ -13,7 +14,7 @@ server.get('/dashboard', async (request, reply) => {
     }
   
     try {
-        const result = await dashboard(username)
+        const result = await createMatch(username, matchName)
         return (reply.send(result))
     } catch (err) {
         console.log('No user found in dashboardRoute')

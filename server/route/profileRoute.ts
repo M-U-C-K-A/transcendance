@@ -1,5 +1,5 @@
 import fastify from 'fastify'
-import {getProfileData} from 'server/request/profile'
+import getProfileData from 'server/request/profile'
 
 const server = fastify()
 
