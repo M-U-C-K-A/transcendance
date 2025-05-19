@@ -105,7 +105,7 @@ export default function ProfilePage() {
 	useEffect(() => {
 		setTimeout(() => {
 			setIsLoading(false)
-		}, 2000)
+		}, 12)
 	}, [])
 
 	// Récupérer les données du profil en fonction du nom d'utilisateur
