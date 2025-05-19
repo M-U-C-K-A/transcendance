@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://user:pass@db:5432/mydb
