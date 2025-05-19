@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import {DashboardSkeleton} from '@/components/dashboard/Skeleton'
 import DashboardClient from './dashboard-client'
 
-export default function DashboardPage({
+export default async function DashboardPage({
   params: { locale },
 }: {
   params: { locale: string }
