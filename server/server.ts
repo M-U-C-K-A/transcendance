@@ -1,8 +1,22 @@
+// server/server.ts
 import Fastify from 'fastify';
 import getUserInfo from './request/userProfile/getUserInfo'
 import cors from '@fastify/cors';
 
-const app = Fastify();
+const loggerConfig = {
+	transport: {
+	  target: 'pino-pretty',
+	  options: {
+		colorize: true,
+		levelFirst: true,
+		translateTime: 'SYS:dd-mm-yyyy HH:MM:ss',
+		ignore: 'pid,hostname',
+	  }
+	},
+	level: 'info' // Vous pouvez changer le niveau (debug, info, warn, error)
+  };
+
+  const app = Fastify({ logger: loggerConfig });
 
 app.register(cors, {
 	origin: true, // Autorise toutes les origines (à restreindre en production)
@@ -10,14 +24,6 @@ app.register(cors, {
   });
 
 const port = 3001;
-
-interface ProfileParams {
-  username: string;
-}
-
-app.get('/', async (req, res) => {
-	return 'Hello World!';
-});
 
 app.get('/profile/:username', async function (request, reply) {
 	const { username } = request.params as { username: string }
