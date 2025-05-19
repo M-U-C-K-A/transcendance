@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
 export interface userData{
-	Id: number;
+	id: number;
 	username: string;
 	elo: number;
 	avatar: string;
@@ -50,3 +50,14 @@ export const connectionSchema = z.object({
 	password: z.string().min(12, {message: "Password must be 12 or more characters"}),
 	email: z.string().email({message: "Invalid Email"}),
 })
+
+export interface Message {
+  id: number;
+  senderId: number;
+  recipientId: number;
+  content: string;
+  readStatus: boolean;
+  status: boolean;
+  messageType: number;
+  dateCreated: Date;
+}

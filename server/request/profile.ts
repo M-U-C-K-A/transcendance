@@ -4,15 +4,15 @@ import {getAvatar} from '../utils/getAvatar';
 
 const prisma = new PrismaClient()
 
-export async function getProfileData(username: string) {
-	const userInfo = await prisma.$queryRaw<userData[]>`SELECT * FROM USER WHERE username == ${username}`;
+export default async function getProfileData(username: string) {
+	const userInfo = await prisma.$queryRaw<userData[]>`SELECT * FROM "User" WHERE username == ${username}`;
 	if (!userInfo) {throw Error('User not found')}
 
 	const user = userInfo[0];
 
-	const achievements = await prisma.$queryRaw<any[]>`SELECT * FROM ACHIEVEMENT WHERE Id == user.Id`
+	const achievements = await prisma.$queryRaw<any[]>`SELECT * FROM "Achievement" WHERE Id == user.Id`
 
-	const history = await prisma.$queryRaw<matchHistory[]>`SELECT * FROM MATCHHISTORY WHERE UserId == user.Id`
+	const history = await prisma.$queryRaw<matchHistory[]>`SELECT * FROM "MatchHistory" WHERE UserId == user.Id`
 
 	const gameNb = user.win + user.lose
 
