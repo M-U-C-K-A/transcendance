@@ -1,6 +1,6 @@
 {
-  "name": "trans",
-  "version": "0.1.0",
+  "name": "transcendance",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -11,7 +11,8 @@
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:studio": "prisma studio",
     "build:server": "tsc --project tsconfig.server.json",
-    "start:server": "node server/dist/index.js"
+    "start:server": "node server/dist/index.js",
+    "docker:build": "docker compose up --build"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",
