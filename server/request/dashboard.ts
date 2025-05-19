@@ -6,7 +6,7 @@ const Prisma = new PrismaClient()
 
 async function getGeneralChat() {
 	const allChat = await Prisma.$queryRaw<Message[]>`SELECT * from "Message" WHERE status == true`
-	
+
 	if(!allChat[0]) {console.log('No messsage found for All Chat')}
 
 	return (allChat)
@@ -28,7 +28,7 @@ async function getFriendsId(user:userData) {
 
 export default async function dashboard(username:string) {
 	const userInfo = await Prisma.$queryRaw<userData[]>`SELECT * FROM "User" WHERE username == ${username}`
-	
+
 	if(!userInfo) {throw Error ('User not found')}
 
 	const user = userInfo[0]
