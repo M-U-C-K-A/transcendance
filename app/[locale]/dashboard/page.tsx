@@ -4,7 +4,7 @@ import {DashboardSkeleton} from '@/components/dashboard/Skeleton'
 import DashboardClient from './dashboard-client'
 import { ThemeHandler } from '@/components/theme-handler'
 
-export default function DashboardPage({
+export default async function DashboardPage({
   params: { locale },
 }: {
   params: { locale: string }
