@@ -13,17 +13,17 @@ export default async function createMatch(host: string, matchName: string) {
 		throw new Error('User not found in createMatch');
 	}
 
-    const avatar = getAvatar(hostInfo[0])
+	const avatar = getAvatar(hostInfo[0])
 	if (!matchName)
 		matchName = `${host}'s game`;
 
 	await Prisma.$executeRaw`INSERT INTO "Match" (p1Id, p1Elo) VALUES (${hostInfo[0].id}, ${hostInfo[0].elo})`;
 
-    let MatchData: matchInfo = {
-        matchName : matchName,
-        p1Name : hostInfo[0].username,
-        p1Elo : hostInfo[0].elo,
-    };
+	let MatchData: matchInfo = {
+		matchName : matchName,
+		p1Name : hostInfo[0].username,
+		p1Elo : hostInfo[0].elo,
+	};
 
-    return {MatchData, avatar}
+	return {MatchData, avatar}
 }
