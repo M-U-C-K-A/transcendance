@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: API Transcendance
+  version: 1.0.0
+  description: API pour le projet Transcendance
+
+servers:
+  - url: http://localhost:3000
+    description: Serveur de développement
+
+paths:
+  /register:
+    get:
+      summary: Inscription d'un nouvel utilisateur
+      parameters:
+        - name: data
+          in: query
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        '201':
+          description: Utilisateur inscrit avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User registered successfully
+        '400':
+          description: Données invalides
+        '500':
+          description: Erreur serveur
+
+  /login:
+    get:
+      summary: Connexion d'un utilisateur
+      parameters:
+        - name: data
+          in: query
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        '202':
+          description: Utilisateur connecté avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User logged successfully
+        '400':
+          description: Données invalides
+        '500':
+          description: Erreur serveur
+
+  /profile/{username}:
+    get:
+      summary: Récupération des données du profil
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Données du profil récupérées avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  # Ajoutez ici les autres propriétés du profil
+        '400':
+          description: Nom d'utilisateur manquant
+        '404':
+          description: Utilisateur non trouvé
+
+components:
+  schemas:
+    ConnectionData:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
