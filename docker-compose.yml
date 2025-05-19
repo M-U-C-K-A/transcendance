@@ -1,9 +1,35 @@
-version: '3.9'
+
 
 services:
-  app:
-    build: .
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: transcendance-back
+    working_dir: /app
+    command: ["sh", "-c", "pnpm run generate-prisma && pnpm run dev:server"]
     ports:
-      - '3000:3000'
+      - "3001:3001"
+    volumes:
+      - ./:/app
+      - node_modules:/app/node_modules
     environment:
-      DATABASE_URL: postgresql://user:pass@db:5432/mydb
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: transcendance-front
+    working_dir: /app
+    command: ["pnpm", "run", "dev"]
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  node_modules:
