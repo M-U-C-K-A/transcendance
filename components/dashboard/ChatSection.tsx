@@ -9,15 +9,15 @@ export function ChatSection() {
 
   return (
     <Card className="bg-card border shadow-sm h-full">
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle className="flex items-center">
           <MessageCircle className="mr-2 h-5 w-5" /> {t('dashboard.chat.title')}
         </CardTitle>
       </CardHeader>
       <Separator />
-      <CardContent className="pt-4 h-[calc(100%-80px)]">
+      <CardContent className="h-[calc(100%-80px)]">
         <ChatComponent placeholder={t('dashboard.chat.placeholder')} />
       </CardContent>
     </Card>
   )
-} 
+}
