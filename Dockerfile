@@ -1,31 +1,28 @@
-# Base Node.js image
+# 1) Base + outils système pour compiler bcrypt
 FROM node:22-alpine
+RUN apk add --no-cache python3 make g++
 
-# Update npm to latest
-RUN npm install -g npm@latest
+# 2) Met à jour npm, active corepack + pnpm
+RUN npm install -g npm@latest \
+ && corepack enable \
+ && corepack prepare pnpm@latest-10 --activate
 
-# Enable Corepack and install pnpm@latest
-RUN corepack enable \
-    && corepack prepare pnpm@latest-10 --activate
-
-# Install Prisma CLI globally
-RUN npm install -g prisma@latest
-
-# Set working directory
 WORKDIR /app
 
-# Copy manifests and install dependencies
-# Set packageManager field to avoid Corepack prompt\ nRUN npm pkg set packageManager="pnpm@10.11.0"
-
-# Copy manifests and install dependencies
+# 3) Copie juste les manifests et installe toutes les deps
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy application code
+# 4) Copie ton schema Prisma et génère le client
+COPY prisma ./prisma
+RUN pnpm run generate-prisma
+
+
+# 5) Copie le reste de l’application
 COPY . .
 
-# Expose port for development
-EXPOSE 3000
+# 6) Expose front (3000) + back (3001)
+EXPOSE 3000 3001
 
-# Start development server
-CMD ["pnpm", "run", "dev"]
+# 7) Commande par défaut : démarre ton server
+CMD ["pnpm", "run", "dev:server"]
