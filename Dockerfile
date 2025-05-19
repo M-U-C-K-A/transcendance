@@ -22,7 +22,7 @@ RUN pnpm run generate-prisma
 COPY . .
 
 # 6) Expose front (3000) + back (3001)
-EXPOSE 3000 3001
+EXPOSE 3000 3001 5555
 
 # 7) Commande par défaut : démarre ton server
 CMD ["pnpm", "run", "dev:server"]

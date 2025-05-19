@@ -1,5 +1,3 @@
-
-
 services:
   backend:
     build:
@@ -30,6 +28,23 @@ services:
       - node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
+
+  studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: transcendance-studio
+    working_dir: /app
+    command: ["pnpx", "prisma", "studio"]
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./:/app
+      - node_modules:/app/node_modules
+    environment:
+      - DATABASE_URL=file:./prisma/data/test.sqlite
+    depends_on:
+      - backend
 
 volumes:
   node_modules:
