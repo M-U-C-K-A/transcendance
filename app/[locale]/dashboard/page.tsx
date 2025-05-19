@@ -1,6 +1,5 @@
-// app/[locale]/dashboard/page.tsx
 import { Suspense } from 'react'
-import {DashboardSkeleton} from '@/components/dashboard/Skeleton'
+import { DashboardSkeleton } from '@/components/dashboard/Skeleton'
 import DashboardClient from './dashboard-client'
 import { ThemeHandler } from '@/components/theme-handler'
 

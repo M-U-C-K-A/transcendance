@@ -1,7 +1,35 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: "/api/chat/:path*",
+        destination: "http://localhost:3001/chat/:path*"
+      },
+      {
+        source: "/api/chat/send",
+        destination: "http://localhost:3001/chat/send"
+      },
+      {
+        source: "/api/profile/:path*",
+        destination: "http://localhost:3001/profile/:path*"
+      }
+    ]
+  },
+  async headers() {
+    return [
+      {
+        source: "/api/chat/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "http://localhost:3000" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,PUT,DELETE,OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" }
+        ]
+      }
+    ]
+  }
 };
 
 export default nextConfig;

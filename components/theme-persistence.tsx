@@ -5,16 +5,15 @@ import { useTheme } from "next-themes"
 import { useEffect } from "react"
 
 export function ThemePersistence({ lang }: { lang: string }) {
-  const { theme, systemTheme, resolvedTheme } = useTheme()
+  const { resolvedTheme } = useTheme()
 
   useEffect(() => {
-    // Applique le thème actuel au html parent
     const html = document.documentElement
     if (resolvedTheme) {
-      html.className = resolvedTheme
-      html.style.colorScheme = resolvedTheme
+      html.setAttribute('class', resolvedTheme)
+      html.setAttribute('style', `color-scheme: ${resolvedTheme}`)
     }
-    html.lang = lang // Force la langue
+    html.setAttribute('lang', lang)
   }, [lang, resolvedTheme])
 
   return null

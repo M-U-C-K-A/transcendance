@@ -83,7 +83,7 @@ export default function ProfilePage() {
     const fetchProfileData = async () => {
       try {
         // Remplacez cette URL par votre endpoint API réel
-        const response = await fetch(`http://localhost:3001/hugo/profile/${username}`)
+        const response = await fetch(`/api/profile/${username}`)
         if (!response.ok) {
           throw new Error("Failed to fetch profile data")
         }
