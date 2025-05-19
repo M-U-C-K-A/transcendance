@@ -38,5 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Docker commands
 
-docker build -t transcendance-dev .
-docker run --rm -p 3000:3000 transcendance-dev
+docker compose up --build
