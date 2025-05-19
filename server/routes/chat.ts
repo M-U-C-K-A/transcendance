@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../request/userProfile/getUserInfo'
+import getMessage from '../request/chat/getMessage'
 
-export default async function profileRoute(server: FastifyInstance) {
-	server.get('/profile/:username', async function (request, reply) {
+export default async function chat(server: FastifyInstance) {
+	server.get('/chat/:username', async function (request, reply) {
 	const { username } = request.params as { username: string }
 
 	if (!username)
@@ -12,7 +12,7 @@ export default async function profileRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const result = await getUserInfo(username)
+		const result = await getMessage(username)
 		return (reply.send(result))
 	} catch (err) {
 		console.log('No user found in profileRoute')
