@@ -45,6 +45,11 @@ export interface connectionData{
 	email: string;
 }
 
+export interface loginData{
+	pass: string
+	email: string
+}
+
 export const connectionSchema = z.object({
 	username: z.string().min(3, {message : "Username must be 3 or more characters long"}).max(16, {message :"Username must be 16 or less characters long"}).optional(),
 	password: z.string().min(12, {message: "Password must be 12 or more characters"}),
@@ -52,12 +57,12 @@ export const connectionSchema = z.object({
 })
 
 export interface Message {
-  id: number;
-  senderId: number;
-  recipientId: number;
-  content: string;
-  readStatus: boolean;
-  status: boolean;
-  messageType: number;
-  dateCreated: Date;
+	id: number;
+	senderId: number;
+	recipientId: number;
+	content: string;
+	readStatus: boolean;
+	status: boolean;
+	messageType: number;
+	dateCreated: Date;
 }
