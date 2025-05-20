@@ -2,101 +2,476 @@ openapi: 3.0.0
 info:
   title: API Transcendance
   version: 1.0.0
-  description: API pour le projet Transcendance
+  description: |
+    API pour le projet Transcendance - Une plateforme de jeu en ligne avec authentification et gestion de profils.
+    Cette API permet de gérer les utilisateurs, leurs profils, et les interactions entre joueurs.
 
 servers:
   - url: http://localhost:3001
-    description: Serveur de développement
+    description: Serveur de développement local
+  - url: https://api.transcendance.com
+    description: Serveur de production
+
+tags:
+  - name: Authentication
+    description: Opérations liées à l'authentification des utilisateurs
+  - name: Users
+    description: Gestion des utilisateurs et des profils
+  - name: Game
+    description: Opérations liées au jeu
+  - name: Chat
+    description: Gestion des conversations et messages
+  - name: Friends
+    description: Gestion des relations entre utilisateurs
+  - name: Matchmaking
+    description: Gestion des matchs et du matchmaking
 
 paths:
-  /register:
-    get:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
       summary: Inscription d'un nouvel utilisateur
-      parameters:
-        - name: data
-          in: query
-          required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
+      description: Crée un nouveau compte utilisateur avec les informations fournies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
       responses:
         '201':
           description: Utilisateur inscrit avec succès
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User registered successfully
+                $ref: '#/components/schemas/RegisterResponse'
         '400':
-          description: Données invalides
-        '500':
-          description: Erreur serveur
-
-  /login:
-    get:
-      summary: Connexion d'un utilisateur
-      parameters:
-        - name: data
-          in: query
-          required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
-      responses:
-        '202':
-          description: Utilisateur connecté avec succès
+          description: Données invalides ou utilisateur déjà existant
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User logged successfully
-        '400':
-          description: Données invalides
+                $ref: '#/components/schemas/Error'
         '500':
           description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-  /profile/{username}:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Connexion d'un utilisateur
+      description: Authentifie un utilisateur et retourne un token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Identifiants invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/profile/{username}:
     get:
+      tags:
+        - Users
       summary: Récupération des données du profil
+      description: Récupère les informations détaillées du profil d'un utilisateur
       parameters:
         - name: username
           in: path
           required: true
           schema:
             type: string
+          description: Nom d'utilisateur du profil à récupérer
+      security:
+        - BearerAuth: []
       responses:
         '200':
-          description: Données du profil récupérées avec succès
+          description: Profil récupéré avec succès
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  # Ajoutez ici les autres propriétés du profil
-        '400':
-          description: Nom d'utilisateur manquant
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Users
+      summary: Mise à jour du profil
+      description: Met à jour les informations du profil de l'utilisateur connecté
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nom d'utilisateur du profil à mettre à jour
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profil mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Non autorisé à modifier ce profil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat/channels:
+    get:
+      tags:
+        - Chat
+      summary: Liste des canaux disponibles
+      description: Récupère la liste des canaux de chat publics et privés accessibles
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Liste des canaux récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Chat
+      summary: Création d'un nouveau canal
+      description: Crée un nouveau canal de chat (public ou privé)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChannelRequest'
+      responses:
+        '201':
+          description: Canal créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat/channels/{channelId}/messages:
+    get:
+      tags:
+        - Chat
+      summary: Historique des messages
+      description: Récupère l'historique des messages d'un canal
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identifiant du canal
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+          description: Nombre maximum de messages à récupérer
+        - name: before
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Récupérer les messages avant cette date
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Messages récupérés avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Canal non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Chat
+      summary: Envoi d'un message
+      description: Envoie un nouveau message dans un canal
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identifiant du canal
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMessageRequest'
+      responses:
+        '201':
+          description: Message envoyé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Message invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /friends:
+    get:
+      tags:
+        - Friends
+      summary: Liste des amis
+      description: Récupère la liste des amis de l'utilisateur connecté
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Liste des amis récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Friend'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /friends/requests:
+    get:
+      tags:
+        - Friends
+      summary: Demandes d'amis reçues
+      description: Récupère les demandes d'amis en attente
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Demandes récupérées avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendRequest'
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Friends
+      summary: Envoi d'une demande d'ami
+      description: Envoie une demande d'ami à un utilisateur
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFriendRequest'
+      responses:
+        '201':
+          description: Demande envoyée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequest'
+        '400':
+          description: Demande invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /game/matchmaking:
+    post:
+      tags:
+        - Matchmaking
+      summary: Recherche d'une partie
+      description: Lance la recherche d'une partie
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchmakingRequest'
+      responses:
+        '200':
+          description: Recherche lancée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchmakingResponse'
+        '400':
+          description: Paramètres invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /game/matches/{matchId}:
+    get:
+      tags:
+        - Game
+      summary: Informations sur une partie
+      description: Récupère les informations détaillées d'une partie
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identifiant de la partie
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Informations récupérées avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '404':
+          description: Partie non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
-    ConnectionData:
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: '^[a-zA-Z0-9_-]+$'
+          description: Nom d'utilisateur unique
+        password:
+          type: string
+          minLength: 8
+          description: Mot de passe sécurisé
+        email:
+          type: string
+          format: email
+          description: Adresse email valide
+
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Compte créé avec succès"
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    LoginRequest:
       type: object
       required:
         - username
@@ -104,5 +479,208 @@ components:
       properties:
         username:
           type: string
+          description: Nom d'utilisateur
         password:
           type: string
+          description: Mot de passe
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token d'authentification
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    UserProfile:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+          description: URL de l'avatar
+        status:
+          type: string
+          enum: [online, offline, in_game]
+        stats:
+          type: object
+          properties:
+            wins:
+              type: integer
+              minimum: 0
+            losses:
+              type: integer
+              minimum: 0
+            rank:
+              type: integer
+              minimum: 0
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        avatar:
+          type: string
+        status:
+          type: string
+          enum: [online, offline, in_game]
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message d'erreur détaillé
+        code:
+          type: string
+          description: Code d'erreur unique
+
+    Channel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum: [public, private, direct]
+        members:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateChannelRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [public, private]
+        members:
+          type: array
+          items:
+            type: string
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        channelId:
+          type: string
+        sender:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateMessageRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 2000
+
+    Friend:
+      type: object
+      properties:
+        username:
+          type: string
+        status:
+          type: string
+          enum: [online, offline, in_game]
+        lastSeen:
+          type: string
+          format: date-time
+
+    FriendRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        sender:
+          type: string
+        receiver:
+          type: string
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateFriendRequest:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
+
+    MatchmakingRequest:
+      type: object
+      properties:
+        gameMode:
+          type: string
+          enum: [casual, ranked]
+        skillLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+
+    MatchmakingResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [searching, found]
+        estimatedTime:
+          type: integer
+          description: Temps d'attente estimé en secondes
+        matchId:
+          type: string
+          description: Identifiant de la partie trouvée (si status = found)
+
+    Match:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [waiting, in_progress, finished]
+        players:
+          type: array
+          items:
+            type: object
+            properties:
+              username:
+                type: string
+              score:
+                type: integer
+        winner:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
