@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
-import {userData, friendTab, friendList, Message} from '../utils/interface';
-import {getAvatar} from '../utils/getAvatar';
+import {userData, friendTab, friendList, Message} from '../../utils/interface';
+import {getAvatar} from '../../utils/getAvatar';
 
 const Prisma = new PrismaClient()
 

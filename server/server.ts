@@ -1,10 +1,11 @@
 // server/server.ts
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
-import profileRoute from './routes/profile';
+import profileRoute from './routes/profile/profile';
 import health from './routes/health';
 import chat from './routes/chat';
-import { registerRoute, loginRoute } from './routes/connection';
+import loginRoute from './routes/auth/login';
+import registerRoute from './routes/auth/register';
 import { Sevillana } from 'next/font/google';
 
 const loggerConfig = {
