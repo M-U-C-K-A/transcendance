@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { login } from '../../request/auth/login'
-import { connectionSchema } from '../../utils/interface'
+import  login from '../../request/auth/login'
 import { connectionData } from '../../utils/interface'
 
 export default async function loginRoute(server: FastifyInstance) {
@@ -8,19 +7,16 @@ export default async function loginRoute(server: FastifyInstance) {
 	const { data } = request.query as { data: connectionData }
 
 	try {
-		connectionSchema.parse(data)
-	} catch (err) {
-		console.log(data.email, data.username, data.password)
-		console.log('Data not conform in loginRoute')
-		return reply.code(400).send({ error: 'Invalid data' })
-	}
-
-	try {
 		await login(data)
 		return reply.code(202).send({ message: 'User logged successfully' })
-	} catch (err) {
-		console.log('Could not register the user')
-		return reply.code(500).send({ error: 'Could not log the user' })
+	} catch (err: any) {
+		if (err.message === 'This account does not exist') {
+			return reply.code(400).send({ error: 'This account does not exist' })
+		} else if (err.message === 'Wrong password') {
+			return reply.code(400).send({ error: 'Wrong password' })
+		}
+
+		return reply.code(500).send({ error: 'Internal server error' })
 	}
 })
 }
