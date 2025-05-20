@@ -41,7 +41,7 @@ export interface friendList{
 
 export interface connectionData{
 	username: string;
-	password: string;
+	pass: string;
 	email: string;
 }
 
