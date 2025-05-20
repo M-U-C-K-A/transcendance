@@ -4,7 +4,7 @@ import { connectionData } from '../../utils/interface'
 
 export default async function loginRoute(server: FastifyInstance) {
 	server.post('/auth/login', async (request, reply) => {
-	const { data } = request.query as { data: connectionData }
+	const data = request.body as connectionData
 
 	try {
 		await login(data)

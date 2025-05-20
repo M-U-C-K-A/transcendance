@@ -21,7 +21,7 @@ export default async function register(data: connectionData) {
 		}
 	}
 
-	const hashedPass = await bcrypt.hash(data.password, 10)
+	const hashedPass = await bcrypt.hash(data.pass, 10)
 
 	const defaultBio = "👐 Hello i'm new here"
 	await Prisma.$executeRaw`

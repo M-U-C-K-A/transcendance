@@ -6,7 +6,6 @@ import health from './routes/health';
 import chat from './routes/chat';
 import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
-import { Sevillana } from 'next/font/google';
 
 const loggerConfig = {
 	transport: {
