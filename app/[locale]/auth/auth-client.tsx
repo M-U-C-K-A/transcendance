@@ -79,8 +79,8 @@ export function LoginPage() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Amber%27sDuckFace.jpg/640px-Amber%27sDuckFace.jpg"
-          alt="Amber's DuckFace"
+          src="https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/427/1000x0/duck-face-1586953061-AqcWNYDuU5.jpg"
+          alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* <PongGame /> */}
