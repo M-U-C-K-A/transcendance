@@ -19,14 +19,24 @@ export function Register({
     e.preventDefault();
     setError('');
 
+    console.log('Valeurs envoyées:', {
+      email,
+      username,
+      password
+    });
     try {
-      const response = await fetch('http://localhost:3001/register', {
+      const response = await fetch('/api/auth/register', {  // Notez le /api devant
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ username, password, email }),
       });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Erreur lors de l\'inscription');
+      }
 
       const data = await response.json();
 
@@ -40,7 +50,6 @@ export function Register({
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
   };
-
   return (
     <form className={cn("flex flex-col gap-6", className)} onSubmit={handleSubmit} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -108,3 +117,4 @@ export function Register({
     </form>
   );
 }
+

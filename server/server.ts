@@ -23,10 +23,11 @@ const loggerConfig = {
 
 const app = Fastify({ logger: loggerConfig });
 
-app.register(require('@fastify/cors'), {
-	origin: 'http://localhost:3000', // Autorisez seulement votre frontend
+app.register(cors, {
+	origin: true, // Autorisez seulement votre frontend
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
-	credentials: true // Si vous utilisez des cookies/sessions
+	credentials: true, // Si vous utilisez des cookies/sessions
+	exposedHeaders: ['Authorization'], // Headers exposés
   })
 
 async function main() {
@@ -48,3 +49,4 @@ async function main() {
 	});
 }
 main();
+
