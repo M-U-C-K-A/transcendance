@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/chat/:path*",
-        destination: "http://localhost:3001/chat/:path*"
+        destination: "http://backend:3001/chat/:path*"
       },
       {
         source: "/api/chat/send",
@@ -13,11 +13,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/profile/:path*",
-        destination: "http://backend:3001/profile/:path*"
+        destination: "http://localhost:3001/profile/:path*"
       },
       {
         source: "/api/auth/:path*",
-        destination: "http://localhost:3001/auth/:path*"
+        destination: "http://backend:3001/auth/:path*"
       }
     ]
   },

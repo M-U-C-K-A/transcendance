@@ -16,10 +16,10 @@ export function Header({ locale }: HeaderProps) {
   return (
     <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
       <div className="container mx-auto py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
+        <Link href={`/`} className="flex items-center gap-2">
           <Activity className="h-6 w-6 text-primary" />
           <h1 className="text-xl font-bold">{t('common.appName')}</h1>
-        </div>
+        </Link>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
             <Settings className="h-5 w-5" />
@@ -44,4 +44,4 @@ export function Header({ locale }: HeaderProps) {
       </div>
     </header>
   )
-} 
+}

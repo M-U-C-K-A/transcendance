@@ -6,11 +6,18 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { z } from 'zod';
+
+// 💡 Schéma de validation Zod
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Email invalide' }),
+  password: z.string().min(6, { message: 'Mot de passe trop court (min. 6 caractères)' }),
+});
 
 export function Login({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"form">) {
+}: React.ComponentPropsWithoutRef<'form'>) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +26,14 @@ export function Login({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // ✅ Valider avec Zod avant d’envoyer
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const firstError = result.error.issues[0]?.message || 'Champs invalides';
+      setError(firstError);
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:3001/login', {
@@ -48,9 +63,7 @@ export function Login({
         process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
       }&redirect_uri=${encodeURIComponent(
         process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || 'http://localhost:3001/auth/google/callback'
-      )}&response_type=code&scope=${encodeURIComponent(
-        'email profile'
-      )}`;
+      )}&response_type=code&scope=${encodeURIComponent('email profile')}`;
 
       window.location.href = googleAuthUrl;
     } catch (err) {
@@ -59,10 +72,10 @@ export function Login({
   };
 
   return (
-    <form className={cn("flex flex-col gap-6", className)} onSubmit={handleSubmit} {...props}>
+    <form className={cn('flex flex-col gap-6', className)} onSubmit={handleSubmit} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Connectez-vous à votre compte</h1>
-        <p className="text-balance text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Entrez votre email pour vous connecter à votre compte
         </p>
       </div>
@@ -121,4 +134,4 @@ export function Login({
       </div>
     </form>
   );
-} 
+}

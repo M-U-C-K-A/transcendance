@@ -86,7 +86,7 @@ const Sparkle = ({ delay = 0 }) => {
   const size = Math.random() * 4 + 1
   const x = Math.random() * 100
   const y = Math.random() * 100
-  
+
   return (
     <motion.div
       className="absolute rounded-full bg-white"
@@ -147,7 +147,7 @@ const Star = ({ x, y, size = 2, delay = 0 }) => {
 // Composant pour les lignes du quadrillage
 const GridLine = ({ isVertical = false, index = 0 }) => {
   const pulseDelay = index * 0.1
-  
+
   return (
     <motion.div
       className={`${isVertical ? "border-r" : "border-b"} border-white h-full w-full`}
@@ -155,14 +155,14 @@ const GridLine = ({ isVertical = false, index = 0 }) => {
       animate={{
         opacity: [0.1, 0.2, 0.1],
         boxShadow: [
-          isVertical 
-            ? "1px 0 2px rgba(255,255,255,0.1)" 
+          isVertical
+            ? "1px 0 2px rgba(255,255,255,0.1)"
             : "0 1px 2px rgba(255,255,255,0.1)",
-          isVertical 
-            ? "1px 0 5px rgba(255,255,255,0.3)" 
+          isVertical
+            ? "1px 0 5px rgba(255,255,255,0.3)"
             : "0 1px 5px rgba(255,255,255,0.3)",
-          isVertical 
-            ? "1px 0 2px rgba(255,255,255,0.1)" 
+          isVertical
+            ? "1px 0 2px rgba(255,255,255,0.1)"
             : "0 1px 2px rgba(255,255,255,0.1)",
         ],
       }}
@@ -189,7 +189,7 @@ export default function NotFound() {
 
   // Générer des bulles colorées avec durée prolongée
   const bubbles = Array.from({ length: 20 }).map((_, i) => <ColorBubble key={i} delay={i * 1.5} />)
-  
+
   // Générer des étincelles
   const sparkles = Array.from({ length: 30 }).map((_, i) => <Sparkle key={i} delay={i * 0.2} />)
 
@@ -292,18 +292,18 @@ export default function NotFound() {
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-black text-white overflow-hidden">
       {/* Colored bubbles background with longer duration */}
       {bubbles}
-      
+
       {/* Sparkles effect */}
       {sparkles}
-      
+
       {/* Stars */}
       {stars.map((star) => (
-        <Star 
-          key={star.id} 
-          x={star.x} 
-          y={star.y} 
-          size={star.size} 
-          delay={star.delay} 
+        <Star
+          key={star.id}
+          x={star.x}
+          y={star.y}
+          size={star.size}
+          delay={star.delay}
         />
       ))}
 
@@ -326,7 +326,7 @@ export default function NotFound() {
             key={i}
             className="h-4 bg-white"
             initial={{ opacity: 0 }}
-            animate={{ 
+            animate={{
               opacity: [0.3, 0.8, 0.3],
               boxShadow: [
                 "0 0 2px rgba(255,255,255,0.3)",
@@ -508,14 +508,14 @@ export default function NotFound() {
               ease: "easeInOut",
             }}
           />
-          
+
           {/* Sparkle effects around 404 */}
           {Array.from({ length: 8 }).map((_, i) => {
             const angle = (i / 8) * Math.PI * 2
             const radius = 150
             const x = Math.cos(angle) * radius
             const y = Math.sin(angle) * radius
-            
+
             return (
               <motion.div
                 key={i}
@@ -585,18 +585,18 @@ export default function NotFound() {
             />
             <Home size={18} className="group-hover:scale-110 transition-transform relative z-10" />
             <span className="relative z-10">Accueil</span>
-            
+
             {/* Button sparkle effect */}
             <motion.div
               className="absolute top-0 left-0 w-full h-full pointer-events-none"
-              animate={{ 
+              animate={{
                 background: [
                   "radial-gradient(circle at 50% -20%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                   "radial-gradient(circle at 50% 120%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                 ]
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 1.5,
                 repeat: Number.POSITIVE_INFINITY,
                 repeatType: "reverse"
               }}
@@ -614,18 +614,18 @@ export default function NotFound() {
             />
             <ArrowLeft size={18} className="group-hover:translate-x-[-3px] transition-transform relative z-10" />
             <span className="relative z-10">Retour</span>
-            
+
             {/* Button sparkle effect */}
             <motion.div
               className="absolute top-0 left-0 w-full h-full pointer-events-none"
-              animate={{ 
+              animate={{
                 background: [
                   "radial-gradient(circle at 30% -20%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                   "radial-gradient(circle at 70% 120%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                 ]
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 1.5,
                 repeat: Number.POSITIVE_INFINITY,
                 repeatType: "reverse",
                 delay: 0.5
@@ -650,18 +650,18 @@ export default function NotFound() {
               <RefreshCw size={18} />
             </motion.div>
             <span className="relative z-10">Rejouer</span>
-            
+
             {/* Button sparkle effect */}
             <motion.div
               className="absolute top-0 left-0 w-full h-full pointer-events-none"
-              animate={{ 
+              animate={{
                 background: [
                   "radial-gradient(circle at 70% -20%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                   "radial-gradient(circle at 30% 120%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 60%)",
                 ]
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 1.5,
                 repeat: Number.POSITIVE_INFINITY,
                 repeatType: "reverse",
                 delay: 1
@@ -679,8 +679,8 @@ export default function NotFound() {
             opacity: 1,
             color: ["#ff5757", "#ffffff", "#ff5757"],
             textShadow: [
-              "0 0 5px rgba(255,87,87,0.5)", 
-              "0 0 15px rgba(255,87,87,0.8)", 
+              "0 0 5px rgba(255,87,87,0.5)",
+              "0 0 15px rgba(255,87,87,0.8)",
               "0 0 5px rgba(255,87,87,0.5)"
             ],
           }}
@@ -698,8 +698,8 @@ export default function NotFound() {
             opacity: 1,
             color: ["#5757ff", "#ffffff", "#5757ff"],
             textShadow: [
-              "0 0 5px rgba(87,87,255,0.5)", 
-              "0 0 15px rgba(87,87,255,0.8)", 
+              "0 0 5px rgba(87,87,255,0.5)",
+              "0 0 15px rgba(87,87,255,0.8)",
               "0 0 5px rgba(87,87,255,0.5)"
             ],
           }}
@@ -743,7 +743,7 @@ export default function NotFound() {
       ))}
 
       {/* Retro scanlines effect with animation */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 pointer-events-none bg-scanlines"
         animate={{
           opacity: [0.03, 0.06, 0.03]
