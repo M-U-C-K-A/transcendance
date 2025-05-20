@@ -20,24 +20,25 @@ const loggerConfig = {
 	level: 'info' // Vous pouvez changer le niveau (debug, info, warn, error)
 };
 
-const server = Fastify({ logger: loggerConfig });
+const app = Fastify({ logger: loggerConfig });
 
-server.register(require('@fastify/cors'), {
-	origin: 'http://localhost:3000', // Autorisez seulement votre frontend
+app.register(cors, {
+	origin: true, // Autorisez seulement votre frontend
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
-	credentials: true // Si vous utilisez des cookies/sessions
+	credentials: true, // Si vous utilisez des cookies/sessions
+	exposedHeaders: ['Authorization'], // Headers exposés
   })
 
 async function main() {
 	const port = 3001;
 
-	await server.register(profileRoute);
-	await server.register(health);
-	await server.register(registerRoute);
-	await server.register(loginRoute);
-	await server.register(chat)
+	await app.register(profileRoute);
+	await app.register(health);
+	await app.register(registerRoute);
+	await app.register(loginRoute);
+	await app.register(chat)
 
-	server.listen({ port, host: '0.0.0.0' }, (err, address) => {
+	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
 			console.log(err);
 			process.exit(1);
@@ -46,3 +47,4 @@ async function main() {
 	});
 }
 main();
+
