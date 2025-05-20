@@ -27,7 +27,7 @@ app.register(cors, {
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
 	credentials: true, // Si vous utilisez des cookies/sessions
 	exposedHeaders: ['Authorization'], // Headers exposés
-  })
+})
 
 async function main() {
 	const port = 3001;
