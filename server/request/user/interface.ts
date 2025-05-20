@@ -12,3 +12,10 @@ export interface userData{
 	pointScored: number;
 	pointConcede: number;
 }
+
+export interface editProfileInfo{
+	username: string,
+	newAlias: string,
+	newBio: string,
+	newAvatar: string,
+}

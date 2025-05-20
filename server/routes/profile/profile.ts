@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../request/userProfile/getUserInfo'
+import getUserInfo from '../../request/user/getUserInfo'
 
 export default async function profileRoute(server: FastifyInstance) {
 	server.get('/profile/:username', async function (request, reply) {
@@ -13,7 +13,7 @@ export default async function profileRoute(server: FastifyInstance) {
 
 	try {
 		const result = await getUserInfo(username)
-		return (reply.send(result))
+		return (reply.code(200).send(result))
 	} catch (err) {
 		console.log('No user found in profileRoute')
 		reply.code(404).send({ error: 'User not found' })
