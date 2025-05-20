@@ -6,7 +6,6 @@ import health from './routes/health';
 import chat from './routes/chat';
 import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
-import { Sevillana } from 'next/font/google';
 
 const loggerConfig = {
 	transport: {
@@ -21,16 +20,15 @@ const loggerConfig = {
 	level: 'info' // Vous pouvez changer le niveau (debug, info, warn, error)
 };
 
-const app = Fastify({ logger: loggerConfig });
+const server = Fastify({ logger: loggerConfig });
 
-app.register(require('@fastify/cors'), {
+server.register(require('@fastify/cors'), {
 	origin: 'http://localhost:3000', // Autorisez seulement votre frontend
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
 	credentials: true // Si vous utilisez des cookies/sessions
   })
 
 async function main() {
-	const server = Fastify();
 	const port = 3001;
 
 	await server.register(profileRoute);

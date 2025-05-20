@@ -5,28 +5,26 @@ import bcrypt from 'bcrypt'
 const Prisma = new PrismaClient()
 
 export default async function login(data: connectionData) {
-	console.log("test1")
-	const getRequest = await Prisma.$queryRaw<connectionData[]>`
-	SELECT email, pass
+	const existingUser = await Prisma.$queryRaw<connectionData[]>`
+	SELECT pass, email
 	FROM "User"
 	WHERE email = ${data.email}`
 
-	if (getRequest[0]) {
-		if (!getRequest[0].email) {
+	if (existingUser[0]) {
+		if (!existingUser[0].email) {
 			console.log('This account does not exist');
-			throw Error ('This account does not exist')
+			throw new Error ('This account does not exist')
 		}
 	}
 
-	console.log("test2")
-	const goodPass = await bcrypt.compare(data.password, getRequest[0].password)
+	const goodPass = await bcrypt.compare(data.pass, existingUser[0].pass)
 
 	if (goodPass) {
-		console.log(`User ${getRequest[0].username} has been logged`)
+		console.log(`User ${existingUser[0].username} has been logged`)
 		return (true)
 	}
 	else {
 		console.log('Wrong password');
-		throw Error ('Wrong password')
+		throw new Error ('Wrong password')
 	}
 }
