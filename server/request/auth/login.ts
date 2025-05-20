@@ -1,11 +1,11 @@
 import {PrismaClient} from '@prisma/client'
-import {connectionData} from '../../utils/interface'
+import {loginData} from '../../utils/interface'
 import bcrypt from 'bcrypt'
 
 const Prisma = new PrismaClient()
 
-export default async function login(data: connectionData) {
-	const existingUser = await Prisma.$queryRaw<connectionData[]>`
+export default async function login(data: loginData) {
+	const existingUser = await Prisma.$queryRaw<loginData[]>`
 	SELECT pass, email
 	FROM "User"
 	WHERE email = ${data.email}`
@@ -20,7 +20,7 @@ export default async function login(data: connectionData) {
 	const goodPass = await bcrypt.compare(data.pass, existingUser[0].pass)
 
 	if (goodPass) {
-		console.log(`User ${existingUser[0].username} has been logged`)
+		console.log(`User has been logged`)
 		return (true)
 	}
 	else {
