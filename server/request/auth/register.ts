@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 
 const Prisma = new PrismaClient()
 
-export async function register(data: connectionData) {
+export default async function register(data: connectionData) {
 	const existingUser = await Prisma.$queryRaw<connectionData[]>`
 	SELECT username, email
 	FROM "User"
@@ -23,9 +23,10 @@ export async function register(data: connectionData) {
 
 	const hashedPass = await bcrypt.hash(data.password, 10)
 
+	const defaultBio = "👐 Hello i'm new here"
 	await Prisma.$executeRaw`
-	INSERT INTO "User" (username, email, pass)
-	VALUES (${data.username}, ${data.email}, ${hashedPass})`
+	INSERT INTO "User" (username, email, pass, alias, bio)
+	VALUES (${data.username}, ${data.email}, ${hashedPass}, ${data.username}, ${defaultBio})`
 
 	await Prisma.$executeRaw`
 	INSERT INTO "Achievement"(id)

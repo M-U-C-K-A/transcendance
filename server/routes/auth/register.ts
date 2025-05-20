@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { register } from '../../request/auth/register'
+import  register from '../../request/auth/register'
 import { connectionSchema } from '../../utils/interface'
 import { connectionData } from '../../utils/interface'
 
@@ -13,7 +13,6 @@ export default async function registerRoute(server: FastifyInstance) {
 		console.log('Data not conform in registerRoute')
 		return reply.code(400).send({ error: 'Invalid data' })
 	}
-	console.log(data.email, data.username, data.password)
 
 	try {
 		await register(data)
