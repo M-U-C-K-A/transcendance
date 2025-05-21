@@ -218,7 +218,7 @@ export default function PongGame() {
   }, [ballX, ballY, leftPaddleY, rightPaddleY, ballVelocity, containerSize, gameActive])
 
   return (
-    <div ref={containerRef} className="relative w-full h-full bg-[#1e1333] rounded-lg shadow-xl overflow-hidden">
+    <div ref={containerRef} className="relative w-full h-full bg-foreground/10 rounded-lg shadow-xl overflow-hidden">
       {/* Score display */}
       <div className="absolute top-4 left-0 right-0 flex justify-center text-white text-2xl font-sans">
         <span className="mx-2">{score.left.toString().padStart(2, "0")}</span>

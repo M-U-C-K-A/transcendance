@@ -7,9 +7,10 @@ import { GameTabs } from "@/components/dashboard/GameTabs"
 import { ChatSection } from "@/components/dashboard/ChatSection"
 
 export default function DashboardClient({ locale }: { locale: string }) {
+  const user = "michaelsnow";
   return (
     <div className="bg-background min-h-screen">
-      <Header locale={locale} />
+      <Header locale={locale} user={user} />
 
       <div className="container mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Sidebar */}

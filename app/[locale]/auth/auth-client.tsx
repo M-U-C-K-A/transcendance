@@ -5,6 +5,7 @@ import { Register } from "@/components/auth/Register";
 import { useState } from "react";
 import PongGame from "@/components/landing/PongGame";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -44,7 +45,7 @@ export function LoginPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2 font-medium">
             ft_transcendence
-          </Link>
+          </Link><ThemeToggle />
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
@@ -79,7 +80,13 @@ export function LoginPage() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/427/1000x0/duck-face-1586953061-AqcWNYDuU5.jpg"
+          src={
+            Math.random() < 0.33
+              ? "https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg"
+              : Math.random() < 0.8
+              ? "https://cdn.intra.42.fr/users/71cfca25335ff0dd421f5d6a4377dbd9/rbardet-.jpg"
+              : "https://cdn.intra.42.fr/users/a2a7276c3000e4c1180a0f7c975b3e32/hdelacou.jpg"
+          }
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />
