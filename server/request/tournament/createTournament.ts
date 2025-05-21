@@ -5,8 +5,8 @@ import { getAvatar }              from '@/server/utils/getAvatar'
 
 const prisma = new PrismaClient()
 
-export async function createTournament(hostUsername: string, slotCount = 4
-): Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
+export async function createTournament(hostUsername: string, tournamentName: string, slotCount = 4): 
+Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
 
   const [h] = await prisma.$queryRaw<userData[]>`
     SELECT id, avatar
@@ -18,9 +18,9 @@ export async function createTournament(hostUsername: string, slotCount = 4
 
 
   const [t] = await prisma.$queryRaw<TournamentData[]>`
-    INSERT INTO "Tournament" ("hostId","slot")
-    VALUES (${h.id}, ${slotCount})
-    RETURNING id, "hostId", "slot", "TDate" AS "tDate"
+    INSERT INTO "Tournament" ("hostId","tournamentName","slot")
+    VALUES (${h.id}, ${tournamentName}, ${slotCount})
+    RETURNING id, "hostId", "tournamentName", "slot", "TDate"
   `
   if (!t) throw new Error('TOURNAMENT CREATION FAILED')
 

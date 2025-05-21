@@ -1,5 +1,14 @@
 import {z} from 'zod'
 
+export interface TournamentData {
+  id: number;
+  hostId: number;
+  tournamentName: string;
+  slot: number;
+  TDate: Date;
+}
+
+
 export interface userData{
 	id: number;
 	username: string;
