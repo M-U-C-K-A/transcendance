@@ -52,7 +52,12 @@ const rankingData = [
   { rank: 10, name: "Ivy", elo: 1400, matches: 55, winRate: "45%" },
 ]
 
-export default function StatsPage({ locale }: { locale: string }) {
+interface StatsPageProps {
+  locale: string
+  user: string
+}
+
+export default function StatsPage({ locale, user = "michaelsnow" }: StatsPageProps) {
   const [activeTab, setActiveTab] = useState("elo")
   const [timeRange, setTimeRange] = useState("year")
 
@@ -67,7 +72,7 @@ export default function StatsPage({ locale }: { locale: string }) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <Header locale={locale} />
+      <Header locale={locale} user={user} />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
