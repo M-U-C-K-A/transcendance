@@ -7,7 +7,8 @@ import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
 import path from 'path';
 import fs from 'fs';
-import { FastifyRequest, FastifyReply } from 'fastify';
+import getMessageRoute from './routes/chat/getMessage';
+import sendMessageRoute from './routes/chat/sendMessage';
 import { loggerConfig } from './config/logger';
 
 // Génère un nom de fichier de log avec timestamp
@@ -56,6 +57,8 @@ async function main() {
     await app.register(registerRoute);
     await app.register(loginRoute);
     await app.register(chat);
+    await app.register(getMessageRoute)
+    await app.register(sendMessageRoute)
 
     app.listen({ port, host: '0.0.0.0' }, (err, address) => {
         if (err) {

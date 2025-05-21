@@ -1,30 +1,26 @@
 import { PrismaClient } from '@prisma/client'
+import { messageInfo, id } from './interface'
+import { matchInfo } from '../match/interface'
 
 const Prisma = new PrismaClient()
 
+
 export default async function getMessage(username: string) {
-  try {
-	const messages = await Prisma.$queryRaw`
-	  SELECT
-		m.*,
-		sender.username as sender_username,
-		recipient.username as recipient_username
-	  FROM
-		Message m
-	  JOIN
-		User sender ON m.senderId = sender.id
-	  LEFT JOIN
-		User recipient ON m.recipientId = recipient.id
-	  WHERE
-		m.isGeneral = true
-		OR sender.username = ${username}
-		OR recipient.username = ${username}
-	  ORDER BY
-		m.sendAt DESC
-	`
-	return messages
-  } catch (error) {
-	console.error("Error fetching messages:", error)
-	throw error
-  }
+	const userId = await Prisma.$queryRaw<id[]>`
+	SELECT id FROM "User"
+	WHERE username = ${username}`
+
+	if (!userId[0].id) {
+		console.log("Coulndt find user in getMessage")
+		throw new Error("Coulndt find user in getMessage")
+	}
+
+	const messages = await Prisma.$queryRaw<matchInfo[]>`
+	SELECT * from "Message"
+	WHERE senderId = ${userId[0].id}
+	OR recipientId = ${userId[0].id}
+	OR isGeneral = TRUE
+	ORDER BY "sendAt" ASC`
+
+	return (messages)
 }
