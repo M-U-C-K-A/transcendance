@@ -1,16 +1,38 @@
+import { sendMessageData, id } from '@/server/request/chat/interface';
 import { PrismaClient } from '@prisma/client'
-import { AwardIcon } from 'lucide-react'
 
 const Prisma = new PrismaClient()
 
-export default async function sendMessage(senderName: string, recipientName: string, content: string) {
-	const message = await Prisma.$queryRaw`
-	INSERT INTO "Message" ("senderId", "recipientId", "content", "status")
-	SELECT sender.id, recipient.id, $3,
-	CASE WHEN $2 IS NULL THEN TRUE ELSE FALSE END
-	FROM "User" AS sender
-	LEFT JOIN "User" AS recipient ON recipient.username = $2
-	WHERE sender.username = $1`;
+export default async function sendMessage(data: sendMessageData) {
+	console.log("test1")
+	const senderId = await Prisma.$queryRaw<id[]>`
+  	SELECT id FROM "User" WHERE username = ${data.senderName}`
+	console.log("test2")
+	const recipientId = await Prisma.$queryRaw<id[]>`
+  	SELECT id FROM "User" WHERE username = ${data.recipientName}`
+	console.log("test3")
 
-	return (message)
+	if (senderId[0]) {
+		if (!senderId[0].id) {
+			console.log("User not found in sendMessage")
+			throw new Error("User not found in sendMessage")
+		}
+	}
+	console.log("test4")
+
+	let isGeneral: Boolean = true;
+	let recipient: number | null = null
+	if (recipientId[0]) {
+		if (recipientId[0].id) {
+			recipient = recipientId[0].id
+			isGeneral = false
+		}
+	}
+	console.log("test5")
+
+	await Prisma.$queryRaw`
+	INSERT INTO "Message" ("senderId", "recipientId", "content", "isGeneral")
+	VALUES (${senderId[0].id}, ${recipient}, ${data.content}, ${isGeneral})`
+
+	return (true)
 }
