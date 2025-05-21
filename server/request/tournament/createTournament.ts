@@ -5,24 +5,34 @@ import { getAvatar }              from '@/server/utils/getAvatar'
 
 const prisma = new PrismaClient()
 
-export async function createTournament(hostUsername: string, slotCount = 4
-): Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
+export async function createTournament(hostUsername: string, tournamentName: string, slotCount = 4): 
+Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
 
   const [h] = await prisma.$queryRaw<userData[]>`
     SELECT id, avatar
     FROM "User"
     WHERE username = ${hostUsername}
-    LIMIT 1
   `
-  if (!h) throw new Error('USER NOT FOUND')
+  if (!h)
+  {
+    console.log('User not found');
+    throw new Error('User not found');
+  }
+  
 
 
   const [t] = await prisma.$queryRaw<TournamentData[]>`
-    INSERT INTO "Tournament" ("hostId","slot")
-    VALUES (${h.id}, ${slotCount})
-    RETURNING id, "hostId", "slot", "TDate" AS "tDate"
+    INSERT INTO "Tournament" ("hostId","tournamentName","slot")
+    VALUES (${h.id}, ${tournamentName}, ${slotCount})
+    RETURNING id, "hostId", "tournamentName", "slot", "TDate"
   `
-  if (!t) throw new Error('TOURNAMENT CREATION FAILED')
+  if (!t)
+  {
+    console.log('Tournament creation failed');
+    throw new Error('Tournament creation failed');
+  } 
+
+
 
   return { tournament: t, avatar: getAvatar(h) }
 }
