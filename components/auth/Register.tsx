@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -48,12 +49,17 @@ export function Register({
     }
 
     try {
+
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(result.data),
+        body: JSON.stringify({
+          email: result.data.email,
+          username: result.data.username,
+          pass: result.data.password,
+        }),
       });
 
       // Check if response is JSON
@@ -134,3 +140,4 @@ export function Register({
     </form>
   );
 }
+

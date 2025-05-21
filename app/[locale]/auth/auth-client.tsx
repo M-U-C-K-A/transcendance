@@ -84,7 +84,8 @@ export function LoginPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* <PongGame /> */}
-        </div>
+      </div>
     </div>
   );
 }
+

@@ -53,6 +53,7 @@ model User {
 model Friends {
 	id1	Int
 	id2	Int
+	status Boolean @default(false)
 
 	user1	User @relation("User1Friends", fields: [id1], references: [id])
 	user2	User @relation("User2Friends", fields: [id2], references: [id])

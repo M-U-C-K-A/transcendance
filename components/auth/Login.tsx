@@ -7,8 +7,9 @@ import { Label } from '../ui/label';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { z } from 'zod';
+import bcrypt from 'bcryptjs';
+import { Eye, EyeOff } from 'lucide-react'; // Import des icônes d'œil
 
-// 💡 Schéma de validation Zod
 const loginSchema = z.object({
   email: z.string().email({ message: 'Email invalide' }),
   password: z.string().min(6, { message: 'Mot de passe trop court (min. 6 caractères)' }),
@@ -21,13 +22,13 @@ export function Login({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // État pour afficher/cacher le mot de passe
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // ✅ Valider avec Zod avant d’envoyer
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const firstError = result.error.issues[0]?.message || 'Champs invalides';
@@ -36,12 +37,12 @@ export function Login({
     }
 
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, pass:password }),
       });
 
       const data = await response.json();
@@ -51,7 +52,7 @@ export function Login({
       }
 
       localStorage.setItem('token', data.token);
-      router.push('/');
+      router.push(`/en/dashboard`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
@@ -106,13 +107,22 @@ export function Login({
               Mot de passe oublié ?
             </a>
           </div>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
         <Button type="submit" className="w-full">
           Se connecter
