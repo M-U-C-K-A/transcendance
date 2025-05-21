@@ -3,30 +3,49 @@ import { userData }     from '@/server/utils/interface'
 
 const prisma = new PrismaClient()
 
-export async function joinTournament(
-  username: string,
-  tournamentId: number
-): Promise<void> {
-  const [u] = await prisma.$queryRaw<userData[]>`
-    SELECT id
-    FROM "User"
-    WHERE username = ${username}
-    LIMIT 1
-  `
-  if (!u) throw new Error('USER NOT FOUND')
+export async function joinTournament(username: string, tournamentName: string):
+Promise<void> {
 
-  const [info] = await prisma.$queryRaw<{ slot: number; count: number }[]>`
-    SELECT t.slot,
-      (SELECT COUNT(*) FROM "TournamentHistory" WHERE "tournamentId" = ${tournamentId}) AS count
-    FROM "Tournament" AS t
-    WHERE t.id = ${tournamentId}
-    LIMIT 1
+  const [u] = await prisma.$queryRaw<userData[]>`
+    SELECT id 
+    FROM "User" 
+    WHERE username = ${username}
   `
-  if (!info)          throw new Error('TOURNAMENT NOT FOUND')
-  if (info.count >= info.slot) throw new Error('TOURNAMENT FULL')
+  if (!u)
+  {
+    console.log('User not found');
+    throw new Error('User not found');
+  }
+
+
+
+  const [tournament] = await prisma.$queryRaw<{ id: number; slot: number }[]>`
+    SELECT id, slot 
+    FROM "Tournament"
+    WHERE "tournamentName" = ${tournamentName}
+  `
+  if (!tournament){
+    console.log('Tournament not found in joinTournament');
+    throw new Error('Tournament not found in joinTournament');
+  } 
+
+
+
+  const [info] = await prisma.$queryRaw<{ count: number }[]>`
+    SELECT COUNT(*) AS count 
+    FROM "TournamentParticipants" 
+    WHERE "tournamentId" = ${tournament.id}
+  `
+  if (info.count >= tournament.slot)
+  {
+    console.log('Tournament room already full');
+    throw new Error('Tournament room already full');
+  } 
+
+
 
   await prisma.$executeRaw`
-    INSERT INTO "TournamentHistory" ("userId","tournamentId")
-    VALUES (${u.id}, ${tournamentId})
+    INSERT INTO "TournamentParticipants" ("userId", "tournamentId")
+    VALUES (${u.id}, ${tournament.id})
   `
 }
