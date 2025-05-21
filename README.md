@@ -39,3 +39,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Docker commands
 
 docker compose up --build
+
+docker system prune -a
+docker images
+docker rm -f
+docker ps -a
+
+
+
+Suppr volum casse :
+
+docker-compose down
+docker volume rm transcend_node_modules
+docker-compose up --build
