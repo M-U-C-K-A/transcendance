@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "generate-prisma": "prisma generate",
-    "dev": "next dev --turbopack --experimental-https",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

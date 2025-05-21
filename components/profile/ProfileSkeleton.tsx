@@ -6,7 +6,7 @@ export function ProfileSkeleton({ locale }: { locale: string }) {
   return (
     <div className="bg-background min-h-screen">
       {/* Header Skeleton */}
-      <Header locale={locale} />
+      <Header locale={locale} user="michaelsnow" />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">

@@ -8,9 +8,10 @@ import { useI18n } from "@/i18n-client"
 
 interface HeaderProps {
   locale: string
+  user: string
 }
 
-export function Header({ locale }: HeaderProps) {
+export function Header({ locale, user }: HeaderProps) {
   const t = useI18n()
 
   return (
@@ -37,8 +38,8 @@ export function Header({ locale }: HeaderProps) {
             </Button>
           </Link>
           <Avatar>
-            <AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${user}`} />
+            <AvatarFallback>{user.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>
       </div>
