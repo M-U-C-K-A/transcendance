@@ -225,7 +225,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
         if (value === "public") setSelectedPrivateUser(null)
       }}
     >
-      <TabsList className="grid w-full grid-cols-2">
+      <TabsList className="grid w-full grid-cols-2 mb-4">
         <TabsTrigger value="public">Public</TabsTrigger>
         <TabsTrigger value="private">Privé</TabsTrigger>
       </TabsList>
