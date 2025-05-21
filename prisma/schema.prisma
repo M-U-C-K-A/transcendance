@@ -36,7 +36,7 @@ model User {
 	hostedTournaments	Tournament[]		@relation("HostedTournaments")
 	tournamentWins		Tournament[]		@relation("TournamentWins")
 	matchHistory		MatchHistory[]
-	tournamentHistory	TournamentHistory[]
+	TournamentParticipants	TournamentParticipants[]
 	achievements		Achievement?
 	friendsAsUser1		Friends[]			@relation("User1Friends")
 	friendsAsUser2		Friends[]			@relation("User2Friends")
@@ -106,20 +106,21 @@ model Achievement {
 
 
 model Tournament {
-	id			Int			@id	@default(autoincrement())
-	hostId		Int
-	slot		Int			@default(4)
-	winnerId	Int?
-	tDate		DateTime	@default(now()) @map("TDate")
+	id					  Int			@id	@default(autoincrement())
+	hostId				  Int
+	tournamentName        String  
+	slot				  Int			@default(4)
+	winnerId			  Int?
+	tDate				  DateTime		@default(now()) @map("TDate")
 
 	host			User			@relation("HostedTournaments", fields: [hostId], references: [id])
 	winner			User?			@relation("TournamentWins", fields: [winnerId], references: [id])
-	participants	TournamentHistory[]
+	participants	TournamentParticipants[]
 
 	@@map("Tournament")
 }
 
-model TournamentHistory {
+model TournamentParticipants {
 	userId			Int
 	tournamentId	Int
 
@@ -127,7 +128,7 @@ model TournamentHistory {
 	tournament	Tournament	@relation(fields: [tournamentId], references: [id])
 
 	@@id([userId, tournamentId])
-	@@map("TournamentHistory")
+	@@map("TournamentParticipants")
 }
 
 //  ___  ___  ___ _____ _____  _   _

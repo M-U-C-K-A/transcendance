@@ -28,7 +28,7 @@ def reset_database(conn):
     """Réinitialise complètement la base de données"""
     tables = [
         "Message", "Invitation", "Block", "Friends",
-        "MatchHistory", "Match", "TournamentHistory",
+        "MatchHistory", "Match", "TournamentParticipants",
         "Tournament", "Achievement", "User"
     ]
 
@@ -302,7 +302,7 @@ def main():
             [{'id': tid, 'slot': t['slot']} for tid, t in zip(tournament_ids, tournaments)],
             user_ids
         )
-        insert_data(conn, "TournamentHistory", tournament_history)
+        insert_data(conn, "TournamentParticipants", tournament_history)
 
         # Génération des matchs
         print("\n🎮 Génération des matchs...")

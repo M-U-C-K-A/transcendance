@@ -146,17 +146,17 @@ CREATE TABLE "new_Tournament" (
 INSERT INTO "new_Tournament" ("TDate", "hostId", "id", "slot", "winnerId") SELECT "TDate", "hostId", "id", "slot", "winnerId" FROM "Tournament";
 DROP TABLE "Tournament";
 ALTER TABLE "new_Tournament" RENAME TO "Tournament";
-CREATE TABLE "new_TournamentHistory" (
+CREATE TABLE "new_TournamentParticipants" (
     "userId" INTEGER NOT NULL,
     "tournamentId" INTEGER NOT NULL,
 
     PRIMARY KEY ("userId", "tournamentId"),
-    CONSTRAINT "TournamentHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "TournamentHistory_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "TournamentParticipants_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "TournamentParticipants_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_TournamentHistory" ("tournamentId", "userId") SELECT "tournamentId", "userId" FROM "TournamentHistory";
-DROP TABLE "TournamentHistory";
-ALTER TABLE "new_TournamentHistory" RENAME TO "TournamentHistory";
+INSERT INTO "new_TournamentParticipants" ("tournamentId", "userId") SELECT "tournamentId", "userId" FROM "TournamentParticipants";
+DROP TABLE "TournamentParticipants";
+ALTER TABLE "new_TournamentParticipants" RENAME TO "TournamentParticipants";
 PRAGMA foreign_keys=ON;
 PRAGMA defer_foreign_keys=OFF;
 

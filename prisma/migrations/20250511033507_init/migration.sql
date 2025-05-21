@@ -52,13 +52,13 @@ CREATE TABLE "Tournament" (
 );
 
 -- CreateTable
-CREATE TABLE "TournamentHistory" (
+CREATE TABLE "TournamentParticipants" (
 	"userId" INTEGER NOT NULL,
 	"tournamentId" INTEGER NOT NULL,
 
 	PRIMARY KEY ("userId", "tournamentId"),
-	CONSTRAINT "TournamentHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserInfo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-	CONSTRAINT "TournamentHistory_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+	CONSTRAINT "TournamentParticipants_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserInfo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT "TournamentParticipants_tournamentId_fkey" FOREIGN KEY ("tournamentId") REFERENCES "Tournament" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
