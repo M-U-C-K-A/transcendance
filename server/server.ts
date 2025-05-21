@@ -7,6 +7,8 @@ import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
 import path from 'path';
 import fs from 'fs';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { loggerConfig } from './config/logger';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -26,8 +28,7 @@ if (!fs.existsSync(logsDir)) {
 
 // Crée le fichier de log et écrit le header
 const currentLogFile = path.join(logsDir, getLogFileName());
-const header = `
-=============================================
+const header = `=============================================
 Server Log - ${new Date().toISOString()}
 Version: 1.0.0
 Node: ${process.version}
@@ -35,32 +36,8 @@ Platform: ${process.platform}
 =============================================
 
 `;
-fs.writeFileSync(currentLogFile, header);
-
-const loggerConfig = {
-    transport: {
-        targets: [
-            {
-                target: 'pino-pretty',
-                options: {
-                    colorize: true,
-                    levelFirst: true,
-                    translateTime: 'SYS:dd-mm-yyyy HH:MM:ss',
-                    ignore: 'pid,hostname',
-                }
-            },
-            {
-                target: 'pino/file',
-                options: {
-                    destination: currentLogFile,
-                    mkdir: true,
-                    append: false // Ne pas ajouter aux logs existants
-                }
-            }
-        ]
-    },
-    level: 'info'
-};
+// On écrit le header SANS écraser le fichier (append: true), puis on laisse pino/file écrire la suite
+fs.writeFileSync(currentLogFile, header, { flag: 'w' });
 
 const app = Fastify({ logger: loggerConfig });
 
@@ -85,8 +62,8 @@ async function main() {
             console.log(err);
             process.exit(1);
         }
-        console.log(`Server running at ${address}`);
-        app.log.info(`Server started - Log file: ${currentLogFile}`);
+        console.log(`Serveur démarré sur ${address}`);
+        app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
     });
 }
 
