@@ -26,7 +26,7 @@ export default function DashboardClient({ locale }: { locale: string }) {
 
         {/* Right Sidebar */}
         <div className="lg:col-span-3">
-          <ChatSection />
+          <ChatSection currentUser={user} />
         </div>
       </div>
     </div>

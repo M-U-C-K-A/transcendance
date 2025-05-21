@@ -4,9 +4,12 @@ import { MessageCircle } from "lucide-react"
 import { ChatComponent } from "@/components/chat"
 import { useI18n } from "@/i18n-client"
 
-export function ChatSection() {
+interface ChatSectionProps {
+  currentUser: string
+}
+
+export function ChatSection({ currentUser }: ChatSectionProps) {
   const t = useI18n()
-  const currentUser = "jhon" // Utilisateur fixe pour l'instant
 
   return (
     <Card className="bg-card border shadow-sm h-full">

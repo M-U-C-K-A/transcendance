@@ -25,7 +25,7 @@ export function MessageList({ messages }: MessageListProps) {
   }, [messages])
 
   return (
-    <div className="flex-1 overflow-y-auto mb-4 p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto mb-4 p-4 space-y-4 max-h-[600px] border-b-1 [&::-webkit-scrollbar]:w-2]">
       {messages.map((message) => (
         <Message key={message.id} message={message} />
       ))}

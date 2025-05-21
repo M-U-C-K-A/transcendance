@@ -25,8 +25,8 @@ export function PublicChat({
   placeholder
 }: PublicChatProps) {
   return (
-    <div className="flex flex-col h-full max-h-[600px]">
-      <MessageList messages={messages} />
+    <div className="flex flex-col h-full">
+      <MessageList messages={messages}/>
       <MessageInput
         value={newMessage}
         onChange={onNewMessageChange}
