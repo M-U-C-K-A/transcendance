@@ -10,18 +10,19 @@ export default function Home() {
       <section className="w-full flex-1 flex flex-col items-center justify-center py-12 md:py-24 bg-background">
         <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground text-center z-10">
               Creative solutions for modern challenges
             </h1>
-            <p className="text-xl text-muted-foreground text-center max-w-2xl">
+            <img src="/home.png" alt="logo" className="w-260 h-260 absolute top-25 left-20 z-0 invisible md:visible" />
+            <p className="text-xl text-muted-foreground text-center max-w-2xl z-10">
               We build beautiful digital experiences that help businesses grow and thrive in the digital landscape.
             </p>
 
-            <div className="w-full max-w-3xl aspect-video mt-8 mb-12">
+            <div className="w-full max-w-3xl aspect-video mt-8 mb-12 z-10 bg-transparent/50 rounded-lg shadow-xl overflow-hidden backdrop-blur-sm">
               <PongGame />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 z-10">
               <a
                 href="#contact"
                 className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-colors"
@@ -30,7 +31,7 @@ export default function Home() {
               </a>
               <a
                 href="#portfolio"
-                className="px-8 py-3 bg-transparent hover:bg-primary/10 text-primary border border-primary font-medium rounded-md transition-colors"
+                className="px-8 py-3 bg-transparent hover:bg-primary/10 text-primary border border-primary font-medium rounded-md transition-colors backdrop-blur-sm"
               >
                 View our work
               </a>
