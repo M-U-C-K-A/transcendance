@@ -6,7 +6,7 @@ import { useI18n } from "@/i18n-client"
 
 export function ChatSection() {
   const t = useI18n()
-  const currentUser = "michaelsnow" // Utilisateur fixe pour l'instant
+  const currentUser = "jhon" // Utilisateur fixe pour l'instant
 
   return (
     <Card className="bg-card border shadow-sm h-full">
@@ -17,7 +17,7 @@ export function ChatSection() {
       </CardHeader>
       <Separator />
       <CardContent className="h-[calc(100%-80px)]">
-        <ChatComponent 
+        <ChatComponent
           placeholder={t('dashboard.chat.placeholder')}
           currentUser={currentUser}
         />

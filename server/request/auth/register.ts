@@ -9,7 +9,6 @@ export default async function register(data: connectionData) {
 	SELECT username, email
 	FROM "User"
 	WHERE username = ${data.username} OR email = ${data.email}`
-
 	if (existingUser[0]) {
 		if (existingUser[0].username == data.username) {
 			console.log('Username already taken');
@@ -20,7 +19,6 @@ export default async function register(data: connectionData) {
 			throw new Error ('Email already taken')
 		}
 	}
-
 	const hashedPass = await bcrypt.hash(data.pass, 10)
 
 	const defaultBio = "👐 Hello i'm new here"

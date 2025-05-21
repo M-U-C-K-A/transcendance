@@ -39,9 +39,6 @@ export function ProfileSkeleton({ locale }: { locale: string }) {
                     <Skeleton key={i} className="h-6 w-20" />
                   ))}
                 </div>
-                <div className="flex gap-2 w-full">
-                  <Skeleton className="h-9 flex-1" />
-                </div>
               </CardContent>
             </Card>
 
@@ -107,4 +104,4 @@ export function ProfileSkeleton({ locale }: { locale: string }) {
       </div>
     </div>
   )
-} 
+}

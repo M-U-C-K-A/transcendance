@@ -246,11 +246,6 @@ export default function ProfilePage() {
                     {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
                   </Badge>
                 </div>
-                <ProfileEditDialog
-                  username={user.alias || user.username}
-                  bio={user.bio}
-                  onSave={(data) => console.log("Profile updated:", data)}
-                />
               </CardContent>
             </Card>
 
