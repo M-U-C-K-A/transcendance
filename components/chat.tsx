@@ -84,13 +84,9 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     }
   };
 
-  // Initialize component and set up polling
+  // Initialize component
   useEffect(() => {
     fetchMessages()
-    
-    const interval = setInterval(fetchMessages, 30000) // Refresh every 30 seconds
-    
-    return () => clearInterval(interval)
   }, [currentUser])
 
   // Process private conversations

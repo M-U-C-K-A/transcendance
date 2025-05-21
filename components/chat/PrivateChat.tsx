@@ -46,7 +46,7 @@ export function PrivateChat({
   onBack
 }: PrivateChatProps) {
   return (
-    <div className="flex flex-col h-full max-h-[600px]">
+    <div className="flex flex-col h-full">
       {!selectedUser ? (
         <PrivateConversationList
           conversations={conversations}
@@ -57,7 +57,7 @@ export function PrivateChat({
         />
       ) : (
         <>
-          <div className="flex items-center gap-3 p-4 border-b">
+          <div className="flex items-center gap-3 p-4 border-b max-h-[600px]">
             <Button
               variant="ghost"
               size="icon"

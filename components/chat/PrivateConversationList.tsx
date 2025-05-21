@@ -31,7 +31,7 @@ export function PrivateConversationList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto max-h-[600px]">
       <div className="p-4">
         <div className="flex gap-2 mb-4">
           <Input
