@@ -13,6 +13,7 @@ interface HeaderProps {
 
 export function Header({ locale, user }: HeaderProps) {
   const t = useI18n()
+  const displayUser = user || "NONE"
 
   return (
     <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
@@ -25,7 +26,7 @@ export function Header({ locale, user }: HeaderProps) {
           <Button variant="ghost" size="sm">
             <Settings className="h-5 w-5" />
           </Button>
-          <Link href={`/${locale}/stats`}>
+          <Link href="/stats">
             <Button variant="ghost" size="sm">
               <BarChart className="h-5 w-5" />
             </Button>
@@ -38,8 +39,8 @@ export function Header({ locale, user }: HeaderProps) {
             </Button>
           </Link>
           <Avatar>
-            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${user}`} />
-            <AvatarFallback>{user.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} />
+            <AvatarFallback>{displayUser.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>
       </div>
