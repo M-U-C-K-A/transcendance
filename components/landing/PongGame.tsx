@@ -218,7 +218,7 @@ export default function PongGame() {
   }, [ballX, ballY, leftPaddleY, rightPaddleY, ballVelocity, containerSize, gameActive])
 
   return (
-    <div ref={containerRef} className="relative w-full h-full bg-foreground/10 rounded-lg shadow-xl overflow-hidden">
+    <div ref={containerRef} className="relative w-full h-full bg-background/60 rounded-lg shadow-xl overflow-hidden z-20">
       {/* Score display */}
       <div className="absolute top-4 left-0 right-0 flex justify-center text-white text-2xl font-sans">
         <span className="mx-2">{score.left.toString().padStart(2, "0")}</span>
@@ -231,9 +231,9 @@ export default function PongGame() {
 
       {/* Hello and dribbble text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <h2 className="text-white text-3xl font-bold mb-4">Hello!</h2>
+        <h2 className="text-white text-3xl font-bold mb-4 z-50">Hello!</h2>
         <motion.div
-          className="text-pink-500 text-4xl font-bold"
+          className="text-pink-500 text-4xl font-bold z-50"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
