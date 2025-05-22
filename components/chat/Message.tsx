@@ -20,10 +20,10 @@ export function Message({ message }: MessageProps) {
 
   return (
     <div className="flex items-start gap-3">
-      {/* <Avatar className="h-8 w-8">
-        <AvatarImage src={message.user.avatar} />
+      <Avatar className="h-8 w-8">
+        <AvatarImage src={message.user.avatar} alt={`image de profile de ${message.user.name}`} />
         <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-      </Avatar>*/}
+      </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-medium">{message.user.name}</span>

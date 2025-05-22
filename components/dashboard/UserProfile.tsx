@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { useI18n } from "@/i18n-client"
 
-export function UserProfile() {
+export function UserProfile({ user }: { user: string }) {
   const t = useI18n()
 
   return (
@@ -14,7 +14,7 @@ export function UserProfile() {
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <Avatar className="h-24 w-24 mb-4">
-          <AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" />
+          <AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" alt="John Doe" />
           <AvatarFallback className="text-2xl">JD</AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-bold mb-1">John Doe</h2>
@@ -43,4 +43,4 @@ export function UserProfile() {
       </CardContent>
     </Card>
   )
-} 
+}
