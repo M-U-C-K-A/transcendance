@@ -9,8 +9,13 @@ export default async function loginRoute(server: FastifyInstance) {
 
 		try {
 			const user = await login(data)
+			const token = server.jwt.sign({
+				id: user[0].id,
+				email: user[0].email,
+				username: user[0].username,
+			})
 			request.log.info({ email: data.email }, 'Connexion réussie')
-			return reply.code(202).send({ message: 'User logged successfully' })
+			return reply.code(202).send({ message: 'User logged successfully', token })
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {
 				request.log.warn({ email: data.email }, 'Tentative de connexion avec un compte inexistant')

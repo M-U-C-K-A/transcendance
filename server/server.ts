@@ -16,18 +16,18 @@ import { loggerConfig } from './config/logger';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
-    const now = new Date();
-    const dateStr = now.toISOString()
-        .replace(/T/, '_')
-        .replace(/\..+/, '')
-        .replace(/:/g, '-');
-    return `server_${dateStr}.log`;
+	const now = new Date();
+	const dateStr = now.toISOString()
+		.replace(/T/, '_')
+		.replace(/\..+/, '')
+		.replace(/:/g, '-');
+	return `server_${dateStr}.log`;
 };
 
 // Crée le répertoire de logs s'il n'existe pas
 const logsDir = path.join('server', 'logs');
 if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
+	fs.mkdirSync(logsDir, { recursive: true });
 }
 
 // Crée le fichier de log et écrit le header
@@ -46,10 +46,10 @@ fs.writeFileSync(currentLogFile, header, { flag: 'w' });
 const app = Fastify({ logger: loggerConfig });
 
 app.register(cors, {
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-    exposedHeaders: ['Authorization'],
+	origin: true,
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	credentials: true,
+	exposedHeaders: ['Authorization'],
 });
 
 app.register(fastifyJwt, {
@@ -57,25 +57,25 @@ app.register(fastifyJwt, {
 })
 
 async function main() {
-    const port = 3001;
+	const port = 3001;
 
-    await app.register(profileRoute);
-    await app.register(health);
-    await app.register(registerRoute);
-    await app.register(loginRoute);
-    await app.register(chat);
-    await app.register(getMessageRoute)
-    await app.register(sendMessageRoute)
-    await app.register(tournamentRoutes);
+	await app.register(profileRoute);
+	await app.register(health);
+	await app.register(registerRoute);
+	await app.register(loginRoute);
+	await app.register(chat);
+	await app.register(getMessageRoute)
+	await app.register(sendMessageRoute)
+	await app.register(tournamentRoutes);
 
-    app.listen({ port, host: '0.0.0.0' }, (err, address) => {
-        if (err) {
-            console.log(err);
-            process.exit(1);
-        }
-        console.log(`Serveur démarré sur ${address}`);
-        app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
-    });
+	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
+		if (err) {
+			console.log(err);
+			process.exit(1);
+		}
+		console.log(`Serveur démarré sur ${address}`);
+		app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
+	});
 }
 
 main();
