@@ -15,8 +15,8 @@ export default function DashboardClient({ locale }: { locale: string }) {
       <div className="container mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Sidebar */}
         <div className="lg:col-span-3">
-          <UserProfile />
-          <ColleaguesList />
+          <UserProfile user={user} />
+          <ColleaguesList user={user} locale={locale} />
         </div>
 
         {/* Main Content */}

@@ -180,7 +180,7 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
                 <Card className="bg-card border shadow-sm">
                   <CardHeader>
                     <CardTitle>Évolution de votre ELO</CardTitle>
-                    <CardDescription>Suivez l'évolution de votre classement ELO au fil du temps</CardDescription>
+                    <CardDescription>Suivez l&apos;évolution de votre classement ELO au fil du temps</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {/* Graphique d'évolution ELO */}

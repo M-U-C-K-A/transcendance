@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -110,7 +109,7 @@ export function Register({
 
         {/* Username */}
         <div className="grid gap-2">
-          <Label htmlFor="username">Nom d'utilisateur</Label>
+          <Label htmlFor="username">Nom d&apos;utilisateur</Label>
           <Input
             id="username"
             type="text"
@@ -134,7 +133,7 @@ export function Register({
         </div>
 
         <Button type="submit" className="w-full">
-          S'inscrire
+          S&apos;inscrire
         </Button>
       </div>
     </form>

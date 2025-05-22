@@ -160,7 +160,7 @@ export default function Home() {
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold mb-4">Tournoi en cours !</h2>
             <p className="text-lg mb-8">
-              Le tournoi "{tournamentName}" a commencé avec {players.length} participants.
+              Le tournoi &apos;{tournamentName}&apos; a commencé avec {players.length} participants.
             </p>
             <Button variant="outline" onClick={() => setTournamentStarted(false)}>
               Retour à la configuration
@@ -176,7 +176,7 @@ export default function Home() {
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" onClick={copyInviteLink}>
                         <Copy className="h-4 w-4 mr-2" />
-                        Copier le lien d'invitation
+                        Copier le lien d&apos;invitation
                       </Button>
                       {players.length >= 4 && (
                         <Button variant="default" size="sm" onClick={startTournament} disabled={countdownActive}>

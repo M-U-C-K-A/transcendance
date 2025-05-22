@@ -29,7 +29,7 @@ export function ColleaguesList() {
                   </p>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.message')} ${friend}`}>
                 <MessageCircle className="h-4 w-4" />
               </Button>
             </div>
@@ -37,10 +37,11 @@ export function ColleaguesList() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" size="sm" className="w-full">
+        <Button variant="outline" size="sm" className="w-full" aria-label={t('dashboard.colleagues.add')}>
           {t('dashboard.colleagues.add')}
         </Button>
       </CardFooter>
     </Card>
   )
-} 
+}
+

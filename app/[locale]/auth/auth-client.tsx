@@ -6,6 +6,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from 'next-themes';
+import Image from "next/image";
 
 export function LoginPage() {
   const { theme } = useTheme();
@@ -82,13 +83,17 @@ export function LoginPage() {
       </div>
       <div className="relative hidden bg-muted lg:block">
       {theme === 'light' ? (
-        <img
+        <Image
+          width={661}
+          height={882}
           src="https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg"
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (
-        <img
+        <Image
+          width={661}
+          height={882}
           src="https://media.discordapp.net/attachments/1375147763410534420/1375147834944524299/throbertchauve.jpg?ex=6830a1b8&is=682f5038&hm=e78fa2e7aed3fe075479a2d20581767a5faa84901147319f88210ce0780b1132&=&format=webp&width=661&height=882"
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
