@@ -19,3 +19,8 @@ export interface editProfileInfo{
 	newBio: string,
 	newAvatar: string,
 }
+
+export interface friendIds{
+	id1: number;
+	id2: number;
+}

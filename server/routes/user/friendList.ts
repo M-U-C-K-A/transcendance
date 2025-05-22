@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import  friendsList  from "../../request/user/friendsList";
 
 export default async function friendListRoute(server: FastifyInstance) {
-	server.get('/friendList/:username', async function (request, reply) {
+	server.get('/friendlist/:username', async function (request, reply) {
 	const { username } = request.params as { username: string }
 
 	if (!username)
