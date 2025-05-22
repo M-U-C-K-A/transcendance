@@ -1,44 +1,99 @@
+// server/request/chat/getMessage.ts
 import { PrismaClient } from '@prisma/client'
-import { messageInfo, id } from './interface'
-import { userData } from '../user/interface'
 import { getAvatar } from '@/server/utils/getAvatar'
-import { send } from 'process'
+import { userData } from '@/server/utils/interface'
 
 const Prisma = new PrismaClient()
 
-export default async function getMessage(username: string) {
-	const userId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User"
-	WHERE username = ${username}`
-
-	if (!userId[0].id) {
-		console.log("Coulndt find user in getMessage")
-		throw new Error("Coulndt find user in getMessage")
-	}
-
-	const messages = await Prisma.$queryRaw<messageInfo[]>`
-	SELECT * from "Message"
-	WHERE senderId = ${userId[0].id}
-	OR recipientId = ${userId[0].id}
-	OR isGeneral = TRUE
-	ORDER BY "sendAt" ASC`
-
-	const users: userData[] = [];
-
-	for (const message of messages) {
-	const sender = await Prisma.$queryRaw<userData[]>`
-		SELECT * FROM "User" WHERE id = ${message.senderId}`
-	const recipient = await Prisma.$queryRaw<userData[]>`
-		SELECT * FROM "User" WHERE id = ${message.recipientId}`
-
-		if (sender[0]) {
-			sender[0].avatar = await getAvatar(sender[0]);
-			users.push(sender[0]);
-		}
-		if (recipient[0]) {
-			recipient[0].avatar = await getAvatar(recipient[0]);
-			users.push(recipient[0]);
-		}
-	}
-	return {messages, users}
+interface FormattedMessage {
+  id: number;
+  content: string;
+  isGeneral: boolean;
+  sendAt: Date;
+  sender: {
+    id: number;
+    username: string;
+    avatar: string;
+  };
+  recipient?: {
+    id: number;
+    username: string;
+    avatar: string;
+  };
 }
+
+export default async function getMessage(username: string): Promise<FormattedMessage[]> {
+  try {
+    const messages: any[] = await Prisma.$queryRaw`
+      SELECT
+        m.id,
+        m.content,
+        m.isGeneral,
+        m.sendAt,
+        sender.id as "senderId",
+        sender.username as "senderUsername",
+        sender.avatar as "senderAvatar",
+        recipient.id as "recipientId",
+        recipient.username as "recipientUsername",
+        recipient.avatar as "recipientAvatar"
+      FROM
+        "Message" m
+      JOIN
+        "User" sender ON m.senderId = sender.id
+      LEFT JOIN
+        "User" recipient ON m.recipientId = recipient.id
+      WHERE
+        sender.username = ${username}
+        OR recipient.username = ${username}
+        OR (m.isGeneral = TRUE AND m.recipientId IS NULL)
+      ORDER BY
+        m.sendAt DESC`;
+
+    const formattedMessages = await Promise.all(messages.map(async (msg) => {
+      const senderAvatar = msg.senderAvatar ? await getAvatar({
+        id: msg.senderId,
+        username: msg.senderUsername,
+        avatar: msg.senderAvatar,
+        elo: 0,
+        bio: '',
+        win: 0,
+        lose: 0,
+      } as userData) : null;
+
+      const recipientAvatar = msg.recipientId && msg.recipientAvatar
+        ? await getAvatar({
+            id: msg.recipientId,
+            username: msg.recipientUsername,
+            avatar: msg.recipientAvatar,
+            elo: 0,
+            bio: '',
+            win: 0,
+            lose: 0,
+          } as userData)
+        : undefined;
+
+      return {
+        id: msg.id,
+        content: msg.content,
+        isGeneral: msg.isGeneral,
+        sendAt: msg.sendAt,
+        sender: {
+          id: msg.senderId,
+          username: msg.senderUsername,
+          avatar: senderAvatar || ''
+        },
+        recipient: msg.recipientId ? {
+          id: msg.recipientId,
+          username: msg.recipientUsername,
+          avatar: recipientAvatar || ''
+        } : undefined
+      };
+    }));
+
+    return formattedMessages;
+  } catch (err) {
+    console.error("Error in getMessage:", err);
+    throw new Error("Could not retrieve messages");
+  }
+}
+
