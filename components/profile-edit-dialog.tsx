@@ -83,7 +83,7 @@ export function ProfileEditDialog({ username, bio = "", profilePhotoUrl = "", on
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
-              Nom d'utilisateur
+              Nom d&apos;utilisateur
             </Label>
             <Input
               id="username"

@@ -91,7 +91,7 @@ interface GlobalStats {
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export function GraphSection() {
-  const t = useI18n()
+  //const t = useI18n()
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null)
   const [loading, setLoading] = useState(true)

@@ -2,6 +2,7 @@ import PongGame from "@/components/landing/PongGame"
 import { Navbar } from "@/components/landing/Header"
 import { Footer } from "@/components/landing/Footer"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-bold text-foreground text-center z-10">
               Creative solutions for modern challenges
             </h1>
-            <img src="/home.png" alt="logo" className="w-260 h-260 absolute top-25 left-20 z-0 invisible md:visible" />
+            <Image src="/home.png" alt="logo" width={260} height={260} className="w-260 h-260 absolute top-25 left-20 z-0 md:invisible" />
             <p className="text-xl text-muted-foreground text-center max-w-2xl z-10">
               We build beautiful digital experiences that help businesses grow and thrive in the digital landscape.
             </p>

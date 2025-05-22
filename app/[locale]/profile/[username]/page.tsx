@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, BarChart, LogOut, MessageCircle, Settings, Trophy, Activity } from "lucide-react"
+import { ArrowLeft, BarChart, LogOut, Settings, Activity } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
