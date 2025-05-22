@@ -1,6 +1,7 @@
 import PongGame from "@/components/landing/PongGame"
 import { Navbar } from "@/components/landing/Header"
 import { Footer } from "@/components/landing/Footer"
+import Link from "next/link"
 
 export default function Home() {
   return (
@@ -23,18 +24,18 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8 z-10">
-              <a
+              <Link
                 href="#contact"
                 className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-colors"
               >
                 Get in touch
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#portfolio"
                 className="px-8 py-3 bg-transparent hover:bg-primary/10 text-primary border border-primary font-medium rounded-md transition-colors backdrop-blur-sm"
               >
                 View our work
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -54,18 +55,21 @@ export default function Home() {
                 description:
                   "Trouvez un adversaire instantanément et commencez à jouer en quelques secondes. Parfait pour une partie rapide.",
                 icon: "⚡",
+                link: "/game/quickmatch",
               },
               {
                 title: "TOURNOIS",
                 description:
                   "Participez à des tournois quotidiens et hebdomadaires avec des prix à gagner. Grimpez dans le classement mondial.",
                 icon: "🏆",
+                link: "/game/tournaments",
               },
               {
                 title: "CUSTOM",
                 description:
                   "Créez votre propre partie avec vos règles. Modifiez la vitesse, la taille des raquettes et invitez vos amis.",
                 icon: "🎮",
+                link: "/game/custom",
               },
             ].map((mode, index) => (
               <div
@@ -77,9 +81,12 @@ export default function Home() {
                   <h3 className="text-2xl font-bold mb-3 text-card-foreground">{mode.title}</h3>
                   <p className="text-muted-foreground mb-6">{mode.description}</p>
                   <div className="mt-auto">
-                    <button className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors">
+                    <Link
+                      href={mode.link}
+                      className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
+                    >
                       Jouer maintenant
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -159,18 +166,18 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="#download"
+              <Link
+                href="/auth"
                 className="px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-all text-lg"
               >
                 Jouer gratuitement
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#learn"
                 className="px-8 py-4 bg-transparent hover:bg-primary/10 text-card-foreground border border-border font-medium rounded-md transition-colors text-lg"
               >
                 En savoir plus
-              </a>
+              </Link>
             </div>
 
             <div className="mt-12 flex flex-wrap justify-center gap-8">

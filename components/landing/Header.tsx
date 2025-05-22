@@ -26,7 +26,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="#contact"
+              href="/auth"
               className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-md transition-colors"
             >
               Get Started
@@ -55,7 +55,7 @@ export function Navbar() {
                 </Link>
               ))}
               <Link
-                href="#contact"
+                href="/auth"
                 className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-md transition-colors inline-block"
                 onClick={() => setIsMenuOpen(false)}
               >
