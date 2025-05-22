@@ -12,6 +12,7 @@ import { ArrowLeft, BarChart, LogOut, Settings, Activity } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
+import { Header } from "@/components/dashboard/Header"
 
 interface UserInfo {
   id: number
@@ -171,34 +172,7 @@ export default function ProfilePage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Header */}
-      <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
-        <div className="container mx-auto py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Activity className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">PongMaster</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm">
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Link href="/stats">
-              <Button variant="ghost" size="sm">
-                <BarChart className="h-5 w-5" />
-              </Button>
-            </Link>
-            <ThemeToggle />
-            <Link href="/">
-              <Button variant="ghost" size="sm">
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </Link>
-            <Avatar>
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-      </header>
+      <Header locale={locale} />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
