@@ -13,6 +13,7 @@ type MessageProps = {
 }
 
 export function Message({ message }: MessageProps) {
+  console.log(message)
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
@@ -36,4 +37,4 @@ export function Message({ message }: MessageProps) {
       </div>
     </div>
   )
-} 
+}
