@@ -104,7 +104,8 @@ def generate_tournaments(count, user_ids):
             'hostId': host_id,
             'slot': random.choice([4, 8, 16]),
             'winnerId': None,  # Initialisé à None, sera mis à jour plus tard
-            'tDate': fake.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S')
+            'tDate': fake.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S'),
+            'tournamentName': fake.sentence()
         })
     return tournaments
 
@@ -275,7 +276,7 @@ def main():
 
         # Génération des utilisateurs
         print("\n👥 Génération des utilisateurs...")
-        users = generate_users(50)
+        users = generate_users(5000)
         user_ids = insert_data(conn, "User", users, return_ids=True)
 
         # Génération des achievements
@@ -330,7 +331,7 @@ def main():
 
         # Messages
         print("\n💬 Génération des messages...")
-        messages = generate_messages(200, user_ids)
+        messages = generate_messages(20000, user_ids)
         insert_data(conn, "Message", messages)
 
         # Invitations

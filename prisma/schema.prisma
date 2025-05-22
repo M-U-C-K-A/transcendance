@@ -108,7 +108,7 @@ model Achievement {
 model Tournament {
 	id					  Int			@id	@default(autoincrement())
 	hostId				  Int
-	tournamentName        String  
+	tournamentName		  String
 	slot				  Int			@default(4)
 	winnerId			  Int?
 	tDate				  DateTime		@default(now()) @map("TDate")
