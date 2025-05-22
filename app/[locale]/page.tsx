@@ -26,12 +26,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8 z-10">
               <Link
                 href="#contact"
+                aria-label="Get in touch"
                 className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-colors"
               >
                 Get in touch
               </Link>
               <Link
                 href="#portfolio"
+                aria-label="View our work"
                 className="px-8 py-3 bg-transparent hover:bg-primary/10 text-primary border border-primary font-medium rounded-md transition-colors backdrop-blur-sm"
               >
                 View our work
@@ -83,6 +85,7 @@ export default function Home() {
                   <div className="mt-auto">
                     <Link
                       href={mode.link}
+                      aria-label="Jouer maintenant"
                       className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
                     >
                       Jouer maintenant
@@ -168,12 +171,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/auth"
+                aria-label="Jouer gratuitement"
                 className="px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-all text-lg"
               >
                 Jouer gratuitement
               </Link>
               <Link
                 href="#learn"
+                aria-label="En savoir plus"
                 className="px-8 py-4 bg-transparent hover:bg-primary/10 text-card-foreground border border-border font-medium rounded-md transition-colors text-lg"
               >
                 En savoir plus
