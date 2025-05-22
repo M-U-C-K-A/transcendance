@@ -9,23 +9,20 @@ export default async function friendsList(username: string) {
 	SELECT id FROM "User"
 	WHERE username = ${username}`
 
-	console.log("test")
 	if (!userId[0]) {
 		console.log("User not found")
 		throw new Error("User not found")
 	}
-	console.log("test2")
+
 	const friendsId = await Prisma.$queryRaw<friendIds[]>`
 	SELECT * FROM "Friends"
 	WHERE (id1 = ${userId[0].id} OR id2 = ${userId[0].id})
 	AND status = TRUE;`
 
-	console.log("test3")
 	if (!friendsId[0]) {
 		console.log("No friends registered")
 		throw new Error("No friends registered")
 	}
-	console.log("test4")
 	let list: number[] = [];
 
 	for (let i = 0; i < friendsId.length; i++) {
@@ -35,10 +32,24 @@ export default async function friendsList(username: string) {
 		list.push(friendsId[i].id1);
 	}
 }
-	console.log("test5")
-	const friendsList = await Prisma.$queryRaw`
-	SELECT * FROM "User"
-	WHERE id = list`
+	const friendsList = await Prisma.user.findMany({
+		where: {
+			id: { in: list }
+		},
+		select: {
+			username: true,
+			alias: true,
+			avatar: true,
+			bio: true,
+			onlineStatus: true,
+			elo: true,
+			win: true,
+			lose: true,
+			tournamentWon: true,
+			pointScored: true,
+			pointConcede: true,
+		}
+	});
 
 	return (friendsList)
 }
