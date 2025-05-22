@@ -8,11 +8,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, BarChart, LogOut, Settings, Activity } from "lucide-react"
+import { ArrowLeft, BarChart, LogOut, Settings, Activity, User } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
+import { UserProfile } from "@/components/dashboard/UserProfile"
 
 interface UserInfo {
   id: number
@@ -85,6 +86,7 @@ export default function ProfilePage() {
       try {
         // Remplacez cette URL par votre endpoint API réel
         const response = await fetch(`/api/profile/${username}`)
+        console.log(response)
         if (!response.ok) {
           throw new Error("Failed to fetch profile data")
         }
@@ -187,41 +189,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar - User Profile */}
           <div className="lg:col-span-4">
-            <Card className="bg-card border shadow-sm">
-              <CardHeader>
-                <CardTitle>Profil</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center">
-                <Avatar className="h-24 w-24 mb-4">
-                  <AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
-                  <AvatarFallback className="text-2xl">{user.username.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <h2 className="text-xl font-bold mb-1">{user.alias || user.username}</h2>
-                <p className="text-muted-foreground mb-2">@{user.username}</p>
-                <p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
-                <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
-                  <div>
-                    <p className="text-2xl font-bold text-primary">{user.win}</p>
-                    <p className="text-xs text-muted-foreground">Victoires</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-red-400">{user.lose}</p>
-                    <p className="text-xs text-muted-foreground">Défaites</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
-                    <p className="text-xs text-muted-foreground">Tournois</p>
-                  </div>
-                </div>
-                <div className="flex gap-2 mb-4">
-                  <Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-                  <Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
-                  <Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-                    {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
+            <UserProfile user={user.username} />
 
             <Card className="bg-card border shadow-sm mt-6">
               <CardHeader>
@@ -307,9 +275,8 @@ export default function ProfilePage() {
                               {match.result}
                             </Badge>
                             <span
-                              className={`font-medium ${
-                                match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
-                              }`}
+                              className={`font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
+                                }`}
                             >
                               {match.eloChange}
                             </span>
@@ -371,9 +338,8 @@ export default function ProfilePage() {
                               </td>
                               <td className="py-3 px-4">{match.score}</td>
                               <td
-                                className={`py-3 px-4 text-right font-medium ${
-                                  match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
-                                }`}
+                                className={`py-3 px-4 text-right font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
+                                  }`}
                               >
                                 {match.eloChange}
                               </td>
@@ -494,14 +460,12 @@ export default function ProfilePage() {
                       ].map((achievement, index) => (
                         <div
                           key={index}
-                          className={`flex items-center p-4 rounded-lg border ${
-                            achievement.unlocked ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-muted"
-                          }`}
+                          className={`flex items-center p-4 rounded-lg border ${achievement.unlocked ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-muted"
+                            }`}
                         >
                           <div
-                            className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 text-2xl ${
-                              achievement.unlocked ? "bg-primary/20" : "bg-muted"
-                            }`}
+                            className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 text-2xl ${achievement.unlocked ? "bg-primary/20" : "bg-muted"
+                              }`}
                           >
                             {achievement.icon}
                           </div>

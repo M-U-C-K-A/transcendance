@@ -4,43 +4,55 @@ import { Badge } from "@/components/ui/badge"
 import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { useI18n } from "@/i18n-client"
 
-export function UserProfile({ user }: { user: string }) {
+interface User {
+  username: string
+  avatar?: string
+  bio?: string
+  onlineStatus: boolean
+  elo: number
+  win: number
+  lose: number
+  tournamentWon: number
+}
+
+export function UserProfile({ user }: { user: User }) {
   const t = useI18n()
 
   return (
     <Card className="bg-card border shadow-sm">
-      <CardHeader>
-        <CardTitle>{t('dashboard.profile.title')}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center">
-        <Avatar className="h-24 w-24 mb-4">
-          <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${user}`} className="h-24 w-24" loading="lazy" alt={user} />
-          <AvatarFallback className="text-2xl">{user.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <h2 className="text-xl font-bold mb-1">{user}</h2>
-        <p className="text-muted-foreground mb-4">@{user}</p>
-        <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
-          <div>
-            <p className="text-2xl font-bold text-primary">24</p>
-            <p className="text-xs text-muted-foreground">{t('dashboard.profile.wins')}</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-red-400">12</p>
-            <p className="text-xs text-muted-foreground">{t('dashboard.profile.losses')}</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-yellow-400">3</p>
-            <p className="text-xs text-muted-foreground">{t('dashboard.profile.tournaments')}</p>
-          </div>
+    <CardHeader>
+      <CardTitle>Profil</CardTitle>
+    </CardHeader>
+    <CardContent className="flex flex-col items-center">
+      <Avatar className="h-24 w-24 mb-4">
+        <AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
+        <AvatarFallback className="text-2xl">{user.username.charAt(0).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <h2 className="text-xl font-bold mb-1">{user.username}</h2>
+      <p className="text-muted-foreground mb-2">@{user.username}</p>
+      <p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
+      <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
+        <div>
+          <p className="text-2xl font-bold text-primary">{user.win}</p>
+          <p className="text-xs text-muted-foreground">Victoires</p>
         </div>
-        <Badge className="bg-primary/20 text-primary mb-4">{t('dashboard.profile.level')} 8</Badge>
-        <ProfileEditDialog
-          username="John Doe"
-          email="john.doe@example.com"
-          bio="Joueur passionné de Pong depuis 2023."
-          onSave={(data) => console.log("Profile updated:", data)}
-        />
-      </CardContent>
-    </Card>
+        <div>
+          <p className="text-2xl font-bold text-red-400">{user.lose}</p>
+          <p className="text-xs text-muted-foreground">Défaites</p>
+        </div>
+        <div>
+          <p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
+          <p className="text-xs text-muted-foreground">Tournois</p>
+        </div>
+      </div>
+      <div className="flex gap-2 mb-4">
+        <Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
+        <Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
+        <Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
+          {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
+        </Badge>
+      </div>
+    </CardContent>
+  </Card>
   )
 }
