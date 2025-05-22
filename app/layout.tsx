@@ -17,6 +17,10 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+function getLangFromSegment(params: { locale?: string }) {
+  return params.locale || "fr";
+}
+
 export const metadata: Metadata = {
   title: {
     default: "PongMaster - Le jeu de Pong professionnel",
@@ -69,12 +73,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
+  params: { locale: string };
+}) {
+  const locale = params.locale || "fr";
+
   return (
-    <html lang="fr">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`}>
+      <body>
         {children}
       </body>
     </html>

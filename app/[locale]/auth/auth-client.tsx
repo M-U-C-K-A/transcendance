@@ -85,7 +85,7 @@ export function LoginPage() {
         <Image
           width={661}
           height={882}
-          src="https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg"
+          src="/throbertchauve.webp"
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />

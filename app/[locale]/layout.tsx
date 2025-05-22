@@ -21,20 +21,15 @@ export default async function RootLayout({
   const { locale } = await Promise.resolve(params)
 
   return (
-    <html lang={locale} className={inter.variable} suppressHydrationWarning>
-      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
         >
           <Provider locale={locale}>
             <ThemePersistence lang={locale} />
             {children}
           </Provider>
         </ThemeProvider>
-      </body>
-    </html>
   )
 }
