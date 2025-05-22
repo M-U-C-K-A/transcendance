@@ -25,7 +25,7 @@ export default async function getMessage(username: string) {
 	WHERE m."senderId" = currentUser.id
 	OR m."recipientId" = currentUser.id
 	OR m."isGeneral" = TRUE
-	ORDER BY m."sendAt" ASC`
+	ORDER BY m."sendAt" DESC`
 
 	for (const message of messages) {
 		message.sender_avatar = message.sender_avatar
