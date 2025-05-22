@@ -1,7 +1,6 @@
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt'
-
 import profileRoute from './routes/profile/profile';
 import health from './routes/health';
 import chat from './routes/chat';
@@ -13,6 +12,8 @@ import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
+import friendListRoute from './routes/user/friendList';
+import leaderboardRoute from './routes/user/leaderboardRoute';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -64,9 +65,11 @@ async function main() {
 	await app.register(registerRoute);
 	await app.register(loginRoute);
 	await app.register(chat);
-	await app.register(getMessageRoute)
-	await app.register(sendMessageRoute)
+	await app.register(getMessageRoute);
+	await app.register(sendMessageRoute);
 	await app.register(tournamentRoutes);
+	await app.register(friendListRoute)
+	await app.register(leaderboardRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
