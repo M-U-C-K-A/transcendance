@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import { createTournament } from '@/request/tournament/createTournament';
-import { joinTournament } from '@/request/tournament/joinTournament';
+import { createTournament } from '../request/tournament/createTournament';
+import { joinTournament } from '../request/tournament/joinTournament';
 
-export  async function tournamentRoutes(server: FastifyInstance) 
+export default async function tournamentRoutes(server: FastifyInstance) 
 {
 
 
