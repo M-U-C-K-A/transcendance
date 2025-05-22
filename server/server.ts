@@ -12,8 +12,10 @@ import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
-import friendListRoute from './routes/user/friendList';
+import friendListRoute from './routes/friends/friendList';
 import leaderboardRoute from './routes/user/leaderboardRoute';
+import friendRequestRoute from './routes/friends/friendRequestRoute';
+import { AwardIcon } from 'lucide-react';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -70,6 +72,7 @@ async function main() {
 	await app.register(tournamentRoutes);
 	await app.register(friendListRoute)
 	await app.register(leaderboardRoute)
+	await app.register(friendRequestRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {

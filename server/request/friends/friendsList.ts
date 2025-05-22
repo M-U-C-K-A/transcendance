@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { id } from "../chat/interface";
-import { friendIds } from "./interface";
+import { friendIds } from "../user/interface";
 
 const Prisma = new PrismaClient()
 
