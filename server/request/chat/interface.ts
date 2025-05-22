@@ -1,14 +1,14 @@
 import sendMessage from "./sendMessage"
 
 export interface messageInfo{
-    id: number     
-    senderId: number
-    recipientId: number
-    content: String
-    sendAt: number 
-    readStatus:  Boolean
-    isGeneral:   Boolean
-    messageType: string
+	id: number
+	senderId: number
+	recipientId: number
+	content: String
+	sendAt: number 
+	readStatus:  Boolean
+	isGeneral:   Boolean
+	messageType: string
 }
 
 export interface id{
@@ -16,7 +16,7 @@ export interface id{
 }
 
 export interface sendMessageData{
-    senderName: string
-    recipientName: string
-    content: string
+	senderName: string
+	recipientName: string
+	content: string
 }
