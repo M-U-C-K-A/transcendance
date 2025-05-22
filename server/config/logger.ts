@@ -29,9 +29,9 @@ const cleanOldLogs = () => {
         }))
         .sort((a, b) => b.time - a.time);
 
-    // Garde les 10 fichiers les plus récents
-    if (files.length > 10) {
-        files.slice(10).forEach(file => {
+    // Garde les 7 fichiers les plus récents
+    if (files.length > 7) {
+        files.slice(7).forEach(file => {
             fs.unlinkSync(file.path);
         });
     }
@@ -100,4 +100,4 @@ export const loggerConfig = {
         }),
         err: pino.stdSerializers.err
     }
-}; 
+};
