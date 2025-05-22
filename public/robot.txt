@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /game/
+Disallow: /profile/
+
+Sitemap: https://localhost/sitemap.xml

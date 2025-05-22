@@ -23,23 +23,23 @@ export function Header({ locale, user }: HeaderProps) {
           <h1 className="text-xl font-bold">{t('common.appName')}</h1>
         </Link>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" aria-label="Settings">
             <Settings className="h-5 w-5" />
           </Button>
           <Link href="/stats">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" aria-label="Stats">
               <BarChart className="h-5 w-5" />
             </Button>
           </Link>
           <LanguageSwitcher />
           <ThemeToggle />
           <Link href={`/${locale}`}>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" aria-label="Log Out">
               <LogOut className="h-5 w-5" />
             </Button>
           </Link>
           <Avatar>
-            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} />
+            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} alt={displayUser} />
             <AvatarFallback>{displayUser.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>
@@ -47,3 +47,4 @@ export function Header({ locale, user }: HeaderProps) {
     </header>
   )
 }
+
