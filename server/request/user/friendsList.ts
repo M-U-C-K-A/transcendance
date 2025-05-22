@@ -9,35 +9,47 @@ export default async function friendsList(username: string) {
 	SELECT id FROM "User"
 	WHERE username = ${username}`
 
-	console.log("test")
 	if (!userId[0]) {
 		console.log("User not found")
 		throw new Error("User not found")
 	}
-	console.log("test2")
+
 	const friendsId = await Prisma.$queryRaw<friendIds[]>`
-	SELECT * FROM
-	WHERE id1 ==  ${userId[0].id}
-	OR id2 == ${userId[0].id}`
-	console.log("test3")
+	SELECT * FROM "Friends"
+	WHERE (id1 = ${userId[0].id} OR id2 = ${userId[0].id})
+	AND status = TRUE;`
+
 	if (!friendsId[0]) {
 		console.log("No friends registered")
 		throw new Error("No friends registered")
 	}
-	console.log("test4")
-	let list : id[] = [];
+	let list: number[] = [];
+
 	for (let i = 0; i < friendsId.length; i++) {
-		if (friendsId[i].id1 = userId[0].id) {
-			list[i].id = friendsId[i].id2
-		}
-		else {
-			list[i].id = friendsId[i].id1
-		}
+	if (friendsId[i].id1 === userId[0].id) {
+		list.push(friendsId[i].id2);
+	} else {
+		list.push(friendsId[i].id1);
 	}
-	console.log("test5")
-	const friendsList = await Prisma.$queryRaw`
-	SELECT * FROM "User"
-	WHERE id = list`
+}
+	const friendsList = await Prisma.user.findMany({
+		where: {
+			id: { in: list }
+		},
+		select: {
+			username: true,
+			alias: true,
+			avatar: true,
+			bio: true,
+			onlineStatus: true,
+			elo: true,
+			win: true,
+			lose: true,
+			tournamentWon: true,
+			pointScored: true,
+			pointConcede: true,
+		}
+	});
 
 	return (friendsList)
 }
