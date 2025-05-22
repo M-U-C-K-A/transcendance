@@ -8,7 +8,7 @@ export default async function loginRoute(server: FastifyInstance) {
 		request.log.info({ email: data.email }, 'Tentative de connexion')
 
 		try {
-			await login(data)
+			const user = await login(data)
 			request.log.info({ email: data.email }, 'Connexion réussie')
 			return reply.code(202).send({ message: 'User logged successfully' })
 		} catch (err: any) {

@@ -1,5 +1,7 @@
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
+import fastifyJwt from '@fastify/jwt'
+
 import profileRoute from './routes/profile/profile';
 import health from './routes/health';
 import chat from './routes/chat';
@@ -49,6 +51,10 @@ app.register(cors, {
     credentials: true,
     exposedHeaders: ['Authorization'],
 });
+
+app.register(fastifyJwt, {
+	secret: process.env.JWT_SECRET || 'test',
+})
 
 async function main() {
     const port = 3001;
