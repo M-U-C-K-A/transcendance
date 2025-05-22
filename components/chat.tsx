@@ -49,21 +49,21 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const response = await fetch(`/api/chat/${currentUser}`, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-  
+
       if (!response.ok) {
         throw new Error(`Erreur ${response.status}: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       const transformedMessages = data.map((msg: any) => ({
         id: msg.id,
-        user: { 
+        user: {
           name: msg.sender_username,
           avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${msg.sender_username}`
         },
@@ -73,7 +73,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
         recipient: msg.recipient_username || undefined,
         isRead: msg.readStatus
       }));
-      
+
       setMessages(transformedMessages);
     } catch (err) {
       console.error('Failed to fetch messages:', err);
@@ -101,17 +101,17 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     )
 
     const conversations = privateUsers.map(userName => {
-      const userMessages = messages.filter(msg => 
-        msg.isPrivate && 
-        ((msg.user.name === userName && msg.recipient === currentUser) || 
+      const userMessages = messages.filter(msg =>
+        msg.isPrivate &&
+        ((msg.user.name === userName && msg.recipient === currentUser) ||
          (msg.user.name === currentUser && msg.recipient === userName))
       )
 
       return {
         userName: userName as string,
         avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${userName}`,
-        unreadCount: userMessages.filter(msg => 
-          msg.user.name !== currentUser && 
+        unreadCount: userMessages.filter(msg =>
+          msg.user.name !== currentUser &&
           !msg.isRead
         ).length,
         lastMessage: userMessages[userMessages.length - 1]?.text,
@@ -125,10 +125,10 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   // Mark messages as read when opening private chat
   useEffect(() => {
     if (selectedPrivateUser) {
-      setMessages(prev => prev.map(msg => 
-        msg.isPrivate && 
-        msg.user.name === selectedPrivateUser && 
-        msg.recipient === currentUser && 
+      setMessages(prev => prev.map(msg =>
+        msg.isPrivate &&
+        msg.user.name === selectedPrivateUser &&
+        msg.recipient === currentUser &&
         !msg.isRead
           ? { ...msg, isRead: true }
           : msg
@@ -166,8 +166,8 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 
       const message: Message = {
         id: sentMessage.id,
-        user: { 
-          name: currentUser, 
+        user: {
+          name: currentUser,
           avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${currentUser}`
         },
         text: newMessage,
@@ -193,7 +193,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   const filteredMessages = messages.filter(msg => {
     if (activeTab === "public") return !msg.isPrivate
     if (!selectedPrivateUser) return false
-    return msg.isPrivate && 
+    return msg.isPrivate &&
            ((msg.user.name === selectedPrivateUser && msg.recipient === currentUser) ||
             (msg.user.name === currentUser && msg.recipient === selectedPrivateUser))
   })
@@ -217,8 +217,8 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   }
 
   return (
-    <Tabs 
-      defaultValue="public" 
+    <Tabs
+      defaultValue="public"
       className="h-full flex flex-col justify-between"
       onValueChange={(value) => {
         setActiveTab(value as "public" | "private")
