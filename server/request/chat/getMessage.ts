@@ -1,6 +1,5 @@
+// server/request/chat/getMessage.ts
 import { PrismaClient } from '@prisma/client'
-import { messageInfo, id, messageUser } from './interface'
-import { getAvatar } from '@/server/utils/getAvatar'
 
 const Prisma = new PrismaClient()
 
