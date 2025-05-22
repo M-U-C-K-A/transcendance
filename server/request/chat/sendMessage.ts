@@ -4,13 +4,10 @@ import { PrismaClient } from '@prisma/client'
 const Prisma = new PrismaClient()
 
 export default async function sendMessage(data: sendMessageData) {
-	console.log("test1")
 	const senderId = await Prisma.$queryRaw<id[]>`
   	SELECT id FROM "User" WHERE username = ${data.senderName}`
-	console.log("test2")
 	const recipientId = await Prisma.$queryRaw<id[]>`
   	SELECT id FROM "User" WHERE username = ${data.recipientName}`
-	console.log("test3")
 
 	if (senderId[0]) {
 		if (!senderId[0].id) {
@@ -18,7 +15,6 @@ export default async function sendMessage(data: sendMessageData) {
 			throw new Error("User not found in sendMessage")
 		}
 	}
-	console.log("test4")
 
 	let isGeneral: Boolean = true;
 	let recipient: number | null = null
@@ -28,7 +24,6 @@ export default async function sendMessage(data: sendMessageData) {
 			isGeneral = false
 		}
 	}
-	console.log("test5")
 
 	await Prisma.$queryRaw`
 	INSERT INTO "Message" ("senderId", "recipientId", "content", "isGeneral")
