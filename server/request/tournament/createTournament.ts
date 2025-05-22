@@ -6,7 +6,18 @@ import { getAvatar }              from '@/server/utils/getAvatar'
 const prisma = new PrismaClient()
 
 export async function createTournament(hostUsername: string, tournamentName: string, slotCount = 4): 
-Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
+Promise<{ tournament: TournamentData}> {
+
+  const [y] = await prisma.$queryRaw<TournamentData[]>`
+    SELECT tournamentName
+    FROM tournament
+    WHERE tournamentName = ${tournamentName}
+    `
+  if (y)
+  {
+    console.log('Tournament name already taken');
+    throw new Error ('Tournament name already taken')
+  }
 
   const [h] = await prisma.$queryRaw<userData[]>`
     SELECT id, avatar
@@ -34,5 +45,5 @@ Promise<{ tournament: TournamentData; avatar: Buffer | null }> {
 
 
 
-  return { tournament: t, avatar: getAvatar(h) }
+  return { tournament: t }
 }
