@@ -179,9 +179,6 @@ const GridLine = ({ isVertical = false, index = 0 }) => {
 export default function NotFound() {
   const router = useRouter()
   const ballControls = useAnimation()
-  const [windowWidth, setWindowWidth] = useState(0)
-  const [windowHeight, setWindowHeight] = useState(0)
-  const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 })
   const [trails, setTrails] = useState([])
   const trailTimeoutRef = useRef(null)
   const [isHovering, setIsHovering] = useState(false)

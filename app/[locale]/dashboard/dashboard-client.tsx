@@ -16,7 +16,7 @@ export default function DashboardClient({ locale }: { locale: string }) {
         {/* Left Sidebar */}
         <div className="lg:col-span-3">
           <UserProfile user={user} />
-          <ColleaguesList />
+          <ColleaguesList user={user} locale={locale} />
         </div>
 
         {/* Main Content */}
