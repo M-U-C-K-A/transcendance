@@ -2,6 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MessageCircle, Users } from "lucide-react"
+import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 
 export function ColleaguesList({ user, locale }: { user: string; locale: string }) {
@@ -16,8 +17,9 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {["Alice", "Bob", "Charlie", "David", "Eva"].map((friend, index) => (
-            <div key={index} className="flex items-center justify-between">
+          {["Alice", "michaelsnow", "Charlie", "David", "Eva"].map((friend, index) => (
+            <Link key={index} href={`/${locale}/profile/${friend}`}>
+              <div key={index} className="flex items-center justify-between">
               <div className="flex items-center">
                 <Avatar className="h-8 w-8 mr-2">
                   <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${friend}`} alt={friend} />
@@ -26,7 +28,7 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
                 <div>
                   <p className="text-sm font-medium">{friend}</p>
                   <p className="text-xs text-muted-foreground">
-                    {index % 2 === 0 ? t('dashboard.colleagues.online') : t('dashboard.colleagues.offline')}
+                    {index % 3 === 0 ? t('dashboard.colleagues.online') : t('dashboard.colleagues.offline')}
                   </p>
                 </div>
               </div>
@@ -34,6 +36,7 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
                 <MessageCircle className="h-4 w-4" />
               </Button>
             </div>
+            </Link>
           ))}
         </div>
       </CardContent>
