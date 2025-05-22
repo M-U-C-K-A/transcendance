@@ -3,11 +3,13 @@
 import { Login } from "@/components/auth/Login";
 import { Register } from "@/components/auth/Register";
 import { useState } from "react";
-import PongGame from "@/components/landing/PongGame";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useTheme } from 'next-themes';
 
 export function LoginPage() {
+  const { theme } = useTheme();
+
   const [isLogin, setIsLogin] = useState(true);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,17 +81,19 @@ export function LoginPage() {
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
+      {theme === 'light' ? (
         <img
-          src={
-            Math.random() < 0.33
-              ? "https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg"
-              : Math.random() < 0.8
-              ? "https://cdn.intra.42.fr/users/71cfca25335ff0dd421f5d6a4377dbd9/rbardet-.jpg"
-              : "https://cdn.intra.42.fr/users/a2a7276c3000e4c1180a0f7c975b3e32/hdelacou.jpg"
-          }
+          src="https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg"
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />
+      ) : (
+        <img
+          src="https://media.discordapp.net/attachments/1375147763410534420/1375147834944524299/throbertchauve.jpg?ex=6830a1b8&is=682f5038&hm=e78fa2e7aed3fe075479a2d20581767a5faa84901147319f88210ce0780b1132&=&format=webp&width=661&height=882"
+          alt="DuckFace"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
         {/* <PongGame /> */}
       </div>
     </div>
