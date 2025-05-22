@@ -52,17 +52,5 @@ export default async function getMessage(username: string) {
 	SELECT * FROM private_messages
 	ORDER BY "sendAt" DESC`;
 
-	for (const message of messages) {
-		message.sender_avatar = message.sender_avatar
-			? `data:image/png;base64,${Buffer.from(message.sender_avatar).toString('base64')}`
-			: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${message.sender_username}`;
-
-		message.recipient_avatar = message.recipient_avatar
-			? `data:image/png;base64,${Buffer.from(message.recipient_avatar).toString('base64')}`
-			: (message.recipient_username
-				? `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${message.recipient_username}`
-				: null);
-	}
-
 	return messages;
 }

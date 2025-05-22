@@ -12,11 +12,9 @@ export default async function getUserInfo(username: string) {
 		throw new Error(`Failed to get ${username} info`)
 	}
 
-	const avatar = getAvatar(userInfo[0].username, userInfo[0].avatar)
-
 	const achievements = await Prisma.$queryRaw`SELECT * FROM "Achievement" WHERE id = ${userInfo[0].id}`;
 
 	const matches = await Prisma.$queryRaw`SELECT * FROM "Match" WHERE id = ${userInfo[0].id}`;
 
-	return {userInfo, avatar, matches, achievements}
+	return {userInfo, matches, achievements}
 }
