@@ -1,18 +1,19 @@
 import { FastifyInstance } from "fastify";
-import  friendsList  from "../../request/user/friendsList";
+import  sendFriendRequest  from "../../request/friends/sendFriendRequest";
+import { friendRequest } from "../../request/friends/interface";
 
-export default async function friendListRoute(server: FastifyInstance) {
-	server.get('/friendlist/:username', async function (request, reply) {
-	const { username } = request.params as { username: string }
+export default async function friendRequestRoute(server: FastifyInstance) {
+	server.post('/friends/request', async function (request, reply) {
+	const param = request.body as friendRequest
 
-	if (!username)
+	if (!param)
 	{
 		console.log('No parameter passed in friendListRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	try {
-		const result = await friendsList(username)
+		const result = await sendFriendRequest(param)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'User not found') {
