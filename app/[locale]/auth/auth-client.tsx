@@ -82,7 +82,6 @@ export function LoginPage() {
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
-      {theme === 'light' ? (
         <Image
           width={661}
           height={882}
@@ -90,15 +89,6 @@ export function LoginPage() {
           alt="DuckFace"
           className="absolute inset-0 w-full h-full object-cover"
         />
-      ) : (
-        <Image
-          width={661}
-          height={882}
-          src="https://media.discordapp.net/attachments/1375147763410534420/1375147834944524299/throbertchauve.jpg?ex=6830a1b8&is=682f5038&hm=e78fa2e7aed3fe075479a2d20581767a5faa84901147319f88210ce0780b1132&=&format=webp&width=661&height=882"
-          alt="DuckFace"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      )}
         {/* <PongGame /> */}
       </div>
     </div>
