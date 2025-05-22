@@ -14,7 +14,7 @@ export function UserProfile({ user }: { user: string }) {
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <Avatar className="h-24 w-24 mb-4">
-          <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${user}`} alt={user} />
+          <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${user}`} className="h-24 w-24" loading="lazy" alt={user} />
           <AvatarFallback className="text-2xl">{user.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-bold mb-1">{user}</h2>
