@@ -14,6 +14,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 
 	try {
 		const result = await sendMessage(data)
+		request.log.warn({ message: `Message send successfully ${data.content}` })
 		return (reply.code(200).send({ message: "Message send succesfully"}))
 	} catch (err: any) {
 		if (err.message === 'User not found in sendMessage') {
