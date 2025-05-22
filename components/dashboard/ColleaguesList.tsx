@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MessageCircle, Users } from "lucide-react"
 import { useI18n } from "@/i18n-client"
 
-export function ColleaguesList() {
+export function ColleaguesList({ user, locale }: { user: string; locale: string }) {
   const t = useI18n()
 
   return (
@@ -21,6 +21,7 @@ export function ColleaguesList() {
               <div className="flex items-center">
                 <Avatar className="h-8 w-8 mr-2">
                   <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${friend}`} alt={friend} />
+                  <AvatarFallback>{friend.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-sm font-medium">{friend}</p>

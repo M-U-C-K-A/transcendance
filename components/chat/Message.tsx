@@ -1,28 +1,65 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { createAvatar } from '@dicebear/core';
+import { botttsNeutral } from '@dicebear/collection';
+import { useMemo, useState, useEffect } from 'react';
+
+// Cache simple en mémoire
+const avatarCache = new Map<string, string>();
 
 type MessageProps = {
   message: {
-    id: number
+    id: number;
     user: {
-      name: string
-      avatar: string
-    }
-    text: string
-    timestamp: Date
-  }
-}
+      name: string;
+    };
+    text: string;
+    timestamp: Date;
+  };
+};
 
 export function Message({ message }: MessageProps) {
-  console.log(message)
+  const [avatarUri, setAvatarUri] = useState<string>('');
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  }
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  useEffect(() => {
+    // Vérifier le cache d'abord
+    if (avatarCache.has(message.user.name)) {
+      setAvatarUri(avatarCache.get(message.user.name)!);
+      return;
+    }
+
+    // Génération de l'avatar
+    const svg = createAvatar(botttsNeutral, {
+      seed: message.user.name,
+      size: 80
+    }).toString();
+
+    const uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+
+    // Mettre en cache et mettre à jour l'état
+    avatarCache.set(message.user.name, uri);
+    setAvatarUri(uri);
+  }, [message.user.name]);
 
   return (
     <div className="flex items-start gap-3">
       <Avatar className="h-8 w-8">
-        <AvatarImage src={message.user.avatar} alt={`image de profile de ${message.user.name}`} />
-        <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
+        {avatarUri ? (
+          <AvatarImage
+            src={avatarUri}
+            alt={`Avatar de ${message.user.name}`}
+            loading="lazy"
+            decoding="async"
+            width="32"
+            height="32"
+          />
+        ) : (
+          <AvatarFallback className="animate-pulse">
+            {message.user.name.charAt(0)}
+          </AvatarFallback>
+        )}
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -36,5 +73,5 @@ export function Message({ message }: MessageProps) {
         </p>
       </div>
     </div>
-  )
+  );
 }

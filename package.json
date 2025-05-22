@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@auth/core": "^0.39.1",
+    "@dicebear/collection": "^9.2.2",
+    "@dicebear/core": "^9.2.2",
     "@fastify/cors": "^11.0.1",
     "@fastify/jwt": "^9.1.0",
     "@fastify/swagger": "^9.5.1",
@@ -56,6 +58,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "dicebear": "^9.2.2",
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.6.0",
     "faker": "^6.6.6",
