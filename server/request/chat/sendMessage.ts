@@ -5,9 +5,9 @@ const Prisma = new PrismaClient()
 
 export default async function sendMessage(data: sendMessageData) {
 	const senderId = await Prisma.$queryRaw<id[]>`
-  	SELECT id FROM "User" WHERE username = ${data.senderName}`
+	SELECT id FROM "User" WHERE username = ${data.senderName}`
 	const recipientId = await Prisma.$queryRaw<id[]>`
-  	SELECT id FROM "User" WHERE username = ${data.recipientName}`
+	SELECT id FROM "User" WHERE username = ${data.recipientName}`
 
 	if (senderId[0]) {
 		if (!senderId[0].id) {
