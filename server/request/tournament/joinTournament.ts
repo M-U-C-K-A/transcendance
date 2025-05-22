@@ -32,7 +32,7 @@ Promise<void> {
 
 
 	const [info] = await prisma.$queryRaw<{ count: number }[]>`
-		SELECT COUNT(*) AS count
+		SELECT COUNT (*) AS count
 		FROM "TournamentParticipants"
 		WHERE "tournamentId" = ${tournament.id}
 	`

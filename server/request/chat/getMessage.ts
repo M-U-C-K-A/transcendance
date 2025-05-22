@@ -1,44 +1,44 @@
 import { PrismaClient } from '@prisma/client'
-import { messageInfo, id } from './interface'
-import { userData } from '../user/interface'
+import { messageInfo, id, messageUser } from './interface'
 import { getAvatar } from '@/server/utils/getAvatar'
-import { send } from 'process'
 
 const Prisma = new PrismaClient()
 
 export default async function getMessage(username: string) {
-	const userId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User"
-	WHERE username = ${username}`
-
-	if (!userId[0].id) {
-		console.log("Coulndt find user in getMessage")
-		throw new Error("Coulndt find user in getMessage")
-	}
-
-	const messages = await Prisma.$queryRaw<messageInfo[]>`
-	SELECT * from "Message"
-	WHERE senderId = ${userId[0].id}
-	OR recipientId = ${userId[0].id}
-	OR isGeneral = TRUE
-	ORDER BY "sendAt" ASC`
-
-	const users: userData[] = [];
+	const messages = await Prisma.$queryRaw<any[]>`
+	SELECT m.*,
+	sender.username AS sender_username,
+	sender.alias AS sender_alias,
+	sender.win AS sender_win,
+	sender.lose AS sender_lose,
+	sender.elo AS sender_elo,
+	sender.avatar AS sender_avatar,
+	recipient.username AS recipient_username,
+	recipient.alias AS recipient_alias,
+	recipient.win AS recipient_win,
+	recipient.lose AS recipient_lose,
+	recipient.elo AS recipient_elo,
+	recipient.avatar AS recipient_avatar
+	FROM "Message" m
+	JOIN "User" sender ON sender.id = m."senderId"
+	LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
+	JOIN "User" currentUser ON currentUser.username = ${username}
+	WHERE m."senderId" = currentUser.id
+	OR m."recipientId" = currentUser.id
+	OR m."isGeneral" = TRUE
+	ORDER BY m."sendAt" ASC`
 
 	for (const message of messages) {
-	const sender = await Prisma.$queryRaw<userData[]>`
-		SELECT * FROM "User" WHERE id = ${message.senderId}`
-	const recipient = await Prisma.$queryRaw<userData[]>`
-		SELECT * FROM "User" WHERE id = ${message.recipientId}`
+		message.sender_avatar = message.sender_avatar
+			? `data:image/png;base64,${Buffer.from(message.sender_avatar).toString('base64')}`
+			: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${message.sender_username}`;
 
-		if (sender[0]) {
-			sender[0].avatar = await getAvatar(sender[0]);
-			users.push(sender[0]);
-		}
-		if (recipient[0]) {
-			recipient[0].avatar = await getAvatar(recipient[0]);
-			users.push(recipient[0]);
-		}
+		message.recipient_avatar = message.recipient_avatar
+			? `data:image/png;base64,${Buffer.from(message.recipient_avatar).toString('base64')}`
+			: (message.recipient_username
+				? `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${message.recipient_username}`
+				: null);
 	}
-	return {messages, users}
+
+	return (messages);
 }
