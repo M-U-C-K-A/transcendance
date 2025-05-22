@@ -9,6 +9,7 @@ import path from 'path';
 import fs from 'fs';
 import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
+import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
 
 // Génère un nom de fichier de log avec timestamp
@@ -59,6 +60,7 @@ async function main() {
     await app.register(chat);
     await app.register(getMessageRoute)
     await app.register(sendMessageRoute)
+    await app.register(tournamentRoutes);
 
     app.listen({ port, host: '0.0.0.0' }, (err, address) => {
         if (err) {

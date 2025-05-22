@@ -52,3 +52,11 @@ Suppr volum casse :
 docker-compose down
 docker volume rm transcend_node_modules
 docker-compose up --build
+
+
+
+
+
+docker-compose up  relance celui tout juste cree
+
+
