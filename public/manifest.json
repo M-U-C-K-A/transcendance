@@ -1,0 +1,48 @@
+{
+	"name": "Transcendance - Pong Multijoueur",
+	"short_name": "Pong",
+	"description": "Une application de jeu Pong multijoueur en temps réel avec chat et profils personnalisés",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#18181b",
+	"theme_color": "#18181b",
+	"icons": [
+	  {
+		"src": "/icons/icon-192x192.png",
+		"sizes": "192x192",
+		"type": "image/png"
+	  },
+	  {
+		"src": "/icons/icon-256x256.png",
+		"sizes": "256x256",
+		"type": "image/png"
+	  },
+	  {
+		"src": "/icons/icon-384x384.png",
+		"sizes": "384x384",
+		"type": "image/png"
+	  },
+	  {
+		"src": "/icons/icon-512x512.png",
+		"sizes": "512x512",
+		"type": "image/png"
+	  }
+	],
+	"screenshots": [
+	  {
+		"src": "./image.png",
+		"sizes": "1280x720",
+		"type": "image/png",
+		"label": "Partie de Pong en cours"
+	  },
+	  {
+		"src": "./meta.png",
+		"sizes": "1280x720",
+		"type": "image/png",
+		"label": "Tableau de bord avec chat et amis"
+	  }
+	],
+	"categories": ["games", "social", "entertainment"],
+	"related_applications": [],
+	"prefer_related_applications": false
+  }
