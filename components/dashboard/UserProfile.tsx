@@ -26,7 +26,7 @@ export function UserProfile({ user }: { user: User }) {
     <CardContent className="flex flex-col items-center">
       <Avatar className="h-24 w-24 mb-4">
         <AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
-        <AvatarFallback className="text-2xl">{user.username.charAt(0).toUpperCase()}</AvatarFallback>
+        <AvatarFallback className="text-2xl">jd</AvatarFallback>
       </Avatar>
       <h2 className="text-xl font-bold mb-1">{user.username}</h2>
       <p className="text-muted-foreground mb-2">@{user.username}</p>

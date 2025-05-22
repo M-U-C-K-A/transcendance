@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Trophy, Activity } from "lucide-react"
+import { ArrowLeft, Trophy, Activity, User } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Header } from "@/components/dashboard/Header"
+import { UserProfile } from "@/components/dashboard/UserProfile"
 
 // Données fictives pour les graphiques
 const eloData = [
@@ -102,35 +103,7 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - User Profile */}
           <div className="lg:col-span-1">
-            <Card className="bg-card border shadow-sm mb-6">
-              <CardHeader>
-                <CardTitle>Profil</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center">
-                <Avatar className="h-24 w-24 mb-4">
-                  <AvatarImage src="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD" />
-                  <AvatarFallback className="text-2xl">JD</AvatarFallback>
-                </Avatar>
-                <h2 className="text-xl font-bold mb-1">John Doe</h2>
-                <p className="text-muted-foreground mb-4">@johndoe</p>
-                <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
-                  <div>
-                    <p className="text-2xl font-bold text-primary">24</p>
-                    <p className="text-xs text-muted-foreground">Victoires</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-destructive">12</p>
-                    <p className="text-xs text-muted-foreground">Défaites</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-yellow-500">3</p>
-                    <p className="text-xs text-muted-foreground">Tournois</p>
-                  </div>
-                </div>
-                <Badge className="bg-primary/20 text-primary mb-4">ELO: 1600</Badge>
-                <Badge className="bg-yellow-500/20 text-yellow-500 mb-4">Rang #4</Badge>
-              </CardContent>
-            </Card>
+            <UserProfile user={user} />
 
             <Card className="bg-card border shadow-sm">
               <CardHeader>
