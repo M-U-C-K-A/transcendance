@@ -134,7 +134,7 @@ export default function PongGame() {
         const bounceAngle = (hitPosition - 0.5) * 1.5
 
         setBallVelocity({
-          x: Math.abs(ballVelocity.x)
+          x: Math.abs(ballVelocity.x),
           y: bounceAngle * 2
         })
         ballX.set(PADDLE_OFFSET + PADDLE_WIDTH)
@@ -151,7 +151,7 @@ export default function PongGame() {
         const bounceAngle = (hitPosition - 0.5) * 1.5
 
         setBallVelocity({
-          x: -Math.abs(ballVelocity.x)
+          x: -Math.abs(ballVelocity.x),
           y: bounceAngle * 2
         })
 
