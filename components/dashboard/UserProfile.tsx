@@ -15,7 +15,6 @@ interface User {
 }
 
 export function UserProfile({ user }: { user: User }) {
-  const t = useI18n()
 
   return (
     <Card className="bg-card border shadow-sm">

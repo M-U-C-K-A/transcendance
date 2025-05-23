@@ -6,11 +6,9 @@ import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, BarChart, LogOut, Settings, Activity, User } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { ProfileEditDialog } from "@/components/profile-edit-dialog"
+import { ArrowLeft } from "lucide-react"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfile } from "@/components/dashboard/UserProfile"
@@ -158,7 +156,6 @@ export default function ProfilePage() {
   const formattedMatches = matches.map(match => {
     const isWinner = match.winnerId === user.id
     const eloChange = isWinner ? match.p1EloGain : -match.p2EloGain
-    const opponentId = match.p1Id === user.id ? match.p2Id : match.p1Id
     const opponentUsername = "opponent" // Vous devrez récupérer le nom d'utilisateur de l'adversaire
 
     return {
@@ -243,7 +240,7 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent className="h-64 flex items-center justify-center">
                     <div className="text-center text-muted-foreground">
-                      Graphique d'évolution ELO (similaire à celui de la page stats)
+                      Graphique d&apos;évolution ELO (similaire à celui de la page stats)
                     </div>
                   </CardContent>
                 </Card>

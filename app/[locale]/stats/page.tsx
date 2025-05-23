@@ -5,15 +5,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Trophy, Activity, User } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { ArrowLeft, Trophy } from "lucide-react"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfile } from "@/components/dashboard/UserProfile"
 
-// Données fictives pour les graphiques
 const eloData = [
   { date: "Jan", elo: 1200 },
   { date: "Fév", elo: 1250 },
@@ -62,17 +60,15 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
   const [activeTab, setActiveTab] = useState("elo")
   const [timeRange, setTimeRange] = useState("year")
 
-  // Fonction pour calculer la hauteur des barres du graphique
   const getBarHeight = (elo: number) => {
     const minElo = Math.min(...eloData.map((d) => d.elo))
     const maxElo = Math.max(...eloData.map((d) => d.elo))
     const range = maxElo - minElo
-    return ((elo - minElo) / range) * 150 + 20 // 20px minimum height
+    return ((elo - minElo) / range) * 150 + 20
   }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <Header locale={locale} user={user} />
 
       <div className="container mx-auto py-8">
@@ -101,7 +97,6 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar - User Profile */}
           <div className="lg:col-span-1">
             <UserProfile user={user} />
 
@@ -140,7 +135,6 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
             </Card>
           </div>
 
-          {/* Main Content - Stats */}
           <div className="lg:col-span-3">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid grid-cols-3 mb-6">
@@ -156,10 +150,8 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
                     <CardDescription>Suivez l&apos;évolution de votre classement ELO au fil du temps</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {/* Graphique d'évolution ELO */}
                     <div className="h-80 w-full">
                       <div className="flex h-full">
-                        {/* Axe Y */}
                         <div className="flex flex-col justify-between pr-2 text-xs text-muted-foreground">
                           <span>1600</span>
                           <span>1500</span>
@@ -167,15 +159,12 @@ export default function StatsPage({ locale, user = "michaelsnow" }: StatsPagePro
                           <span>1300</span>
                           <span>1200</span>
                         </div>
-                        {/* Graphique */}
                         <div className="flex-1 relative">
-                          {/* Lignes horizontales */}
                           <div className="absolute inset-0 flex flex-col justify-between">
                             {[0, 1, 2, 3, 4].map((i) => (
                               <div key={i} className="border-t border-muted h-0 w-full" />
                             ))}
                           </div>
-                          {/* Barres */}
                           <div className="absolute inset-0 flex items-end">
                             <div className="w-full flex justify-between items-end h-full pt-4 pb-8">
                               {eloData.map((data, i) => (
