@@ -29,7 +29,6 @@ interface UserSelectProps {
 export function UserSelect({ onUserSelect, selectedUserId }: UserSelectProps) {
   const [open, setOpen] = useState(false)
   const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -40,8 +39,6 @@ export function UserSelect({ onUserSelect, selectedUserId }: UserSelectProps) {
         setUsers(data)
       } catch (error) {
         console.error('Erreur:', error)
-      } finally {
-        setLoading(false)
       }
     }
 

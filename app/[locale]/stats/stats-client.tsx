@@ -8,8 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Trophy, Activity } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { ArrowLeft, Trophy } from "lucide-react"
 import { Header } from "@/components/dashboard/Header"
 
 // Données fictives pour les graphiques
@@ -53,7 +52,7 @@ const rankingData = [
 ]
 
 type StatsClientProps = {
-  t: any
+  t: (key: string) => string
   locale: string
 }
 

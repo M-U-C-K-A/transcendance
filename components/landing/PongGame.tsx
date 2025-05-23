@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { motion, useMotionValue } from "framer-motion"
 
 export default function PongGame() {
@@ -56,7 +56,7 @@ export default function PongGame() {
     return () => window.removeEventListener("resize", updateSize)
   }, [leftPaddleY, rightPaddleY, ballX, ballY])
 
-  const resetBall = (direction: number) => {
+  const resetBall = useCallback((direction: number) => {
     if (gameLoopRef.current) {
       cancelAnimationFrame(gameLoopRef.current)
       gameLoopRef.current = null
@@ -75,7 +75,7 @@ export default function PongGame() {
     setTimeout(() => {
       setGameActive(true)
     }, 1000)
-  }
+  }, [ballX, ballY, containerSize.width, containerSize.height, setGameActive, setBallVelocity]);
 
   useEffect(() => {
     if (!containerRef.current || !gameActive) return
@@ -174,7 +174,7 @@ export default function PongGame() {
         gameLoopRef.current = null
       }
     }
-  }, [ballX, ballY, leftPaddleY, rightPaddleY, ballVelocity, containerSize, gameActive])
+  }, [ballX, ballY, leftPaddleY, rightPaddleY, ballVelocity, containerSize, gameActive, resetBall])
 
   return (
     <div ref={containerRef} className="relative w-full h-full bg-background/60 rounded-lg shadow-xl overflow-hidden z-20">

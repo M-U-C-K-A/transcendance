@@ -3,15 +3,21 @@ import { DashboardSkeleton } from '@/components/dashboard/Skeleton'
 import DashboardClient from './dashboard-client'
 import { ThemeHandler } from '@/components/theme-handler'
 
-export default async function DashboardPage({
-  params: { locale },
-}: {
-  params: { locale: string }
-}) {
+type PageProps = {
+  params: Promise<{
+    locale: string
+    jwtToken: string
+  }>
+}
+
+export default async function DashboardPage({ params }: PageProps) {
+  const { locale, jwtToken } = await params
+
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <ThemeHandler />
-      <DashboardClient locale={locale} />
-    </Suspense>
+    <ThemeHandler>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <DashboardClient locale={locale} jwtToken={jwtToken} />
+      </Suspense>
+    </ThemeHandler>
   )
 }

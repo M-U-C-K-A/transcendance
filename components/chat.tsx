@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { PublicChat } from "./chat/PublicChat"
@@ -19,6 +19,16 @@ type Message = {
   isPrivate: boolean
   recipient?: string
   isRead: boolean
+}
+
+interface ServerMessage {
+  id: number
+  sender_username: string
+  content: string
+  sendAt: string
+  isGeneral: boolean
+  recipient_username?: string
+  readStatus: boolean
 }
 
 type PrivateConversation = {
@@ -45,7 +55,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   const [error, setError] = useState<string | null>(null)
 
   // Fetch messages from backend
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -61,7 +71,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
       }
 
       const data = await response.json();
-      const transformedMessages = data.map((msg: any) => ({
+      const transformedMessages = data.map((msg: ServerMessage) => ({
         id: msg.id,
         user: {
           name: msg.sender_username,
@@ -82,12 +92,12 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentUser]);
 
   // Initialize component
   useEffect(() => {
     fetchMessages()
-  }, [currentUser])
+  }, [currentUser, fetchMessages])
 
   // Process private conversations
   useEffect(() => {

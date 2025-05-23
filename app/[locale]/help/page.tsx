@@ -8,11 +8,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GraphSection } from "@/components/graph/GraphSection"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+interface ApiResponse {
+  data: unknown;
+  status: number;
+  headers: Record<string, string>;
+  responseTime: number;
+}
+
 export default function GraphPage() {
   const [endpoint, setEndpoint] = useState("")
   const [method, setMethod] = useState("GET")
   const [body, setBody] = useState("")
-  const [response, setResponse] = useState<any>(null)
+  const [response, setResponse] = useState<ApiResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

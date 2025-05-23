@@ -66,7 +66,7 @@ export function Login({
 			)}&response_type=code&scope=${encodeURIComponent('email profile')}`;
 
 			window.location.href = googleAuthUrl;
-		} catch (err) {
+		} catch {
 			setError('Erreur lors de la connexion avec Google');
 		}
 	};
