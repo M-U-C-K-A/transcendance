@@ -1,13 +1,7 @@
-import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemePersistence } from '@/components/theme-persistence'
 import { Provider } from './provider'
 
-const inter = Inter({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-inter',
-  display: 'swap'
-})
 
 // ✅ Important : rendre la fonction async pour await `params`
 export default async function RootLayout({

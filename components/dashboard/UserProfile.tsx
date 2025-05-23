@@ -17,7 +17,6 @@ interface User {
 }
 
 export function UserProfile() {
-  const t = useI18n()
   const jwt = useJWT()
   const [user, setUser] = useState<User | null>(null)
 

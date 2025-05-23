@@ -31,7 +31,7 @@ export function LoginPage() {
 										onClick={() => setIsLogin(false)}
 										className="underline underline-offset-4"
 									>
-										S'inscrire
+										S&apos;inscrire
 									</button>
 								</>
 							) : (
