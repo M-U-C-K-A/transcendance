@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
       {
         source: "/api/friends/:path*",
         destination: "http://localhost:3001/friends/list/:path*"
+      },
+      {
+        source: "/api/user/me",
+        destination: "http://localhost:3001/profile/me"
       }
     ]
   },

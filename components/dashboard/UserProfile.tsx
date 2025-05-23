@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useI18n } from "@/i18n-client"
+import { useEffect, useState } from "react"
+import { useJWT } from "@/hooks/use-jwt"
 
 interface User {
   username: string
@@ -14,44 +16,65 @@ interface User {
   tournamentWon: number
 }
 
-export function UserProfile({ user }: { user: User }) {
+export function UserProfile() {
   const t = useI18n()
+  const jwt = useJWT()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await fetch("/api/user/me", {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+      const data = await response.json()
+      setUser(data)
+    }
+    fetchUser()
+  }, [jwt])
+
+  if (!user) {
+    return null
+  }
+  console.log(user)
 
   return (
     <Card className="bg-card border shadow-sm">
-    <CardHeader>
-      <CardTitle>Profil</CardTitle>
-    </CardHeader>
-    <CardContent className="flex flex-col items-center">
-      <Avatar className="h-24 w-24 mb-4">
-        <AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
-        <AvatarFallback className="text-2xl">jd</AvatarFallback>
-      </Avatar>
-      <h2 className="text-xl font-bold mb-1">{user.username}</h2>
-      <p className="text-muted-foreground mb-2">@{user.username}</p>
-      <p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
-      <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
-        <div>
-          <p className="text-2xl font-bold text-primary">{user.win}</p>
-          <p className="text-xs text-muted-foreground">Victoires</p>
+      <CardHeader>
+        <CardTitle>Profil</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center">
+        <Avatar className="h-24 w-24 mb-4">
+          <AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
+          <AvatarFallback className="text-2xl">jd</AvatarFallback>
+        </Avatar>
+        <h2 className="text-xl font-bold mb-1">{user.username}</h2>
+        <p className="text-muted-foreground mb-2">@{user.username}</p>
+        <p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
+        <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
+          <div>
+            <p className="text-2xl font-bold text-primary">{user.win}</p>
+            <p className="text-xs text-muted-foreground">Victoires</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-red-400">{user.lose}</p>
+            <p className="text-xs text-muted-foreground">Défaites</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
+            <p className="text-xs text-muted-foreground">Tournois</p>
+          </div>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-red-400">{user.lose}</p>
-          <p className="text-xs text-muted-foreground">Défaites</p>
+        <div className="flex gap-2 mb-4">
+          <Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
+          <Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
+          <Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
+            {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
+          </Badge>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
-          <p className="text-xs text-muted-foreground">Tournois</p>
-        </div>
-      </div>
-      <div className="flex gap-2 mb-4">
-        <Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-        <Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
-        <Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-          {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
-        </Badge>
-      </div>
-    </CardContent>
-  </Card>
+      </CardContent>
+    </Card>
   )
 }
+
