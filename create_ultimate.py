@@ -173,7 +173,8 @@ def generate_friends(user_ids):
                                (f['id1'] == friend_id and f['id2'] == user_id)):
                 friends.append({
                     'id1': min(user_id, friend_id),
-                    'id2': max(user_id, friend_id)
+                    'id2': max(user_id, friend_id),
+                    'status' : random.choice([True, False])
                 })
     return friends
 
