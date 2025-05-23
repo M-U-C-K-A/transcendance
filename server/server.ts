@@ -61,7 +61,6 @@ app.register(fastifyJwt, {
 
 async function main() {
 	const port = 3001;
-
 	await app.register(profileRoute);
 	await app.register(health);
 	await app.register(registerRoute);
@@ -74,7 +73,6 @@ async function main() {
 	await app.register(leaderboardRoute)
 	await app.register(friendRequestRoute)
 	await app.register(meProfile)
-
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
 			console.log(err);
