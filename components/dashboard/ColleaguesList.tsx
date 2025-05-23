@@ -16,6 +16,8 @@ import { useI18n } from "@/i18n-client"
 // Hooks React pour gérer l'état et les effets de bord
 import { useEffect, useState } from "react"
 
+import { useJWT } from "@/hooks/use-jwt"
+
 // Définition du type d'objet représentant un collègue
 interface Friend {
   username: string;
@@ -25,6 +27,7 @@ interface Friend {
 
 // Définition du composant principal qui affiche la liste des collègues
 export function ColleaguesList({ user, locale }: { user: string; locale: string }) {
+  const jwt = useJWT()
   // Initialisation du hook de traduction
   const t = useI18n()
 
@@ -40,7 +43,11 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
     const fetchFriends = async () => {
       try {
         setLoading(true) // indique que le chargement commence
-        const response = await fetch(`/api/friends/${user}`) // appel API pour récupérer les collègues
+        const response = await fetch(`/api/friends/`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }) // appel API pour récupérer les collègues
         if (!response.ok) {
           throw new Error('Failed to fetch friends') // gestion d'erreur si la réponse est mauvaise
         }
@@ -53,9 +60,9 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
         setLoading(false) // le chargement est terminé, quel que soit le résultat
       }
     }
-
-    fetchFriends() // exécution de la fonction de récupération
-  }, [user]) // se déclenche à chaque fois que l'utilisateur change
+    if (jwt)
+     fetchFriends() // exécution de la fonction de récupération
+  }, [jwt]) // se déclenche à chaque fois que l'utilisateur change
 
   // Affichage d'un message de chargement
   if (loading) {

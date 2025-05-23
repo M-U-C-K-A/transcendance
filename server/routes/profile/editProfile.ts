@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import  editProfile  from "../../request/user/editProfile"
-import { editProfileInfo } from "../../request/user/interface";
+import  editProfile  from "../../request/profile/editProfile"
+import { editProfileInfo } from "../../request/profile/interface";
 
 export default async function editProfileRoute(server: FastifyInstance) {
 	server.get('/editprofile/:username', async function (request, reply) {

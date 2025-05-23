@@ -1,7 +1,6 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../../request/user/getUserInfo'
-import { authMiddleware } from '../../authMiddleware'
-import { userData } from '@/server/request/user/interface'
+import getUserInfo from '../../request/profile/getUserInfo'
+import authMiddleware from '../../authMiddleware'
 
 export default async function meProfile(server: FastifyInstance) {
 	server.get('/profile/me', { preHandler: authMiddleware }, async function (request, reply) {
@@ -13,9 +12,9 @@ export default async function meProfile(server: FastifyInstance) {
 
 		try {
 			console.log("/profile/me request")
-			const result2 = await getUserInfo(user.username)
-			console.log(result2)
-			return reply.code(200).send(result2)
+			const result = await getUserInfo(user.username)
+			console.log(result)
+			return reply.code(200).send(result)
 		} catch (err: any) {
 			if (err.message == 'Failed to get user info')
 				return reply.code(404).send({ error: 'User not found' })
