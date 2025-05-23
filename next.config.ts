@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       {
         source: "/api/auth/:path*",
         destination: "http://localhost:3001/auth/:path*"
+      },
+      {
+        source: "/api/friends/:path*",
+        destination: "http://localhost:3001/friends/list/:path*"
       }
     ]
   },
