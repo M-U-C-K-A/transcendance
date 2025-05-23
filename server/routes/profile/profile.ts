@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../../request/user/getUserInfo'
+import getUserInfo from '../../request/profile/getUserInfo'
 
 export default async function profileRoute(server: FastifyInstance) {
 	server.get('/profile/:username', async function (request, reply) {

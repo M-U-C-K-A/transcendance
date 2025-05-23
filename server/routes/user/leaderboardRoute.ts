@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import leaderboard from "@/server/request/user/leaderboard";
+import leaderboard from "@/server/request/profile/leaderboard";
 
 export default async function leaderboardRoute(server: FastifyInstance) {
 	server.get('/leaderboard', async function (request, reply) {
