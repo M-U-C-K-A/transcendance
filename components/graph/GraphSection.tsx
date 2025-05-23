@@ -33,7 +33,6 @@ import {
   YAxis,
   Cell,
 } from "recharts"
-import { useI18n } from "@/i18n-client"
 import { UserSelect } from "./UserSelect"
 
 interface UserStats {
