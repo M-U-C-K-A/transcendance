@@ -2,12 +2,11 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 
 export async function authMiddleware(request: FastifyRequest, reply: FastifyReply) {
 	try {
-	  await request.jwtVerify()
-	  console.log("testtesttes")
-	  console.log('Auth middleware: JWT verified', request.user)
+		await request.jwtVerify()
+		console.log("testtoken")
 	} catch (err) {
-	  console.log('Auth middleware: JWT verification failed')
-	  return reply.code(401).send({ error: 'Unauthorized' })
+		console.log("testtokenfailed")
+		return reply.code(401).send({ error: 'Unauthorized' })
 	}
   }
 

@@ -1,5 +1,5 @@
 export interface userData{
-	id: number;
+	id: number
 	username: string;
 	elo: number;
 	avatar: string;
@@ -11,6 +11,36 @@ export interface userData{
 	tournamentWon: number;
 	pointScored: number;
 	pointConcede: number;
+}
+
+export interface User {
+	username: string
+	avatar?: string
+	bio?: string
+	onlineStatus: boolean
+	elo: number
+	win: number
+	lose: number
+	tournamentWon: number
+}
+
+export interface AchievementsData {
+	beginner: boolean;
+	humiliation: boolean;
+	shamefullLose: boolean;
+	rivality: boolean;
+	fairPlay: boolean;
+	lastSecond: boolean;
+	comeback: boolean;
+	longGame: boolean;
+	winTournament: boolean;
+	friendly: boolean;
+	rank1: boolean;
+	looser: boolean;
+	winner: boolean;
+	scorer: boolean;
+	emoji: boolean;
+	rage: boolean;
 }
 
 export interface editProfileInfo{
