@@ -15,7 +15,7 @@ import { loggerConfig } from './config/logger';
 import friendListRoute from './routes/friends/friendList';
 import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
-import { AwardIcon } from 'lucide-react';
+import meProfile from './routes/profile/meProfile';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -73,6 +73,7 @@ async function main() {
 	await app.register(friendListRoute)
 	await app.register(leaderboardRoute)
 	await app.register(friendRequestRoute)
+	await app.register(meProfile)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
