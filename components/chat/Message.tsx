@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createAvatar } from '@dicebear/core';
 import { botttsNeutral } from '@dicebear/collection';
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Cache simple en mémoire
 const avatarCache = new Map<string, string>();

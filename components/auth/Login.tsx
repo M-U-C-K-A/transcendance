@@ -7,7 +7,6 @@ import { Label } from '../ui/label';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
 import { Eye, EyeOff } from 'lucide-react'; // Import des icônes d'œil
 
 const loginSchema = z.object({

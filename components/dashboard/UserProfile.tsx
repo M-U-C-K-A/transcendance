@@ -16,6 +16,9 @@ interface User {
   tournamentWon: number
 }
 
+<<<<<<< HEAD
+export function UserProfile({ user }: { user: User }) {
+=======
 export function UserProfile() {
   const t = useI18n()
   const jwt = useJWT()
@@ -38,6 +41,7 @@ export function UserProfile() {
     return null
   }
   console.log(user)
+>>>>>>> ff54a6e1c0cea0b8c9de9139b677b4c5ada81dc9
 
   return (
     <Card className="bg-card border shadow-sm">
