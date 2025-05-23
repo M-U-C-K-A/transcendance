@@ -23,7 +23,7 @@ export default async function getMessage(username: string) {
 		JOIN "User" sender ON sender.id = m."senderId"
 		LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
 		WHERE m."isGeneral" = TRUE
-		ORDER BY m."sendAt" DESC
+		ORDER BY m."id" DESC
 		LIMIT 100
 	),
 	private_messages AS (
