@@ -52,7 +52,7 @@ export function PongGame({ locale }: PongGameProps) {
     gameHeight: 500,
     paddleWidth: 15,
     paddleSpeed: 8,
-    ballSpeed: 5,
+    ballSpeed: 2.5,
     isRunning: false,
     winner: null,
   })

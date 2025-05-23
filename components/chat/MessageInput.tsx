@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Send } from "lucide-react"
+// import { Invitation } from "Invitation"
 
 type MessageInputProps = {
   value: string
@@ -12,6 +13,9 @@ type MessageInputProps = {
 export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrivez un message..." }: MessageInputProps) {
   return (
     <form onSubmit={onSubmit} className="flex gap-2 p-4">
+      {/* <Invitation
+
+      /> */}
       <Input
         placeholder={placeholder}
         value={value}
