@@ -2,6 +2,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // Importation des icônes utilisées dans le composant
 import { MessageCircle, Users } from "lucide-react"
@@ -58,13 +59,35 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 
   // Affichage d'un message de chargement
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-6 w-1/2" />
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="flex items-center space-x-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        ))}
+      </div>
+    );
   }
+
 
   // Affichage d'un message d'erreur si l'appel API a échoué
   if (error) {
-    return <div>Error: {error}</div>
+    return (
+      <div className="space-y-4 border rounded-lg mt-4 px-4 py-6">
+        <Skeleton className="h-6 w-1/2 bg-red-500 opacity-50" />
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="flex items-center space-x-3">
+            <Skeleton className="h-10 w-10 rounded-full bg-red-700 opacity-50" />
+            <Skeleton className="h-4 w-24 bg-red-700 opacity-50" />
+          </div>
+        ))}
+      </div>
+    );
   }
+
 
   // Rendu principal du composant une fois les données chargées
   return (
@@ -123,3 +146,5 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
     </Card>
   )
 }
+
+
