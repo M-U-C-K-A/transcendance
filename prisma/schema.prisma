@@ -16,12 +16,12 @@ datasource db {
 
 model User {
 	id				Int			@id @default(autoincrement())
-	username		String		@unique // Supprimé @db.Text
-	alias			String? // Supprimé @db.Text
-	email			String  @unique // Supprimé @db.Text
-	pass			String // Supprimé @db.Text
+	username		String		@unique
+	alias			String?
+	email			String  @unique
+	pass			String
 	avatar			Bytes?
-	bio				String? // Supprimé @db.Text
+	bio				String?
 	onlineStatus	Boolean	@default(false)
 	elo				Int			@default(1200)
 	win				Int			@default(0)
@@ -183,7 +183,7 @@ model Invitation {
 	id			Int			@id @default(autoincrement())
 	senderId	Int
 	recipientId	Int
-	matchType   String   @default("Quickplay") // Remplace MatchType enum
+	matchType   String   @default("Quickplay")
 	createdAt	DateTime	@default(now())
 	expireAt	DateTime
 
@@ -201,7 +201,6 @@ model Message {
   isGeneral   Boolean  @default(false)
   messageType String   @default("Message")
 
-  // Relations avec des noms explicites
   sender      User     @relation("SentMessages", fields: [senderId], references: [id])
   recipient   User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
 }
