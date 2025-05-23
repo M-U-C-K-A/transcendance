@@ -17,10 +17,6 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-function getLangFromSegment(params: { locale?: string }) {
-  return params.locale || "fr";
-}
-
 export const metadata: Metadata = {
   title: {
     default: "PongMaster - Le jeu de Pong professionnel",
@@ -66,6 +62,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  viewport: "width=device-width, initial-scale=1",
   verification: {
     google: "votre-code-verification-google",
   },
@@ -82,9 +79,13 @@ export default function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body>
         {children}
       </body>
     </html>
   );
 }
+

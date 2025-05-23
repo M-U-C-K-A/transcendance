@@ -39,7 +39,7 @@ export function Header({ locale, user }: HeaderProps) {
             </Button>
           </Link>
           <Avatar>
-            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} alt={displayUser} />
+            <AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} width={32} height={32} alt={displayUser} />
             <AvatarFallback>{displayUser.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>

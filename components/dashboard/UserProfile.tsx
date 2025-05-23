@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ProfileEditDialog } from "@/components/profile-edit-dialog"
 import { useI18n } from "@/i18n-client"
 
 interface User {
