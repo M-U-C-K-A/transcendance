@@ -19,6 +19,7 @@ interface User {
 export function UserProfile() {
   const jwt = useJWT()
   const [user, setUser] = useState<User | null>(null)
+  console.log("JWT:", jwt)
 
   useEffect(() => {
     const fetchUser = async () => {
