@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 
-// Types pour le jeu Pong
 type PaddleState = {
   y: number
   height: number
@@ -52,7 +51,7 @@ export function PongGame({ locale }: PongGameProps) {
     gameHeight: 500,
     paddleWidth: 15,
     paddleSpeed: 8,
-    ballSpeed: 2.5,
+    ballSpeed: 4,
     isRunning: false,
     winner: null,
   })
@@ -97,36 +96,59 @@ export function PongGame({ locale }: PongGameProps) {
   }, [])
 
   useEffect(() => {
+    const pressedKeys = new Set<string>()
+
     const handleKeyDown = (e: KeyboardEvent) => {
+      pressedKeys.add(e.key)
+      e.preventDefault()
+    }
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      pressedKeys.delete(e.key)
+    }
+
+    window.addEventListener("keydown", handleKeyDown, { passive: false })
+    window.addEventListener("keyup", handleKeyUp)
+
+    const interval = setInterval(() => {
       if (!gameState.isRunning) return
 
       setGameState((prev) => {
         const newState = { ...prev }
-        if (e.key === "w" || e.key === "W") {
+
+        // Contrôles Joueur 1 (W/S)
+        if (pressedKeys.has("w") || pressedKeys.has("W")) {
           newState.player1.y = Math.max(0, newState.player1.y - newState.paddleSpeed)
-        } else if (e.key === "s" || e.key === "S") {
+        }
+        if (pressedKeys.has("s") || pressedKeys.has("S")) {
           newState.player1.y = Math.min(
             newState.gameHeight - newState.player1.height,
-            newState.player1.y + newState.paddleSpeed,
+            newState.player1.y + newState.paddleSpeed
           )
         }
 
-        if (e.key === "ArrowUp") {
+        // Contrôles Joueur 2 (flèches)
+        if (pressedKeys.has("ArrowUp")) {
           newState.player2.y = Math.max(0, newState.player2.y - newState.paddleSpeed)
-        } else if (e.key === "ArrowDown") {
+        }
+        if (pressedKeys.has("ArrowDown")) {
           newState.player2.y = Math.min(
             newState.gameHeight - newState.player2.height,
-            newState.player2.y + newState.paddleSpeed,
+            newState.player2.y + newState.paddleSpeed
           )
         }
 
         return newState
       })
-    }
+    }, 1000 / 60)
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+      window.removeEventListener("keyup", handleKeyUp)
+      clearInterval(interval)
+    }
   }, [gameState.isRunning])
+
 
   useEffect(() => {
     if (!gameState.isRunning) return
@@ -138,7 +160,10 @@ export function PongGame({ locale }: PongGameProps) {
         newState.ball.x += newState.ball.dx
         newState.ball.y += newState.ball.dy
 
-        if (newState.ball.y - newState.ball.radius <= 0 || newState.ball.y + newState.ball.radius >= newState.gameHeight) {
+        if (
+          newState.ball.y - newState.ball.radius <= 0 ||
+          newState.ball.y + newState.ball.radius >= newState.gameHeight
+        ) {
           newState.ball.dy = -newState.ball.dy
         }
 
@@ -148,8 +173,8 @@ export function PongGame({ locale }: PongGameProps) {
           newState.ball.y <= newState.player1.y + newState.player1.height
         ) {
           newState.ball.dx = Math.abs(newState.ball.dx)
-          const hitPosition = (newState.ball.y - newState.player1.y) / newState.player1.height
-          newState.ball.dy = newState.ballSpeed * (hitPosition - 0.5) * 2
+          const hitPos = (newState.ball.y - newState.player1.y) / newState.player1.height
+          newState.ball.dy = newState.ballSpeed * (hitPos - 0.5) * 2
         }
 
         if (
@@ -158,8 +183,8 @@ export function PongGame({ locale }: PongGameProps) {
           newState.ball.y <= newState.player2.y + newState.player2.height
         ) {
           newState.ball.dx = -Math.abs(newState.ball.dx)
-          const hitPosition = (newState.ball.y - newState.player2.y) / newState.player2.height
-          newState.ball.dy = newState.ballSpeed * (hitPosition - 0.5) * 2
+          const hitPos = (newState.ball.y - newState.player2.y) / newState.player2.height
+          newState.ball.dy = newState.ballSpeed * (hitPos - 0.5) * 2
         }
 
         if (newState.ball.x - newState.ball.radius <= 0) {
@@ -217,7 +242,7 @@ export function PongGame({ locale }: PongGameProps) {
       gameState.gameWidth - gameState.paddleWidth,
       gameState.player2.y,
       gameState.paddleWidth,
-      gameState.player2.height,
+      gameState.player2.height
     )
 
     context.beginPath()
@@ -248,12 +273,16 @@ export function PongGame({ locale }: PongGameProps) {
       context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--primary") || "#3b82f6"
       context.textAlign = "center"
       context.textBaseline = "middle"
-      context.fillText(`${gameState.winner} ${locale === "fr" ? "a gagné !" : "won!"}`, gameState.gameWidth / 2, gameState.gameHeight / 2 - 50)
+      context.fillText(
+        `${gameState.winner} ${locale === "fr" ? "a gagné !" : "won!"}`,
+        gameState.gameWidth / 2,
+        gameState.gameHeight / 2 - 50
+      )
       context.font = "24px Arial"
       context.fillText(
         `${locale === "fr" ? "Score final" : "Final score"}: ${gameState.score.player1} - ${gameState.score.player2}`,
         gameState.gameWidth / 2,
-        gameState.gameHeight / 2 + 20,
+        gameState.gameHeight / 2 + 20
       )
     }
   }, [gameState, showCountdown, countdown, gameOver, locale])
@@ -286,15 +315,23 @@ export function PongGame({ locale }: PongGameProps) {
       </div>
       <div className="flex justify-between items-center">
         <div>
-          <p className="text-sm text-muted-foreground mb-1">{locale === "fr" ? "Contrôles Joueur 1:" : "Player 1 Controls:"}</p>
+          <p className="text-sm text-muted-foreground mb-1">
+            {locale === "fr" ? "Contrôles Joueur 1:" : "Player 1 Controls:"}
+          </p>
           <p className="text-xs text-muted-foreground">{locale === "fr" ? "W (haut) / S (bas)" : "W (up) / S (down)"}</p>
         </div>
-        {gameOver && <button onClick={restartGame} className="btn-primary">{locale === "fr" ? "Rejouer" : "Restart"}</button>}
+        {gameOver && (
+          <button onClick={restartGame} className="btn-primary">
+            {locale === "fr" ? "Rejouer" : "Restart"}
+          </button>
+        )}
         <div className="text-right">
-          <p className="text-sm text-muted-foreground mb-1">{locale === "fr" ? "Contrôles Joueur 2:" : "Player 2 Controls:"}</p>
-<p className="text-xs text-muted-foreground">↑ / ↓</p>
-</div>
-</div>
-</>
-)
+          <p className="text-sm text-muted-foreground mb-1">
+            {locale === "fr" ? "Contrôles Joueur 2:" : "Player 2 Controls:"}
+          </p>
+          <p className="text-xs text-muted-foreground">↑ / ↓</p>
+        </div>
+      </div>
+    </>
+  )
 }
