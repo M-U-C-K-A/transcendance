@@ -3,7 +3,7 @@ import { User } from './interface'
 
 const Prisma = new PrismaClient()
 
-export default async function getUserInfo(username: string) {
+export default async function meProfileInfo(username: string) {
 	const userInfo = await Prisma.$queryRaw<User[]>`
 	SELECT username, avatar, bio, elo, win, onlineStatus, lose, tournamentWon
 	FROM "User"

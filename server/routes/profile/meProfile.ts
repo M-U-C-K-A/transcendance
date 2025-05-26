@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../../request/profile/getUserInfo'
+import meProfileInfo from '../../request/profile/meProfile'
 import authMiddleware from '../../authMiddleware'
 
 export default async function meProfile(server: FastifyInstance) {
@@ -12,7 +12,7 @@ export default async function meProfile(server: FastifyInstance) {
 
 		try {
 			console.log("/profile/me request")
-			const result = await getUserInfo(user.username)
+			const result = await meProfileInfo(user.username)
 			console.log(result)
 			return reply.code(200).send(result)
 		} catch (err: any) {
