@@ -207,10 +207,6 @@ export default function ProfilePage() {
                     <span className="font-medium">{userInfo.pointConcede}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Meilleure série</span>
-                    <span className="font-medium">N/A</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-muted-foreground">Tournois gagnés</span>
                     <span className="font-medium">{userInfo.tournamentWon}</span>
                   </div>

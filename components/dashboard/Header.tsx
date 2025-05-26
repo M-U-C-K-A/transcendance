@@ -1,3 +1,5 @@
+
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -5,29 +7,21 @@ import { Activity, BarChart, LogOut, Settings } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { useI18n } from "@/i18n-client"
+import { LogIn } from "lucide-react"
+import { useJWT } from "@/hooks/use-jwt"
 
 interface HeaderProps {
 	locale: string
-	user: string
+	user: string | null
 }
 
-/**
- * The main header component, displayed on every page.
- *
- * @param {HeaderProps} props The component props.
- * @param {string} props.locale The locale of the user.
- * @param {string} props.user The username of the user.
- *
- * @returns {JSX.Element} The rendered header component.
- *
- * Rendering:
- * - A main header component with a logo on the left and a user dropdown on the right.
- * - The user dropdown displays the user's avatar and name.
- * - The user dropdown contains a "Settings" button, a "Stats" link, a language switcher, a theme toggle, and a logout button.
- */
-export function Header({ locale, user }: HeaderProps) {
+export function Header({ user: jwtToken, locale }: { user: string, locale: string }) {
+	const jwt = useJWT()
 	const t = useI18n()
-	const displayUser = user || "NONE"
+	const [user, setUser] = useState<HeaderProps | null>(null)
+	console.log("JWT:", jwt)
+	const isLoggedIn = jwt ? true : false
+	const displayName = jwt ? jwtToken : null
 
 	return (
 		<header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
@@ -37,28 +31,55 @@ export function Header({ locale, user }: HeaderProps) {
 					<h1 className="text-xl font-bold">{t('common.appName')}</h1>
 				</Link>
 				<div className="flex items-center gap-4">
-					<Button variant="ghost" size="sm" aria-label="Settings">
-						<Settings className="h-5 w-5" />
-					</Button>
-					<Link href="/stats">
-						<Button variant="ghost" size="sm" aria-label="Stats">
-							<BarChart className="h-5 w-5" />
-						</Button>
-					</Link>
+
+					{isLoggedIn ? (
+						<>
+							<Button variant="ghost" size="sm" aria-label="Settings" disabled={!isLoggedIn}>
+								<Settings className="h-5 w-5" />
+							</Button>
+							<Link href="/stats">
+								<Button variant="ghost" size="sm" aria-label="Stats">
+									<BarChart className="h-5 w-5" />
+								</Button>
+							</Link>
+						</>
+					) : (
+						<>
+
+							<Button variant="ghost" size="sm" aria-label="Settings" disabled>
+								<Settings className="h-5 w-5" />
+							</Button>
+							<Button variant="ghost" size="sm" aria-label="Stats" disabled>
+								<BarChart className="h-5 w-5" />
+							</Button>
+						</>
+					)}
 					<LanguageSwitcher />
 					<ThemeToggle />
-					<Link href={`/${locale}`}>
-						<Button variant="ghost" size="sm" aria-label="Log Out">
-							<LogOut className="h-5 w-5" />
-						</Button>
-					</Link>
-					<Avatar>
-						<AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} width={32} height={32} alt={displayUser} />
-						<AvatarFallback>{displayUser.slice(0, 2).toUpperCase()}</AvatarFallback>
-					</Avatar>
+					{isLoggedIn ? (
+						<>
+							<Link href={`/${locale}`}>
+								<Button variant="ghost" size="sm" aria-label="Log Out">
+									<LogOut className="h-5 w-5" /> Log Out
+								</Button>
+							</Link>
+							<Avatar>
+								<AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayName}`} width={32} height={32} alt={displayName} />
+								<AvatarFallback>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
+							</Avatar>
+						</>
+					) : (
+
+						<Link href={`/auth?redirect=${locale}`}>
+							<Button variant="ghost" size="sm" aria-label="Log Out">
+								<LogIn className="h-5 w-5" /> Sign in
+							</Button>
+						</Link>
+					)}
 				</div>
 			</div>
 		</header>
 	)
 }
+
 
