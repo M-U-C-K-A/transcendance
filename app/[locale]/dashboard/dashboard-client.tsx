@@ -11,12 +11,12 @@ export default function DashboardClient({ locale, jwtToken }: { locale: string, 
   console.log("JWT Token ta race:", jwtToken)
   return (
     <div className="bg-background min-h-screen">
-      <Header locale={locale} user={jwtToken} />
+      <Header locale={locale} />
 
       <div className="container mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Sidebar */}
         <div className="lg:col-span-3">
-          <UserProfile user={jwtToken} locale={locale} />
+          <UserProfile locale={locale} />
           <ColleaguesList user={jwtToken} locale={locale} />
         </div>
 

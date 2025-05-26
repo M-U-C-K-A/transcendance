@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft } from "lucide-react"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
-import { UserProfileCard } from "@/components/profile/userInfo"
+import { UserProfileCard } from "@/components/profile/UserInfo"
 
 interface UserInfo {
   id: number
@@ -166,7 +166,7 @@ export default function ProfilePage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Header */}
-      <Header locale={locale} user={userInfo.username} />
+      <Header locale={locale} />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
