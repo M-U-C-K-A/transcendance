@@ -14,10 +14,10 @@ export default async function registerRoute(server: FastifyInstance) {
 		} catch (err: any) {
 			if (err.message === 'Username already taken') {
 				request.log.warn({ username: data.username }, 'Tentative d\'inscription avec un nom d\'utilisateur déjà pris')
-				return reply.code(400).send({ error: 'Username already taken' })
+				return reply.code(403).send({ error: 'Username already taken' })
 			} else if (err.message === 'Email already taken') {
 				request.log.warn({ email: data.email }, 'Tentative d\'inscription avec un email déjà utilisé')
-				return reply.code(400).send({ error: 'Email already taken' })
+				return reply.code(403).send({ error: 'Email already taken' })
 			}
 
 			request.log.error({ username: data.username, email: data.email, error: err }, 'Erreur lors de l\'inscription')

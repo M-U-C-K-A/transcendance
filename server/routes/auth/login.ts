@@ -13,6 +13,7 @@ export default async function loginRoute(server: FastifyInstance) {
 				id: user[0].id,
 				email: user[0].email,
 				username: user[0].username,
+				bio: user[0].bio,
 			})
 			request.log.info({ email: data.email }, 'Connexion réussie')
 			return reply.code(202).send({ message: 'User logged successfully', token })

@@ -23,7 +23,7 @@ export default async function login(data: loginData) {
 	if (goodPass) {
 		console.log(`User has been logged`)
 		const userInfo = await Prisma.$queryRaw<returnData[]>`
-		SELECT id, email, username
+		SELECT id, email, username, bio
 		FROM "User" WHERE email = ${data.email}`
 		return (userInfo)
 	}
