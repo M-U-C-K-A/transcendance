@@ -8,14 +8,12 @@ export default async function friendsList(username: string) {
 	const userId = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${username}`
-	console.log('test1')
-	console.log(`${userId[0].id}`)
+
 	const friendsId = await Prisma.$queryRaw<friendIds[]>`
 	SELECT * FROM "Friends"
 	WHERE (id1 = ${userId[0].id} OR id2 = ${userId[0].id})
 	AND status = TRUE;`
 
-	console.log('test2')
 	if (!friendsId[0]) {
 		console.log("No friends registered")
 		throw new Error("No friends registered")
@@ -29,7 +27,6 @@ export default async function friendsList(username: string) {
 		list.push(friendsId[i].id1);
 	}
 }
-	console.log('test3')
 	const friendsList = await Prisma.user.findMany({
 		where: {
 			id: { in: list }
@@ -48,6 +45,5 @@ export default async function friendsList(username: string) {
 			pointConcede: true,
 		}
 	});
-	console.log('test4')
 	return (friendsList)
 }
