@@ -83,7 +83,6 @@ export function Message({ message }: MessageProps) {
 			</Avatar>
 			<div className="flex-1 min-w-0">
 				<div className="flex items-center gap-2">
-					<Link href={`/profile/${message.user.name}`}>
 						<HoverCard>
 							<HoverCardTrigger>
 								<span className="font-medium">{message.user.name}</span></HoverCardTrigger>
@@ -120,7 +119,6 @@ export function Message({ message }: MessageProps) {
 								</div>
 							</HoverCardContent>
 						</HoverCard>
-					</Link>
 					<span className="text-xs text-muted-foreground">
 						{formatTime(message.timestamp)}
 					</span>

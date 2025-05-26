@@ -21,7 +21,6 @@ export function Header({ user: jwtToken, locale }: { user: string, locale: strin
 	const [user, setUser] = useState<HeaderProps | null>(null)
 	console.log("JWT:", jwt)
 	const isLoggedIn = jwt ? true : false
-	const displayName = jwt ? jwtToken : null
 
 	return (
 		<header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
@@ -64,8 +63,8 @@ export function Header({ user: jwtToken, locale }: { user: string, locale: strin
 								</Button>
 							</Link>
 							<Avatar>
-								<AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayName}`} width={32} height={32} alt={displayName} />
-								<AvatarFallback>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
+								<AvatarImage src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${displayUser}`} width={32} height={32} alt={displayUser} />
+								<AvatarFallback>{displayUser.slice(0, 2).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						</>
 					) : (
@@ -81,5 +80,4 @@ export function Header({ user: jwtToken, locale }: { user: string, locale: strin
 		</header>
 	)
 }
-
 
