@@ -1,23 +1,31 @@
 import { FastifyInstance } from "fastify";
 import  editProfile  from "../../request/profile/editProfile"
-import { editProfileInfo } from "../../request/profile/interface";
+import authMiddleware from "@/server/authMiddleware";
+import meProfileInfo from "@/server/request/profile/meProfile";
 
 export default async function editProfileRoute(server: FastifyInstance) {
-	server.get('/editprofile/:username', async function (request, reply) {
-	const { newInfo } = request.params as { newInfo: editProfileInfo }
+	server.post('/editprofile', {preHandler: authMiddleware}, async function (request, reply) {
+	const userId = request.user as { id: number; username: string}
+	const newInfo = request.body as { newAvatar: string, newUsername: string, newBio: string}
 
-	if (!newInfo)
+	if (!userId || !newInfo)
 	{
-		console.log('No parameter passed in editProfileRoute route')
+		console.log('wrong parameter in editProfileRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	try {
-		const result = await editProfile(newInfo)
+		await editProfile(userId.id, userId.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)
+		const result = await meProfileInfo(userId.username)
 		return (reply.code(200).send(result))
-	} catch (err) {
-		console.log('No user found in editProfileRoute')
-		reply.code(404).send({ error: 'User not found' })
+	} catch (err: any) {
+		if (err.message == 'Username already taken' ) {
+			reply.code(403).send({ error: 'Username already taken' })
+		}
+		if (err.message == 'Failed to get user info') {
+			return reply.code(404).send({ error: 'User not found' })
+		}
+		reply.code(500).send({ error: 'Internal server error' })
 	}
 })
 }

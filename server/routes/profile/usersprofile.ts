@@ -12,7 +12,6 @@ export default async function profileRoute(server: FastifyInstance) {
 		}
 
 		try {
-			console.log("test2")
 			const result = await getUserInfo(username)
 			request.log.info({ username }, 'Profil récupéré avec succès')
 			return (reply.code(200).send(result))

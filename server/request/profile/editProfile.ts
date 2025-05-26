@@ -1,21 +1,35 @@
 import { PrismaClient } from '@prisma/client'
-import { editProfileInfo } from './interface'
 
 const Prisma = new PrismaClient()
 
-export default async function editProfile(newInfo: editProfileInfo) {
-	const result = await Prisma.$queryRaw`UPDATE "User"
-	SET bio = ${newInfo.newBio},
-	username = ${newInfo.newAlias},
-	avatar = ${newInfo.newAvatar}
-	WHERE username = ${newInfo.username}`
+export default async function editProfile(id: number, username: string, newAvatar: string, newBio: string, newUsername: string) {
+	console.log(`${username}\n ${newUsername}\n`)
 
-	if (!result) {
-		console.log('Error while updating the profile')
-		throw new Error('Error while updating the profile')
+	if (username != newUsername) {
+		const result = await Prisma.user.findFirst({
+			where: {
+				username: newUsername
+			},
+		});
+
+		if (result) {
+			console.log('Username already taken')
+			throw new Error('Username already taken')
+		}
 	}
-	else {
-		console.log(`Update of ${newInfo.username} profile successful`);
-		return (result)
-	}
+
+	const avatar = Buffer.from(newAvatar);
+
+	const newInfo = await Prisma.user.update({
+		where: {
+			id: id,
+		},
+		data: {
+			avatar: avatar,
+			bio: newBio,
+			username: newUsername,
+		}
+	});
+
+	return (true)
 }
