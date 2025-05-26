@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import getUserInfo from '../../request/profile/getUserInfo'
+import getUserInfo from '../../request/profile/usersProfile'
 
 export default async function profileRoute(server: FastifyInstance) {
 	server.get('/profile/:username', async function (request, reply) {
@@ -12,6 +12,7 @@ export default async function profileRoute(server: FastifyInstance) {
 		}
 
 		try {
+			console.log("test2")
 			const result = await getUserInfo(username)
 			request.log.info({ username }, 'Profil récupéré avec succès')
 			return (reply.code(200).send(result))

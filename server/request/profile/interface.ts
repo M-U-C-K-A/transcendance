@@ -6,8 +6,6 @@ export interface userData{
 	bio: string;
 	win: number;
 	lose: number;
-	gameNumber: number;
-	winRate: number;
 	tournamentWon: number;
 	pointScored: number;
 	pointConcede: number;
