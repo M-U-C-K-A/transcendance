@@ -6,24 +6,22 @@ import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft } from "lucide-react"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
-import { UserProfile } from "@/components/dashboard/UserProfile"
+import { UserProfileCard } from "@/components/profile/userInfo"
 
 interface UserInfo {
   id: number
   username: string
-  alias: string
-  email: string
-  avatar: string
-  bio: string
-  onlineStatus: boolean
   elo: number
+  avatar: string | null
+  bio: string
   win: number
   lose: number
+  onlineStatus: boolean
   tournamentWon: number
   pointScored: number
   pointConcede: number
@@ -65,9 +63,9 @@ interface Achievements {
 }
 
 interface ProfileData {
-  userInfo: UserInfo[]
-  matches: Match[]
-  achievements: Achievements[]
+  userInfo: UserInfo
+  matchHistory: Match[]
+  achievements: Achievements
 }
 
 export default function ProfilePage() {
@@ -82,9 +80,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // Remplacez cette URL par votre endpoint API réel
         const response = await fetch(`/api/profile/${username}`)
-        console.log(response)
         if (!response.ok) {
           throw new Error("Failed to fetch profile data")
         }
@@ -125,7 +121,7 @@ export default function ProfilePage() {
     )
   }
 
-  if (!profileData || profileData.userInfo.length === 0) {
+  if (!profileData || !profileData.userInfo) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Card className="w-full max-w-md">
@@ -145,33 +141,32 @@ export default function ProfilePage() {
     )
   }
 
-  const user = profileData.userInfo[0]
-  const matches = profileData.matches
-  const achievements = profileData.achievements[0]
+  const { userInfo, matchHistory, achievements } = profileData
+  const winCount = userInfo.win || 0
+  const loseCount = userInfo.lose || 0
+  const winRate = winCount + loseCount > 0 ? Math.round((winCount / (winCount + loseCount)) * 100) : 0
 
-  // Calculer le taux de victoire
-  const winRate = user.win + user.lose > 0 ? Math.round((user.win / (user.win + user.lose)) * 100) : 0
-
-  // Formater les matchs pour l'affichage
-  const formattedMatches = matches.map(match => {
-    const isWinner = match.winnerId === user.id
-    const eloChange = isWinner ? match.p1EloGain : -match.p2EloGain
-    const opponentUsername = "opponent" // Vous devrez récupérer le nom d'utilisateur de l'adversaire
+  const formattedMatches = matchHistory.map(match => {
+    const isPlayer1 = match.p1Id === userInfo.id
+    const opponentId = isPlayer1 ? match.p2Id : match.p1Id
+    const playerScore = isPlayer1 ? match.p1Score : match.p2Score
+    const opponentScore = isPlayer1 ? match.p2Score : match.p1Score
+    const eloChange = isPlayer1 ? match.p1EloGain : match.p2EloGain
 
     return {
+      id: match.id,
       date: new Date(match.MDate).toLocaleDateString(),
-      opponent: opponentUsername,
-      result: isWinner ? "Victoire" : "Défaite",
-      eloChange: `${eloChange > 0 ? "+" : ""}${eloChange}`,
-      score: `${match.p1Score}-${match.p2Score}`,
-      isUserPlayer1: match.p1Id === user.id
+      opponent: `User ${opponentId}`, // Replace with actual username if available
+      result: match.winnerId === userInfo.id ? "Victoire" : "Défaite",
+      score: `${playerScore}-${opponentScore}`,
+      eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`
     }
   })
 
   return (
     <div className="bg-background min-h-screen">
       {/* Header */}
-      <Header locale={locale} />
+      <Header locale={locale} user={userInfo.username} />
 
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
@@ -180,13 +175,14 @@ export default function ProfilePage() {
               <ArrowLeft className="h-4 w-4" /> Retour au tableau de bord
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">Profil de {user.alias || user.username}</h1>
+          <h1 className="text-2xl font-bold">Profil de {userInfo.username}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar - User Profile */}
           <div className="lg:col-span-4">
-            <UserProfile user={user.username} />
+
+          <UserProfileCard user={userInfo} locale={locale} />
 
             <Card className="bg-card border shadow-sm mt-6">
               <CardHeader>
@@ -196,7 +192,7 @@ export default function ProfilePage() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Parties jouées</span>
-                    <span className="font-medium">{user.win + user.lose}</span>
+                    <span className="font-medium">{userInfo.win + userInfo.lose}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Taux de victoire</span>
@@ -204,11 +200,11 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Points marqués</span>
-                    <span className="font-medium">{user.pointScored}</span>
+                    <span className="font-medium">{userInfo.pointScored}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Points concédés</span>
-                    <span className="font-medium">{user.pointConcede}</span>
+                    <span className="font-medium">{userInfo.pointConcede}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Meilleure série</span>
@@ -216,7 +212,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Tournois gagnés</span>
-                    <span className="font-medium">{user.tournamentWon}</span>
+                    <span className="font-medium">{userInfo.tournamentWon}</span>
                   </div>
                 </div>
               </CardContent>
@@ -252,8 +248,8 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {formattedMatches.slice(0, 5).map((match, index) => (
-                        <div key={index} className="flex items-center justify-between bg-muted p-4 rounded-lg">
+                      {formattedMatches.slice(0, 5).map((match) => (
+                        <div key={match.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
                           <div>
                             <div className="flex items-center">
                               <p className="font-medium">vs {match.opponent}</p>
@@ -272,8 +268,7 @@ export default function ProfilePage() {
                               {match.result}
                             </Badge>
                             <span
-                              className={`font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
-                                }`}
+                              className={`font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"}`}
                             >
                               {match.eloChange}
                             </span>
@@ -294,7 +289,7 @@ export default function ProfilePage() {
                 <Card className="bg-card border shadow-sm">
                   <CardHeader>
                     <CardTitle>Historique des matchs</CardTitle>
-                    <CardDescription>Tous les matchs joués par {user.alias || user.username}</CardDescription>
+                    <CardDescription>Tous les matchs joués par {userInfo.username}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
@@ -309,17 +304,17 @@ export default function ProfilePage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {formattedMatches.map((match, index) => (
-                            <tr key={index} className="border-b">
+                          {formattedMatches.map((match) => (
+                            <tr key={match.id} className="border-b">
                               <td className="py-3 px-4 text-muted-foreground">{match.date}</td>
                               <td className="py-3 px-4">
                                 <div className="flex items-center">
                                   <Avatar className="h-6 w-6 mr-2">
                                     <AvatarFallback>{match.opponent.charAt(0)}</AvatarFallback>
                                   </Avatar>
-                                  <Link href={`/profile/${match.opponent.toLowerCase()}`} className="hover:underline">
+                                  <span className="hover:underline">
                                     {match.opponent}
-                                  </Link>
+                                  </span>
                                 </div>
                               </td>
                               <td className="py-3 px-4">
@@ -335,8 +330,7 @@ export default function ProfilePage() {
                               </td>
                               <td className="py-3 px-4">{match.score}</td>
                               <td
-                                className={`py-3 px-4 text-right font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"
-                                  }`}
+                                className={`py-3 px-4 text-right font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"}`}
                               >
                                 {match.eloChange}
                               </td>
@@ -457,12 +451,10 @@ export default function ProfilePage() {
                       ].map((achievement, index) => (
                         <div
                           key={index}
-                          className={`flex items-center p-4 rounded-lg border ${achievement.unlocked ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-muted"
-                            }`}
+                          className={`flex items-center p-4 rounded-lg border ${achievement.unlocked ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-muted"}`}
                         >
                           <div
-                            className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 text-2xl ${achievement.unlocked ? "bg-primary/20" : "bg-muted"
-                              }`}
+                            className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 text-2xl ${achievement.unlocked ? "bg-primary/20" : "bg-muted"}`}
                           >
                             {achievement.icon}
                           </div>
