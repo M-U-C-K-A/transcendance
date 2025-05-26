@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const Prisma = new PrismaClient()
 
 export default async function getuser(username: string) {
-	const user = await Prisma.user.findUnique({
+	const userInfo = await Prisma.user.findUnique({
 		where: {
 			username: username
 		},
@@ -22,33 +22,33 @@ export default async function getuser(username: string) {
 		},
 	});
 
-	if (!user) {
+	if (!userInfo) {
 		console.log(`Failed to get ${username} info`)
 		throw new Error(`Failed to get ${username} info`)
 	}
 
-	const gameNumber = user.win + user.lose
+	const gameNumber = userInfo.win + userInfo.lose
 	let winRate: number;
 	if (gameNumber > 0) {
-		winRate = (1.0 * user.win) / gameNumber
+		winRate = (1.0 * userInfo.win) / gameNumber
 	} else {
 		winRate = 0
 	}
 
 	const achievements = await Prisma.achievement.findUnique({
 		where: {
-			id: user.id,
+			id: userInfo.id,
 		},
 	});
 
 	const matchHistory = await Prisma.match.findMany({
 		where: {
 			OR: [
-				{ p1Id: user.id },
-				{ p2Id: user.id },
+				{ p1Id: userInfo.id },
+				{ p2Id: userInfo.id },
 			],
 		},
 	});
 	console.log(achievements)
-	return {user, gameNumber, winRate, achievements, matchHistory}
+	return {userInfo, gameNumber, winRate, achievements, matchHistory}
 }
