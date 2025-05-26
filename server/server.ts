@@ -16,6 +16,7 @@ import friendListRoute from './routes/friends/friendList';
 import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
 import meProfile from './routes/profile/meProfile';
+import editProfileRoute from './routes/profile/editProfile';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -67,6 +68,7 @@ async function main() {
 	await app.register(loginRoute);
 	await app.register(chat);
 	await app.register(getMessageRoute);
+	await app.register(editProfileRoute)
 	await app.register(sendMessageRoute);
 	await app.register(tournamentRoutes);
 	await app.register(friendListRoute)
