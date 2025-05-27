@@ -7,6 +7,8 @@ import { LanguageSwitcher } from "@/components/language-switcher"
 import { useI18n } from "@/i18n-client"
 import { LogIn } from "lucide-react"
 import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
+import { ProfileEditDialog } from "../profile-edit-dialog"
+import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
 
 interface HeaderProps {
   locale: string
@@ -14,6 +16,7 @@ interface HeaderProps {
 
 export function Header({ locale }: HeaderProps) {
   const username = useUsernameFromJWT()
+  const avatar = useAvatarFromJWT()
   const t = useI18n()
   const isLoggedIn = Boolean(username)
 
@@ -27,9 +30,7 @@ export function Header({ locale }: HeaderProps) {
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <>
-              <Button variant="ghost" size="sm" aria-label="Settings">
-                <Settings className="h-5 w-5" />
-              </Button>
+                <ProfileEditDialog username={username} />
               <Link href="/stats">
                 <Button variant="ghost" size="sm" aria-label="Stats">
                   <BarChart className="h-5 w-5" />
@@ -57,7 +58,7 @@ export function Header({ locale }: HeaderProps) {
               </Link>
               <Avatar>
                 <AvatarImage
-                  src={`https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`}
+                  src={avatar}
                   width={32}
                   height={32}
                   alt={username}

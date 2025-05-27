@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
+import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
 
 interface User {
 	username: string
@@ -23,6 +24,7 @@ interface User {
  */
 export function UserProfile({ locale }: { locale: string }) {
 	const jwt = useJWT()
+	const avatar = useAvatarFromJWT()
 	const [user, setUser] = useState<User | null>(null)
 	console.log("JWT:", jwt)
 
@@ -51,7 +53,7 @@ export function UserProfile({ locale }: { locale: string }) {
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage src={user.avatar || "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=JD"} />
+					<AvatarImage src={avatar} />
 					<AvatarFallback className="text-2xl">jd</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
