@@ -65,10 +65,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
   const handleSave = async () => {
 	console.group("[ProfileEditDialog] handleSave")
 
-	console.log("🔍 Données brutes du formulaire :", formData)
-
 	const result = ProfileSchema.safeParse(formData)
-
 	if (!result.success) {
 	  console.error("❌ Erreurs de validation Zod :", result.error.format())
 	  alert("Certains champs ne sont pas valides.")
@@ -76,34 +73,37 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 	  return
 	}
 
-	const payload = result.data
-	console.log("✅ Données validées à envoyer :", payload)
-
 	try {
 	  const response = await fetch("/api/editprofile", {
 		method: "POST",
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+		  "Content-Type": "application/json",
+		  Authorization: `Bearer ${localStorage.getItem("token")}`, // ou selon ton auth flow
 		},
-		body: JSON.stringify(payload),
+		body: JSON.stringify({
+		  newAvatar: formData.profilePhotoUrl,
+		  newUsername: formData.username,
+		  newBio: formData.bio,
+		}),
 	  })
 
-	  const responseText = await response.text()
-	  console.log("📥 Réponse brute de l'API :", responseText)
+	  const resText = await response.text()
+	  console.log("📥 Réponse brute :", resText)
 
 	  if (!response.ok) {
-		console.error("❌ Erreur HTTP :", response.status, response.statusText)
+		console.error("❌ Erreur HTTP :", response.status)
 		throw new Error("Échec de la mise à jour")
 	  }
 
-	  alert("✅ Profil mis à jour avec succès !")
-	} catch (error) {
-	  console.error("🚨 Exception attrapée :", error)
-	  alert("Une erreur est survenue lors de la mise à jour.")
+	  alert("✅ Profil mis à jour avec succès")
+	} catch (err) {
+	  console.error("🚨 Erreur dans handleSave :", err)
+	  alert("Une erreur est survenue.")
 	}
 
 	console.groupEnd()
   }
+
 
   return (
     <AlertDialog {...props}>
