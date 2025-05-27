@@ -11,7 +11,7 @@ export default async function loginRoute(server: FastifyInstance) {
 			const user = await login(data)
 			const token = server.jwt.sign({
 				id: user[0].id,
-				avatar: null,
+				avatar: user[0].avatar,
 				email: user[0].email,
 				username: user[0].username,
 				bio: user[0].bio,
