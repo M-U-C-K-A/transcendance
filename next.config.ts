@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
       {
         source: "/api/user/me",
         destination: "http://localhost:3001/profile/me"
+      },
+      {
+        source: "/api/editprofile",
+        destination: "http://localhost:3001/editprofile"
       }
     ]
   },
