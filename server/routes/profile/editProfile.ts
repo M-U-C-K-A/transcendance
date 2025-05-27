@@ -17,6 +17,12 @@ export default async function editProfileRoute(server: FastifyInstance) {
 	try {
 		await editProfile(userId.id, userId.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)
 		const result = await meProfileInfo(userId.username)
+		const token = server.jwt.sign({
+			id: result.id,
+			email: result.email,
+			username: result.username,
+			bio: result.bio,
+		})
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message == 'Username already taken' ) {
