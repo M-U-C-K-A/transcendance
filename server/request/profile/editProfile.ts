@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client'
 const Prisma = new PrismaClient()
 
 export default async function editProfile(id: number, username: string, newAvatar: string, newBio: string, newUsername: string) {
-	console.log(`${username}\n ${newUsername}\n`)
 
 	if (username != newUsername) {
 		const result = await Prisma.user.findFirst({

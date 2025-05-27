@@ -12,6 +12,8 @@ export interface userData{
 }
 
 export interface User {
+	id: number
+	email: number
 	username: string
 	avatar?: string
 	bio?: string
