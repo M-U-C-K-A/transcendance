@@ -12,42 +12,195 @@ import {
 } from "@babylonjs/core"
 
 export default function Page() {
+  // ----------------------------------------------------------------
+  // 1) Définition des 6 couleurs disponibles (hexadécimal)
+  // ----------------------------------------------------------------
+  const COLORS = [
+    "#FF0000", // Rouge
+    "#00FF00", // Vert
+    "#0000FF", // Bleu
+    "#FFFF00", // Jaune
+    "#FF00FF", // Magenta
+    "#00FFFF", // Cyan
+  ]
+
+  // ----------------------------------------------------------------
+  //  États React pour :
+  //    - la couleur choisie par Joueur 1
+  //    - la couleur choisie par Joueur 2
+  //    - quel joueur est en train de sélectionner (1 ou 2)
+  //    - si la partie a démarré ou non
+  // ----------------------------------------------------------------
+  const [colorP1, setColorP1] = useState<string | null>(null)
+  const [colorP2, setColorP2] = useState<string | null>(null)
+  const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1)
+  const [gameStarted, setGameStarted] = useState(false)
+
+  // ----------------------------------------------------------------
+  //  Bouton “Démarrer” activé uniquement si P1 et P2 ont chacun choisi
+  //    une couleur et que ces deux couleurs sont différentes.
+  // ----------------------------------------------------------------
+  const bothChosenAndDistinct =
+    colorP1 !== null && colorP2 !== null && colorP1 !== colorP2
+
   return (
-    <div className="fixed inset-0 bg-background  flex flex-col items-center justify-center">
+    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center px-4">
       {/* TITRE */}
       <h1 className="text-2xl font-bold mb-4 text-foreground">
         PongMaster – Duel
       </h1>
 
-      {/* ZONE DE JEU */}
-      <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
-        <Pong3D />
-      </div>
+      {!gameStarted ? (
+        <div className="bg-card p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+          {/* 3.1) Sélecteur de joueur */}
+          <div className="mb-4 flex justify-center space-x-4">
+            <button
+              onClick={() => setCurrentPlayer(1)}
+              className={`px-4 py-2 rounded-lg font-semibold ${
+                currentPlayer === 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              🎖️ Joueur 1
+            </button>
+            <button
+              onClick={() => setCurrentPlayer(2)}
+              className={`px-4 py-2 rounded-lg font-semibold ${
+                currentPlayer === 2
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              🎖️ Joueur 2
+            </button>
+          </div>
+
+          {/* 3.2) Texte d’instruction */}
+          <div className="text-center mb-4 text-lg font-medium text-foreground">
+            Sélectionnez la couleur pour{" "}
+            <span className="font-bold">
+              {currentPlayer === 1 ? "Joueur 1" : "Joueur 2"}
+            </span>
+          </div>
+
+          {/* 3.3) Grille unique de 6 cases colorées, bien centrée */}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-3 gap-3 mx-auto">
+              {COLORS.map((hex) => {
+                // Est-ce que cette couleur est déjà prise ?
+                const takenByP1 = colorP1 === hex
+                const takenByP2 = colorP2 === hex
+
+                // Si elle est prise par l’autre joueur, on disabled
+                const isDisabled =
+                  (currentPlayer === 1 && takenByP2) ||
+                  (currentPlayer === 2 && takenByP1)
+
+                // Bordures pour indiquer l’attribution :
+                // - si prise par P1  ⇒ bordure blanche épaisse
+                // - si prise par P2  ⇒ bordure noire épaisse
+                // - sinon (non prise) ⇒ pas de bordure particulière
+                let borderStyle = "2px solid transparent"
+                if (takenByP1) borderStyle = "3px solid white"
+                if (takenByP2) borderStyle = "3px solid black"
+
+                return (
+                  <button
+                    key={hex}
+                    onClick={() => {
+                      if (isDisabled) return
+                      if (currentPlayer === 1) {
+                        setColorP1(hex)
+                      } else {
+                        setColorP2(hex)
+                      }
+                    }}
+                    disabled={isDisabled}
+                    aria-label={`Couleur ${hex} ${
+                      isDisabled ? "(déjà prise)" : ""
+                    }`}
+                    className="relative h-12 w-12 rounded-lg focus:outline-none"
+                    style={{
+                      backgroundColor: hex,
+                      opacity: isDisabled ? 0.4 : 1,
+                      border: borderStyle,
+                    }}
+                  >
+                    {/* Si cette case est prise, on affiche un badge “1” ou “2” */}
+                    {(takenByP1 || takenByP2) && (
+                      <span
+                        className={`
+                          absolute -top-1 -left-1
+                          bg-foreground text-background
+                          text-xs font-bold
+                          w-5 h-5 rounded-full
+                          flex items-center justify-center
+                        `}
+                      >
+                        {takenByP1 ? "1" : "2"}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 3.4) Bouton “Démarrer la partie” */}
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setGameStarted(true)}
+              disabled={!bothChosenAndDistinct}
+              className={`
+                px-5 py-2 rounded-lg font-bold text-white
+                ${
+                  bothChosenAndDistinct
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }
+              `}
+            >
+              Démarrer la partie
+            </button>
+          </div>
+        </div>
+      ) : (
+        // Si gameStarted = true, on affiche directement le jeu
+        <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
+          <Pong3D paddle1Color={colorP1!} paddle2Color={colorP2!} />
+        </div>
+      )}
     </div>
   )
 }
 
-function Pong3D() {
+
+// --------------------------------------------------------------------
+// PARTIE PONG
+// --------------------------------------------------------------------
+
+
+type Pong3DProps = {
+  paddle1Color: string
+  paddle2Color: string
+}
+
+function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  // État React pour l'affichage du score
   const [score, setScore] = useState({ player1: 0, player2: 0 })
-  // État React pour le nom du winner (affiché dans l'UI)
   const [winner, setWinner] = useState<string | null>(null)
-  // Référentiel local pour que la boucle Babylon puisse lire le winner à jour
   const winnerRef = useRef<string | null>(null)
 
   const [countdown, setCountdown] = useState<number | null>(null)
   const [isPaused, setIsPaused] = useState(false)
-  // Même logique : on veut lire isPaused dans la boucle Babylon (référentiel)
   const isPausedRef = useRef(false)
 
   useEffect(() => {
-    // Synchronisation automatique de isPausedRef avec isPaused
     isPausedRef.current = isPaused
   }, [isPaused])
 
   useEffect(() => {
-    // Synchronisation automatique de winnerRef avec winner
     winnerRef.current = winner
   }, [winner])
 
@@ -57,19 +210,19 @@ function Pong3D() {
     const scene = new Scene(engine)
     scene.clearColor = new Color3(1, 1, 1)
 
-    // === Camera (souris pour bouger) ===
+    // ==== Caméra ====
     const camera = new ArcRotateCamera(
-      "cam", // nom de la cam
-      0, // tourne autour axe x  (gauche droite)
-      Math.PI / 3.1, // (y haut bas,  augmente le diviseur  pour voir de haut)  
-      35,   // Zoom
+      "cam",
+      0,
+      Math.PI / 3.1,
+      35,
       Vector3.Zero(),
       scene
     )
     camera.attachControl(canvas, true)
     camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput")
 
-    // === lumières ===
+    // ==== Lumières ====
     const dir = new DirectionalLight(
       "dir",
       new Vector3(-1, -2, -1),
@@ -79,13 +232,28 @@ function Pong3D() {
     const hemi = new HemisphericLight("hemi", Vector3.Up(), scene)
     hemi.intensity = 0.3
 
-    // === Materials ===
-    const whiteMat = new StandardMaterial("whiteMat", scene)
-    whiteMat.diffuseColor = Color3.White()
+    // ==== Materials ====
+    // Material pour la table
     const groundMat = new StandardMaterial("groundMat", scene)
     groundMat.diffuseColor = new Color3(0.05, 0.05, 0.05)
 
-    // === table de jeu ===
+    // Material pour le paddle1 (couleur reçue en prop)
+    const p1Mat = new StandardMaterial("p1Mat", scene)
+    p1Mat.diffuseColor = Color3.FromHexString(paddle1Color)
+
+    // Material pour le paddle2 (couleur reçue en prop)
+    const p2Mat = new StandardMaterial("p2Mat", scene)
+    p2Mat.diffuseColor = Color3.FromHexString(paddle2Color)
+
+    // Material pour la balle (changeable après chaque collision)
+    const ballMat = new StandardMaterial("ballMat", scene)
+    ballMat.diffuseColor = Color3.White() // couleur initiale blanche
+
+    // La balle et le mini-paddle restent en blanc initialement
+    const whiteMat = new StandardMaterial("whiteMat", scene)
+    whiteMat.diffuseColor = Color3.White()
+
+    // ==== Table de jeu ====
     const ground = MeshBuilder.CreateGround(
       "ground",
       { width: 20, height: 40 },
@@ -94,67 +262,61 @@ function Pong3D() {
     ground.material = groundMat
     ground.position.y = -0.25
 
-    // === les paddles  ===
+    // ==== Les paddles ====
     const paddleOpts = { width: 6, height: 0.5, depth: 0.5 }
     const paddle1 = MeshBuilder.CreateBox("p1", paddleOpts, scene)
-    paddle1.material = whiteMat
+    paddle1.material = p1Mat
     paddle1.position.z = -19
+
     const paddle2 = paddle1.clone("p2")
+    paddle2.material = p2Mat
     paddle2.position.z = +19
 
-    // === AJOUT MINI‐PADDLE: DÉBUT ===
+    // ==== Mini‐paddle ====
     const miniPaddleOpts = { width: 4, height: 0.5, depth: 0.5 }
-    const miniPaddle = MeshBuilder.CreateBox("miniPaddle", miniPaddleOpts, scene)
+    const miniPaddle = MeshBuilder.CreateBox(
+      "miniPaddle",
+      miniPaddleOpts,
+      scene
+    )
     miniPaddle.material = whiteMat
-    miniPaddle.position.y = 0                   // même niveau que la table
-    miniPaddle.position.z = 0                   // au milieu en Z
-    miniPaddle.position.x = -6                  // position initiale à gauche
-    let miniDir = 1                             // 1 = vers la droite, -1 = vers la gauche
-    const MINI_SPEED = 0.1                      // vitesse du mini‐paddle
-    const MINI_BOUND_X = 6                      // borne en X où il rebondit
-    // === AJOUT MINI‐PADDLE: FIN ===
+    miniPaddle.position.y = 0
+    miniPaddle.position.z = 0
+    miniPaddle.position.x = -6
+    let miniDir = 1
+    const MINI_SPEED = 0.1
+    const MINI_BOUND_X = 6
 
-    // === Ball ===
+    // ==== Balle ====
     const ball = MeshBuilder.CreateSphere(
       "ball",
       { diameter: 0.5 },
       scene
     )
-    ball.material = whiteMat
+    ball.material = ballMat  // ← on applique désormais ballMat, pas whiteMat
     ball.position = Vector3.Zero()
 
-    // === logique de la balle ===
+    // ==== Logique de la balle ====
     let ballV = Vector3.Zero()
     const keys = new Set<string>()
-
-    // Local scoreboard pour la boucle de rendu
     const scoreLocal = { player1: 0, player2: 0 }
 
-    // SERVICE
-
-    const TOTAL_SPEED = 0.16 // vitesse de base 
+    const TOTAL_SPEED = 0.16
     let currentSpeed = TOTAL_SPEED
-    const SPEED_INCREMENT = 1.009 // facteur d'augmentation à chaque collision
-
-    // angle max (45°) en radians pour que le cône de dispersion soit ±45° autour de Z
+    const SPEED_INCREMENT = 1.009
     const MAX_ANGLE = Math.PI / 4
 
     const serve = (loserSide: "player1" | "player2") => {
-      // Réinitialiser la vitesse courante à la vitesse de base
       currentSpeed = TOTAL_SPEED
-
-      // On tire un angle entre –MAX_ANGLE et +MAX_ANGLE
       const angle = (Math.random() * 2 - 1) * MAX_ANGLE
-
-      // On calcule la composante X et la composante Z (positif pour player2, négatif pour player1)
       const vx = Math.sin(angle) * currentSpeed
       const vz =
-        Math.cos(angle) * currentSpeed * (loserSide === "player1" ? -1 : +1)
-
+        Math.cos(angle) *
+        currentSpeed *
+        (loserSide === "player1" ? -1 : +1)
       ballV = new Vector3(vx, 0, vz)
     }
 
-    // startCountdown reste inchangé
     const startCountdown = (
       duration: number,
       callback: () => void
@@ -175,23 +337,16 @@ function Pong3D() {
       }, 500)
     }
 
-    // On adapte resetBall pour qu'il reçoive le perdant du point
     const resetBall = (loser: "player1" | "player2") => {
-      // Remet la balle au centre et stoppe sa vitesse
       ball.position = Vector3.Zero()
       ballV = Vector3.Zero()
-
-      // Si le perdant est "player1", on envoie la balle vers -Z (côté player1)
-      // Sinon, on l'envoie vers +Z (côté player2)
       const dirZ = loser === "player1" ? -1 : +1
-
       startCountdown(3, () => serve(dirZ as any))
     }
 
-    // === gestion des touches ===
+    // ==== Gestion des touches pour le jeu ====
     const onKeyDown = (e: KeyboardEvent) => {
       if (winnerRef.current || isPausedRef.current) return
-
       if (["w", "s", "ArrowUp", "ArrowDown"].includes(e.key)) {
         keys.add(e.key)
         e.preventDefault()
@@ -203,11 +358,19 @@ function Pong3D() {
     window.addEventListener("keydown", onKeyDown, { passive: false })
     window.addEventListener("keyup", onKeyUp)
 
-    // === Boucle principale de rendu ===
+    // ==== Écouteur pour mettre en pause avec la touche Échap ====
+    const onGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsPaused((prev: boolean) => !prev)
+      }
+    }
+    window.addEventListener("keydown", onGlobalKeyDown)
+
+    // ==== Boucle principale de rendu ====
     scene.onBeforeRenderObservable.add(() => {
       if (winnerRef.current || isPausedRef.current) return
 
-      // Déplacements des paddles
+      // → Déplacement des paddles
       if (keys.has("w"))
         paddle1.position.x = Math.max(-9, paddle1.position.x - 0.3)
       if (keys.has("s"))
@@ -217,7 +380,7 @@ function Pong3D() {
       if (keys.has("ArrowDown"))
         paddle2.position.x = Math.min(9, paddle2.position.x + 0.3)
 
-      // === AJOUT MINI‐PADDLE DANS LA BOUCLE: DÉBUT ===
+      // → Mouvement du mini-paddle
       miniPaddle.position.x += MINI_SPEED * miniDir
       if (miniPaddle.position.x > MINI_BOUND_X) {
         miniPaddle.position.x = MINI_BOUND_X
@@ -226,87 +389,81 @@ function Pong3D() {
         miniPaddle.position.x = -MINI_BOUND_X
         miniDir = 1
       }
-      // === AJOUT MINI‐PADDLE DANS LA BOUCLE: FIN ===
 
-      // Déplace la balle
+      // → Déplacement de la balle
       ball.position.addInPlace(ballV)
 
-      // === Rebond sur les murs latéraux (X = ±10) ===
+      // → Rebond sur les murs latéraux
       if (ball.position.x > 10 || ball.position.x < -10) {
-        // On inverse la composante X
         const dirAfter = new Vector3(-ballV.x, 0, ballV.z).normalize()
-        // On augmente légèrement la vitesse et on réaffecte ballV
         currentSpeed *= SPEED_INCREMENT
         ballV = dirAfter.scale(currentSpeed)
       }
 
-      // === Rebonds avec les paddles (Pong “vrai”) ===
-      // Largeur demi‐paddle = paddleOpts.width / 2 = 6 / 2 = 3
+      // → Rebonds “vrais” avec les paddles
       const PADDLE_HALF_WIDTH = 3
-      // Angle maximum (par exemple 60°) pour rebond en fonction du point de contact
       const MAX_BOUNCE_ANGLE = Math.PI / 3
 
-      // Collision avec le paddle1 (côté bas)
+      // Collision avec paddle1
       if (
         ball.position.z < -19 &&
         Math.abs(ball.position.x - paddle1.position.x) < PADDLE_HALF_WIDTH
       ) {
-        // Calculer le point de contact relatif : entre –1 (extrême gauche) et +1 (extrême droit)
         const relativeIntersectX =
           (ball.position.x - paddle1.position.x) / PADDLE_HALF_WIDTH
-        // Angle de rebond
         const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE
-        // On calcule la direction du rebond (avant d’ajuster la vitesse)
         const dirX = Math.sin(bounceAngle)
         const dirZ = Math.cos(bounceAngle)
-        const dirAfter = new Vector3(dirX, 0, dirZ).normalize() // vers +Z
-
-        // On augmente légèrement la vitesse
+        const dirAfter = new Vector3(dirX, 0, dirZ).normalize()
         currentSpeed *= SPEED_INCREMENT
         ballV = dirAfter.scale(currentSpeed)
+
+        // ← Changer la couleur de la balle pour celle du paddle1
+        ballMat.diffuseColor = p1Mat.diffuseColor.clone()
       }
 
-      // Collision avec le paddle2 (côté haut)
+      // Collision avec paddle2
       if (
         ball.position.z > 19 &&
         Math.abs(ball.position.x - paddle2.position.x) < PADDLE_HALF_WIDTH
       ) {
-        // Point de contact relatif pour paddle2
         const relativeIntersectX =
           (ball.position.x - paddle2.position.x) / PADDLE_HALF_WIDTH
         const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE
         const dirX = Math.sin(bounceAngle)
         const dirZ = Math.cos(bounceAngle)
-        const dirAfter = new Vector3(dirX, 0, -dirZ).normalize() // vers –Z
-
-        // On augmente légèrement la vitesse
+        const dirAfter = new Vector3(dirX, 0, -dirZ).normalize()
         currentSpeed *= SPEED_INCREMENT
         ballV = dirAfter.scale(currentSpeed)
+
+        // ← Changer la couleur de la balle pour celle du paddle2
+        ballMat.diffuseColor = p2Mat.diffuseColor.clone()
       }
 
-      // === AJOUT COLLISION MINI‐PADDLE ===
+      // → Collision avec le mini-paddle
       {
-        const PADDLE_HALF_W = miniPaddleOpts.width / 2    // = 2
-        const PADDLE_HALF_D = miniPaddleOpts.depth / 2    // = 0.25
+        const PADDLE_HALF_W = miniPaddleOpts.width / 2 // = 2
+        const PADDLE_HALF_D = miniPaddleOpts.depth / 2 // = 0.25
         if (
           Math.abs(ball.position.z - miniPaddle.position.z) < PADDLE_HALF_D &&
           Math.abs(ball.position.x - miniPaddle.position.x) < PADDLE_HALF_W
         ) {
-          // Calcul du point de contact relatif sur X (entre -1 et +1)
-          const relativeX = (ball.position.x - miniPaddle.position.x) / PADDLE_HALF_W
-          const bounceAngle = relativeX * (Math.PI / 4)      // angle max 45°
+          const relativeX =
+            (ball.position.x - miniPaddle.position.x) / PADDLE_HALF_W
+          const bounceAngle = relativeX * (Math.PI / 4)
           const dirX = Math.sin(bounceAngle)
-          const dirZ = ballV.z > 0 ? -Math.cos(bounceAngle) : +Math.cos(bounceAngle)
+          const dirZ =
+            ballV.z > 0
+              ? -Math.cos(bounceAngle)
+              : +Math.cos(bounceAngle)
           const dirAfter = new Vector3(dirX, 0, dirZ).normalize()
           currentSpeed *= SPEED_INCREMENT
           ballV = dirAfter.scale(currentSpeed)
         }
       }
-      // === FIN AJOUT COLLISION MINI‐PADDLE ===
 
-      // === Gestion des scores ===
+      // → Gestion des scores
       if (ball.position.z < -20) {
-        // La balle est sortie côté player1 → point pour player2
         scoreLocal.player2 += 1
         setScore({
           player1: scoreLocal.player1,
@@ -314,17 +471,14 @@ function Pong3D() {
         })
 
         if (scoreLocal.player2 >= 5) {
-          // player2 atteint 5 ⇒ fin de partie
           setWinner("Joueur 2")
           winnerRef.current = "Joueur 2"
         } else {
-          // Perdant = player1, on informe resetBall pour qu'il serve vers –Z
           resetBall("player1")
         }
       }
 
       if (ball.position.z > 20) {
-        // La balle est sortie côté player2 → point pour player1
         scoreLocal.player1 += 1
         setScore({
           player1: scoreLocal.player1,
@@ -332,11 +486,9 @@ function Pong3D() {
         })
 
         if (scoreLocal.player1 >= 5) {
-          // player1 atteint 5 ⇒ fin de partie
           setWinner("Joueur 1")
           winnerRef.current = "Joueur 1"
         } else {
-          // Perdant = player2, on informe resetBall pour qu'il serve vers +Z
           resetBall("player2")
         }
       }
@@ -345,19 +497,19 @@ function Pong3D() {
     engine.runRenderLoop(() => scene.render())
     window.addEventListener("resize", () => engine.resize())
 
-    // === Lancement du match avec décompte initial de 5 secondes ===
-    // Au premier service, on choisit aléatoirement un sens (comme avant)
+    // Lancement initial (décompte 5 secondes)
     startCountdown(5, () =>
       serve(Math.random() > 0.5 ? ("player1" as any) : ("player2" as any))
     )
 
-    // === Cleanup ===
+    // Cleanup
     return () => {
       engine.dispose()
       window.removeEventListener("keydown", onKeyDown)
       window.removeEventListener("keyup", onKeyUp)
+      window.removeEventListener("keydown", onGlobalKeyDown)
     }
-  }, []) // ← empty deps: s'exécute une seule fois
+  }, [paddle1Color, paddle2Color]) // On recrée la scène si les couleurs changent
 
   return (
     <div className="relative">
@@ -368,7 +520,7 @@ function Pong3D() {
         </span>
       </div>
 
-      {/* --- Affichage des touches de contrôle --- */}
+      {/* Affichage des touches (visuel) */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
         <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
           W
@@ -387,7 +539,6 @@ function Pong3D() {
         </div>
       </div>
 
-
       {/* Affichage du gagnant */}
       {winner && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
@@ -395,8 +546,6 @@ function Pong3D() {
             <span className="text-green-500 text-4xl font-extrabold mb-6">
               🏆 {winner} a gagné !
             </span>
-
-            {/* rejouer + quitter */}
             <div className="flex space-x-4">
               <button
                 onClick={() => window.location.reload()}
@@ -424,8 +573,14 @@ function Pong3D() {
         </div>
       )}
 
-      {/* bouton pause / reprendre */}
-      <div className="absolute top-2 right-2 z-20">
+      {/* Bouton pause / label Échap */}
+      <div className="absolute top-2 right-2 z-20 flex items-center space-x-2">
+        {/* Encadré "Échap" pour indiquer que la touche Escape met en pause */}
+        <div className="bg-card border border-border rounded px-2 py-1 text-xs text-foreground">
+          Échap
+        </div>
+
+        {/* Bouton pause / reprendre */}
         {isPaused ? (
           <button
             onClick={() => setIsPaused(false)}
@@ -443,7 +598,7 @@ function Pong3D() {
         )}
       </div>
 
-      {/* taille du jeu */}
+      {/* Canvas Babylon */}
       <canvas
         ref={canvasRef}
         style={{ width: "100%", height: "100%" }}
