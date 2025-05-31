@@ -9,9 +9,31 @@ import {
   MeshBuilder,
   Color3,
   StandardMaterial,
+  Sound,
 } from "@babylonjs/core"
 
 export default function Page() {
+  // ──────────────────────────────────────────────────────────────────
+  //  Faire jouer la musique d’ambiance dès que Page est monté (selection de couleur)
+  // ──────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    // Création d'un élément Audio HTML pour la musique d'ambiance
+    const music = new Audio("/sounds/AGST - Force (Royalty Free Music).mp3")
+    music.loop = true
+    music.volume = 0.2
+    music
+      .play()
+      .catch(() => {
+        // Si l'autoplay est bloqué, on attend un premier clic pour relancer
+        const resumeOnFirstInteraction = () => {
+          music.play().catch(() => {})
+          window.removeEventListener("click", resumeOnFirstInteraction)
+        }
+        window.addEventListener("click", resumeOnFirstInteraction)
+      })
+    // Pas de cleanup ; on laisse la musique tourner tant que Page est monté
+  }, [])
+
   // ----------------------------------------------------------------
   // 1) Définition des 6 couleurs disponibles (hexadécimal)
   // ----------------------------------------------------------------
@@ -92,15 +114,15 @@ export default function Page() {
                 const takenByP1 = colorP1 === hex
                 const takenByP2 = colorP2 === hex
 
-                // Si elle est prise par l’autre joueur, on disabled
+                // Si prise par l’autre joueur → disabled
                 const isDisabled =
                   (currentPlayer === 1 && takenByP2) ||
                   (currentPlayer === 2 && takenByP1)
 
-                // Bordures pour indiquer l’attribution :
-                // - si prise par P1  ⇒ bordure blanche épaisse
-                // - si prise par P2  ⇒ bordure noire épaisse
-                // - sinon (non prise) ⇒ pas de bordure particulière
+                // Bordure pour indiquer attribution :
+                // - prise par P1 → bordure blanche épaisse
+                // - prise par P2 → bordure noire épaisse
+                // - sinon → bordure transparente
                 let borderStyle = "2px solid transparent"
                 if (takenByP1) borderStyle = "3px solid white"
                 if (takenByP2) borderStyle = "3px solid black"
@@ -127,7 +149,7 @@ export default function Page() {
                       border: borderStyle,
                     }}
                   >
-                    {/* Si cette case est prise, on affiche un badge “1” ou “2” */}
+                    {/* Si prise, on affiche un badge “1” ou “2” */}
                     {(takenByP1 || takenByP2) && (
                       <span
                         className={`
@@ -177,9 +199,8 @@ export default function Page() {
 
 
 // --------------------------------------------------------------------
-// PARTIE PONG
+// PARTIE PONG (composant Pong3D)
 // --------------------------------------------------------------------
-
 
 type Pong3DProps = {
   paddle1Color: string
@@ -210,6 +231,32 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
     const scene = new Scene(engine)
     scene.clearColor = new Color3(1, 1, 1)
 
+    // ——————————————  SON ——————————————
+    // On prépare un tableau de 5 sons “pong” (URL dans /public/sounds/)
+    const allHitSounds: Sound[] = [
+      new Sound("hit1", "/sounds/pong-1.mp3", scene, null, {
+        volume: 0.5,
+        autoplay: false,
+      }),
+      new Sound("hit2", "/sounds/pong-2.mp3", scene, null, {
+        volume: 0.5,
+        autoplay: false,
+      }),
+      new Sound("hit3", "/sounds/pong-3.mp3", scene, null, {
+        volume: 0.5,
+        autoplay: false,
+      }),
+      new Sound("hit4", "/sounds/pong-4.mp3", scene, null, {
+        volume: 0.5,
+        autoplay: false,
+      }),
+      new Sound("hit5", "/sounds/pong-5.mp3", scene, null, {
+        volume: 0.5,
+        autoplay: false,
+      }),
+    ]
+    // ——————————————  FIN SECTION SONORE ——————————————
+
     // ==== Caméra ====
     const camera = new ArcRotateCamera(
       "cam",
@@ -233,23 +280,18 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
     hemi.intensity = 0.3
 
     // ==== Materials ====
-    // Material pour la table
     const groundMat = new StandardMaterial("groundMat", scene)
     groundMat.diffuseColor = new Color3(0.05, 0.05, 0.05)
 
-    // Material pour le paddle1 (couleur reçue en prop)
     const p1Mat = new StandardMaterial("p1Mat", scene)
     p1Mat.diffuseColor = Color3.FromHexString(paddle1Color)
 
-    // Material pour le paddle2 (couleur reçue en prop)
     const p2Mat = new StandardMaterial("p2Mat", scene)
     p2Mat.diffuseColor = Color3.FromHexString(paddle2Color)
 
-    // Material pour la balle (changeable après chaque collision)
     const ballMat = new StandardMaterial("ballMat", scene)
-    ballMat.diffuseColor = Color3.White() // couleur initiale blanche
+    ballMat.diffuseColor = Color3.White()
 
-    // La balle et le mini-paddle restent en blanc initialement
     const whiteMat = new StandardMaterial("whiteMat", scene)
     whiteMat.diffuseColor = Color3.White()
 
@@ -272,7 +314,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
     paddle2.material = p2Mat
     paddle2.position.z = +19
 
-    // ==== Mini‐paddle ====
+    // ==== Mini–paddle ====
     const miniPaddleOpts = { width: 4, height: 0.5, depth: 0.5 }
     const miniPaddle = MeshBuilder.CreateBox(
       "miniPaddle",
@@ -293,7 +335,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
       { diameter: 0.5 },
       scene
     )
-    ball.material = ballMat  // ← on applique désormais ballMat, pas whiteMat
+    ball.material = ballMat
     ball.position = Vector3.Zero()
 
     // ==== Logique de la balle ====
@@ -358,7 +400,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
     window.addEventListener("keydown", onKeyDown, { passive: false })
     window.addEventListener("keyup", onKeyUp)
 
-    // ==== Écouteur pour mettre en pause avec la touche Échap ====
+    // ==== Écouteur pour mettre en pause/reprendre avec Échap ====
     const onGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsPaused((prev: boolean) => !prev)
@@ -398,6 +440,12 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
         const dirAfter = new Vector3(-ballV.x, 0, ballV.z).normalize()
         currentSpeed *= SPEED_INCREMENT
         ballV = dirAfter.scale(currentSpeed)
+
+        // ← Jouer un bruit de pong aléatoire
+        const randomIndex = Math.floor(
+          Math.random() * allHitSounds.length
+        )
+        allHitSounds[randomIndex].play()
       }
 
       // → Rebonds “vrais” avec les paddles
@@ -420,6 +468,10 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
 
         // ← Changer la couleur de la balle pour celle du paddle1
         ballMat.diffuseColor = p1Mat.diffuseColor.clone()
+
+        // ← Jouer un bruit de pong aléatoire
+        const idx1 = Math.floor(Math.random() * allHitSounds.length)
+        allHitSounds[idx1].play()
       }
 
       // Collision avec paddle2
@@ -438,9 +490,13 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
 
         // ← Changer la couleur de la balle pour celle du paddle2
         ballMat.diffuseColor = p2Mat.diffuseColor.clone()
+
+        // ← Jouer un bruit de pong aléatoire
+        const idx2 = Math.floor(Math.random() * allHitSounds.length)
+        allHitSounds[idx2].play()
       }
 
-      // → Collision avec le mini-paddle
+      // → Collision avec le mini-paddle (inchangée)
       {
         const PADDLE_HALF_W = miniPaddleOpts.width / 2 // = 2
         const PADDLE_HALF_D = miniPaddleOpts.depth / 2 // = 0.25
@@ -462,7 +518,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
         }
       }
 
-      // → Gestion des scores
+      // → Gestion des scores (inchangée)
       if (ball.position.z < -20) {
         scoreLocal.player2 += 1
         setScore({
@@ -508,6 +564,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
       window.removeEventListener("keydown", onKeyDown)
       window.removeEventListener("keyup", onKeyUp)
       window.removeEventListener("keydown", onGlobalKeyDown)
+      // Les objets Sound sont libérés par scene.dispose()
     }
   }, [paddle1Color, paddle2Color]) // On recrée la scène si les couleurs changent
 
