@@ -2,11 +2,11 @@
 
 import { Header } from "@/components/dashboard/Header"
 import { useParams } from "next/navigation"
-import { PongGame } from "@/components/PongGame"
+import PongGame from "@/components/PongGame"
 
 export default function Game() {
   const params = useParams()
-  const locale = params.locale ?? "fr" // Par défaut français si pas défini
+  const locale = params.locale ?? "fr"
 
   return (
     <>
