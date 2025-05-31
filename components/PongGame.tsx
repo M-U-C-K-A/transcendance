@@ -14,10 +14,10 @@ import {
 
 export default function Page() {
   // ──────────────────────────────────────────────────────────────────
-  //  Faire jouer la musique d’ambiance dès que Page est monté (selection de couleur)
+  //  Musique des la selection de couleur
   // ──────────────────────────────────────────────────────────────────
   useEffect(() => {
-    // Création d'un élément Audio HTML pour la musique d'ambiance
+    // musique d ambiance
     const music = new Audio("/sounds/AGST - Force (Royalty Free Music).mp3")
     music.loop = true
     music.volume = 0.2
@@ -31,11 +31,11 @@ export default function Page() {
         }
         window.addEventListener("click", resumeOnFirstInteraction)
       })
-    // Pas de cleanup ; on laisse la musique tourner tant que Page est monté
+    // Pas de cleanup ; on laisse la musique tourner tant que Page est la.
   }, [])
 
   // ----------------------------------------------------------------
-  // 1) Définition des 6 couleurs disponibles (hexadécimal)
+  //  les 6 couleurs au choix
   // ----------------------------------------------------------------
   const COLORS = [
     "#FF0000", // Rouge
@@ -74,7 +74,7 @@ export default function Page() {
 
       {!gameStarted ? (
         <div className="bg-card p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
-          {/* 3.1) Sélecteur de joueur */}
+          {/* Sélecteur de joueur */}
           <div className="mb-4 flex justify-center space-x-4">
             <button
               onClick={() => setCurrentPlayer(1)}
@@ -98,7 +98,7 @@ export default function Page() {
             </button>
           </div>
 
-          {/* 3.2) Texte d’instruction */}
+          {/*  Texte d’instruction pour couleur */}
           <div className="text-center mb-4 text-lg font-medium text-foreground">
             Sélectionnez la couleur pour{" "}
             <span className="font-bold">
@@ -106,7 +106,7 @@ export default function Page() {
             </span>
           </div>
 
-          {/* 3.3) Grille unique de 6 cases colorées, bien centrée */}
+          {/* Grille de couleur */}
           <div className="flex justify-center">
             <div className="grid grid-cols-3 gap-3 mx-auto">
               {COLORS.map((hex) => {
@@ -114,12 +114,12 @@ export default function Page() {
                 const takenByP1 = colorP1 === hex
                 const takenByP2 = colorP2 === hex
 
-                // Si prise par l’autre joueur → disabled
+                // Si prise par l’autre joueur → rendre indispo
                 const isDisabled =
                   (currentPlayer === 1 && takenByP2) ||
                   (currentPlayer === 2 && takenByP1)
 
-                // Bordure pour indiquer attribution :
+                // Bordure autour de couleur prise pour dire qui a quelle couleur
                 // - prise par P1 → bordure blanche épaisse
                 // - prise par P2 → bordure noire épaisse
                 // - sinon → bordure transparente
@@ -169,7 +169,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* 3.4) Bouton “Démarrer la partie” */}
+          {/* Bouton “Démarrer la partie” */}
           <div className="mt-6 flex justify-center">
             <button
               onClick={() => setGameStarted(true)}
@@ -255,7 +255,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
         autoplay: false,
       }),
     ]
-    // ——————————————  FIN SECTION SONORE ——————————————
+    // ————————————————————————————
 
     // ==== Caméra ====
     const camera = new ArcRotateCamera(
@@ -279,7 +279,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
     const hemi = new HemisphericLight("hemi", Vector3.Up(), scene)
     hemi.intensity = 0.3
 
-    // ==== Materials ====
+    // ==== sol + paddles + balle (matieres) ====
     const groundMat = new StandardMaterial("groundMat", scene)
     groundMat.diffuseColor = new Color3(0.05, 0.05, 0.05)
 
@@ -496,7 +496,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
         allHitSounds[idx2].play()
       }
 
-      // → Collision avec le mini-paddle (inchangée)
+      // Collision avec le mini-paddle
       {
         const PADDLE_HALF_W = miniPaddleOpts.width / 2 // = 2
         const PADDLE_HALF_D = miniPaddleOpts.depth / 2 // = 0.25
@@ -518,7 +518,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
         }
       }
 
-      // → Gestion des scores (inchangée)
+      //   scores 
       if (ball.position.z < -20) {
         scoreLocal.player2 += 1
         setScore({
@@ -558,7 +558,7 @@ function Pong3D({ paddle1Color, paddle2Color }: Pong3DProps) {
       serve(Math.random() > 0.5 ? ("player1" as any) : ("player2" as any))
     )
 
-    // Cleanup
+    // Cleanup a la fin de la game pour que plus rien ne bouge
     return () => {
       engine.dispose()
       window.removeEventListener("keydown", onKeyDown)
