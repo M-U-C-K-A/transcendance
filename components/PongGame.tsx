@@ -325,7 +325,25 @@ function Pong3D() {
         </span>
       </div>
 
-      {/* … touches de contrôle, décompte, bouton pause, canvas, etc. … */}
+      {/* --- Affichage des touches de contrôle --- */}
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
+        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+          W
+        </div>
+        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+          S
+        </div>
+      </div>
+
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
+        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+          ↑
+        </div>
+        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+          ↓
+        </div>
+      </div>
+
 
       {/* Affichage du gagnant */}
       {winner && (
