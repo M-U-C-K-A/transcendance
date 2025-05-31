@@ -13,7 +13,7 @@ import {
 
 export default function Page() {
   return (
-    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center">
+    <div className="fixed inset-0 bg-background  flex flex-col items-center justify-center">
       {/* TITRE */}
       <h1 className="text-2xl font-bold mb-4 text-foreground">
         PongMaster – Duel
@@ -102,6 +102,18 @@ function Pong3D() {
     const paddle2 = paddle1.clone("p2")
     paddle2.position.z = +19
 
+    // === AJOUT MINI‐PADDLE: DÉBUT ===
+    const miniPaddleOpts = { width: 4, height: 0.5, depth: 0.5 }
+    const miniPaddle = MeshBuilder.CreateBox("miniPaddle", miniPaddleOpts, scene)
+    miniPaddle.material = whiteMat
+    miniPaddle.position.y = 0                   // même niveau que la table
+    miniPaddle.position.z = 0                   // au milieu en Z
+    miniPaddle.position.x = -6                  // position initiale à gauche
+    let miniDir = 1                             // 1 = vers la droite, -1 = vers la gauche
+    const MINI_SPEED = 0.1                      // vitesse du mini‐paddle
+    const MINI_BOUND_X = 6                      // borne en X où il rebondit
+    // === AJOUT MINI‐PADDLE: FIN ===
+
     // === Ball ===
     const ball = MeshBuilder.CreateSphere(
       "ball",
@@ -122,7 +134,7 @@ function Pong3D() {
 
     const TOTAL_SPEED = 0.16 // vitesse de base 
     let currentSpeed = TOTAL_SPEED
-    const SPEED_INCREMENT = 1.009// facteur d'augmentation à chaque collision
+    const SPEED_INCREMENT = 1.009 // facteur d'augmentation à chaque collision
 
     // angle max (45°) en radians pour que le cône de dispersion soit ±45° autour de Z
     const MAX_ANGLE = Math.PI / 4
@@ -171,7 +183,7 @@ function Pong3D() {
 
       // Si le perdant est "player1", on envoie la balle vers -Z (côté player1)
       // Sinon, on l'envoie vers +Z (côté player2)
-      const dirZ = loser === "player1" ? +1 : -1
+      const dirZ = loser === "player1" ? -1 : +1
 
       startCountdown(3, () => serve(dirZ as any))
     }
@@ -204,6 +216,17 @@ function Pong3D() {
         paddle2.position.x = Math.max(-9, paddle2.position.x - 0.3)
       if (keys.has("ArrowDown"))
         paddle2.position.x = Math.min(9, paddle2.position.x + 0.3)
+
+      // === AJOUT MINI‐PADDLE DANS LA BOUCLE: DÉBUT ===
+      miniPaddle.position.x += MINI_SPEED * miniDir
+      if (miniPaddle.position.x > MINI_BOUND_X) {
+        miniPaddle.position.x = MINI_BOUND_X
+        miniDir = -1
+      } else if (miniPaddle.position.x < -MINI_BOUND_X) {
+        miniPaddle.position.x = -MINI_BOUND_X
+        miniDir = 1
+      }
+      // === AJOUT MINI‐PADDLE DANS LA BOUCLE: FIN ===
 
       // Déplace la balle
       ball.position.addInPlace(ballV)
@@ -260,6 +283,26 @@ function Pong3D() {
         currentSpeed *= SPEED_INCREMENT
         ballV = dirAfter.scale(currentSpeed)
       }
+
+      // === AJOUT COLLISION MINI‐PADDLE ===
+      {
+        const PADDLE_HALF_W = miniPaddleOpts.width / 2    // = 2
+        const PADDLE_HALF_D = miniPaddleOpts.depth / 2    // = 0.25
+        if (
+          Math.abs(ball.position.z - miniPaddle.position.z) < PADDLE_HALF_D &&
+          Math.abs(ball.position.x - miniPaddle.position.x) < PADDLE_HALF_W
+        ) {
+          // Calcul du point de contact relatif sur X (entre -1 et +1)
+          const relativeX = (ball.position.x - miniPaddle.position.x) / PADDLE_HALF_W
+          const bounceAngle = relativeX * (Math.PI / 4)      // angle max 45°
+          const dirX = Math.sin(bounceAngle)
+          const dirZ = ballV.z > 0 ? -Math.cos(bounceAngle) : +Math.cos(bounceAngle)
+          const dirAfter = new Vector3(dirX, 0, dirZ).normalize()
+          currentSpeed *= SPEED_INCREMENT
+          ballV = dirAfter.scale(currentSpeed)
+        }
+      }
+      // === FIN AJOUT COLLISION MINI‐PADDLE ===
 
       // === Gestion des scores ===
       if (ball.position.z < -20) {
