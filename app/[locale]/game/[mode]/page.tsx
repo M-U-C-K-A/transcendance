@@ -11,8 +11,8 @@ export default function Game() {
   return (
     <>
       <Header locale={locale} />
-      <main className="flex min-h-screen flex-col items-center justify-center p-24">
-        <div className="mb-12 max-w-4xl rounded-lg border border-border bg-background p-10">
+      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-blue-500">
+        <div className="mb-12 max-w-4xl rounded-lg border border-border bg-red-500 p-10">
           <PongGame locale={locale} />
         </div>
       </main>

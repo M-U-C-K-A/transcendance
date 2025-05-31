@@ -18,6 +18,42 @@ function parseJwt(token: string) {
   }
 }
 
+function bufferToDataUrl(buffer: any) {
+  try {
+    // Si c'est déjà une URL data ou HTTP
+    if (typeof buffer === 'string') {
+      if (buffer.startsWith('data:image/') || buffer.startsWith('http')) {
+        return buffer;
+      }
+      // Si c'est une chaîne base64 simple
+      return `data:image/png;base64,${buffer}`;
+    }
+    
+    // Si c'est un objet Buffer sérialisé
+    if (typeof buffer === 'object' && buffer !== null) {
+      // Convertir l'objet buffer en tableau d'octets
+      const bytes = Object.values(buffer) as number[];
+      
+      // Convertir les octets en chaîne de caractères de manière sûre
+      let binaryString = '';
+      const chunkSize = 1024;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.slice(i, i + chunkSize);
+        binaryString += String.fromCharCode.apply(null, chunk);
+      }
+      
+      // Convertir en base64
+      const base64 = btoa(binaryString);
+      return `data:image/png;base64,${base64}`;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error processing avatar:', error);
+    return null;
+  }
+}
+
 export function useAvatarFromJWT() {
   const token = useJWT()
   const username = useUsernameFromJWT()

@@ -54,9 +54,9 @@ export function LoginPage() {
 				<Image
 					width={661}
 					height={882}
-					src=""
+					src={"/throbertchauve.webp"}
 					alt="DuckFace"
-					className="absolute inset-0 w-full h-full object-cover"
+					className="absolute inset-0 w-full h-full object-cover opacity-50"
 				/>
 			</div>
 		</div>

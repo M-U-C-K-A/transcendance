@@ -13,14 +13,14 @@ import {
 
 export default function Page() {
   return (
-    <div className="fixed inset-0 bg-white flex flex-col items-center justify-center">
+    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center">
       {/* TITRE */}
-      <h1 className="text-2xl font-bold mb-4 text-white">
+      <h1 className="text-2xl font-bold mb-4 text-foreground">
         PongMaster – Duel
       </h1>
 
       {/* ZONE DE JEU */}
-      <div className="w-[80vw] h-[80vh] relative bg-white">
+      <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
         <Pong3D />
       </div>
     </div>
@@ -319,7 +319,7 @@ function Pong3D() {
   return (
     <div className="relative">
       {/* Score */}
-      <div className="flex justify-center mb-4 text-lg font-bold text-black">
+      <div className="flex justify-center mb-4 text-lg font-bold text-foreground">
         <span>
           {score.player1} - {score.player2}
         </span>
@@ -327,19 +327,19 @@ function Pong3D() {
 
       {/* --- Affichage des touches de contrôle --- */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
-        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
           W
         </div>
-        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
           S
         </div>
       </div>
 
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
-        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
           ↑
         </div>
-        <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-black font-bold">
+        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
           ↓
         </div>
       </div>
@@ -347,9 +347,9 @@ function Pong3D() {
 
       {/* Affichage du gagnant */}
       {winner && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
-            <span className="text-green-700 text-4xl font-extrabold mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
+          <div className="bg-background px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
+            <span className="text-green-500 text-4xl font-extrabold mb-6">
               🏆 {winner} a gagné !
             </span>
 
@@ -375,7 +375,7 @@ function Pong3D() {
       {/* Overlay gris : décompte avant service */}
       {countdown !== null && (
         <div className="absolute inset-0 bg-gray-400/40 flex items-center justify-center z-10">
-          <span className="text-black text-2xl font-bold">
+          <span className="text-foreground text-2xl font-bold">
             {countdown}
           </span>
         </div>

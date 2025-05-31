@@ -20,7 +20,7 @@ model User {
 	alias			String?
 	email			String  @unique
 	pass			String
-	avatar			Bytes?
+	avatar			String?
 	bio				String?
 	onlineStatus	Boolean	@default(false)
 	elo				Int			@default(1200)
