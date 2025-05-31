@@ -54,7 +54,7 @@ export function LoginPage() {
 				<Image
 					width={661}
 					height={882}
-					src={"/throbertchauve.webp"}
+					src={""}
 					alt="DuckFace"
 					className="absolute inset-0 w-full h-full object-cover opacity-50"
 				/>
