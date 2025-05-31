@@ -22,6 +22,7 @@ export default async function editProfileRoute(server: FastifyInstance) {
 			email: result.email,
 			username: result.username,
 			bio: result.bio,
+			avatar: result.avatar,
 		})
 		return (reply.code(200).send(result))
 	} catch (err: any) {

@@ -29,7 +29,7 @@ import { useJWT } from "@/hooks/use-jwt"
 const ProfileSchema = z.object({
   username: z.string().min(3).max(30),
   bio: z.string().max(300).optional(),
-  profilePhotoUrl: z.string().optional(), // base64 string or empty
+  profilePhotoUrl: z.string().nullable(),
 })
 
 type ProfileFormData = z.infer<typeof ProfileSchema>
@@ -56,7 +56,10 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, profilePhotoUrl: reader.result as string }))
+        const base64String = reader.result as string;
+        // Enlever le préfixe "data:image/...;base64," pour n'avoir que les données base64
+        const base64Data = base64String.split(',')[1];
+        setFormData((prev) => ({ ...prev, profilePhotoUrl: base64Data }))
       }
       reader.readAsDataURL(file)
     }
@@ -74,17 +77,24 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 	}
 
 	try {
+	  const payload = {
+		newUsername: formData.username,
+		newBio: formData.bio || "",
+		newAvatar: formData.profilePhotoUrl || "",
+	  };
+	  
+	  console.log("Sending profile update with payload:", {
+		...payload,
+		newAvatar: payload.newAvatar ? "base64_data_present" : "no_avatar"
+	  });
+
 	  const response = await fetch("/api/editprofile", {
 		method: "POST",
 		headers: {
 		  "Content-Type": "application/json",
-		  Authorization: `Bearer ${localStorage.getItem("token")}`, // ou selon ton auth flow
+		  Authorization: `Bearer ${localStorage.getItem("token")}`,
 		},
-		body: JSON.stringify({
-		  newAvatar: formData.profilePhotoUrl,
-		  newUsername: formData.username,
-		  newBio: formData.bio,
-		}),
+		body: JSON.stringify(payload),
 	  })
 
 	  const resText = await response.text()
@@ -123,7 +133,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
           <div className="flex justify-center items-center flex-col gap-2">
             <Avatar className="h-20 w-20">
               <AvatarImage
-                src={formData.profilePhotoUrl || avatarFromJWT}
+                src={formData.profilePhotoUrl || avatarFromJWT || undefined}
                 alt={formData.username}
               />
               <AvatarFallback>{formData.username.charAt(0)}</AvatarFallback>
