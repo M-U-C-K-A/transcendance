@@ -13,26 +13,47 @@ import {
 } from "@babylonjs/core"
 
 export default function Page() {
+  // Gestion des états pour le volume et le changement de piste
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false)
+  const [volume, setVolume] = useState(0.2)
+  const [showTrackMenu, setShowTrackMenu] = useState(false)
+  const TRACKS = [
+    { label: "Force", src: "/sounds/AGST - Force (Royalty Free Music).mp3" },
+    { label: "Envy", src: "/sounds/AGST - Envy (Royalty Free Music).mp3" },
+    { label: "Arcadewave", src: "/sounds/Lupus Nocte - Arcadewave (Royalty Free Music).mp3" },
+  ]
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
+
   // ──────────────────────────────────────────────────────────────────
   //  Musique des la selection de couleur
   // ──────────────────────────────────────────────────────────────────
   useEffect(() => {
     // musique d ambiance
-    const music = new Audio("/sounds/AGST - Force (Royalty Free Music).mp3")
-    music.loop = true
-    music.volume = 0.2
-    music
-      .play()
-      .catch(() => {
-        // Si l'autoplay est bloqué, on attend un premier clic pour relancer
-        const resumeOnFirstInteraction = () => {
-          music.play().catch(() => {})
-          window.removeEventListener("click", resumeOnFirstInteraction)
-        }
-        window.addEventListener("click", resumeOnFirstInteraction)
-      })
+    audioRef.current = new Audio(TRACKS[currentTrackIndex].src)
+    audioRef.current.loop = true
+    audioRef.current.volume = volume
+    audioRef.current.play().catch(() => {
+      // Si l'autoplay est bloqué, on attend un premier clic pour relancer
+      const resumeOnFirstInteraction = () => {
+        audioRef.current?.play().catch(() => {})
+        window.removeEventListener("click", resumeOnFirstInteraction)
+      }
+      window.addEventListener("click", resumeOnFirstInteraction)
+    })
     // Pas de cleanup ; on laisse la musique tourner tant que Page est la.
-  }, [])
+    return () => {
+      audioRef.current?.pause()
+      audioRef.current = null
+    }
+  }, [currentTrackIndex])
+
+  // Pour mettre à jour le volume en temps réel
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
 
   // ----------------------------------------------------------------
   //  les 6 couleurs au choix
@@ -190,6 +211,61 @@ export default function Page() {
       ) : (
         // Si gameStarted = true, on affiche directement le jeu
         <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
+          {/* Icônes en haut à gauche : volume + changement de musique */}
+          <div className="absolute top-2 left-2 z-30 flex space-x-2">
+            {/* Icône Volume */}
+            <button
+              onClick={() => setShowVolumeSlider((prev) => !prev)}
+              className="bg-card border border-border rounded p-2 hover:bg-card/80"
+              aria-label="Volume"
+            >
+              {volume > 0 ? "🔊" : "🔇"}
+            </button>
+            {/* Slider de volume (affiché si showVolumeSlider = true) */}
+            {showVolumeSlider && (
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="h-2 w-24 ml-2"
+              />
+            )}
+
+            {/* Icône CD pour changer la musique */}
+            <button
+              onClick={() => setShowTrackMenu((prev) => !prev)}
+              className="bg-card border border-border rounded p-2 hover:bg-card/80"
+              aria-label="Changer musique"
+            >
+              💿
+            </button>
+          </div>
+
+          {/* Menu de sélection de piste (affiché si showTrackMenu = true) */}
+          {showTrackMenu && (
+            <div className="absolute top-12 left-2 z-30 bg-card border border-border rounded shadow-lg p-2 space-y-1">
+              {TRACKS.map((track, idx) => (
+                <button
+                  key={track.label}
+                  onClick={() => {
+                    setCurrentTrackIndex(idx)
+                    setShowTrackMenu(false)
+                  }}
+                  className={`block w-full text-left px-2 py-1 rounded ${
+                    idx === currentTrackIndex
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-200"
+                  }`}
+                >
+                  {track.label}
+                </button>
+              ))}
+            </div>
+          )}
+
           <Pong3D paddle1Color={colorP1!} paddle2Color={colorP2!} />
         </div>
       )}
