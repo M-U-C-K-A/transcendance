@@ -7,7 +7,7 @@ export default {
     "login": "Login",
     "register": "Register",
     "freeRegister": "Register for free",
-    "statistics": "Statistics", 
+    "statistics": "Statistics",
     "dashboard": "Dashboard",
     "back": "Back",
     "copyright": "© 2025 PongMaster Enterprise. All rights reserved."
@@ -73,7 +73,27 @@ export default {
       "title": "Colleagues",
       "online": "Online",
       "offline": "Offline",
-      "add": "Add colleague"
+      "add": "Add colleague",
+      "addDialog": {
+        "title": "Add colleague",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Enter the username of the person you want to add as a colleague",
+        "submit": "Add",
+        "submitting": "Adding...",
+        "errors": {
+          "tooShort": "Your username should be at least 3 characters long.",
+          "tooLong": "Your username should be at most 20 characters long.",
+          "invalidChars": "Your username should only contain letters, numbers or underscores."
+        },
+        "success": {
+          "title": "Colleague added",
+          "description": "You have successfully added {username} as a colleague"
+        },
+        "error": {
+          "title": "Error adding colleague",
+          "description": "An error occurred while adding the colleague."
+        }
+      }
     },
     "game": {
       "quickMatch": "Quick Match",
@@ -131,7 +151,7 @@ export default {
     "period": "Period",
     "lastMonth": "Last month",
     "lastQuarter": "Last quarter",
-    "lastYear": "Last year", 
+    "lastYear": "Last year",
     "all": "All",
     "profile": {
       "title": "Profile",
