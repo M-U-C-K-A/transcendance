@@ -7,11 +7,13 @@ import string
 import secrets
 from sqlite3 import Error
 import uuid
+import requests  # Ajout pour les requêtes HTTP
 
 fake = Faker()
 
 # Configuration
 DB_PATH = './prisma/data/test.sqlite'
+PROFILE_PICTURES_DIR = './public/profilepicture'  # Chemin relatif vers le dossier de stockage
 
 def create_connection():
     """Crée une connexion à la base de données SQLite"""
@@ -50,13 +52,42 @@ def reset_database(conn):
     conn.commit()
     print("✅ Base de données réinitialisée")
 
+def download_profile_picture(username, index):
+    """Télécharge l'image de profil depuis DiceBear et l'enregistre"""
+    try:
+        # Créer le dossier s'il n'existe pas
+        os.makedirs(PROFILE_PICTURES_DIR, exist_ok=True)
+
+        url = f"https://api.dicebear.com/9.x/bottts-neutral/webp?seed={username}"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            filename = f"{index}.webp"
+            filepath = os.path.join(PROFILE_PICTURES_DIR, filename)
+
+            with open(filepath, 'wb') as f:
+                f.write(response.content)
+
+            print(f"✅ Image téléchargée: {filepath}")
+            return filename
+        else:
+            print(f"❌ Échec du téléchargement pour {username}")
+            return None
+    except Exception as e:
+        print(f"❌ Erreur lors du téléchargement de l'image: {e}")
+        return None
+
 def generate_users(count=50):
     """Génère des utilisateurs valides"""
     users = []
-    for _ in range(count):
+    for i in range(count):
         username = fake.unique.user_name()[:20]  # Limite la longueur
         email = fake.unique.email()[:50]        # Limite la longueur
         password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+
+        # Télécharger l'image de profil
+        profile_picture = download_profile_picture(username, i+1)
+
         users.append({
             'username': username,
             'alias': fake.first_name()[:20],
@@ -69,7 +100,8 @@ def generate_users(count=50):
             'lose': 0,
             'tournamentWon': 0,
             'pointScored': 0,
-            'pointConcede': 0
+            'pointConcede': 0,
+            'profilePicture': profile_picture or 'default.webp'  # Valeur par défaut si échec
         })
     return users
 
@@ -277,7 +309,7 @@ def main():
 
         # Génération des utilisateurs
         print("\n👥 Génération des utilisateurs...")
-        users = generate_users(5000)
+        users = generate_users(500)
         user_ids = insert_data(conn, "User", users, return_ids=True)
 
         # Génération des achievements
