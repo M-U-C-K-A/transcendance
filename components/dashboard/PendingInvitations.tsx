@@ -42,6 +42,8 @@ export function PendingInvitations({ locale }: { locale: string }) {
   }, [jwt])
 
   const handleInvitationResponse = async (invitationId: number, accept: boolean) => {
+
+  console.log(handleInvitationResponse)
     try {
       const response = await fetch(`/api/friends/respond`, {
         method: 'POST',
