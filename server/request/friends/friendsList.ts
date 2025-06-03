@@ -28,9 +28,9 @@ export default async function friendsList(username: string) {
 			id: { in: list }
 		},
 		select: {
+			id: true,
 			username: true,
 			alias: true,
-			avatar: true,
 			bio: true,
 			onlineStatus: true,
 			elo: true,

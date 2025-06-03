@@ -40,9 +40,8 @@ Server Log - ${new Date().toISOString()}
 Version: 1.0.0
 Node: ${process.version}
 Platform: ${process.platform}
-=============================================
+=============================================`;
 
-`;
 // On écrit le header SANS écraser le fichier (append: true), puis on laisse pino/file écrire la suite
 fs.writeFileSync(currentLogFile, header, { flag: 'w' });
 
