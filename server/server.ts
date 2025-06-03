@@ -16,7 +16,7 @@ import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
 import meProfile from './routes/profile/meProfile';
 import editProfileRoute from './routes/profile/editProfile';
-import acceptRequestRoute from './routes/friends/acceptRequestRoute';
+import acceptRequestRoute from './routes/friends/treatRequestRoute';
 import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
 

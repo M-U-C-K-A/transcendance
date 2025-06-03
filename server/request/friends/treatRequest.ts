@@ -3,7 +3,7 @@ import { id } from "../chat/interface";
 
 const Prisma = new PrismaClient();
 
-export default async function acceptRequest(userId: number, friendName: string, asAccepted: boolean) {
+export default async function treatRequest(userId: number, friendName: string, asAccepted: boolean) {
 	const friendId = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${friendName}`;
