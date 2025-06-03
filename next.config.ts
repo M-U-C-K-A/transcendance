@@ -42,6 +42,10 @@ const nextConfig: NextConfig = {
        {
         source: "/api/friends/remove",
         destination: "http://localhost:3001/friends/remove"
+       },
+       {
+        source: "/api/friends/accept",
+        destination: "http://localhost:3001/friends/accept"
        }
     ]
   },

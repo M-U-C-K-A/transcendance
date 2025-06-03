@@ -41,28 +41,35 @@ export function PendingInvitations({ locale }: { locale: string }) {
     if (jwt) fetchPendingInvitations()
   }, [jwt])
 
-  const handleInvitationResponse = async (invitationId: number, accept: boolean) => {
+const handleInvitationResponse = async (username: string, accept: boolean) => {
+  try {
+    console.log('Envoi de la réponse:', { username, asAccepted: accept });
 
-  console.log(handleInvitationResponse)
-    try {
-      const response = await fetch(`/api/friends/respond`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({
-          invitationId,
-          accept
-        }),
-      })
-      if (!response.ok) throw new Error('Failed to respond to invitation')
-      // Remove the invitation from the list
-      setPendingInvitations(prev => prev.filter(inv => inv.id !== invitationId))
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+    const response = await fetch(`/api/friends/accept`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        username,       // Envoie le username au lieu de l'id
+        asAccepted: accept  // Notez le changement de nom du champ (accept -> asAccepted)
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to respond to invitation');
     }
+
+    // Supprime l'invitation de la liste en utilisant le username
+    setPendingInvitations(prev => prev.filter(inv => inv.username !== username));
+
+  } catch (err) {
+    console.error('Erreur:', err);
+    setError(err instanceof Error ? err.message : 'Unknown error');
   }
+}
 
   if (!jwt) return null
 
@@ -126,14 +133,14 @@ export function PendingInvitations({ locale }: { locale: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleInvitationResponse(invitation.id, true)}
+                    onClick={() => handleInvitationResponse(invitation.username, true)}
                   >
                     <Check className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleInvitationResponse(invitation.id, false)}
+                    onClick={() => handleInvitationResponse(invitation.username, false)}
                   >
                     <X className="h-4 w-4" />
                   </Button>

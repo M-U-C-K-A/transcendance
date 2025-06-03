@@ -134,7 +134,6 @@ export function ColleaguesList({ locale }: { locale: string }) {
 										username={friend.username}
 										userId={friend.id}
 										onRemove={() => {
-											// Mettre à jour la liste des amis après suppression
 											setFriends(prev => prev.filter(f => f.id !== friend.id))
 										}}
 									/>

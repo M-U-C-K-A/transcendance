@@ -26,7 +26,6 @@ export function UserProfile({ locale }: { locale: string }) {
 	const jwt = useJWT()
 	const avatar = useAvatarFromJWT()
 	const [user, setUser] = useState<User | null>(null)
-	console.log("JWT:", jwt)
 
 	useEffect(() => {
 		const fetchUser = async () => {
