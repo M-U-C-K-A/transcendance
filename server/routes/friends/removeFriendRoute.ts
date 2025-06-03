@@ -5,14 +5,17 @@ import removeFriend from "@/server/request/friends/removeFriend";
 export default async function removeFriendRoute(server: FastifyInstance) {
 	server.post('/friends/remove', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
-	const friendName = request.body as { username: string}
+	const friendId = request.body as { id: number}
 
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
+	console.log(friendId)
 	try {
-		const result = await removeFriend(user.id, friendName.username)
+		console.log(user.id)
+		console.log(friendId.id)
+		const result = await removeFriend(user.id, friendId.id)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'Could not find friend Id') {
