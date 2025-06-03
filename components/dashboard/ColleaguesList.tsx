@@ -102,7 +102,7 @@ export function ColleaguesList({ locale }: { locale: string }) {
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<div className="space-y-4">
+				<div className="space-y-4 max-h-[200px] pr-2 overflow-y-auto">
 					{friends.length > 0 ? (
 						friends.map((friend) => (
 							<div key={friend.id} className="flex items-center justify-between">
