@@ -20,10 +20,6 @@ const nextConfig: NextConfig = {
         destination: "http://localhost:3001/auth/:path*"
       },
       {
-        source: "/api/friends/:path*",
-        destination: "http://localhost:3001/friends/:path*"
-      },
-      {
         source: "/api/user/me",
         destination: "http://localhost:3001/profile/me"
       },
@@ -32,12 +28,20 @@ const nextConfig: NextConfig = {
         destination: "http://localhost:3001/editprofile"
       },
       {
+        source: "/api/friends/:path*",
+        destination: "http://localhost:3001/friends/:path*"
+      },
+      {
         source: "/api/friends/request",
   destination: "http://localhost:3001/friends/request"
        },
        {
         source: "/api/friends/pending",
         destination: "http://localhost:3001/friends/pending"
+       },
+       {
+        source: "/api/friends/remove",
+        destination: "http://localhost:3001/friends/remove"
        }
     ]
   },

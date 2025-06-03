@@ -306,6 +306,7 @@ export default function ProfilePage() {
                               <td className="py-3 px-4">
                                 <div className="flex items-center">
                                   <Avatar className="h-6 w-6 mr-2">
+                                    <AvatarImage src={`/profilepicture/${match.id}.webp`} />
                                     <AvatarFallback>{match.opponent.charAt(0)}</AvatarFallback>
                                   </Avatar>
                                   <span className="hover:underline">
@@ -471,3 +472,4 @@ export default function ProfilePage() {
     </div>
   )
 }
+
