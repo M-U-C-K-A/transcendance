@@ -5,26 +5,33 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm-cache,target=/root/.pnpm-store \
-    pnpm install --frozen-lockfile
 
-COPY server/ ./server
-COPY prisma/ ./prisma
+RUN pnpm install --frozen-lockfile
+
+COPY server/   ./server
+COPY prisma/   ./prisma
 
 RUN pnpm run generate-prisma
 
-FROM node:18-alpine3.18 AS runner
+
+
+FROM node:18-alpine3.18 AS dev
 
 WORKDIR /app
 RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile \
-    && pnpm prune --prod
+
+RUN pnpm install --frozen-lockfile
+
+COPY --from=builder /app/node_modules ./node_modules
 
 COPY --from=builder /app/server  ./server
 COPY --from=builder /app/prisma  ./prisma
 
-ENV NODE_ENV=production
+COPY . .
+
+
 EXPOSE 3001
-CMD ["pnpm", "run", "start"]
+
+CMD ["pnpm", "run", "dev:server"]
