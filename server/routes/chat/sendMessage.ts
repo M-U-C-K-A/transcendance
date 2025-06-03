@@ -4,7 +4,7 @@ import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
 
 export default async function sendMessageRoute(server: FastifyInstance) {
-	server.post('/message/send', {preHandler: authMiddleware}, async function (request, reply) {
+	server.post('/chat/send', {preHandler: authMiddleware}, async function (request, reply) {
 	const data = request.body as sendMessageData
 	const senderId = request.user as {id: number}
 

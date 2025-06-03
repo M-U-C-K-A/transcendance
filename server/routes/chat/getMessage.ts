@@ -3,7 +3,7 @@ import getMessage from "@/server/request/chat/getMessage";
 import authMiddleware from "@/server/authMiddleware";
 
 export default async function getMessageRoute(server: FastifyInstance) {
-	server.get('/message/receive', {preHandler: authMiddleware}, async function (request, reply) {
+	server.get('/chat/receive', {preHandler: authMiddleware}, async function (request, reply) {
 	const user = request.user as { id: number; username: string}
 
 	console.log(user)
