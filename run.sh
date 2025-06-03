@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="http://10.12.6.6:3001/auth/register"
+URL="http://10.12.8.4:3001/auth/register"
 TOTAL=199900
 PARALLEL=1000
 
