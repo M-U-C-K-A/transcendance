@@ -96,12 +96,11 @@ def generate_users(count=50):
             'bio': fake.sentence()[:100],
             'onlineStatus': random.choice([True, False]),
             'elo': random.randint(800, 2000),
-            'win': 0,
-            'lose': 0,
-            'tournamentWon': 0,
-            'pointScored': 0,
-            'pointConcede': 0,
-            'profilePicture': profile_picture or 'default.webp'  # Valeur par défaut si échec
+            'win': random.randint(0, 50),
+            'lose': random.randint(0, 50),
+            'tournamentWon': random.randint(0, 5),
+            'pointScored': random.randint(0, 1000),
+            'pointConcede': random.randint(0, 1000),
         })
     return users
 
@@ -309,7 +308,7 @@ def main():
 
         # Génération des utilisateurs
         print("\n👥 Génération des utilisateurs...")
-        users = generate_users(500)
+        users = generate_users(200)
         user_ids = insert_data(conn, "User", users, return_ids=True)
 
         # Génération des achievements
