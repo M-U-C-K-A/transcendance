@@ -3,7 +3,7 @@ import  friendsList  from "../../request/friends/friendsList";
 import authMiddleware from '../../authMiddleware';
 
 export default async function friendListRoute(server: FastifyInstance) {
-	server.get('/friends/list', { preHandler: authMiddleware }, async function (request, reply) {
+	server.get('/friends', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number; username: string; email: string }
 
 	if (!user) {

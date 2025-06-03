@@ -5,7 +5,7 @@ import authMiddleware from '../../authMiddleware'
 export default async function friendRequestRoute(server: FastifyInstance) {
 	server.post('/friends/request', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
-	const { friendName } = request.params as { friendName: string }
+	const { username } = request.body as { username: string }
 
 	if (!user)
 	{
@@ -14,7 +14,7 @@ export default async function friendRequestRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const result = await sendFriendRequest(user.id, friendName.name)
+		const result = await sendFriendRequest(user.id, username)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'This user does not exist') {
