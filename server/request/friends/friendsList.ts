@@ -14,10 +14,6 @@ export default async function friendsList(username: string) {
 	WHERE (id1 = ${userId[0].id} OR id2 = ${userId[0].id})
 	AND status = TRUE;`
 
-	if (!friendsId[0]) {
-		console.log("No friends registered")
-		return (null)
-	}
 	let list: number[] = [];
 
 	for (let i = 0; i < friendsId.length; i++) {
