@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
+import { AddColleagueDialog } from "./AddColleagueDialog"
 
 interface Friend {
 	username: string;
@@ -66,17 +67,18 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 		if (jwt) fetchFriends()
 	}, [jwt])
 
-	if (loading) {
+	if (!jwt) {
 		return (
-			<div className="space-y-4">
-				<Skeleton className="h-6 w-1/2" />
-				{[...Array(3)].map((_, i) => (
-					<div key={i} className="flex items-center space-x-3">
-						<Skeleton className="h-10 w-10 rounded-full" />
-						<Skeleton className="h-4 w-24" />
-					</div>
-				))}
-			</div>
+		<Card className="bg-card border shadow-sm mt-6">
+			<CardHeader>
+				<CardTitle className="flex items-center">
+					<Users className="mr-2 h-5 w-5" /> {t('dashboard.colleagues.title')}
+				</CardTitle>
+			</CardHeader>
+			<CardContent>
+				Vous n&apos;etes pas connect .
+			</CardContent>
+		</Card>
 		);
 	}
 
@@ -136,9 +138,9 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 				</div>
 			</CardContent>
 			<CardFooter>
-				<Button variant="outline" size="sm" className="w-full" aria-label={t('dashboard.colleagues.add')}>
-					{t('dashboard.colleagues.add')}
-				</Button>
+				<CardFooter>
+  <AddColleagueDialog />
+</CardFooter>
 			</CardFooter>
 		</Card>
 	)
