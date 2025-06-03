@@ -16,6 +16,8 @@ import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
 import meProfile from './routes/profile/meProfile';
 import editProfileRoute from './routes/profile/editProfile';
+import acceptRequestRoute from './routes/friends/acceptRequestRoute';
+import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -72,6 +74,8 @@ async function main() {
 	await app.register(leaderboardRoute)
 	await app.register(friendRequestRoute)
 	await app.register(meProfile)
+	await app.register(acceptRequestRoute)
+	await app.register(seeFriendRequestRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
