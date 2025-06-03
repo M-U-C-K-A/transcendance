@@ -5,7 +5,7 @@ const Prisma = new PrismaClient()
 
 export default async function meProfileInfo(username: string) {
 	const userInfo = await Prisma.$queryRaw<User[]>`
-	SELECT id, email, username, avatar, bio, elo, win, onlineStatus, lose, tournamentWon
+	SELECT id, email, username, bio, elo, win, onlineStatus, lose, tournamentWon
 	FROM "User"
 	WHERE username = ${username}`
 

@@ -5,6 +5,7 @@ const Prisma = new PrismaClient()
 
 export default async function sendFriendRequest(userId: number, friendName: string) {
 
+	console.log(friendName)
 	const newFriend = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${friendName}`
