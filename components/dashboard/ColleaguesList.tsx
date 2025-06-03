@@ -2,17 +2,19 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MessageCircle, Users } from "lucide-react"
+import { MessageCircle, Users, Clock, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
 import { AddColleagueDialog } from "./AddColleagueDialog"
+import { PendingInvitations } from "./PendingInvitations"
 
 interface Friend {
-	username: string;
-	status: 'online' | 'offline';
-	avatar?: string;
+  id: number;
+  username: string;
+  status: 'online' | 'offline';
+  avatar?: string;
 }
 
 /**
@@ -39,9 +41,9 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 	const jwt = useJWT()
 	const t = useI18n()
 
-	const [friends, setFriends] = useState<Friend[]>([])
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
+  const [friends, setFriends] = useState<Friend[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
 		const fetchFriends = async () => {
@@ -69,16 +71,16 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 
 	if (!jwt) {
 		return (
-		<Card className="bg-card border shadow-sm mt-6">
-			<CardHeader>
-				<CardTitle className="flex items-center">
-					<Users className="mr-2 h-5 w-5" /> {t('dashboard.colleagues.title')}
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				Vous n&apos;etes pas connect .
-			</CardContent>
-		</Card>
+			<Card className="bg-card border shadow-sm mt-6">
+				<CardHeader>
+					<CardTitle className="flex items-center">
+						<Users className="mr-2 h-5 w-5" /> {t('dashboard.colleagues.title')}
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					Vous n&apos;etes pas connect .
+				</CardContent>
+			</Card>
 		);
 	}
 
@@ -95,7 +97,6 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 			</div>
 		);
 	}
-
 	return (
 		<Card className="bg-card border shadow-sm mt-6">
 			<CardHeader>
@@ -112,7 +113,7 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 									<div className="flex items-center">
 										<Avatar className="h-8 w-8 mr-2">
 											<AvatarImage
-												src={friend.avatar || `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${friend.username}`}
+												src={`/profilepicture/${friend.id}.webp` || `/public/profilepicture/0.webp`}
 												alt={friend.username}
 											/>
 											<AvatarFallback>{friend.username.slice(0, 2).toUpperCase()}</AvatarFallback>
@@ -127,7 +128,7 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 										</div>
 									</div>
 									<Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.message')} ${friend.username}`}>
-										<MessageCircle className="h-4 w-4" />
+										<SquareArrowOutUpRight className="h-4 w-4" />
 									</Button>
 								</div>
 							</Link>
@@ -136,11 +137,12 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 						<p className="text-sm text-muted-foreground">{t('dashboard.colleagues.noFriends')}</p>
 					)}
 				</div>
+			<PendingInvitations locale={locale} />
 			</CardContent>
 			<CardFooter>
 				<CardFooter>
-  <AddColleagueDialog />
-</CardFooter>
+					<AddColleagueDialog />
+				</CardFooter>
 			</CardFooter>
 		</Card>
 	)

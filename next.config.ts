@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/friends/:path*",
-        destination: "http://localhost:3001/friends/list/:path*"
+        destination: "http://localhost:3001/friends/:path*"
       },
       {
         source: "/api/user/me",
@@ -30,7 +30,15 @@ const nextConfig: NextConfig = {
       {
         source: "/api/editprofile",
         destination: "http://localhost:3001/editprofile"
-      }
+      },
+      {
+        source: "/api/friends/request",
+  destination: "http://localhost:3001/friends/request"
+       },
+       {
+        source: "/api/friends/pending",
+        destination: "http://10.12.8.4:3001/friends/pending"
+       }
     ]
   },
   async headers() {

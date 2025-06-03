@@ -50,12 +50,13 @@ export function AddColleagueDialog() {
     try {
       setIsLoading(true)
       const response = await fetch("/api/friends/request", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({
-          username: values.username,
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${jwt}`,
+  },
+  body: JSON.stringify({
+    username: values.username,
         }),
       })
 
