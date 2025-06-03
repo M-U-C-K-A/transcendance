@@ -35,7 +35,7 @@ export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFr
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ friendId: userId }),
       })
 
       if (!response.ok) {

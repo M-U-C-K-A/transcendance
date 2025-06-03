@@ -116,7 +116,7 @@ const handleInvitationResponse = async (username: string, accept: boolean) => {
       </CardHeader>
       <CardContent className="p-4 pt-0">
         {pendingInvitations.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-[200px] pr-2 overflow-y-auto">
             {pendingInvitations.map((invitation) => (
               <div key={invitation.id} className="flex items-center justify-between">
                 <div className="flex items-center">
