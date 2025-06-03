@@ -11,7 +11,6 @@ export default async function getuser(username: string) {
 			id: true,
 			username: true,
 			elo: true,
-			avatar: true,
 			bio: true,
 			onlineStatus: true,
 			win: true,
