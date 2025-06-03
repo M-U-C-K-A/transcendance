@@ -52,7 +52,6 @@ export function AddColleagueDialog() {
       const response = await fetch("/api/friends/request", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({
