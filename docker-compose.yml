@@ -1,11 +1,16 @@
+
+x-buildkit: &buildkit-args
+  args:
+    - DOCKER_BUILDKIT=1
+
 services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.back
+      <<: *buildkit-args
     container_name: transcendance-back
     working_dir: /app
-    command: ["sh", "-c", "pnpm run generate-prisma && pnpm run dev:server"]
     ports:
       - "3001:3001"
     volumes:
@@ -17,10 +22,10 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.front
+      <<: *buildkit-args
     container_name: transcendance-front
     working_dir: /app
-    command: ["pnpm", "run", "dev"]
     ports:
       - "3000:3000"
     volumes:
@@ -32,10 +37,10 @@ services:
   studio:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.studio
+      <<: *buildkit-args
     container_name: transcendance-studio
     working_dir: /app
-    command: ["pnpx", "prisma", "studio"]
     ports:
       - "5555:5555"
     volumes:
