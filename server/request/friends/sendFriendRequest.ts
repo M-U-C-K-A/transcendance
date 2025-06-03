@@ -4,8 +4,8 @@ import { id } from "../chat/interface";
 const Prisma = new PrismaClient()
 
 export default async function sendFriendRequest(userId: number, friendName: string) {
-
 	console.log(friendName)
+	console.log(userId)
 	const newFriend = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${friendName}`
@@ -17,13 +17,14 @@ export default async function sendFriendRequest(userId: number, friendName: stri
 
 	const isAlreadyFriend = await Prisma.$queryRaw<any[]>`
 	SELECT * FROM "Friends"
-	WHERE id1 = userId AND id2 = newFriend[0].id
-	OR id1 = newFriend[0].id OR id2 = userId`
+	WHERE (id1 = ${userId} AND id2 = ${newFriend[0].id})
+	OR (id1 = ${newFriend[0].id} AND id2 = ${userId})`;
 
 	if (isAlreadyFriend[0]) {
 		console.log("This user is already a friend")
 		throw new Error("This user is already a friend")
 	}
+	console.log('test')
 
 	await Prisma.$executeRaw`
 	INSERT INTO "Friends"(id1, id2)
