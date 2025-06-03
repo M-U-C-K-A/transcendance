@@ -126,14 +126,14 @@ export function PendingInvitations({ locale }: { locale: string }) {
                     size="sm"
                     onClick={() => handleInvitationResponse(invitation.id, true)}
                   >
-                    <Check className="mr-2 h-4 w-4" />
+                    <Check className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleInvitationResponse(invitation.id, false)}
                   >
-                    <X className="mr-2 h-4 w-4" />
+                    <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>

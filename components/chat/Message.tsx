@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createAvatar } from '@dicebear/core';
 import { botttsNeutral } from '@dicebear/collection';
 import { useState, useEffect } from 'react';
-import Link from "next/link"
 import {
 	HoverCard,
 	HoverCardContent,

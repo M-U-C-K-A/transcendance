@@ -85,7 +85,7 @@ export function AddColleagueDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full">
+        <Button variant="outline" className="w-full">
           {t("dashboard.colleagues.add")}
         </Button>
       </DialogTrigger>
