@@ -16,7 +16,7 @@ export default async function friendsList(username: string) {
 
 	if (!friendsId[0]) {
 		console.log("No friends registered")
-		throw new Error("No friends registered")
+		return (null)
 	}
 	let list: number[] = [];
 
