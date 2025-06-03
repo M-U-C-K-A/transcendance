@@ -2,13 +2,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MessageCircle, Users, Clock, SquareArrowOutUpRight, Trash } from "lucide-react"
+import { Users, SquareArrowOutUpRight, Trash } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
 import { AddColleagueDialog } from "./AddColleagueDialog"
 import { PendingInvitations } from "./PendingInvitations"
+import { RemoveFriendDialog } from "./RemoveFriendDialog"
 
 interface Friend {
 	id: number;
@@ -37,18 +38,16 @@ interface Friend {
  * - If error, displays an error message.
  * - Otherwise, displays the list of friends with their username, status, and avatar.
  */
-export function ColleaguesList({ user, locale }: { user: string; locale: string }) {
+export function ColleaguesList({ locale }: { locale: string }) {
 	const jwt = useJWT()
 	const t = useI18n()
 
 	const [friends, setFriends] = useState<Friend[]>([])
-	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
 		const fetchFriends = async () => {
 			try {
-				setLoading(true)
 				const response = await fetch(`/api/friends/`, {
 					headers: {
 						Authorization: `Bearer ${jwt}`,
@@ -62,8 +61,6 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 				setFriends(data)
 			} catch (err) {
 				setError(err instanceof Error ? err.message : 'Unknown error')
-			} finally {
-				setLoading(false)
 			}
 		}
 		if (jwt) fetchFriends()
@@ -132,9 +129,15 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 											<SquareArrowOutUpRight className="h-4 w-4" />
 										</Button>
 									</Link>
-									<Button variant="destructive" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.remove')} ${friend.username}`}>
-										<Trash className="h-4 w-4" />
-									</Button>
+									<RemoveFriendDialog
+										jwt={jwt}
+										username={friend.username}
+										userId={friend.id}
+										onRemove={() => {
+											// Mettre à jour la liste des amis après suppression
+											setFriends(prev => prev.filter(f => f.id !== friend.id))
+										}}
+									/>
 								</div>
 							</div>
 						))
@@ -145,9 +148,7 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 				<PendingInvitations locale={locale} />
 			</CardContent>
 			<CardFooter>
-				<CardFooter>
-					<AddColleagueDialog />
-				</CardFooter>
+				<AddColleagueDialog />
 			</CardFooter>
 		</Card>
 	)
