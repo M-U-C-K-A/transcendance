@@ -101,7 +101,6 @@ export function GraphSection(selectedUserId: number) {
 	const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
-	const [selectedUserId, setSelectedUserId] = useState<number>(1)
 
 	useEffect(() => {
 		const fetchStats = async () => {

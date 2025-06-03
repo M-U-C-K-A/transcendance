@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MessageCircle, Users, Clock, SquareArrowOutUpRight } from "lucide-react"
+import { MessageCircle, Users, Clock, SquareArrowOutUpRight, Trash } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
@@ -11,10 +11,10 @@ import { AddColleagueDialog } from "./AddColleagueDialog"
 import { PendingInvitations } from "./PendingInvitations"
 
 interface Friend {
-  id: number;
-  username: string;
-  status: 'online' | 'offline';
-  avatar?: string;
+	id: number;
+	username: string;
+	status: 'online' | 'offline';
+	avatar?: string;
 }
 
 /**
@@ -41,9 +41,9 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 	const jwt = useJWT()
 	const t = useI18n()
 
-  const [friends, setFriends] = useState<Friend[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+	const [friends, setFriends] = useState<Friend[]>([])
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
 		const fetchFriends = async () => {
@@ -107,37 +107,42 @@ export function ColleaguesList({ user, locale }: { user: string; locale: string 
 			<CardContent>
 				<div className="space-y-4">
 					{friends.length > 0 ? (
-						friends.map((friend, index) => (
-							<Link key={index} href={`/${locale}/profile/${friend.username}`}>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<Avatar className="h-8 w-8 mr-2">
-											<AvatarImage
-												src={`/profilepicture/${friend.id}.webp` || `/public/profilepicture/0.webp`}
-												alt={friend.username}
-											/>
-											<AvatarFallback>{friend.username.slice(0, 2).toUpperCase()}</AvatarFallback>
-										</Avatar>
-										<div>
-											<p className="text-sm font-medium">{friend.username}</p>
-											<p className="text-xs text-muted-foreground">
-												{friend.status === 'online'
-													? t('dashboard.colleagues.online')
-													: t('dashboard.colleagues.offline')}
-											</p>
-										</div>
+						friends.map((friend) => (
+							<div key={friend.id} className="flex items-center justify-between">
+								<div className="flex items-center min-w-[125px]">
+									<Avatar className="h-8 w-8 mr-2">
+										<AvatarImage
+											src={`/profilepicture/${friend.id}.webp` || `/public/profilepicture/0.webp`}
+											alt={friend.username}
+										/>
+										<AvatarFallback>{friend.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+									</Avatar>
+									<div>
+										<p className="text-sm font-medium">{friend.username}</p>
+										<p className="text-xs text-muted-foreground">
+											{friend.status === 'online'
+												? t('dashboard.colleagues.online')
+												: t('dashboard.colleagues.offline')}
+										</p>
 									</div>
-									<Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.message')} ${friend.username}`}>
-										<SquareArrowOutUpRight className="h-4 w-4" />
+								</div>
+								<div className="flex items-center space-x-2">
+									<Link href={`/${locale}/profile/${friend.username}`}>
+										<Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.message')} ${friend.username}`}>
+											<SquareArrowOutUpRight className="h-4 w-4" />
+										</Button>
+									</Link>
+									<Button variant="destructive" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.remove')} ${friend.username}`}>
+										<Trash className="h-4 w-4" />
 									</Button>
 								</div>
-							</Link>
+							</div>
 						))
 					) : (
 						<p className="text-sm text-muted-foreground">{t('dashboard.colleagues.noFriends')}</p>
 					)}
 				</div>
-			<PendingInvitations locale={locale} />
+				<PendingInvitations locale={locale} />
 			</CardContent>
 			<CardFooter>
 				<CardFooter>

@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
        },
        {
         source: "/api/friends/pending",
-        destination: "http://10.12.8.4:3001/friends/pending"
+        destination: "http://localhost:3001/friends/pending"
        }
     ]
   },
