@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Clock } from "lucide-react"
+import { Check, Clock, X } from "lucide-react"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
@@ -126,14 +126,14 @@ export function PendingInvitations({ locale }: { locale: string }) {
                     size="sm"
                     onClick={() => handleInvitationResponse(invitation.id, true)}
                   >
-                    Accepter
+                    <Check className="mr-2 h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleInvitationResponse(invitation.id, false)}
                   >
-                    Refuser
+                    <X className="mr-2 h-4 w-4" />
                   </Button>
                 </div>
               </div>
