@@ -5,7 +5,7 @@ import authMiddleware from '../../authMiddleware'
 export default async function friendRequestRoute(server: FastifyInstance) {
 	server.post('/friends/request', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
-	const friendName = request.params as { name: string}
+	const { friendName } = request.params as { friendName: string }
 
 	if (!user)
 	{
