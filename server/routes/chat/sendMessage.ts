@@ -1,10 +1,12 @@
 import { FastifyInstance } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import { sendMessageData } from '@/server/request/chat/interface';
+import authMiddleware from "@/server/authMiddleware";
 
 export default async function sendMessageRoute(server: FastifyInstance) {
-	server.post('/sendmessage', async function (request, reply) {
+	server.post('/message/send', {preHandler: authMiddleware}, async function (request, reply) {
 	const data = request.body as sendMessageData
+	const senderId = request.user as {id: number}
 
 	if (!data)
 	{
@@ -13,7 +15,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const result = await sendMessage(data)
+		const result = await sendMessage(senderId.id, data)
 		return (reply.code(200).send({ message: "Message send succesfully"}))
 	} catch (err: any) {
 		if (err.message === 'User not found in sendMessage') {

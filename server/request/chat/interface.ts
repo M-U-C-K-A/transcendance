@@ -26,7 +26,6 @@ export interface id{
 }
 
 export interface sendMessageData{
-	senderName: string
-	recipientName: string
+	recipientId: number
 	content: string
 }

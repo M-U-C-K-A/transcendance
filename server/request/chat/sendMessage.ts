@@ -3,31 +3,26 @@ import { PrismaClient } from '@prisma/client'
 
 const Prisma = new PrismaClient()
 
-export default async function sendMessage(data: sendMessageData) {
-	const senderId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User" WHERE username = ${data.senderName}`
-	const recipientId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User" WHERE username = ${data.recipientName}`
+export default async function sendMessage(senderId: number, data: sendMessageData) {
 
-	if (senderId[0]) {
-		if (!senderId[0].id) {
-			console.log("User not found in sendMessage")
-			throw new Error("User not found in sendMessage")
-		}
+	console.log("test")
+	let isGeneral: boolean = true;
+	if (data.recipientId != -1) {
+		isGeneral = false
 	}
+	console.log("test3")
+	console.log(senderId)
+	console.log(data)
+	console.log(isGeneral)
+	await Prisma.message.create({
+		data: {
+			senderId,
+			recipientId: data.recipientId,
+			content: data.content,
+			isGeneral: isGeneral,
+		},
+	});
 
-	let isGeneral: Boolean = true;
-	let recipient: number | null = null
-	if (recipientId[0]) {
-		if (recipientId[0].id) {
-			recipient = recipientId[0].id
-			isGeneral = false
-		}
-	}
-
-	await Prisma.$queryRaw`
-	INSERT INTO "Message" ("senderId", "recipientId", "content", "isGeneral")
-	VALUES (${senderId[0].id}, ${recipient}, ${data.content}, ${isGeneral})`
-
+	console.log("test4")
 	return (true)
 }
