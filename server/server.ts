@@ -3,7 +3,6 @@ import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt'
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
-import chat from './routes/chat';
 import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
 import path from 'path';
@@ -66,7 +65,6 @@ async function main() {
 	await app.register(health);
 	await app.register(registerRoute);
 	await app.register(loginRoute);
-	await app.register(chat);
 	await app.register(getMessageRoute);
 	await app.register(editProfileRoute)
 	await app.register(sendMessageRoute);
