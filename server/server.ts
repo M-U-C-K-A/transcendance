@@ -18,6 +18,7 @@ import meProfile from './routes/profile/meProfile';
 import editProfileRoute from './routes/profile/editProfile';
 import acceptRequestRoute from './routes/friends/acceptRequestRoute';
 import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
+import removeFriendRoute from './routes/friends/removeFriendRoute';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -76,6 +77,7 @@ async function main() {
 	await app.register(meProfile)
 	await app.register(acceptRequestRoute)
 	await app.register(seeFriendRequestRoute)
+	await app.register(removeFriendRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
