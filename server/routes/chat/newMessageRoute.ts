@@ -13,7 +13,7 @@ export default async function newMessageRoute(server: FastifyInstance) {
 		try {
 			const result = await newMessage(username);
 			console.log(result)
-			return reply.code(200).send({ message: "User Exist" });
+			return reply.code(200).send(result);
 		} catch (err: any) {
 			if (err.message === 'No User found') {
 				return reply.code(409).send({ error: 'No User found' });
