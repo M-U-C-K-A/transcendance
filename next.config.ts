@@ -4,14 +4,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/chat/:path*",
-        destination: "http://localhost:3001/getmessage/:path*"
-      },
-      {
-        source: "/api/chat/send",
-        destination: "http://localhost:3001/chat/send"
-      },
-      {
         source: "/api/profile/:path*",
         destination: "http://localhost:3001/profile/:path*"
       },
@@ -33,7 +25,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/friends/request",
-  destination: "http://localhost:3001/friends/request"
+        destination: "http://localhost:3001/friends/request"
        },
        {
         source: "/api/friends/pending",
