@@ -6,7 +6,6 @@ export default async function getMessageRoute(server: FastifyInstance) {
 	server.get('/chat/receive', {preHandler: authMiddleware}, async function (request, reply) {
 	const user = request.user as { id: number; username: string}
 
-	console.log(user)
 	if (!user) {
 		console.log('No parameter passed in getMessageRoute route')
 		return reply.code(400).send({ error: 'Username parameter is required' })
