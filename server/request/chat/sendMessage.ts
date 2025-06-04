@@ -5,7 +5,6 @@ const Prisma = new PrismaClient()
 
 export default async function sendMessage(senderId: number, data: sendMessageData) {
 
-	console.log("test")
 	let isGeneral: boolean = true;
 	let recipientId: number | null = null;
 
@@ -14,19 +13,15 @@ export default async function sendMessage(senderId: number, data: sendMessageDat
 		recipientId = data.recipientId
 	}
 
-	console.log("test3")
-	console.log(senderId)
-	console.log(data)
-	console.log(isGeneral)
 	await Prisma.message.create({
 		data: {
 			senderId,
 			recipientId: recipientId,
 			content: data.content,
 			isGeneral: isGeneral,
+			messageType: data.messageType,
 		},
 	});
 
-	console.log("test4")
 	return (true)
 }
