@@ -1,23 +1,23 @@
 import { PrismaClient } from "@prisma/client";
-import { id } from "../chat/interface";
 import { friendIds } from "../profile/interface";
 
 const Prisma = new PrismaClient()
 
-export default async function friendsList(username: string) {
-	const userId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User"
-	WHERE username = ${username}`
-
-	const friendsId = await Prisma.$queryRaw<friendIds[]>`
-	SELECT * FROM "Friends"
-	WHERE (id1 = ${userId[0].id} OR id2 = ${userId[0].id})
-	AND status = TRUE;`
+export default async function friendsList(userId: number) {
+	const friendsId = await Prisma.friends.findMany({
+		where: {
+			status: true,
+			OR: [
+			{ id1: userId },
+			{ id2: userId },
+			],
+		},
+	});
 
 	let list: number[] = [];
 
 	for (let i = 0; i < friendsId.length; i++) {
-	if (friendsId[i].id1 === userId[0].id) {
+	if (friendsId[i].id1 === userId) {
 		list.push(friendsId[i].id2);
 	} else {
 		list.push(friendsId[i].id1);

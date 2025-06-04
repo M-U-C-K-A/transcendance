@@ -3,16 +3,28 @@ import { User } from './interface'
 
 const Prisma = new PrismaClient()
 
-export default async function meProfileInfo(username: string) {
-	const userInfo = await Prisma.$queryRaw<User[]>`
-	SELECT id, email, username, bio, elo, win, onlineStatus, lose, tournamentWon
-	FROM "User"
-	WHERE username = ${username}`
+export default async function meProfileInfo(userId: number) {
+	const userInfo = await Prisma.user.findUnique ({
+		where: {
+			id: userId,
+		},
+		select: {
+			id: true,
+			email: true,
+			username: true,
+			bio: true,
+			elo: true,
+			win: true,
+			lose: true,
+			onlineStatus: true,
+			tournamentWon: true,
+		}
+	})
 
-	if (!userInfo[0]) {
-		console.log(`Failed to get ${username} info`)
-		throw new Error(`Failed to get ${username} info`)
+	if (!userInfo) {
+		console.log(`Failed to get user's info`)
+		throw new Error(`Failed to get user's info`)
 	}
 
-	return (userInfo[0])
+	return (userInfo)
 }

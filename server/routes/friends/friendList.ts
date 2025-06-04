@@ -4,7 +4,7 @@ import authMiddleware from '../../authMiddleware';
 
 export default async function friendListRoute(server: FastifyInstance) {
 	server.get('/friends', { preHandler: authMiddleware }, async function (request, reply) {
-	const user = request.user as { id: number; username: string; email: string }
+	const user = request.user as { id: number }
 
 	if (!user) {
 		console.log('No parameter passed in friendListRoute route')
@@ -12,7 +12,7 @@ export default async function friendListRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const result = await friendsList(user.username)
+		const result = await friendsList(user.id)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'User not found') {
