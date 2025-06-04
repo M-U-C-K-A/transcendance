@@ -18,7 +18,6 @@ export default async function getMessage(username: string) {
 		recipient.win AS recipient_win,
 		recipient.lose AS recipient_lose,
 		recipient.elo AS recipient_elo,
-		recipient.avatar AS recipient_avatar
 		FROM "Message" m
 		JOIN "User" sender ON sender.id = m."senderId"
 		LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
@@ -39,7 +38,6 @@ export default async function getMessage(username: string) {
 		recipient.win AS recipient_win,
 		recipient.lose AS recipient_lose,
 		recipient.elo AS recipient_elo,
-		recipient.avatar AS recipient_avatar
 		FROM "Message" m
 		JOIN "User" sender ON sender.id = m."senderId"
 		LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
