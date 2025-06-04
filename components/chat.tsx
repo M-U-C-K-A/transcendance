@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button"
 import { PublicChat } from "./chat/PublicChat"
 import { PrivateChat } from "./chat/PrivateChat"
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
-
 type Message = {
 	id: number
 	user: {
@@ -59,9 +57,9 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 		setError(null);
 
 		try {
-			const response = await fetch(`/api/chat/${currentUser}`, {
+			const response = await fetch(`/api/chat/receive`, {
 				headers: {
-					"Content-Type": "application/json"
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				}
 			});
 
@@ -74,7 +72,6 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 				id: msg.id,
 				user: {
 					name: msg.sender_username,
-					avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${msg.sender_username}`
 				},
 				text: msg.content,
 				timestamp: new Date(msg.sendAt),
@@ -149,7 +146,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 		const recipient = isPrivate ? (selectedPrivateUser || newPrivateUser) : undefined;
 
 		try {
-			const response = await fetch(`${BACKEND_URL}/chat/send`, {
+			const response = await fetch(`/api/chat/send`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
