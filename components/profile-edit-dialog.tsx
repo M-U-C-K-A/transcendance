@@ -24,6 +24,7 @@ import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
 import { useBioFromJWT } from "@/hooks/use-bio-from-jwt"
 import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
 import { useJWT } from "@/hooks/use-jwt"
+import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 // Zod schema
 const ProfileSchema = z.object({
@@ -39,6 +40,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 	const usernameFromJWT = useUsernameFromJWT()
 	const bioFromJWT = useBioFromJWT()
 	const avatarFromJWT = useAvatarFromJWT()
+	const id = useIdFromJWT()
 
 	const [formData, setFormData] = useState<ProfileFormData>({
 		username: usernameFromJWT || "",
@@ -145,7 +147,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 					<div className="flex justify-center items-center flex-col gap-2">
 						<Avatar className="h-20 w-20">
 							<AvatarImage
-								src={formData.profilePhotoUrl || avatarFromJWT || undefined}
+								src={`/profilepicture/${id}.webp`}
 								alt={formData.username}
 							/>
 							<AvatarFallback>{formData.username.charAt(0)}</AvatarFallback>
