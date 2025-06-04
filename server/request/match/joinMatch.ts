@@ -1,25 +1,33 @@
 import { PrismaClient } from '@prisma/client'
-import { userData } from '@/server/utils/interface'
-import  { matchInfo } from './interface'
-import { getAvatar } from '@/server/utils/getAvatar';
+
 
 const Prisma = new PrismaClient()
 
-export default async function joinMatch(user: string, matchName: string) {
-	const matchId = await Prisma.$queryRaw<number[]>`SELECT id FROM "Match" WHERE name = ${matchName}`;
+export default async function joinMatch(userId: number, matchId: number) {
+	const userInfo = await Prisma.user.findUnique ({
+		where: {
+			id: userId,
+		},
+		select: {
+			username: true,
+			elo: true,
+		}
+	});
 
-	if(!matchId[0]) {
-		console.log('Match not found in joinMatch');
-		throw new Error('Match not found in joinMatch');
+	if (!userInfo) {
+		throw new Error ("User not found")
 	}
 
-	if (matchId.length > 2) {
-		console.log('Match room already full');
-		throw new Error('Match room already full');
-	}
+	const matchInfo = await Prisma.match.update ({
+		where: {
+			id: matchId,
+		},
+		data: {
+			p2Id: userId,
+			p2Elo: userInfo?.elo,
+		}
+	});
 
-	const userElo = await Prisma.$queryRaw<number[]>`SELECT elo FROM "User" WHERE username = ${user}`;
-
-
-	return (userElo[0])
+	console.log("Match joined succesfully")
+	return (matchInfo)
 }

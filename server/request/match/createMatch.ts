@@ -1,29 +1,37 @@
 import { PrismaClient } from '@prisma/client'
-import { userData } from '@/server/utils/interface'
-import  { matchInfo } from './interface'
-import { getAvatar } from '@/server/utils/getAvatar';
+import { userAgent } from 'next/server'
 
 const Prisma = new PrismaClient()
 
-export default async function createMatch(host: string, matchName: string) {
-	const hostInfo = await Prisma.$queryRaw<userData[]>`SELECT id, elo FROM "User" WHERE username = ${host}`;
+export default async function createMatch(hostId: number, matchName: string) {
+	const hostData = await Prisma.user.findUnique ({
+		where: {
+			id: hostId,
+		},
+		select: {
+			elo: true,
+			username: true,
+		}
+	});
 
-	if (!hostInfo[0]) {
-		console.log('User not found in createMatch');
-		throw new Error('User not found in createMatch');
+	if (!hostData) {
+		throw new Error ("User not found")
 	}
 
-	const avatar = getAvatar(hostInfo[0])
-	if (!matchName)
-		matchName = `${host}'s game`;
+	let name: string;
+	if (matchName) {
+		name = matchName
+	} else {
+		name = hostData.username + '\'s game'
+	}
 
-	await Prisma.$executeRaw`INSERT INTO "Match" (p1Id, p1Elo) VALUES (${hostInfo[0].id}, ${hostInfo[0].elo})`;
+	const matchInfo = await Prisma.match.create ({
+		data: {
+			name: name,
+			p1Id: hostId,
+			p1Elo: hostData.elo
+		}
+	});
 
-	let MatchData: matchInfo = {
-		matchName : matchName,
-		p1Name : hostInfo[0].username,
-		p1Elo : hostInfo[0].elo,
-	};
-
-	return {MatchData, avatar}
+	return (matchInfo)
 }
