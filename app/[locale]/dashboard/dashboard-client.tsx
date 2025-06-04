@@ -16,7 +16,7 @@ export default function DashboardClient({ locale, jwtToken }: { locale: string, 
         {/* Left Sidebar */}
         <div className="lg:col-span-3">
           <UserProfile locale={locale} />
-          <ColleaguesList user={jwtToken} locale={locale} />
+          <ColleaguesList locale={locale} />
         </div>
 
         {/* Main Content */}
