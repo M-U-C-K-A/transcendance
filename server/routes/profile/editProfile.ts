@@ -5,26 +5,33 @@ import meProfileInfo from "@/server/request/profile/meProfile";
 
 export default async function editProfileRoute(server: FastifyInstance) {
 	server.post('/editprofile', {preHandler: authMiddleware}, async function (request, reply) {
-	const userId = request.user as { id: number; username: string}
+	const user = request.user as { id: number; username: string; bio: string}
 	const newInfo = request.body as { newAvatar: string, newUsername: string, newBio: string}
 
-	if (!userId || !newInfo)
+	if (!user || !newInfo)
 	{
 		console.log('wrong parameter in editProfileRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
+	console.log(user)
+	console.log(newInfo)
+
+	if (!newInfo.newBio) {
+		newInfo.newBio = user.bio
+	}
+
 	try {
-		await editProfile(userId.id, userId.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)
-		const result = await meProfileInfo(userId.username)
+		console.log(newInfo.newBio)
+		await editProfile(user.id, user.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)
+		const result = await meProfileInfo(user.id)
 		const token = server.jwt.sign({
 			id: result.id,
 			email: result.email,
 			username: result.username,
-			bio: result.bio,
-			avatar: result.avatar,
+			bio: result.bio
 		})
-		return (reply.code(200).send(result))
+		return (reply.code(200).send({user: result, token}))
 	} catch (err: any) {
 		if (err.message == 'Username already taken' ) {
 			reply.code(403).send({ error: 'Username already taken' })

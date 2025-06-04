@@ -19,10 +19,8 @@ import editProfileRoute from './routes/profile/editProfile';
 import acceptRequestRoute from './routes/friends/treatRequestRoute';
 import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
-import { AwardIcon } from 'lucide-react';
 import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
-import joinMatch from './request/match/joinMatch';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 
