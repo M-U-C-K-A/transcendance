@@ -23,6 +23,9 @@ import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
 import joinMatchRoute from './routes/match/joinMatch';
 import matchResultRoute from './routes/match/matchResultRoute';
+import getOnlineUsers, { initSocket } from './websocket/onlineUser';
+import { setupWebSocket } from './websocket/websocket';
+import { createServer } from 'http';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -53,6 +56,7 @@ Platform: ${process.platform}
 fs.writeFileSync(currentLogFile, header, { flag: 'w' });
 
 const app = Fastify({ logger: loggerConfig });
+const httpServer = createServer(app.server);
 
 app.register(cors, {
 	origin: true,
@@ -86,6 +90,9 @@ async function main() {
 	await app.register(createMatchRoute)
 	await app.register(joinMatchRoute)
 	await app.register(matchResultRoute)
+	await app.register(getOnlineUsers)
+
+	initSocket(httpServer, app.jwt)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
@@ -95,6 +102,7 @@ async function main() {
 		console.log(`Serveur démarré sur ${address}`);
 		app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
 	});
+	setupWebSocket(app.server, app);
 }
 
 main();

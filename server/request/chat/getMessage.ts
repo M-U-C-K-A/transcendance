@@ -53,5 +53,5 @@ export default async function getMessage(username: string) {
 	ORDER BY "sendAt" DESC`;
 
 
-	return messages;
+	return (messages);
 }
