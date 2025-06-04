@@ -12,6 +12,10 @@ import {
   Sound,
   GlowLayer,
 } from "@babylonjs/core"
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 type Pong3DProps = {
   paddle1Color: string
@@ -49,7 +53,7 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
       glow.intensity = 0.6
     }
 
-    // Sons “pong”
+    // Sons "pong"
     const allHitSounds: Sound[] = [
       new Sound("hit1", "/sounds/pong-1.mp3", scene, null, {
         volume: 0.5,
@@ -170,7 +174,7 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
       p2Mat.specularPower = 32
     }
 
-    // Mini–paddle
+    // Mini-paddle
     const miniPaddleOpts = { width: 4, height: 0.5, depth: 0.5 }
     const miniPaddle = MeshBuilder.CreateBox(
       "miniPaddle",
@@ -372,6 +376,7 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
         if (scoreLocal.player2 >= 5) {
           setWinner("Joueur 2")
           winnerRef.current = "Joueur 2"
+          toast.success("🏆 Joueur 2 remporte la partie !")
         } else {
           resetBall("player1")
         }
@@ -385,6 +390,7 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
         if (scoreLocal.player1 >= 5) {
           setWinner("Joueur 1")
           winnerRef.current = "Joueur 1"
+          toast.success("🏆 Joueur 1 remporte la partie !")
         } else {
           resetBall("player2")
         }
@@ -410,8 +416,8 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
   return (
     <div className="relative">
       {/* Score */}
-      <div className="flex justify-center mb-4 text-lg font-bold text-foreground">
-        {score.player1} - {score.player2}
+      <div className="flex justify-center text-xl font-bold text-foreground font-mono">
+        {score.player1} <span className="text-lg mx-2">-</span> {score.player2}
       </div>
 
       {/* Touches visuelles */}
@@ -434,27 +440,51 @@ export default function Pong3D({ paddle1Color, paddle2Color, mopStyle }: Pong3DP
 
       {/* Gagnant */}
       {winner && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
-          <div className="bg-background px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
-            <span className="text-green-500 text-4xl font-extrabold mb-6">
-              🏆 {winner} a gagné !
-            </span>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        <AlertDialog open={!!winner}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-center">
+                <span className="text-green-500 text-4xl font-extrabold">
+                  🏆 {winner} a gagné !
+                </span>
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex justify-center gap-4">
+              <Button
+                variant="default" 
+                onClick={() => {
+                  window.location.reload();
+                  toast.success("Nouvelle partie lancée!");
+                }}
               >
-                Rejouer
-              </button>
-              <button
-                onClick={() => window.history.back()}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>Rejouer</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Recommencer une nouvelle partie</p>
+                  </TooltipContent>
+                </Tooltip>
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  window.history.back();
+                  toast.info("Retour au menu");
+                }}
               >
-                Quitter
-              </button>
-            </div>
-          </div>
-        </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>Quitter</span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Retourner au menu principal</p>
+                  </TooltipContent>
+                </Tooltip>
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
 
       {/* Décompte avant service */}
