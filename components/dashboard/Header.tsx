@@ -9,6 +9,7 @@ import { LogIn } from "lucide-react"
 import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
 import { ProfileEditDialog } from "../profile-edit-dialog"
 import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
+import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 interface HeaderProps {
   locale: string
@@ -16,7 +17,7 @@ interface HeaderProps {
 
 export function Header({ locale }: HeaderProps) {
   const username = useUsernameFromJWT()
-  const avatar = useAvatarFromJWT()
+  const id = useIdFromJWT()
   const t = useI18n()
   const isLoggedIn = Boolean(username)
 
@@ -58,7 +59,7 @@ export function Header({ locale }: HeaderProps) {
               </Link>
               <Avatar>
                 <AvatarImage
-                  src={avatar}
+                  src={`/profilepicture/${id}.webp`}
                   width={32}
                   height={32}
                   alt={username}

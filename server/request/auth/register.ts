@@ -1,10 +1,9 @@
 import { PrismaClient } from '@prisma/client'
-import { connectionData } from '../../utils/interface'
+import { connectionData } from '@/server/routes/auth/interface'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
-
 
 const Prisma = new PrismaClient()
 
@@ -12,7 +11,7 @@ async function createProfilePicture(username: string, id: number) {
   try {
 	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`
 
-	const dir = path.resolve('public/profilePicture')
+	const dir = path.resolve('public/profilepicture')
 	if (!fs.existsSync(dir)) {
 	  fs.mkdirSync(dir, { recursive: true })
 	}
@@ -36,18 +35,26 @@ async function createProfilePicture(username: string, id: number) {
 }
 
 export default async function register(data: connectionData) {
-  const existingUser = await Prisma.$queryRaw<connectionData[]>`
-	SELECT username, email
-	FROM "User"
-	WHERE username = ${data.username}
-	OR email = ${data.email}`
+	const existingUser = await Prisma.user.findFirst({
+		where: {
+			OR: [
+			{ username: data.username },
+			{ email: data.email },
+			],
+		},
+		select: {
+			username: true,
+			email: true,
+		},
+	})
 
-	if (existingUser[0]) {
-		if (existingUser[0].username == data.username) {
+
+	if (existingUser) {
+		if (existingUser.username == data.username) {
 			console.log('Username already taken')
 			throw new Error('Username already taken')
 		}
-		if (existingUser[0].email) {
+		if (existingUser.email == data.email) {
 			console.log('Email already taken')
 			throw new Error('Email already taken')
 		}
@@ -56,21 +63,30 @@ export default async function register(data: connectionData) {
 	const hashedPass = await bcrypt.hash(data.pass, 10)
 	const defaultBio = "👐 Hello i'm new here"
 
-	await Prisma.$executeRaw`
-	INSERT INTO "User" (username, email, pass, alias, bio)
-	VALUES (${data.username}, ${data.email}, ${hashedPass}, ${data.username}, ${defaultBio})`
+	const newUser = await Prisma.user.create({
+		data: {
+			username: data.username,
+			email: data.email,
+			pass: hashedPass,
+			alias: data.username,
+			bio: defaultBio,
+		},
+	})
 
-	await Prisma.$executeRaw`
-	INSERT INTO "Achievement"(id)
-	SELECT id FROM "User"
-	WHERE username = ${data.username}`
+	await Prisma.achievement.create({
+		data: {
+			id: newUser.id,
+		},
+	})
 
 	const user = await Prisma.user.findUnique({
 		where: { username: data.username },
 		select: { id: true },
 	})
 
-	if (!user) throw new Error('User not found after insertion')
+	if (!user) {
+		throw new Error('User not found after insertion')
+	}
 
 	const id = user.id
 

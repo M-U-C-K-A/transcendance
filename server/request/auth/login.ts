@@ -1,5 +1,5 @@
-import {PrismaClient} from '@prisma/client'
-import {loginData} from '../../utils/interface'
+import { PrismaClient } from '@prisma/client'
+import { loginData } from '@/server/routes/auth/interface'
 import { returnData } from './interface'
 import bcrypt from 'bcrypt'
 

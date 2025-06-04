@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import login from '../../request/auth/login'
-import { loginData } from '../../utils/interface'
+import { loginData } from './interface'
 
 export default async function loginRoute(server: FastifyInstance) {
 	server.post('/auth/login', async (request, reply) => {

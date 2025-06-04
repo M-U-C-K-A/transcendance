@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import register from '../../request/auth/register'
-import { connectionData } from '../../utils/interface'
+import { connectionData } from './interface'
 
 export default async function registerRoute(server: FastifyInstance) {
 	server.post('/auth/register', async (request, reply) => {

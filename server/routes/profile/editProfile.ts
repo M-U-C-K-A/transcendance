@@ -20,7 +20,7 @@ export default async function editProfileRoute(server: FastifyInstance) {
 	if (!newInfo.newBio) {
 		newInfo.newBio = user.bio
 	}
-
+	console.log(newInfo.newAvatar)
 	try {
 		console.log(newInfo.newBio)
 		await editProfile(user.id, user.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)

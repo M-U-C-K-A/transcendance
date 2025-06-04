@@ -11,7 +11,7 @@ import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
-import friendListRoute from './routes/friends/friendList';
+import friendListRoute from './routes/friends/friendListRoute';
 import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
 import meProfile from './routes/profile/meProfile';
@@ -21,7 +21,7 @@ import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
 import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
-import joinMatchRoute from './routes/match/joinMatchRoute';
+import joinMatchRoute from './routes/match/joinMatch';
 import matchResultRoute from './routes/match/matchResultRoute';
 
 // Génère un nom de fichier de log avec timestamp
