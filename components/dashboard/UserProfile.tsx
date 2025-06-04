@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
 import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
+import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 interface User {
 	username: string
@@ -24,7 +25,7 @@ interface User {
  */
 export function UserProfile({ locale }: { locale: string }) {
 	const jwt = useJWT()
-	const avatar = useAvatarFromJWT()
+	const id = useIdFromJWT()
 	const [user, setUser] = useState<User | null>(null)
 
 	useEffect(() => {
@@ -52,7 +53,7 @@ export function UserProfile({ locale }: { locale: string }) {
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage src={avatar} />
+					<AvatarImage src={`/profilepicture/${id}.webp`} />
 					<AvatarFallback className="text-2xl">jd</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
