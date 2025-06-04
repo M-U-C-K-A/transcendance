@@ -19,6 +19,8 @@ import editProfileRoute from './routes/profile/editProfile';
 import acceptRequestRoute from './routes/friends/treatRequestRoute';
 import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
+import { AwardIcon } from 'lucide-react';
+import newMessageRoute from './routes/chat/newMessageRoute';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -78,6 +80,7 @@ async function main() {
 	await app.register(acceptRequestRoute)
 	await app.register(seeFriendRequestRoute)
 	await app.register(removeFriendRoute)
+	await app.register(newMessageRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
