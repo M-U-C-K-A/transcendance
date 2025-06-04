@@ -41,13 +41,15 @@ export default async function getuser(username: string) {
 	});
 
 	const matchHistory = await Prisma.match.findMany({
-		where: {
-			OR: [
-				{ p1Id: userInfo.id },
-				{ p2Id: userInfo.id },
-			],
-		},
+	where: {
+		OR: [
+		{ p1Id: userInfo.id },
+		{ p2Id: userInfo.id },
+		],
+		winnerId: {
+			not: null
+		}
+	},
 	});
-	console.log(achievements)
 	return {userInfo, gameNumber, winRate, achievements, matchHistory}
 }
