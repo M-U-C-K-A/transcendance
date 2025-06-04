@@ -18,7 +18,7 @@ export default async function getMessage(username: string) {
 		recipient.alias AS recipient_alias,
 		recipient.win AS recipient_win,
 		recipient.lose AS recipient_lose,
-		recipient.elo AS recipient_elo,
+		recipient.elo AS recipient_elo
 		FROM "Message" m
 		JOIN "User" sender ON sender.id = m."senderId"
 		LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
@@ -39,7 +39,7 @@ export default async function getMessage(username: string) {
 		recipient.alias AS recipient_alias,
 		recipient.win AS recipient_win,
 		recipient.lose AS recipient_lose,
-		recipient.elo AS recipient_elo,
+		recipient.elo AS recipient_elo
 		FROM "Message" m
 		JOIN "User" sender ON sender.id = m."senderId"
 		LEFT JOIN "User" recipient ON recipient.id = m."recipientId"
@@ -51,6 +51,7 @@ export default async function getMessage(username: string) {
 	UNION ALL
 	SELECT * FROM private_messages
 	ORDER BY "sendAt" DESC`;
+
 
 	return messages;
 }
