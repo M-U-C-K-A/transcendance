@@ -34,7 +34,6 @@ export default async function getMessage(username: string) {
 		sender.win AS sender_win,
 		sender.lose AS sender_lose,
 		sender.elo AS sender_elo,
-		sender.avatar AS sender_avatar,
 		recipient.id as recipient_id,
 		recipient.username AS recipient_username,
 		recipient.alias AS recipient_alias,
