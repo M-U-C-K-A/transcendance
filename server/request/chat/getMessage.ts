@@ -7,11 +7,13 @@ export default async function getMessage(username: string) {
 	const messages = await Prisma.$queryRaw<any[]>`
 	WITH general_messages AS (
 		SELECT m.*,
+		sender.id as sender_id,
 		sender.username AS sender_username,
 		sender.alias AS sender_alias,
 		sender.win AS sender_win,
 		sender.lose AS sender_lose,
 		sender.elo AS sender_elo,
+		recipient.id as recipient_id,
 		recipient.username AS recipient_username,
 		recipient.alias AS recipient_alias,
 		recipient.win AS recipient_win,
@@ -26,12 +28,14 @@ export default async function getMessage(username: string) {
 	),
 	private_messages AS (
 		SELECT m.*,
+		sender.id as sender_id,
 		sender.username AS sender_username,
 		sender.alias AS sender_alias,
 		sender.win AS sender_win,
 		sender.lose AS sender_lose,
 		sender.elo AS sender_elo,
 		sender.avatar AS sender_avatar,
+		recipient.id as recipient_id,
 		recipient.username AS recipient_username,
 		recipient.alias AS recipient_alias,
 		recipient.win AS recipient_win,
