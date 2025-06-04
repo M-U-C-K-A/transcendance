@@ -25,7 +25,9 @@ export default async function login(data: loginData) {
 		const userInfo = await Prisma.$queryRaw<returnData[]>`
 		SELECT id, email, username, bio
 		FROM "User" WHERE email = ${data.email}`
+
 		return (userInfo)
+
 	}
 	else {
 		console.log('Wrong password');

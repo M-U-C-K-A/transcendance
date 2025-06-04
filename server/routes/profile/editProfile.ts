@@ -14,13 +14,10 @@ export default async function editProfileRoute(server: FastifyInstance) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
-	console.log(user)
-	console.log(newInfo)
-
 	if (!newInfo.newBio) {
 		newInfo.newBio = user.bio
 	}
-	console.log(newInfo.newAvatar)
+
 	try {
 		console.log(newInfo.newBio)
 		await editProfile(user.id, user.username, newInfo.newAvatar, newInfo.newBio, newInfo.newUsername)
