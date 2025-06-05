@@ -26,7 +26,7 @@ export interface id{
 }
 
 export interface sendMessageData{
-	recipient?: string
+	recipient?: number
 	content: string
 	messageType: string
 }
