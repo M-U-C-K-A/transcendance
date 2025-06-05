@@ -53,7 +53,7 @@ export function UserProfile({ locale }: { locale: string }) {
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage src={`/profilepicture/${id}.webp`} />
+					<AvatarImage src={`/profilepicture/${id}.webp`} alt={user.username} />
 					<AvatarFallback className="text-2xl">jd</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>

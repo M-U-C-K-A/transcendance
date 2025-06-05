@@ -20,10 +20,10 @@ export function Invitation() {
 	return (
 		<TooltipProvider>
 			<Tooltip>
-				<TooltipTrigger>
-					<Button disabled>
+				<TooltipTrigger asChild>
+					<span className="border opacity-50 inline-flex items-center justify-center p-2 rounded-md text-gray-400 cursor-not-allowed">
 						<Swords />
-					</Button>
+					</span>
 				</TooltipTrigger>
 				<TooltipContent>
 					Lancer une partie
