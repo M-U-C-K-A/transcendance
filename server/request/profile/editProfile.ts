@@ -38,7 +38,7 @@ export default async function editProfile(id: number, username: string, newAvata
 			where: { username: newUsername },
 		})
 		if (result) {
-			throw new Error('Username already taken')
+			throw new Error('Username already taken puta')
 		}
 	}
 

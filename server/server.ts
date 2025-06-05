@@ -1,5 +1,5 @@
 import cors from '@fastify/cors';
-import Fastify, { fastify } from 'fastify';
+import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt'
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
@@ -10,6 +10,7 @@ import fs from 'fs';
 import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
+import { loggerConfig } from './config/logger';
 import friendListRoute from './routes/friends/friendListRoute';
 import leaderboardRoute from './routes/user/leaderboardRoute';
 import friendRequestRoute from './routes/friends/friendRequestRoute';
@@ -22,9 +23,9 @@ import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
-import matchListRoute from './routes/match/matchListRoute';
-import fastifyWebsocket from '@fastify/websocket';
-
+import getOnlineUsers, { initSocket } from './websocket/onlineUser';
+import { setupWebSocket } from './websocket/websocket';
+import { createServer } from 'http';
 
 // Génère un nom de fichier de log avec timestamp
 const getLogFileName = () => {
@@ -54,7 +55,9 @@ Platform: ${process.platform}
 // On écrit le header SANS écraser le fichier (append: true), puis on laisse pino/file écrire la suite
 fs.writeFileSync(currentLogFile, header, { flag: 'w' });
 
-const app = fastify();
+const app = Fastify({ logger: loggerConfig,
+  bodyLimit: 20 * 1024 * 1024 });
+const httpServer = createServer(app.server);
 
 app.register(cors, {
 	origin: true,
@@ -66,9 +69,6 @@ app.register(cors, {
 app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
 })
-
-app.register(fastifyWebsocket);
-
 
 async function main() {
 	const port = 3001;
@@ -91,7 +91,9 @@ async function main() {
 	await app.register(createMatchRoute)
 	await app.register(joinMatchRoute)
 	await app.register(matchResultRoute)
-	await app.register(matchListRoute)
+	await app.register(getOnlineUsers)
+
+	initSocket(httpServer, app.jwt)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
@@ -101,6 +103,7 @@ async function main() {
 		console.log(`Serveur démarré sur ${address}`);
 		app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
 	});
+	setupWebSocket(app.server, app);
 }
 
 main();
