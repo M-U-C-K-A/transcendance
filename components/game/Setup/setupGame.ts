@@ -11,7 +11,7 @@ export const setupGame = (
   paddle1Color: string,
   paddle2Color: string
 ) => {
-  // 1) Création des objets 3D (paddles, mini-paddle, balle, etc.)
+  // 1) Création des objets 3D (paddles, mini-paddle, balle, bumpers, etc.)
   const {
     scene: scn,
     camera,
@@ -20,6 +20,8 @@ export const setupGame = (
     paddle2,
     miniPaddle,
     ball,
+    bumperLeft,
+    bumperRight,
     p1Mat,
     p2Mat,
     ballMat,
@@ -37,6 +39,8 @@ export const setupGame = (
     paddle2,
     miniPaddle,
     ball,
+    bumperLeft,
+    bumperRight,
     p1Mat,
     p2Mat,
     ballMat,

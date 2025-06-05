@@ -1,15 +1,20 @@
-// components/game/Physic/collisions/handleCollisions.ts
+// src/Physic/collisions/handleCollisions.ts
+// -----------------------------------------
+
 import { Vector3 } from "@babylonjs/core";
 
 import { collideWalls } from "./collisionWalls";
 import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
 import { collideMiniPaddle } from "./collisionMiniPaddle";
+import { collideBumper } from "./collisionBumpers";
 
 export function handleCollisions(
   ball: any,
   paddle1: any,
   paddle2: any,
   miniPaddle: any,
+  bumperLeft: any,
+  bumperRight: any,
   ballV: Vector3,
   currentSpeed: number,
   ballMat: any,
@@ -26,7 +31,7 @@ export function handleCollisions(
     };
   }
 
-  // 2) Collision paddle1 (on passe currentSpeed en 3e position)
+  // 2) Collision paddle1
   const p1Result = collidePaddle1(
     ball,
     paddle1,
@@ -42,7 +47,7 @@ export function handleCollisions(
     };
   }
 
-  // 3) Collision paddle2 (on passe ballV puis currentSpeed)
+  // 3) Collision paddle2
   const p2Result = collidePaddle2(
     ball,
     paddle2,
@@ -76,6 +81,40 @@ export function handleCollisions(
     }
   }
 
-  // 5) Pas de collision : renvoyer ballV et currentSpeed inchangés
+  // 5) Collision bumperLeft (si défini)
+  if (bumperLeft) {
+    const bump1 = collideBumper(
+      ball,
+      bumperLeft,
+      ballV,
+      currentSpeed,
+      allHitSounds
+    );
+    if (bump1) {
+      return {
+        newVelocity: bump1.newVelocity,
+        newSpeed: bump1.newSpeed,
+      };
+    }
+  }
+
+  // 6) Collision bumperRight (si défini)
+  if (bumperRight) {
+    const bump2 = collideBumper(
+      ball,
+      bumperRight,
+      ballV,
+      currentSpeed,
+      allHitSounds
+    );
+    if (bump2) {
+      return {
+        newVelocity: bump2.newVelocity,
+        newSpeed: bump2.newSpeed,
+      };
+    }
+  }
+
+  // 7) Pas de collision : on renvoie la vélocité inchangée
   return { newVelocity: ballV, newSpeed: currentSpeed };
 }
