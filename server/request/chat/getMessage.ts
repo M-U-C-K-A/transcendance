@@ -50,7 +50,7 @@ export default async function getMessage(username: string) {
 	SELECT * FROM general_messages
 	UNION ALL
 	SELECT * FROM private_messages
-	ORDER BY "sendAt" DESC`;
+	ORDER BY "id" ASC`;
 
 
 	return (messages);
