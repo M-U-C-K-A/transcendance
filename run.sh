@@ -1,27 +1,45 @@
 #!/bin/bash
 
-URL="http://10.12.8.4:3001/auth/register"
-TOTAL=199900
-PARALLEL=1000
+# === Configuration ===
+TARGETS=(
+    "http://10.12.8.5:3001/health"
+)
+LOOPS=1000           # Nombre total de requêtes (0 = infini)
+PARALLEL_REQS=10     # Requêtes simultanées
+TIMEOUT=2            # Timeout en secondes
+DELAY=0.1            # Délai entre requêtes (0 = max speed)
 
-# Utilisation de seq et xargs avec tout le code inline
-seq "$TOTAL" | xargs -n1 -P "$PARALLEL" bash -c '
-random_string() {
-    openssl rand -base64 32 | tr -dc "a-zA-Z0-9" | head -c "$1"
+# === Fonction pour envoyer une requête HTTP ===
+send_request() {
+    local url=$1
+    local start_time=$(date +%s%3N)  # Timestamp en millisecondes
+
+    # Envoi de la requête avec curl (silencieux, timeout, user-agent random)
+    if curl -s -k --max-time $TIMEOUT -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "$url" > /dev/null; then
+        local end_time=$(date +%s%3N)
+        local latency=$((end_time - start_time))
+        echo "[+] $url → HTTP 200 (${latency}ms)"
+    else
+        echo "[-] $url → FAILED (Timeout/Error)"
+    fi
 }
 
-create_user() {
-    local username="user_$(random_string 8)"
-    local email="${username}@example.com"
-    local password=$(random_string 12)
+# === Boucle principale ===
+COUNT=0
+while [[ $LOOPS -eq 0 || $COUNT -lt $LOOPS ]]; do
+    for TARGET in "${TARGETS[@]}"; do
+        send_request "$TARGET" &
 
-    curl -s -X POST "'"$URL"'" \
-        -H "Content-Type: application/json" \
-        -d "{\"username\":\"$username\",\"email\":\"$email\",\"pass\":\"$password\"}" \
-        > /dev/null
-}
+        # Limiter le nombre de requêtes parallèles
+        if (( $(jobs -r | wc -l) >= PARALLEL_REQS )); then
+            wait -n
+        fi
 
-create_user
-'
+        sleep $DELAY
+        ((COUNT++))
+    done
+done
 
-echo "Terminé!"
+# === Nettoyage ===
+wait
+echo "[✓] Test terminé (Total: $COUNT requêtes)."
