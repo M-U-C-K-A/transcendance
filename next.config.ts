@@ -5,47 +5,47 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/profile/:path*",
-        destination: "http://backend:3001/profile/:path*"
+        destination: "http://localhost:3001/profile/:path*"
       },
       {
         source: "/api/auth/:path*",
-        destination: "http://backend:3001/auth/:path*"
+        destination: "http://localhost:3001/auth/:path*"
       },
       {
         source: "/api/user/me",
-        destination: "http://backend:3001/profile/me"
+        destination: "http://localhost:3001/profile/me"
       },
       {
         source: "/api/editprofile",
-        destination: "http://backend:3001/editprofile"
+        destination: "http://localhost:3001/editprofile"
       },
       {
         source: "/api/friends/:path*",
-        destination: "http://backend:3001/friends/:path*"
+        destination: "http://localhost:3001/friends/:path*"
       },
       {
         source: "/api/friends/request",
-        destination: "http://backend:3001/friends/request"
+        destination: "http://localhost:3001/friends/request"
       },
       {
         source: "/api/friends/pending",
-        destination: "http://backend:3001/friends/pending"
+        destination: "http://localhost:3001/friends/pending"
       },
       {
         source: "/api/friends/remove",
-        destination: "http://backend:3001/friends/remove"
+        destination: "http://localhost:3001/friends/remove"
       },
       {
         source: "/api/friends/accept",
-        destination: "http://backend:3001/friends/accept"
+        destination: "http://localhost:3001/friends/accept"
       },
       {
         source: "/api/chat/receive",
-        destination: "http://backend:3001/chat/receive"
+        destination: "http://localhost:3001/chat/receive"
       },
       {
         source: "/api/chat/send",
-        destination: "http://backend:3001/chat/send"
+        destination: "http://localhost:3001/chat/send"
       }
     ];
   },
