@@ -64,3 +64,7 @@ docker-compose up  relance celui tout juste cree
 nano ~/.docker/config.json
 
 "suppr si truc entre {}"
+
+
+
+test.
