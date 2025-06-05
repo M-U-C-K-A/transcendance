@@ -32,6 +32,10 @@ export function QuickMatchContent({ locale }: GameTabsContentProps) {
             <p className="mb-4 text-muted-foreground">{t("dashboard.game.startDesc")}</p>
           </div>
         </div>
+        {/*
+        <video className="w-full rounded-md" autoPlay loop muted>
+          <source src="/3dpong.mp4" type="video/mp4" />
+        </video>*/}
       </CardContent>
       <CardFooter>
         <Link href={`/${locale}/game/quickmatch`} className="w-full">
