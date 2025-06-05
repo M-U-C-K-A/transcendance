@@ -1,6 +1,5 @@
-// miniPaddleLogic.ts
-// ----------------
-// Logique de déplacement du miniPaddle (va–vient).
+// src/Physic/paddle/miniPaddleLogic.ts
+// ------------------------------------
 
 import { MINI_SPEED, MINI_BOUND_X } from "../constants";
 
