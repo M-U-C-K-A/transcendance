@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import authMiddleware from '../../authMiddleware';
+import matchList from "@/server/request/match/matchList";
 
 export default async function matchListRoute(server: FastifyInstance) {
 	server.get('/match/list', { preHandler: authMiddleware }, async function (request, reply) {
