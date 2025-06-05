@@ -60,11 +60,16 @@ export function createGround(
   }
 
   // Création du sol unique sous la table de jeu
-  const ground = MeshBuilder.CreateGround(
+  const ground = MeshBuilder.CreateBox(
     "ground",
-    { width: 20, height: 40 },
+    {
+      width: 20,
+      height: 1.5,    // ⬅ épaisseur du sol
+      depth: 40       // ⬅ longueur du terrain
+    },
     scene
   );
   ground.material = groundMat;
-  ground.position.y = -0.25;
+  ground.position.y = -0.75; // ⬅ pour que le haut du sol reste à y = 0
+
 }
