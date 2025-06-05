@@ -5,6 +5,7 @@ import authMiddleware from "@/server/authMiddleware";
 
 export default async function sendMessageRoute(server: FastifyInstance) {
 	server.post('/chat/send', {preHandler: authMiddleware}, async function (request, reply) {
+	console.log("test ntm si sa marche pas")
 	const data = request.body as sendMessageData
 	const senderId = request.user as {id: number}
 

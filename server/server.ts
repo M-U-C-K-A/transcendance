@@ -21,7 +21,7 @@ import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
 import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
-import joinMatchRoute from './routes/match/joinMatch';
+import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 import getOnlineUsers, { initSocket } from './websocket/onlineUser';
 import { setupWebSocket } from './websocket/websocket';
