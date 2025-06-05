@@ -46,6 +46,10 @@ const nextConfig: NextConfig = {
        {
         source: "/api/chat/send",
         destination: "http://localhost:3001/chat/send"
+       },
+       {
+        source: "/api/chat/create",
+        destination: "http://localhost:3001/chat/create"
        }
     ]
   },

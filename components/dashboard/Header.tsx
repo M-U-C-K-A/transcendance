@@ -16,8 +16,8 @@ interface HeaderProps {
 }
 
 export function Header({ locale }: HeaderProps) {
-  const username = useUsernameFromJWT()
-  const id = useIdFromJWT()
+  const username = useUsernameFromJWT() || ''
+  const id = useIdFromJWT() || ''
   const t = useI18n()
   const isLoggedIn = Boolean(username)
 
@@ -79,3 +79,4 @@ export function Header({ locale }: HeaderProps) {
     </header>
   )
 }
+
