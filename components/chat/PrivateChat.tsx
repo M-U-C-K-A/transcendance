@@ -85,12 +85,14 @@ export function PrivateChat({
               ←
             </Button>
             <Avatar className="h-8 w-8">
-              <AvatarImage
-                src={`/profilepicture/${conversationsList.find(c => c.userName === selectedUser)?.id}.webp`}
-                alt={selectedUser}
-              />
-              <AvatarFallback>{selectedUser.charAt(0)}</AvatarFallback>
-            </Avatar>
+    <AvatarImage
+        src={`/profilepicture/${conversationsList.find(c => c.userName === selectedUser)?.id}.webp`}
+        alt={selectedUser}
+    />
+    <AvatarFallback>
+        {selectedUser?.charAt(0).toUpperCase()}
+    </AvatarFallback>
+</Avatar>
             <span className="font-medium">{selectedUser}</span>
           </div>
 

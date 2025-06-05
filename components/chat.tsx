@@ -77,17 +77,18 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 
             const data = await response.json();
             const transformedMessages = data.map((msg: ServerMessage) => ({
-                id: msg.id,
-                user: {
-                    id: msg.sender_id,
-                    name: msg.sender_username,
-                },
-                text: msg.content,
-                timestamp: new Date(msg.sendAt),
-                isPrivate: !msg.isGeneral,
-                recipient: msg.recipient_username || undefined,
-                isRead: msg.readStatus
-            }));
+		    id: msg.id,
+		    user: {
+		        id: msg.sender_id,
+		        name: msg.sender_username,
+		        avatar: `/profilepicture/${msg.sender_id}.webp` // Modification ici
+		    },
+		    	text: msg.content,
+		    	timestamp: new Date(msg.sendAt),
+		    	isPrivate: !msg.isGeneral,
+		    	recipient: msg.recipient_username || undefined,
+		    	isRead: msg.readStatus
+			}));
 
             setMessages(transformedMessages);
         } catch (err) {
@@ -111,25 +112,25 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
                     .filter(Boolean)
             )
         );
+const conversations = privateUsers.map(userName => {
+    const userMessages = messages.filter(msg =>
+        msg.isPrivate &&
+        ((msg.user.name === userName && msg.recipient === currentUser) ||
+         (msg.user.name === currentUser && msg.recipient === userName))
+    );
 
-        const conversations = privateUsers.map(userName => {
-            const userMessages = messages.filter(msg =>
-                msg.isPrivate &&
-                ((msg.user.name === userName && msg.recipient === currentUser) ||
-                 (msg.user.name === currentUser && msg.recipient === userName))
-            );
-
-            return {
-                userName: userName as string,
-                avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${userName}`,
-                unreadCount: userMessages.filter(msg =>
-                    msg.user.name !== currentUser &&
-                    !msg.isRead
-                ).length,
-                lastMessage: userMessages[userMessages.length - 1]?.text,
-                lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
-            };
-        });
+    return {
+        id: userMessages[0]?.user.id || 0, // Ajout de l'ID
+        userName: userName as string,
+        avatar: `/profilepicture/${userMessages[0]?.user.id || 0}.webp`, // Modification ici
+        unreadCount: userMessages.filter(msg =>
+            msg.user.name !== currentUser &&
+            !msg.isRead
+        ).length,
+        lastMessage: userMessages[userMessages.length - 1]?.text,
+        lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
+    };
+});
 
         setPrivateConversations(conversations);
     }, [messages, currentUser]);
@@ -175,8 +176,9 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
             const message: Message = {
                 id: sentMessage.id,
                 user: {
-                    name: currentUser,
-                    avatar: `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${currentUser}`
+        			id: sentMessage.sender_id || 0, // Utilisez l'ID réel du serveur
+        			name: currentUser,
+        			avatar: `/profilepicture/${sentMessage.sender_id}.webp` // Modification ici
                 },
                 text: newMessage,
                 timestamp: new Date(sentMessage.sendAt),
@@ -197,12 +199,15 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     };
 
     const filteredMessages = messages.filter(msg => {
-        if (activeTab === "public") return !msg.isPrivate;
+    if (activeTab === "public") {
+        return !msg.isPrivate;
+    } else {
         if (!selectedPrivateUser) return false;
         return msg.isPrivate &&
-            ((msg.user.name === selectedPrivateUser && msg.recipient === currentUser) ||
-             (msg.user.name === currentUser && msg.recipient === selectedPrivateUser));
-    });
+            ((msg.user.name === currentUser && msg.recipient === selectedPrivateUser) ||
+             (msg.user.name === selectedPrivateUser && msg.recipient === currentUser));
+    }
+});
 
     if (isLoading) {
         return (
