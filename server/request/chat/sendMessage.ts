@@ -10,7 +10,7 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 	if (data.recipient) {
 		const userInfo = await Prisma.user.findUnique ({
 			where: {
-				username: data.recipient,
+				id: data.recipient,
 			},
 			select: {
 				id: true,
