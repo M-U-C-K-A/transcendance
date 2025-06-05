@@ -32,6 +32,7 @@ export default function Page() {
       audioRef.current.loop = true;
       audioRef.current.volume = volume;
       audioRef.current.play().catch(console.error);
+      (window as any).__GAME_AUDIO__ = audioRef.current;
     }
     if (audioRef.current) {
       audioRef.current.volume = volume;
