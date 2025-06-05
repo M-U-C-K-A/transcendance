@@ -47,7 +47,13 @@ export const GameUI: React.FC<{
               Rejouer
             </button>
             <button
-              onClick={() => window.history.back()}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  const audio = (window as any).__GAME_AUDIO__;
+                  if (audio?.pause) audio.pause();
+                }
+                window.history.back();
+              }}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
             >
               Quitter
