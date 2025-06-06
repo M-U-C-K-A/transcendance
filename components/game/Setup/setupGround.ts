@@ -31,12 +31,11 @@ export function createGround(
   // Bandes fluo sur la map neon
   if (MapStyle === "neon") {
     const colors = [
-      Color3.FromHexString("#FF00FF"),
-      Color3.FromHexString("#00FF00"),
-      Color3.FromHexString("#FFFF00"),
-      Color3.FromHexString("#00FFFF"),
-      Color3.FromHexString("#FF0000"),
-      Color3.FromHexString("#0000FF"),
+      Color3.FromHexString("#FF3500"), // Orange néon
+      Color3.FromHexString("#FF00FF"), // Magenta néon
+      Color3.FromHexString("#00CBFF"), // Cyan néon
+      Color3.FromHexString("#00FF00"), // Vert néon
+      Color3.FromHexString("#0000FF"), // Bleu néon
     ];
 
     const stripeHeight = 40 / colors.length;
