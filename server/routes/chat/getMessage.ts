@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
 import getMessage from "@/server/request/chat/getMessage";
 import authMiddleware from "@/server/authMiddleware";
+import { use } from "react";
 
 export default async function getMessageRoute(server: FastifyInstance) {
 	server.get('/chat/receive', {preHandler: authMiddleware}, async function (request, reply) {
-	const user = request.user as { id: number; username: string}
+	const user = request.user as { id: number}
 
 	if (!user) {
 		console.log('No parameter passed in getMessageRoute route')
@@ -12,7 +13,9 @@ export default async function getMessageRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const messages = await getMessage(user.username)
+		console.log("test")
+		console.log(user.id)
+		const messages = await getMessage(user.id)
 		return reply.code(200).send(messages)
 	} catch (err: any) {
 		console.error('Error in getMessageRoute:', err)

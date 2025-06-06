@@ -5,8 +5,6 @@ import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
-import path from 'path';
-import fs from 'fs';
 import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
@@ -27,34 +25,6 @@ import getOnlineUsers, { initSocket } from './websocket/onlineUser';
 import { setupWebSocket } from './websocket/websocket';
 import { createServer } from 'http';
 
-// Génère un nom de fichier de log avec timestamp
-const getLogFileName = () => {
-	const now = new Date();
-	const dateStr = now.toISOString()
-		.replace(/T/, '_')
-		.replace(/\..+/, '')
-		.replace(/:/g, '-');
-	return `server_${dateStr}.log`;
-};
-
-// Crée le répertoire de logs s'il n'existe pas
-const logsDir = path.join('server', 'logs');
-if (!fs.existsSync(logsDir)) {
-	fs.mkdirSync(logsDir, { recursive: true });
-}
-
-// Crée le fichier de log et écrit le header
-const currentLogFile = path.join(logsDir, getLogFileName());
-const header = `=============================================
-Server Log - ${new Date().toISOString()}
-Version: 1.0.0
-Node: ${process.version}
-Platform: ${process.platform}
-=============================================`;
-
-// On écrit le header SANS écraser le fichier (append: true), puis on laisse pino/file écrire la suite
-fs.writeFileSync(currentLogFile, header, { flag: 'w' });
-
 const app = Fastify({ logger: loggerConfig,
   bodyLimit: 20 * 1024 * 1024 });
 const httpServer = createServer(app.server);
@@ -69,6 +39,9 @@ app.register(cors, {
 app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
 })
+
+const onlineUsers = new Map<number, WebSocket>();
+
 
 async function main() {
 	const port = 3001;
@@ -101,7 +74,6 @@ async function main() {
 			process.exit(1);
 		}
 		console.log(`Serveur démarré sur ${address}`);
-		app.log.info(`Serveur démarré - Fichier log : ${currentLogFile}`);
 	});
 	setupWebSocket(app.server, app);
 }
