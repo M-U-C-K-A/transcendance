@@ -5,7 +5,7 @@
 import { GameRefs } from "./gameTypes";
 
 export const handleScoring = (
-  ball: any,
+  ball: Mesh,
   scoreLocal: { player1: number; player2: number },
   setScore: (score: { player1: number; player2: number }) => void,
   setWinner: (winner: string | null) => void,

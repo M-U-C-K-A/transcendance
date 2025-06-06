@@ -7,10 +7,10 @@ import { playRandomCollisionSound } from "../sound";
 
 
 export function collideWalls(
-  ball: any,
+  ball: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: any[]
+  allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Rebond murs latéraux
   if (ball.position.x > 10 || ball.position.x < -10) {

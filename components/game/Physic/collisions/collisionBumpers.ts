@@ -6,11 +6,11 @@ import { SPEED_INCREMENT } from "../constants";
 import { playRandomCollisionSound } from "../sound";
 
 export function collideBumper(
-  ball: any,
-  bumper: any,
+  ball: Mesh,
+  bumper: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: any[]
+  allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } | null {
   if (!ball || !bumper) return null;
 

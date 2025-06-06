@@ -1,88 +1,99 @@
 // src/Pong3D.tsx
-// --------------
-
 import { useEffect, useRef, useState } from "react";
+import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Engine, Scene, Color3, Vector3 } from "@babylonjs/core";
 import { setupGame } from "./Setup/setupGame";
 import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
-import { Pong3DProps, GameState } from "./gameTypes";
-
-type ExtendedPong3DProps = Pong3DProps & {
-  resetCamFlag: number;
-};
+import type { Pong3DProps, GameState, GameRefs, GameObjects } from "./gameTypes";
 
 export default function Pong3D({
   paddle1Color,
   paddle2Color,
   MapStyle,
-  resetCamFlag,
-}: ExtendedPong3DProps) {
+}: Pong3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
-  const [winner, setWinner] = useState<GameState["winner"]>(null);
-  const [countdown, setCountdown] = useState<GameState["countdown"]>(null);
-  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
 
-  // Réfs pour winner & isPaused
-  const blockPauseRef = useRef(false);
-  const blockMovementRef = useRef(false);
+  // ─── États React ─────────────────────────────────────────────
+  const [score, setScore] = useState<{ player1: number; player2: number }>({
+    player1: 0,
+    player2: 0,
+  });
+  const [winner, setWinner] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
 
+  // ─── Refs pour GameRefs (y compris maintenant countdown) ──────
   const winnerRef = useRef<string | null>(winner);
   const isPausedRef = useRef<boolean>(isPaused);
+  const countdownRef = useRef<number | null>(countdown);
+
   useEffect(() => {
     winnerRef.current = winner;
   }, [winner]);
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
+  useEffect(() => {
+    countdownRef.current = countdown;
+  }, [countdown]);
 
-  // Réf pour conserver la caméra (récupérée depuis setupGame)
-  const cameraRef = useRef<any>(null);
+  // Wrapper pour interdire la pause tant que countdown !== null
+  const handleSetIsPaused = (pause: boolean) => {
+    if (countdown !== null) return;
+    setIsPaused(pause);
+  };
+
+  // ─── Réf pour la caméra Babylon ────────────────────────────────
+  const cameraRef = useRef<ArcRotateCamera | null>(null);
+
+  // ─── Réf pour stocker tous les objets du jeu ──────────────────
+  const gameObjectsRef = useRef<GameObjects | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // 1) Création de l’engine et de la scène
+    // 1) Création de l’Engine et de la Scene
     const engine = new Engine(canvasRef.current, true);
     const scene = new Scene(engine);
     scene.clearColor = new Color3(1, 1, 1);
 
-    // 2) Initialiser la partie : setupGame retourne tous les objets, y compris bumpers
-    const gameObjects = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
-    cameraRef.current = gameObjects.camera;
+    // 2) Appel à setupGame qui retourne un objet conforme à GameObjects
+    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
+    cameraRef.current = objs.camera;
 
-    // 3) Physique du jeu
+    // On stocke dans la ref pour y accéder depuis gamePhysic si besoin
+    gameObjectsRef.current = objs;
+
+    // 3) Préparer l’objet gameRefs à passer à initgamePhysic
+    const gameRefs: GameRefs = {
+      winner: winnerRef,
+      isPaused: isPausedRef,
+      countdown: countdownRef,
+    };
+
+    // 4) Lancer la logique physique
     const cleanupPhysic = initgamePhysic(
       scene,
-      gameObjects, 
+      objs,
       { score, winner, countdown, isPaused },
-      { winner: winnerRef, isPaused: isPausedRef, blockPause: blockPauseRef, blockMovement: blockMovementRef},
+      gameRefs,
       setScore,
       setWinner,
       setCountdown,
-      setIsPaused
+      handleSetIsPaused
     );
 
-    // 4) Boucle de rendu
+    // 5) Boucle de rendu
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
 
-    // 5) Cleanup au démontage
+    // 6) Cleanup à la destruction du composant
     return () => {
       cleanupPhysic();
       engine.dispose();
     };
   }, [paddle1Color, paddle2Color, MapStyle]);
-
-  // 6) Reset caméra sur changement de flag
-  useEffect(() => {
-    if (!cameraRef.current) return;
-    cameraRef.current.alpha = 0;
-    cameraRef.current.beta = Math.PI / 3.1;
-    cameraRef.current.radius = 35;
-    cameraRef.current.setTarget(Vector3.Zero());
-  }, [resetCamFlag]);
 
   return (
     <div className="relative">
@@ -91,7 +102,7 @@ export default function Pong3D({
         winner={winner}
         countdown={countdown}
         isPaused={isPaused}
-        setIsPaused={setIsPaused}
+        setIsPaused={handleSetIsPaused}
       />
       <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
     </div>
