@@ -1,7 +1,3 @@
-// countdown.ts
-// ----------------
-
-
 export function startCountdown(
   duration: number,
   setIsPaused: (isPaused: boolean) => void,
@@ -10,6 +6,10 @@ export function startCountdown(
 ) {
   setIsPaused(true);
   setCountdown(duration);
+  
+  // Créer un état pour bloquer les changements de pause
+  const blockPauseChanges = { current: true };
+  
   let cnt = duration;
   const iv = setInterval(() => {
     cnt--;
@@ -19,7 +19,13 @@ export function startCountdown(
       clearInterval(iv);
       setCountdown(null);
       setIsPaused(false);
+      blockPauseChanges.current = false; // Débloque après le décompte
       callback();
     }
   }, 500);
+
+  // Retourne la fonction pour débloquer si nécessaire
+  return () => {
+    blockPauseChanges.current = false;
+  };
 }
