@@ -25,6 +25,9 @@ export default function Pong3D({
   const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
 
   // Réfs pour winner & isPaused
+  const blockPauseRef = useRef(false);
+  const blockMovementRef = useRef(false);
+
   const winnerRef = useRef<string | null>(winner);
   const isPausedRef = useRef<boolean>(isPaused);
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function Pong3D({
       scene,
       gameObjects, 
       { score, winner, countdown, isPaused },
-      { winner: winnerRef, isPaused: isPausedRef },
+      { winner: winnerRef, isPaused: isPausedRef, blockPause: blockPauseRef, blockMovement: blockMovementRef},
       setScore,
       setWinner,
       setCountdown,
