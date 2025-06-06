@@ -72,7 +72,7 @@ export const GameUI: React.FC<{
       </div>
     )}
 
-    {/* Pause */}
+    {/* Pause - Bouton désactivé pendant décompte */}
     <div className="absolute top-2 right-2 z-20 flex items-center space-x-2">
       <div className="bg-card border border-border rounded px-2 py-1 text-xs text-foreground">
         Échap
@@ -80,14 +80,20 @@ export const GameUI: React.FC<{
       {isPaused ? (
         <button
           onClick={() => setIsPaused(false)}
-          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+          disabled={countdown !== null} // Désactivé pendant décompte
+          className={`bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded ${
+            countdown !== null ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           Reprendre
         </button>
       ) : (
         <button
           onClick={() => setIsPaused(true)}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
+          disabled={countdown !== null} // Désactivé pendant décompte
+          className={`bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded ${
+            countdown !== null ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           Pause
         </button>
