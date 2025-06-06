@@ -21,8 +21,8 @@ export function ChatSection({ currentUser }: ChatSectionProps) {
 
 	return (
 		<Card className="bg-card border shadow-sm h-full max-h-[750px]">
-			<CardHeader className="bg-violet-400">
-				<CardTitle className="flex items-center bg-red-500 py-0 my-0">
+			<CardHeader>
+				<CardTitle className="flex items-center">
 					<MessageCircle className="mr-2 h-5 w-5" /> {t('dashboard.chat.title')}
 				</CardTitle>
 			</CardHeader>

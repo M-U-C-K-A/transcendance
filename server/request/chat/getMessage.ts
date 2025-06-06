@@ -71,20 +71,19 @@ export default async function getMessage(userId: number) {
 			lose: Number(m.sender_lose),
 			elo: Number(m.sender_elo),
 		},
-		recipient: m.recipient_user_id ? {
+		recipient: {
 			id: m.recipient_user_id,
 			name: m.recipient_name,
 			avatar: m.recipient_avatar,
 			win: Number(m.recipient_win),
 			lose: Number(m.recipient_lose),
 			elo: Number(m.recipient_elo),
-		} : null,
+		} ,
 		text: m.text,
 		timestamp: m.timestamp,
 		isPrivate: Number(m.isPrivate),
 		isRead: m.isRead,
 	}))
 
-
-	return messageInfo;
+	return (messageInfo);
 }
