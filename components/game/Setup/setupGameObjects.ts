@@ -67,7 +67,7 @@ export function setupGameObjects(
     const miniPaddleOpts = { width: 4, height: 0.5, depth: 0.5 };
     miniPaddle = MeshBuilder.CreateBox("miniPaddle", miniPaddleOpts, scene);
     miniPaddle.material = new StandardMaterial("whiteMat", scene);
-    miniPaddle.position.set(0, 0.25, 0);
+    miniPaddle.position.set(5, 0.25, 0);
   }
 
   // === Balle ===
