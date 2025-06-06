@@ -3,7 +3,7 @@
 
 import { MINI_SPEED, MINI_BOUND_X } from "../constants";
 
-export function updateMiniPaddle(miniPaddle: any, miniDirRef: { current: number }, deltaTime: number) {
+export function updateMiniPaddle(miniPaddle: Mesh, miniDirRef: { current: number }, deltaTime: number) {
   if (!miniPaddle) {
     console.error("miniPaddle n'est pas défini");
     return;

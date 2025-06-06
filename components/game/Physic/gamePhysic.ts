@@ -1,31 +1,41 @@
 // src/Physic/gamePhysic.ts
 import { Vector3 } from "@babylonjs/core";
-import { GameState, GameRefs } from "../gameTypes";
+import { Scene }   from "@babylonjs/core/scene";
+import type { Mesh }              from "@babylonjs/core/Meshes/mesh";
+import type { StandardMaterial }  from "@babylonjs/core/Materials/standardMaterial";
+import type { ArcRotateCamera }   from "@babylonjs/core/Cameras/arcRotateCamera";
+import type { Sound }             from "@babylonjs/core/Audio/sound";
+import { Dispatch, SetStateAction } from "react";
 
 import {
   TOTAL_SPEED,
-  BUMPER_SPEED,
-  BUMPER_BOUND_LEFT,
-  BUMPER_BOUND_RIGHT,
+  // On réduit BUMPER_SPEED ici pour ralentir les bumpers
+  BUMPER_SPEED,           // ex. passe de 8 → 4
+  BUMPER_BOUND_LEFT,      // ex. -8
+  BUMPER_BOUND_RIGHT,     // ex. +8
+  BUMPER_MID_LEFT,        // ex. -4
+  BUMPER_MID_RIGHT,       // ex. +4
 } from "./constants";
-import { serve as serveBall } from "./paddle/serve";
-import { startCountdown } from "./countdown";
-import { handleScoring } from "./collisions/scoring";
-import { registerInputListeners } from "./input";
-import { movePaddles } from "./paddle/paddleMovement";
-import { updateMiniPaddle } from "./paddle/miniPaddleLogic";
-import { handleCollisions } from "./collisions/handleCollisions";
+
+import { serve as serveBall }      from "./paddle/serve";
+import { startCountdown }          from "./countdown";
+import { handleScoring }           from "./collisions/scoring";
+import { registerInputListeners }  from "./input";
+import { movePaddles }             from "./paddle/paddleMovement";
+import { updateMiniPaddle }        from "./paddle/miniPaddleLogic";
+import { handleCollisions }        from "./collisions/handleCollisions";
+import type { GameState, GameRefs, GameObjects } from "../gameTypes";
 
 export const initgamePhysic = (
-  scene: any,
-  gameObjects: any,
+  scene: Scene,
+  gameObjects: GameObjects,
   gameState: GameState,
   gameRefs: GameRefs,
-  setScore: (score: { player1: number; player2: number }) => void,
-  setWinner: (winner: string | null) => void,
-  setCountdown: (countdown: number | null) => void,
-  setIsPaused: (isPaused: boolean) => void
-) => {
+  setScore: Dispatch<SetStateAction<{ player1: number; player2: number }>>,
+  setWinner: Dispatch<SetStateAction<string | null>>,
+  setCountdown: Dispatch<SetStateAction<number | null>>,
+  setIsPaused: Dispatch<SetStateAction<boolean>>
+): (() => void) => {
   const {
     ball,
     paddle1,
@@ -37,56 +47,56 @@ export const initgamePhysic = (
     ballMat,
     p1Mat,
     p2Mat,
+    camera,
   } = gameObjects;
 
-  // Blocage de la pause et du mouvement
-  const blockPauseRef = { current: false };
+  // Référentiel pour bloquer pause et mouvement
+  const blockPauseRef    = { current: false };
   const blockMovementRef = { current: false };
 
-  // Références pour diriger miniPaddle et bumpers
-  const miniDirRef = { current: 1 };
+  // Directions : +1 = vers le centre, -1 = vers l’extérieur
+  const miniDirRef   = { current: 1 };
   const bumperDirRef = { current: 1 };
 
-  // Remet bumpers et miniPaddle à leurs positions de départ et réinitialise les directions
+  // Réinitialise miniPaddle et bumpers à leur position de départ
   const resetBumpersAndMiniPaddle = () => {
     if (miniPaddle) {
-      // position de départ arbitraire ; ajustez selon vos coordonnées initiales
-      miniPaddle.position.set(5, 0.25, 0);
+      miniPaddle.position.set(5, 0.25, 0); // exemple, ajustez à votre coordonnée initiale
     }
     if (bumperLeft && bumperRight) {
-      bumperLeft.position.set(-8, 0.25, 0);
-      bumperRight.position.set(8, 0.25, 0);
+      bumperLeft.position.set(BUMPER_BOUND_LEFT,  0.25, 0);
+      bumperRight.position.set(BUMPER_BOUND_RIGHT, 0.25, 0);
     }
-    miniDirRef.current = 1;
+    miniDirRef.current   = 1;
     bumperDirRef.current = 1;
   };
 
-  // Permet de bloquer la mise en pause tant que blockPauseRef.current === true
+  // Version “sûre” pour bloquer pause durant countdown
   const safeSetIsPaused = (newPauseState: boolean) => {
     if (!blockPauseRef.current) {
       setIsPaused(newPauseState);
     }
   };
 
-  // Intercepte le compte à rebours : bloque pause + mouvement, réinitialise objets, puis débloque
+  // Lance un countdown, bloque la pause/movement, reset des bumpers, puis débloque
   const startCountdownWrapper = (
     duration: number,
     setIsPausedFn: (paused: boolean) => void,
     setCountdownFn: (countdown: number | null) => void,
     callback: () => void
   ) => {
-    blockPauseRef.current = true;
+    blockPauseRef.current    = true;
     blockMovementRef.current = true;
     resetBumpersAndMiniPaddle();
 
     startCountdown(duration, setIsPausedFn, setCountdownFn, () => {
       callback();
-      blockPauseRef.current = false;
+      blockPauseRef.current    = false;
       blockMovementRef.current = false;
     });
   };
 
-  // Enregistre les listeners d’entrée utilisateur en utilisant safeSetIsPaused
+  // Enregistre les listeners clavier (mouvement + escape), utilContinu
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused);
 
   let ballV = Vector3.Zero();
@@ -105,50 +115,98 @@ export const initgamePhysic = (
       loser === "player1"
         ? (paddle1.position.z as number) + 17
         : (paddle2.position.z as number) - 17;
-
     ball.position.set(0, startY, startZ);
     ballV = Vector3.Zero();
-    startCountdownWrapper(3, safeSetIsPaused, setCountdown, () => serve(loser));
+    startCountdownWrapper(3, safeSetIsPaused, setCountdown, () =>
+      serve(loser)
+    );
   };
 
   scene.onBeforeRenderObservable.add(() => {
-    // Si partie gagnée, en pause manuelle ou en compte à rebours, on bloque tout
+    const isPausedNow   = gameRefs.isPaused.current;
+    const countdownNow  = gameRefs.countdown.current;
+
+    // Si partie terminée, en pause, ou mouvement bloqué, on skip le rendu physique
     if (
       gameRefs.winner.current ||
-      gameRefs.isPaused.current ||
+      isPausedNow      ||
+      countdownNow !== null ||
       blockMovementRef.current
     ) {
       return;
     }
 
-    const deltaTime = scene.getEngine().getDeltaTime() / 1000;
+    const deltaTime = scene.getEngine().getDeltaTime() / 1000; // en secondes
 
+    // ─── Déplacement des paddles ───────────────────────────────────
     movePaddles(paddle1, paddle2, deltaTime);
 
+    // ─── Mini-paddle, si présent ──────────────────────────────────
     if (miniPaddle) {
       updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);
     }
 
+    // ─── Bumpers ───────────────────────────────────────────────────
     if (bumperLeft && bumperRight) {
-      bumperLeft.position.x += BUMPER_SPEED * bumperDirRef.current * deltaTime;
-      bumperRight.position.x -= BUMPER_SPEED * bumperDirRef.current * deltaTime;
+      // Calcul du déplacement pour chaque bumper
+      const moveAmount = BUMPER_SPEED * deltaTime * bumperDirRef.current;
 
-      if (
-        bumperLeft.position.x >= 0 &&
-        bumperRight.position.x <= 0
-      ) {
-        bumperDirRef.current = -bumperDirRef.current;
+      // On calcule la nouvelle position brute
+      let newLeftX  = bumperLeft.position.x  + moveAmount;
+      let newRightX = bumperRight.position.x - moveAmount;
+
+      // 1) Clampuer à l’intérieur des bornes (pour éviter hors-map)
+      //    BUMPER_BOUND_LEFT ≤ leftX ≤ BUMPER_BOUND_RIGHT
+      //    BUMPER_BOUND_LEFT ≤ rightX ≤ BUMPER_BOUND_RIGHT
+      newLeftX  = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newLeftX));
+      newRightX = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newRightX));
+
+      // 2) Définir exactement la “mi-distance” si on dépasse
+      //    Si on avance vers l’intérieur (dir = +1) :
+      if (bumperDirRef.current > 0) {
+        // Si left dépasse la mi-distance, on le clamp précisément à BUMPER_MID_LEFT
+        if (newLeftX >= BUMPER_MID_LEFT) {
+          newLeftX = BUMPER_MID_LEFT;
+        }
+        // Si right descend sous la mi-distance, clamp au BUMPER_MID_RIGHT
+        if (newRightX <= BUMPER_MID_RIGHT) {
+          newRightX = BUMPER_MID_RIGHT;
+        }
       }
-      if (
-        bumperLeft.position.x <= BUMPER_BOUND_LEFT &&
-        bumperRight.position.x >= BUMPER_BOUND_RIGHT
-      ) {
-        bumperDirRef.current = -bumperDirRef.current;
+      //    Si on repart vers l’extérieur (dir = -1) :
+      else {
+        // Si left revient sous la borne extérieure
+        if (newLeftX <= BUMPER_BOUND_LEFT) {
+          newLeftX = BUMPER_BOUND_LEFT;
+        }
+        // Si right revient au-delà de sa borne extérieure
+        if (newRightX >= BUMPER_BOUND_RIGHT) {
+          newRightX = BUMPER_BOUND_RIGHT;
+        }
+      }
+
+      // 3) Mettre à jour les positions
+      bumperLeft.position.x  = newLeftX;
+      bumperRight.position.x = newRightX;
+
+      // 4) Inversion de direction lorsqu’on atteint la cible
+      if (bumperDirRef.current > 0) {
+        // On inverse si l’un des deux a atteint sa mi-distance
+        if (newLeftX  === BUMPER_MID_LEFT || newRightX === BUMPER_MID_RIGHT) {
+          bumperDirRef.current = -1;
+        }
+      } else {
+        // On inverse si l’un revient à sa borne extérieure
+        if (newLeftX  === BUMPER_BOUND_LEFT || newRightX === BUMPER_BOUND_RIGHT) {
+          bumperDirRef.current = 1;
+        }
       }
     }
 
+    // ─── Mouvement de la balle ─────────────────────────────────────
     ball.position.addInPlace(ballV.scale(deltaTime));
 
+    // ─── Collisions & ajustement de vélocité ───────────────────────
     const collisionResult = handleCollisions(
       ball,
       paddle1,
@@ -166,10 +224,11 @@ export const initgamePhysic = (
     ballV = collisionResult.newVelocity;
     currentSpeed = collisionResult.newSpeed;
 
+    // ─── Gestion du score (resetBall appelle startCountdownWrapper) ──
     handleScoring(ball, scoreLocal, setScore, setWinner, resetBall, gameRefs);
   });
 
-  // Premier service avec countdown
+  // Premier countdown avant le service initial
   startCountdownWrapper(5, safeSetIsPaused, setCountdown, () =>
     serve(Math.random() > 0.5 ? "player1" : "player2")
   );

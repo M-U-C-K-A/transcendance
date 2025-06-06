@@ -5,7 +5,7 @@
 import { keys } from "../input";
 import { PADDLE_SPEED, PADDLE_BOUND_LEFT, PADDLE_BOUND_RIGHT } from "../constants";
 
-export function movePaddles(paddle1: any, paddle2: any, deltaTime: number) {
+export function movePaddles(paddle1: Mesh, paddle2: Mesh, deltaTime: number) {
   const moveAmount = PADDLE_SPEED * deltaTime;
 
   if (keys.has("w")) paddle1.position.x = Math.max(PADDLE_BOUND_LEFT, paddle1.position.x - moveAmount);

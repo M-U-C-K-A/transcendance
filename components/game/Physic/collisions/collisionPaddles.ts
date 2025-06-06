@@ -12,12 +12,12 @@ import { playRandomCollisionSound } from "../sound";
 
 
 export function collidePaddle1(
-  ball: any,
-  paddle1: any,
+  ball: Mesh,
+  paddle1: Mesh,
   currentSpeed: number,
-  ballMat: any,
-  p1Mat: any,
-  allHitSounds: any[]
+  ballMat: StandardMaterial,
+  p1Mat: StandardMaterial,
+  allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision paddle1
   if (
@@ -45,13 +45,13 @@ export function collidePaddle1(
 }
 
 export function collidePaddle2(
-  ball: any,
-  paddle2: any,
+  ball: Mesh,
+  paddle2: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  ballMat: any,
-  p2Mat: any,
-  allHitSounds: any[]
+  ballMat: StandardMaterial,
+  p2Mat: StandardMaterial,
+  allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision paddle2
   if (

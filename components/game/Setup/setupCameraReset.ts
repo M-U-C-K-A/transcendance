@@ -3,7 +3,7 @@
 
 import { Vector3 } from "@babylonjs/core";
 
-export function addCameraResetButton(camera: any) {
+export function addCameraResetButton(camera: ArcRotateCamera) {
   // === Bouton UI pour réinitialiser la caméra ===
   const resetCameraButton = document.createElement("button");
   resetCameraButton.textContent = "Réinitialiser la caméra";

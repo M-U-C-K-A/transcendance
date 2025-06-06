@@ -9,18 +9,18 @@ import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideBumper } from "./collisionBumpers";
 
 export function handleCollisions(
-  ball: any,
-  paddle1: any,
-  paddle2: any,
-  miniPaddle: any,
-  bumperLeft: any,
-  bumperRight: any,
+  ball: Mesh,
+  paddle1: Mesh,
+  paddle2: Mesh,
+  miniPaddle: Mesh,
+  bumperLeft: Mesh,
+  bumperRight: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  ballMat: any,
-  p1Mat: any,
-  p2Mat: any,
-  allHitSounds: any[]
+  ballMat: StandardMaterial,
+  p1Mat: StandardMaterial,
+  p2Mat: StandardMaterial,
+  allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } {
   // 1) Collision murs latéraux
   const wallResult = collideWalls(ball, ballV, currentSpeed, allHitSounds);
