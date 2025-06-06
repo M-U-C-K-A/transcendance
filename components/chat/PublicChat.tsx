@@ -43,15 +43,13 @@ export function PublicChat({
 }: PublicChatProps) {
 	return (
 		<div className="flex flex-col h-full">
-<MessageList messages={messages} />
-			<div className="mt-2">
+			<MessageList messages={messages} />
 				<MessageInput
 					value={newMessage}
 					onChange={onNewMessageChange}
 					onSubmit={onSendMessage}
 					placeholder={placeholder}
 				/>
-			</div>
 		</div>
 	)
 }

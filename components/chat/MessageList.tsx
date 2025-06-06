@@ -6,7 +6,7 @@ type MessageListProps = {
 		id: number
 		user: {
 			name: string
-			avatar: string
+			id: number
 		}
 		text: string
 		timestamp: Date
@@ -39,3 +39,4 @@ export function MessageList({ messages }: MessageListProps) {
 		</div>
 	)
 }
+
