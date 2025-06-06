@@ -3,14 +3,16 @@
 // Déplacement des paddles (player1 & player2) à chaque frame, en fonction de `keys`.
 
 import { keys } from "../input";
+import { PADDLE_SPEED, PADDLE_BOUND_LEFT, PADDLE_BOUND_RIGHT } from "../constants";
 
-export function movePaddles(paddle1: any, paddle2: any) {
-  // Déplacement paddle1
-  if (keys.has("w")) paddle1.position.x = Math.max(-9, paddle1.position.x - 0.3);
-  if (keys.has("s")) paddle1.position.x = Math.min(9, paddle1.position.x + 0.3);
-  // Déplacement paddle2
-  if (keys.has("ArrowUp"))
-    paddle2.position.x = Math.max(-9, paddle2.position.x - 0.3);
-  if (keys.has("ArrowDown"))
-    paddle2.position.x = Math.min(9, paddle2.position.x + 0.3);
+export function movePaddles(paddle1: any, paddle2: any, deltaTime: number) {
+  const moveAmount = PADDLE_SPEED * deltaTime;
+
+  if (keys.has("w")) paddle1.position.x = Math.max(PADDLE_BOUND_LEFT, paddle1.position.x - moveAmount);
+  if (keys.has("s")) paddle1.position.x = Math.min(PADDLE_BOUND_RIGHT, paddle1.position.x + moveAmount);
+
+  if (keys.has("ArrowUp")) paddle2.position.x = Math.max(PADDLE_BOUND_LEFT, paddle2.position.x - moveAmount);
+  if (keys.has("ArrowDown")) paddle2.position.x = Math.min(PADDLE_BOUND_RIGHT, paddle2.position.x + moveAmount);
 }
+
+

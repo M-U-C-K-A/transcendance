@@ -86,7 +86,7 @@ export function setupGameObjects(
     bumperMat.emissiveColor = Color3.FromHexString("#8000FF");
 
     // Diamètre plus grand et épaisseur pour mieux intercepter la balle
-    const donutOpts = { diameter: 2.5, thickness: 0.6, tessellation: 32 };
+    const donutOpts = { diameter: 3.5, thickness: 0.4, tessellation: 32 };
 
     bumperLeft = MeshBuilder.CreateTorus("bumperLeft", donutOpts, scene);
     bumperLeft.material = bumperMat;

@@ -44,6 +44,10 @@ const nextConfig: NextConfig = {
         destination: "http://localhost:3001/chat/receive"
       },
       {
+        source: "/api/match/list",
+        destination: "http://localhost:3001/match/list"
+      },
+      {
         source: "/api/chat/send",
         destination: "http://localhost:3001/chat/send"
       }

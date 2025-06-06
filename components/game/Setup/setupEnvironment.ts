@@ -74,7 +74,7 @@ export const initEnvironment = (
   p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
 
   const ballMat = new StandardMaterial("ballMat", scene);
-  ballMat.diffuseColor = Color3.Black(); // La balle reste noire par défaut
+  ballMat.diffuseColor = Color3.White(); // La balle reste noire par défaut
 
   // === Création du sol selon MapStyle (implémenté dans setupGround.ts) ===
   createGround(scene, MapStyle);
