@@ -31,6 +31,7 @@ interface ServerMessage {
 }
 
 type PrivateConversation = {
+    id: number
     userName: string
     avatar: string
     unreadCount: number
@@ -89,6 +90,8 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 		    	recipient: msg.recipient_username || undefined,
 		    	isRead: msg.readStatus
 			}));
+            console.log("data", data);
+            console.log("transformedMessages", transformedMessages);
 
             setMessages(transformedMessages);
         } catch (err) {
@@ -109,28 +112,32 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
                 messages
                     .filter(msg => msg.isPrivate)
                     .map(msg => msg.user.name === currentUser ? msg.recipient : msg.user.name)
-                    .filter(Boolean)
+                    .filter(name => name && name !== currentUser)
             )
         );
-const conversations = privateUsers.map(userName => {
-    const userMessages = messages.filter(msg =>
-        msg.isPrivate &&
-        ((msg.user.name === userName && msg.recipient === currentUser) ||
-         (msg.user.name === currentUser && msg.recipient === userName))
-    );
 
-    return {
-        id: userMessages[0]?.user.id || 0, // Ajout de l'ID
-        userName: userName as string,
-        avatar: `/profilepicture/${userMessages[0]?.user.id || 0}.webp`, // Modification ici
-        unreadCount: userMessages.filter(msg =>
-            msg.user.name !== currentUser &&
-            !msg.isRead
-        ).length,
-        lastMessage: userMessages[userMessages.length - 1]?.text,
-        lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
-    };
-});
+        const conversations = privateUsers.map(userName => {
+            const userMessages = messages.filter(msg =>
+                msg.isPrivate &&
+                ((msg.user.name === userName && msg.recipient === currentUser) ||
+                 (msg.user.name === currentUser && msg.recipient === userName))
+            );
+
+            const otherUserMessage = userMessages.find(msg => msg.user.name === userName);
+            const userId = otherUserMessage?.user.id || 0;
+
+            return {
+                id: userId,
+                userName: userName as string,
+                avatar: `/profilepicture/${userId}.webp`,
+                unreadCount: userMessages.filter(msg =>
+                    msg.user.name !== currentUser &&
+                    !msg.isRead
+                ).length,
+                lastMessage: userMessages[userMessages.length - 1]?.text,
+                lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
+            };
+        });
 
         setPrivateConversations(conversations);
     }, [messages, currentUser]);
@@ -152,17 +159,34 @@ const conversations = privateUsers.map(userName => {
         e.preventDefault();
         if (!newMessage.trim()) return;
 
-        const isPrivate = activeTab === "private" && (selectedPrivateUser || newPrivateUser);
-        const recipient = isPrivate ? (selectedPrivateUser || newPrivateUser) : undefined;
+        const isPrivate = Boolean(activeTab === "private" && (selectedPrivateUser || newPrivateUser));
+        const recipientUsername = isPrivate ? (selectedPrivateUser || newPrivateUser) : undefined;
 
         try {
+            let recipientId;
+            if (isPrivate && recipientUsername) {
+                // Obtenir l'ID du destinataire
+                const createResponse = await fetch('/api/chat/create', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ username: recipientUsername }),
+                });
+
+                if (!createResponse.ok) {
+                    throw new Error("Utilisateur non trouvé");
+                }
+
+                const userData = await createResponse.json();
+                recipientId = userData.id;
+            }
+
             const response = await fetch(`/api/chat/send`, {
                 method: "POST",
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
-                    sender: currentUser,
-                    recipient,
                     content: newMessage,
+                    recipient: recipientId,
+                    messageType: "text",
                     isGeneral: !isPrivate
                 })
             });
@@ -171,43 +195,32 @@ const conversations = privateUsers.map(userName => {
                 throw new Error("Failed to send message");
             }
 
-            const sentMessage = await response.json();
-
-            const message: Message = {
-                id: sentMessage.id,
-                user: {
-        			id: sentMessage.sender_id || 0, // Utilisez l'ID réel du serveur
-        			name: currentUser,
-        			avatar: `/profilepicture/${sentMessage.sender_id}.webp` // Modification ici
-                },
-                text: newMessage,
-                timestamp: new Date(sentMessage.sendAt),
-                isPrivate: !!isPrivate,
-                recipient,
-                isRead: true
-            };
-
-            setMessages(prev => [...prev, message]);
+            // Réinitialiser le message
             setNewMessage("");
             if (newPrivateUser) {
                 setSelectedPrivateUser(newPrivateUser);
                 setNewPrivateUser("");
             }
+
+            // Rafraîchir les messages
+            await fetchMessages();
+
         } catch (err) {
+            console.error("Erreur lors de l'envoi du message:", err);
             setError("Échec de l'envoi du message. Veuillez réessayer.");
         }
     };
 
     const filteredMessages = messages.filter(msg => {
-    if (activeTab === "public") {
-        return !msg.isPrivate;
-    } else {
-        if (!selectedPrivateUser) return false;
-        return msg.isPrivate &&
-            ((msg.user.name === currentUser && msg.recipient === selectedPrivateUser) ||
-             (msg.user.name === selectedPrivateUser && msg.recipient === currentUser));
-    }
-});
+        if (activeTab === "public") {
+            return !msg.isPrivate;
+        } else {
+            if (!selectedPrivateUser) return false;
+            return msg.isPrivate &&
+                ((msg.user.name === currentUser && msg.recipient === selectedPrivateUser) ||
+                 (msg.user.name === selectedPrivateUser && msg.recipient === currentUser));
+        }
+    });
 
     if (isLoading) {
         return (
