@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button"
 import { PublicChat } from "./chat/PublicChat"
 import { PrivateChat } from "./chat/PrivateChat"
 
+/*****************************************************************
+ * TYPES ET INTERFACES
+ *****************************************************************/
+type Tab = "public" | "private";
+
+// Format interne des messages utilisé dans l'application
 type Message = {
     id: number
     user: {
@@ -15,22 +21,33 @@ type Message = {
     text: string
     timestamp: Date
     isPrivate: boolean
-    recipient?: string
+    recipient?: string  // seulement pour les messages privés
     isRead: boolean
 }
 
+// Format des messages reçus de l'API
 interface ServerMessage {
     id: number
-    sender_id: number
-    sender_username: string
     content: string
     sendAt: string
-    isGeneral: boolean
-    recipient_username?: string
     readStatus: boolean
+    isGeneral: boolean
+    messageType: string
+    sender_id: number
+    sender_username: string
+    sender_win: number
+    sender_lose: number
+    sender_elo: number
+    recipient_id: number | null
+    recipient_username: string | null
+    recipient_win: number | null
+    recipient_lose: number | null
+    recipient_elo: number | null
 }
 
+// Format des conversations privées
 type PrivateConversation = {
+    id: number
     userName: string
     avatar: string
     unreadCount: number
@@ -43,9 +60,13 @@ interface ChatComponentProps {
     currentUser: string
 }
 
-type Tab = "public" | "private";
-
+/*****************************************************************
+ * COMPOSANT PRINCIPAL
+ *****************************************************************/
 export function ChatComponent({ placeholder = "Écrivez un message...", currentUser }: ChatComponentProps) {
+    /*****************************************************************
+     * ÉTATS
+     *****************************************************************/
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [activeTab, setActiveTab] = useState<Tab>("public");
@@ -55,13 +76,60 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const getAuthHeaders = () => {
+    /*****************************************************************
+     * FONCTIONS UTILITAIRES
+     *****************************************************************/
+    const getAuthHeaders = () => ({
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    });
+
+    /**
+     * Transforme un message de l'API vers le format interne
+     */
+    const transformApiMessage = (apiMessage: ServerMessage, currentUser: string): Message => {
+        const isCurrentUserSender = apiMessage.sender_username === currentUser;
+        const isPrivate = !apiMessage.isGeneral;
+        
+        // Déterminer qui est le destinataire pour les messages privés
+        let recipient: string | undefined;
+        if (isPrivate) {
+            recipient = isCurrentUserSender 
+                ? apiMessage.recipient_username || undefined 
+                : apiMessage.sender_username;
+        }
+    
         return {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+            id: apiMessage.id,
+            user: {
+                id: apiMessage.sender_id,
+                name: apiMessage.sender_username,
+                avatar: `/profilepicture/${apiMessage.sender_id}.webp`,
+                win: apiMessage.sender_win,
+                lose: apiMessage.sender_lose,
+                elo: apiMessage.sender_elo
+            },
+            recipient: {
+                id: apiMessage.recipient_id,
+                name: apiMessage.recipient_username,
+                avatar: `/profilepicture/${apiMessage.recipient_id}.webp`,
+                win: apiMessage.recipient_win,
+                lose: apiMessage.recipient_lose,
+                elo: apiMessage.recipient_elo
+            },
+            text: apiMessage.content,
+            timestamp: new Date(apiMessage.sendAt),
+            isPrivate: isPrivate,
+            isRead: apiMessage.readStatus
         };
     };
 
+    /*****************************************************************
+     * GESTION DES MESSAGES
+     *****************************************************************/
+    /**
+     * Récupère les messages depuis l'API et les transforme
+     */
     const fetchMessages = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -71,27 +139,15 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
                 headers: getAuthHeaders()
             });
 
-            if (!response.ok) {
-                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
 
-            const data = await response.json();
-            const transformedMessages = data.map((msg: ServerMessage) => ({
-		    id: msg.id,
-		    user: {
-		        id: msg.sender_id,
-		        name: msg.sender_username,
-		        avatar: `/profilepicture/${msg.sender_id}.webp` // Modification ici
-		    },
-		    	text: msg.content,
-		    	timestamp: new Date(msg.sendAt),
-		    	isPrivate: !msg.isGeneral,
-		    	recipient: msg.recipient_username || undefined,
-		    	isRead: msg.readStatus
-			}));
+            const data: ServerMessage[] = await response.json();
+            const transformedMessages = data.map(transformApiMessage);
+            console.log("transformedMessages", transformedMessages);
 
             setMessages(transformedMessages);
         } catch (err) {
+            console.error("Fetch messages error:", err);
             setError("Impossible de se connecter au serveur de chat");
             setMessages([]);
         } finally {
@@ -99,42 +155,102 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
         }
     }, [currentUser]);
 
+    /**
+     * Envoie un nouveau message
+     */
+    const handleSendMessage = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newMessage.trim()) return;
+
+        const isPrivate = activeTab === "private" && (selectedPrivateUser || newPrivateUser);
+        const recipientUsername = isPrivate ? (selectedPrivateUser || newPrivateUser) : undefined;
+
+        try {
+            let recipientId;
+            if (isPrivate && recipientUsername) {
+                // Récupère l'ID du destinataire
+                const createResponse = await fetch('/api/chat/create', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ username: recipientUsername }),
+                });
+
+                if (!createResponse.ok) throw new Error("Utilisateur non trouvé");
+                recipientId = (await createResponse.json()).id;
+            }
+
+            // Envoie le message
+            const response = await fetch(`/api/chat/send`, {
+                method: "POST",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({
+                    content: newMessage,
+                    recipient: recipientId,
+                    messageType: "text",
+                    isGeneral: !isPrivate
+                })
+            });
+
+            if (!response.ok) throw new Error("Échec de l'envoi du message");
+
+            // Réinitialise et rafraîchit
+            setNewMessage("");
+            if (newPrivateUser) {
+                setSelectedPrivateUser(newPrivateUser);
+                setNewPrivateUser("");
+            }
+            await fetchMessages();
+        } catch (err) {
+            console.error("Erreur envoi message:", err);
+            setError("Échec de l'envoi. Veuillez réessayer.");
+        }
+    };
+
+    /*****************************************************************
+     * EFFETS
+     *****************************************************************/
+    // Charge les messages au montage et quand currentUser change
     useEffect(() => {
         fetchMessages();
     }, [currentUser, fetchMessages]);
 
+    // Met à jour la liste des conversations privées
     useEffect(() => {
         const privateUsers = Array.from(
             new Set(
                 messages
                     .filter(msg => msg.isPrivate)
                     .map(msg => msg.user.name === currentUser ? msg.recipient : msg.user.name)
-                    .filter(Boolean)
+                    .filter(name => name && name !== currentUser)
             )
         );
-const conversations = privateUsers.map(userName => {
-    const userMessages = messages.filter(msg =>
-        msg.isPrivate &&
-        ((msg.user.name === userName && msg.recipient === currentUser) ||
-         (msg.user.name === currentUser && msg.recipient === userName))
-    );
-
-    return {
-        id: userMessages[0]?.user.id || 0, // Ajout de l'ID
-        userName: userName as string,
-        avatar: `/profilepicture/${userMessages[0]?.user.id || 0}.webp`, // Modification ici
-        unreadCount: userMessages.filter(msg =>
-            msg.user.name !== currentUser &&
-            !msg.isRead
-        ).length,
-        lastMessage: userMessages[userMessages.length - 1]?.text,
-        lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
-    };
-});
-
+    
+        const conversations = privateUsers.map(userName => {
+            const userMessages = messages.filter(msg =>
+                msg.isPrivate &&
+                ((msg.user.name === userName && msg.recipient === currentUser) ||
+                (msg.user.name === currentUser && msg.recipient === userName))
+            );
+    
+            const otherUserMessage = userMessages.find(msg => msg.user.name === userName);
+            const userId = otherUserMessage?.user.id || 0;
+    
+            return {
+                id: userId,
+                userName: userName as string,
+                avatar: `/profilepicture/${userId}.webp`,
+                unreadCount: userMessages.filter(msg =>
+                    msg.user.name !== currentUser && !msg.isRead
+                ).length,
+                lastMessage: userMessages[userMessages.length - 1]?.text,
+                lastMessageTime: userMessages[userMessages.length - 1]?.timestamp
+            };
+        });
+    
         setPrivateConversations(conversations);
     }, [messages, currentUser]);
 
+    // Marque les messages comme lus quand une conversation est sélectionnée
     useEffect(() => {
         if (selectedPrivateUser) {
             setMessages(prev => prev.map(msg =>
@@ -148,67 +264,21 @@ const conversations = privateUsers.map(userName => {
         }
     }, [selectedPrivateUser, currentUser]);
 
-    const handleSendMessage = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newMessage.trim()) return;
-
-        const isPrivate = activeTab === "private" && (selectedPrivateUser || newPrivateUser);
-        const recipient = isPrivate ? (selectedPrivateUser || newPrivateUser) : undefined;
-
-        try {
-            const response = await fetch(`/api/chat/send`, {
-                method: "POST",
-                headers: getAuthHeaders(),
-                body: JSON.stringify({
-                    sender: currentUser,
-                    recipient,
-                    content: newMessage,
-                    isGeneral: !isPrivate
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to send message");
-            }
-
-            const sentMessage = await response.json();
-
-            const message: Message = {
-                id: sentMessage.id,
-                user: {
-        			id: sentMessage.sender_id || 0, // Utilisez l'ID réel du serveur
-        			name: currentUser,
-        			avatar: `/profilepicture/${sentMessage.sender_id}.webp` // Modification ici
-                },
-                text: newMessage,
-                timestamp: new Date(sentMessage.sendAt),
-                isPrivate: !!isPrivate,
-                recipient,
-                isRead: true
-            };
-
-            setMessages(prev => [...prev, message]);
-            setNewMessage("");
-            if (newPrivateUser) {
-                setSelectedPrivateUser(newPrivateUser);
-                setNewPrivateUser("");
-            }
-        } catch (err) {
-            setError("Échec de l'envoi du message. Veuillez réessayer.");
-        }
-    };
-
+    /*****************************************************************
+     * FILTRAGE DES MESSAGES
+     *****************************************************************/
     const filteredMessages = messages.filter(msg => {
-    if (activeTab === "public") {
-        return !msg.isPrivate;
-    } else {
+        if (activeTab === "public") return !msg.isPrivate;
+        
         if (!selectedPrivateUser) return false;
         return msg.isPrivate &&
             ((msg.user.name === currentUser && msg.recipient === selectedPrivateUser) ||
              (msg.user.name === selectedPrivateUser && msg.recipient === currentUser));
-    }
-});
+    });
 
+    /*****************************************************************
+     * RENDU CONDITIONNEL (CHARGEMENT/ERREUR)
+     *****************************************************************/
     if (isLoading) {
         return (
             <div className="flex flex-col h-full justify-center items-center">
@@ -227,6 +297,9 @@ const conversations = privateUsers.map(userName => {
         );
     }
 
+    /*****************************************************************
+     * RENDU PRINCIPAL
+     *****************************************************************/
     return (
         <Tabs
             defaultValue="public"
@@ -236,11 +309,13 @@ const conversations = privateUsers.map(userName => {
                 if (value === "public") setSelectedPrivateUser(null);
             }}
         >
+            {/* Onglets Public/Privé */}
             <TabsList className="grid w-full grid-cols-2 mb-4">
                 <TabsTrigger value="public">Public</TabsTrigger>
                 <TabsTrigger value="private">Privé</TabsTrigger>
             </TabsList>
 
+            {/* Chat Public */}
             <TabsContent value="public" className="flex-1 overflow-hidden">
                 <PublicChat
                     messages={filteredMessages}
@@ -251,6 +326,7 @@ const conversations = privateUsers.map(userName => {
                 />
             </TabsContent>
 
+            {/* Chat Privé */}
             <TabsContent value="private" className="flex-1 overflow-hidden">
                 <PrivateChat
                     messages={filteredMessages}
