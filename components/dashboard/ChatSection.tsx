@@ -20,14 +20,14 @@ export function ChatSection({ currentUser }: ChatSectionProps) {
 	const t = useI18n()
 
 	return (
-		<Card className="bg-card border shadow-sm h-full">
-			<CardHeader>
-				<CardTitle className="flex items-center">
+		<Card className="bg-card border shadow-sm h-full max-h-[750px]">
+			<CardHeader className="bg-violet-400">
+				<CardTitle className="flex items-center bg-red-500 py-0 my-0">
 					<MessageCircle className="mr-2 h-5 w-5" /> {t('dashboard.chat.title')}
 				</CardTitle>
 			</CardHeader>
 			<Separator />
-			<CardContent className="h-[calc(100%-80px)]">
+			<CardContent className="h-[calc(100%-60px)] mt-0">
 				<ChatComponent
 					placeholder={t('dashboard.chat.placeholder')}
 					currentUser={currentUser}
