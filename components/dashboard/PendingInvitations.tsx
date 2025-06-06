@@ -108,8 +108,8 @@ const handleInvitationResponse = async (username: string, accept: boolean) => {
 
   return (
     <Card className="bg-card border shadow-sm mt-4">
-      <CardHeader className="p-4 pb-2">
-        <CardTitle className="flex items-center text-sm font-medium">
+      <CardHeader className="px-2">
+        <CardTitle className="flex items-center text-sm font-medium py-0 my-0">
           <Clock className="mr-2 h-4 w-4" />
           {t('dashboard.colleagues.pendingInvitations')}
         </CardTitle>
