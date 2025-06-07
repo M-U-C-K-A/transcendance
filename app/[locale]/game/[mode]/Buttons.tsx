@@ -77,7 +77,7 @@ export default function Buttons({
         >
           ↺
         </button>
-        {/* Nouveau bouton : Réinitialiser la caméra */}
+        {/* Réinitialiser la caméra */}
         <button
           onClick={() => setCameraKey((prev) => prev + 1)}
           className="ml-2 bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"

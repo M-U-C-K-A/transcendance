@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
+import { ControlsConfig } from "./ControlsConfig";
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -29,6 +30,8 @@ export default function SettingsPanel({
   canStart,
   onStart,
 }: SettingsPanelProps) {
+  const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
+
   return (
     <div className="bg-card p-6 rounded-lg shadow-lg w-full max-w-md mx-auto space-y-6">
       {/* Intègre le composant pour le choix du style du sol */}
@@ -45,8 +48,14 @@ export default function SettingsPanel({
         setColorP2={setColorP2}
       />
 
-      {/* Bouton “Démarrer la partie” */}
-      <div className="mt-6 flex justify-center">
+      {/* Boutons de configuration */}
+      <div className="mt-6 flex justify-center space-x-4">
+        <button
+          onClick={() => setIsControlsConfigOpen(true)}
+          className="px-5 py-2 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700"
+        >
+          Configurer les contrôles
+        </button>
         <button
           onClick={onStart}
           disabled={!canStart}
@@ -59,6 +68,12 @@ export default function SettingsPanel({
           Démarrer la partie
         </button>
       </div>
+
+      {/* Modal de configuration des contrôles */}
+      <ControlsConfig
+        isOpen={isControlsConfigOpen}
+        onClose={() => setIsControlsConfigOpen(false)}
+      />
     </div>
   );
 }

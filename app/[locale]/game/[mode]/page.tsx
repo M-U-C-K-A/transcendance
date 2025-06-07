@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SettingsPanel from "@/app/[locale]/game/[mode]/SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
+import { ControlsProvider } from "./ControlsContext";
 
 export default function Page() {
   const params = useParams();
@@ -117,7 +118,7 @@ export default function Page() {
   const [cameraKey, setCameraKey] = useState(0);
 
   return (
-    <>
+    <ControlsProvider>
       {/* HEADER */}
       <Header locale={locale} />
 
@@ -163,6 +164,6 @@ export default function Page() {
           )}
         </div>
       </main>
-    </>
+    </ControlsProvider>
   );
 }
