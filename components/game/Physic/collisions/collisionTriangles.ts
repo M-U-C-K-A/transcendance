@@ -1,6 +1,7 @@
 // src/Physic/collisions/collisionTriangles.ts
 import { Mesh, Vector3 } from "@babylonjs/core";
-import { playRandomCollisionSound } from "../sound";  // Importation du son
+import type { Sound }             from "@babylonjs/core/Audio/sound";
+import { playRandomCollisionSound } from "../sound";
 
 interface CollisionResult {
   newVelocity: Vector3;
@@ -12,66 +13,65 @@ export function collideTrianglePrism(
   tri: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[]  // Passer allHitSounds pour le son
+  allHitSounds: Sound[]
 ): CollisionResult | null {
-  // Paramètres (doivent matcher ceux de la création du prisme)
-  const offX      = 10;   // X de la base du prisme
-  const apexShift = 1.5;  // profondeur de la pointe
-  const halfBaseZ = 1;    // demi-largeur de la base en Z
-  const yBottom   = 0.26; // hauteur de la base sur Y
-  const heightY   = 0.5;  // épaisseur du prisme en Y
+  // Géométrie du prisme (doit correspondre à setupGameObjects)
+  const offX = 10;
+  const apexShift = 1.5;
+  const halfBaseZ = 1;
+  const yBottom = 0.26;
+  const heightY = 0.5;
 
   const p = ball.position;
   const r = ball.getBoundingInfo().boundingSphere.radius;
 
-  // 1) Vérif zone verticale
+  // 1) Zone verticale
   if (p.y + r < yBottom || p.y - r > yBottom + heightY) {
     return null;
   }
 
-  // Fonction générique de collision pour un prisme côté droit/ gauche
-  const testSide = (sign: 1 | -1): CollisionResult | null => {
-    // X de la face verticale
+  // Test des deux côtés
+  for (const sign of [1 as const, -1 as const]) {
     const faceX = sign * offX;
-    // Borne avant de la zone collision (la face plate)
     const planeX = faceX - sign * apexShift;
 
-    // 2) Vérif zone X
+    // 2) Zone X
     if (sign === 1) {
-      if (p.x - r > faceX) return null;      // trop à droite
-      if (p.x + r < planeX) return null;     // pas arrivé à la face
+      if (p.x - r > faceX || p.x + r < planeX) continue;
     } else {
-      if (p.x + r < faceX) return null;      // trop à gauche
-      if (p.x - r > planeX) return null;     // pas arrivé à la face
+      if (p.x + r < faceX || p.x - r > planeX) continue;
     }
 
-    // 3) Calcul de la largeur du trapèze à cette profondeur
-    //    la largeur diminue linéairement de halfBaseZ → 0 sur [0, apexShift]
-    const localX = Math.abs(p.x - (faceX - sign * apexShift));
-    const maxZ   = halfBaseZ * (1 - localX / apexShift);
+    // 3) Largeur du trapèze à cette profondeur
+    const localX = Math.abs(p.x - planeX);
+    const maxZ = halfBaseZ * (1 - localX / apexShift);
+    const localZ = p.z - tri.position.z;
+    if (Math.abs(localZ) - r > maxZ) continue;
 
-    // 4) Vérif zone Z
-    if (Math.abs(p.z) - r > maxZ) {
-      return null;
-    }
-
-    // 5) On y est : collision, on repositionne et on rebondit en X
-    // repositionnement pour sortir du prisme
+    // Collision détectée
+    // Repositionner hors du prisme
     p.x = planeX - sign * r;
 
-    // réflexion de la vélocité sur l’axe X
-    const newSpeed = currentSpeed;
-    const newVx    = -ballV.x;
-    const newVy    = ballV.y;
-    const newVz    = ballV.z;
-    const dirAfter = new Vector3(newVx, newVy, newVz).normalize().scale(newSpeed);
+    // Calcul effet "pong-like" en fonction de la hauteur de l'impact sur Z
+    // Normaliser localZ ∈ [-maxZ, maxZ] → facteur ∈ [-1, 1]
+    const impactRatio = localZ / maxZ;
+    // Angle max en radians (≈ 60°)
+    const maxAngle = Math.PI / 3;
+    // Nouvelle direction en plan XZ
+    const bounceAngle = impactRatio * maxAngle;
+    // Vitesse horizontale conservée, ajustée
+    const dirX = -sign * Math.cos(bounceAngle);
+    const dirZ = Math.sin(bounceAngle);
 
-    // Ajouter le son de la collision
+    const dir = new Vector3(dirX, ballV.y / currentSpeed, dirZ)
+      .normalize()
+      .scale(currentSpeed);
+
+    // Son de collision
     playRandomCollisionSound(allHitSounds);
 
-    return { newVelocity: dirAfter, newSpeed };
-  };
+    return { newVelocity: dir, newSpeed: currentSpeed };
+  }
 
-  // Test côté droit (+1) puis gauche (-1)
-  return testSide(1) || testSide(-1);
+  return null;
 }

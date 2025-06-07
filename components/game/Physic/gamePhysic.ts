@@ -50,6 +50,10 @@ export const initgamePhysic = (
     p2Mat,
     leftTri,
     rightTri,
+    rightTriOuterLeft,
+    leftTriOuterLeft,
+    rightTriOuterRight,
+    leftTriOuterRight
   } = gameObjects;
 
   // Référentiel pour bloquer pause et mouvement
@@ -226,7 +230,11 @@ export const initgamePhysic = (
       p2Mat,
       allHitSounds,
       rightTri,
-      leftTri
+      leftTri,
+      rightTriOuterLeft,
+      leftTriOuterLeft,
+      rightTriOuterRight,
+      leftTriOuterRight
     );
     ballV = collisionResult.newVelocity;
     currentSpeed = collisionResult.newSpeed;
