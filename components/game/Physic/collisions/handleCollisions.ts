@@ -1,9 +1,11 @@
-import { Vector3, Mesh } from "@babylonjs/core";
 import { collideWalls } from "./collisionWalls";
 import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
 import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideBumper } from "./collisionBumpers";
-import { collideTrianglePrism } from "./collisionTriangles"; // Assurez-vous d'importer la fonction de collision avec les triangles
+import { collideTrianglePrism } from "./collisionTriangles";
+import { Mesh, Vector3, StandardMaterial } from "@babylonjs/core";
+import type { Sound }                       from "@babylonjs/core/Audio/sound";
+
 
 export function handleCollisions(
   ball: Mesh,
@@ -19,7 +21,11 @@ export function handleCollisions(
   p2Mat: StandardMaterial,
   allHitSounds: Sound[],
   rightTri: Mesh | null,
-  leftTri: Mesh | null
+  leftTri: Mesh | null,
+  rightTriOuterLeft : Mesh | null, 
+  leftTriOuterLeft: Mesh | null,
+  rightTriOuterRight: Mesh | null,
+  leftTriOuterRight: Mesh | null
 ): { newVelocity: Vector3; newSpeed: number } {
 
   // 1) Collision murs latéraux
@@ -116,19 +122,24 @@ export function handleCollisions(
   }
 
   // 7) Collision avec les triangles (si définis)
-  if (rightTri) {
-    const tri1 = collideTrianglePrism(ball, rightTri, ballV, currentSpeed, allHitSounds);
-    if (tri1) {
-      return { newVelocity: tri1.newVelocity, newSpeed: tri1.newSpeed };
-    }
-  }
-  if (leftTri) {
-    const tri2 = collideTrianglePrism(ball, leftTri, ballV, currentSpeed, allHitSounds);
-    if (tri2) {
-      return { newVelocity: tri2.newVelocity, newSpeed: tri2.newSpeed };
+ const tris: Array<Mesh | null> = [
+    rightTri,
+    leftTri,
+    rightTriOuterLeft,
+    leftTriOuterLeft,
+    rightTriOuterRight,
+    leftTriOuterRight,
+  ];
+  for (const tri of tris) {
+    if (tri) {
+      const triHit = collideTrianglePrism(ball, tri, ballV, currentSpeed, allHitSounds);
+      if (triHit) {
+        return { newVelocity: triHit.newVelocity, newSpeed: triHit.newSpeed };
+      }
     }
   }
 
+     
   // 8) Pas de collision : on renvoie la vélocité inchangée
   return { newVelocity: ballV, newSpeed: currentSpeed };
 }

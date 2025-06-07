@@ -27,6 +27,10 @@ export const setupGame = (
     p1Mat,
     p2Mat,
     ballMat,
+    rightTriOuterLeft,
+    leftTriOuterLeft,
+    rightTriOuterRight,
+    leftTriOuterRight
   } = setupGameObjects(scene, MapStyle, paddle1Color, paddle2Color);
 
   // 2) Ajout du bouton “Réinitialiser la caméra”
@@ -48,5 +52,9 @@ export const setupGame = (
     p1Mat,
     p2Mat,
     ballMat,
+    rightTriOuterLeft,
+    leftTriOuterLeft,
+    rightTriOuterRight,
+    leftTriOuterRight
   };
 };

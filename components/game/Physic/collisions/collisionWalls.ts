@@ -1,9 +1,10 @@
 // collisionWalls.ts
 // -----------------
 
-import { Vector3 } from "@babylonjs/core";
+import { Vector3, Mesh } from "@babylonjs/core";
 import { SPEED_INCREMENT } from "../constants";
 import { playRandomCollisionSound } from "../sound";
+import type { Sound }             from "@babylonjs/core/Audio/sound";
 
 
 export function collideWalls(

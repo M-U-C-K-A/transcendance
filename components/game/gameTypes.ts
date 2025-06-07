@@ -51,4 +51,8 @@ export interface GameObjects {
   camera: ArcRotateCamera;
   leftTri: Mesh | null;
   rightTri: Mesh | null;
+  rightTriOuterLeft: Mesh | null,
+  leftTriOuterLeft: Mesh | null,
+  rightTriOuterRight: Mesh | null,
+  leftTriOuterRight: Mesh | null
 }
