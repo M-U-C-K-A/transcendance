@@ -1,12 +1,9 @@
-// src/Physic/collisions/handleCollisions.ts
-// -----------------------------------------
-
-import { Vector3 } from "@babylonjs/core";
-
+import { Vector3, Mesh } from "@babylonjs/core";
 import { collideWalls } from "./collisionWalls";
 import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
 import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideBumper } from "./collisionBumpers";
+import { collideTrianglePrism } from "./collisionTriangles"; // Assurez-vous d'importer la fonction de collision avec les triangles
 
 export function handleCollisions(
   ball: Mesh,
@@ -20,8 +17,11 @@ export function handleCollisions(
   ballMat: StandardMaterial,
   p1Mat: StandardMaterial,
   p2Mat: StandardMaterial,
-  allHitSounds: Sound[]
+  allHitSounds: Sound[],
+  rightTri: Mesh | null,
+  leftTri: Mesh | null
 ): { newVelocity: Vector3; newSpeed: number } {
+
   // 1) Collision murs latéraux
   const wallResult = collideWalls(ball, ballV, currentSpeed, allHitSounds);
   if (wallResult) {
@@ -115,6 +115,20 @@ export function handleCollisions(
     }
   }
 
-  // 7) Pas de collision : on renvoie la vélocité inchangée
+  // 7) Collision avec les triangles (si définis)
+  if (rightTri) {
+    const tri1 = collideTrianglePrism(ball, rightTri, ballV, currentSpeed, allHitSounds);
+    if (tri1) {
+      return { newVelocity: tri1.newVelocity, newSpeed: tri1.newSpeed };
+    }
+  }
+  if (leftTri) {
+    const tri2 = collideTrianglePrism(ball, leftTri, ballV, currentSpeed, allHitSounds);
+    if (tri2) {
+      return { newVelocity: tri2.newVelocity, newSpeed: tri2.newSpeed };
+    }
+  }
+
+  // 8) Pas de collision : on renvoie la vélocité inchangée
   return { newVelocity: ballV, newSpeed: currentSpeed };
 }

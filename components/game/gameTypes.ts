@@ -9,6 +9,7 @@ import type { Sound } from "@babylonjs/core/Audio/sound";
  * Props passées au composant Pong3D
  */
 export type Pong3DProps = {
+  resetCamFlag : ArcRotateCamera
   paddle1Color: string;
   paddle2Color: string;
   MapStyle: "classic" | "red" | "neon";
@@ -40,12 +41,14 @@ export interface GameObjects {
   ball: Mesh;
   paddle1: Mesh;
   paddle2: Mesh;
-  miniPaddle?: Mesh;
-  bumperLeft?: Mesh;
-  bumperRight?: Mesh;
+  miniPaddle: Mesh;
+  bumperLeft: Mesh;
+  bumperRight: Mesh;
   allHitSounds: Sound[];
   ballMat: StandardMaterial;
   p1Mat: StandardMaterial;
   p2Mat: StandardMaterial;
   camera: ArcRotateCamera;
+  leftTri: Mesh | null;
+  rightTri: Mesh | null;
 }

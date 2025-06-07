@@ -11,6 +11,7 @@ export default function Pong3D({
   paddle1Color,
   paddle2Color,
   MapStyle,
+  resetCamFlag
 }: Pong3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -94,6 +95,13 @@ export default function Pong3D({
       engine.dispose();
     };
   }, [paddle1Color, paddle2Color, MapStyle]);
+
+  useEffect(() => {
+    if (cameraRef.current) {
+      cameraRef.current.setPosition(new Vector3(35, 25, 0));
+      cameraRef.current.setTarget(Vector3.Zero());
+    }
+  }, [resetCamFlag]);
 
   return (
     <div className="relative">
