@@ -5,14 +5,13 @@ export const keys = new Set<string>();
 
 export function onKeyDown(e: KeyboardEvent, gameRefs: { winner: any; isPaused: any }) {
   if (gameRefs.winner.current || gameRefs.isPaused.current) return;
-  if (["w", "s", "ArrowUp", "ArrowDown"].includes(e.key)) {
-    keys.add(e.key);
-    e.preventDefault();
-  }
+  // On accepte toutes les touches pour permettre la personnalisation
+  keys.add(e.key.toLowerCase());
+  e.preventDefault();
 }
 
 export function onKeyUp(e: KeyboardEvent) {
-  keys.delete(e.key);
+  keys.delete(e.key.toLowerCase());
 }
 
 export function onGlobalKeyDown(
