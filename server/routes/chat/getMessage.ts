@@ -13,9 +13,8 @@ export default async function getMessageRoute(server: FastifyInstance) {
 	}
 
 	try {
-		console.log("test")
-		console.log(user.id)
 		const messages = await getMessage(user.id)
+		console.log(messages)
 		return reply.code(200).send(messages)
 	} catch (err: any) {
 		console.error('Error in getMessageRoute:', err)
