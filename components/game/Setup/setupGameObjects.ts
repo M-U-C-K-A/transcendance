@@ -70,6 +70,89 @@ export function setupGameObjects(
     miniPaddle.position.set(5, 0.25, 0);
   }
 
+  // === Triangles épais pour "red" ===
+    let leftTri: Mesh | null = null;
+    let rightTri: Mesh | null = null;
+  
+    if (MapStyle === "red") {
+    // Matériau orange
+    const triMat = new StandardMaterial("triMat", scene);
+    triMat.diffuseColor    = Color3.FromHexString("#9B3030");
+    triMat.emissiveColor   = Color3.FromHexString("#9B3030");
+    triMat.backFaceCulling = false;
+  
+    // Paramètres
+    const offX       = 10;    // X de la base
+    const apexShift  = 1.5;   // recul de la pointe
+    const halfBaseZ  = 1;     // demi-largeur de la base sur Z
+    const yBottom    = 0;  // base posée juste au-dessus de la table
+    const heightY    = 0.5;   // même hauteur que vos paddles
+  
+    // 6 sommets : 3 au bas, 3 en haut
+    const A = new Vector3(offX - apexShift,      yBottom,          0);
+    const B = new Vector3(offX,                  yBottom, +halfBaseZ);
+    const C = new Vector3(offX,                  yBottom, -halfBaseZ);
+    const D = A.add(new Vector3(0, heightY, 0)); // A haut
+    const E = B.add(new Vector3(0, heightY, 0)); // B haut
+    const F = C.add(new Vector3(0, heightY, 0)); // C haut
+  
+    const positions = [
+      // bas
+      A.x, A.y, A.z,
+      B.x, B.y, B.z,
+      C.x, C.y, C.z,
+      // haut
+      D.x, D.y, D.z,
+      E.x, E.y, E.z,
+      F.x, F.y, F.z,
+    ];
+  
+    // indices (2 triangles par face)
+    const indices = [
+      // face bas (A-B-C)
+      0, 1, 2,
+      // face haut (F-E-D)
+      5, 4, 3,
+      // face AB
+      0, 3, 4,   0, 4, 1,
+      // face BC
+      1, 4, 5,   1, 5, 2,
+      // face CA
+      2, 5, 3,   2, 3, 0,
+    ];
+  
+    // normales : une normale par sommet (approximées pour être lisses)
+    // ici on oriente tout vers le haut pour bien voir le volume
+    const normals = [
+      0, 1, 0,  0, 1, 0,  0, 1, 0,
+      0, 1, 0,  0, 1, 0,  0, 1, 0,
+    ];
+  
+    // création du mesh
+    rightTri = new Mesh("triRightPrism", scene);
+    rightTri.setVerticesData("position", positions);
+    rightTri.setVerticesData("normal", normals);
+    rightTri.setIndices(indices);
+    rightTri.material = triMat;
+  
+    // même chose en miroir pour le gauche
+    const makeMirror = (v: Vector3) => new Vector3(-v.x, v.y, v.z);
+    const positionsL = [];
+    for (let i = 0; i < positions.length; i += 3) {
+      positionsL.push(...makeMirror(new Vector3(
+        positions[i],
+        positions[i+1],
+        positions[i+2]
+      )).asArray());
+    }
+    const left = new Mesh("triLeftPrism", scene);
+    left.setVerticesData("position", positionsL);
+    left.setVerticesData("normal", normals);
+    left.setIndices(indices);
+    left.material = triMat;
+    leftTri = left;
+  }
+
   // === Balle ===
   const ball = MeshBuilder.CreateSphere("ball", { diameter: 0.5 }, scene);
   ball.material = ballMat;
@@ -124,6 +207,8 @@ export function setupGameObjects(
     paddle2,
     miniPaddle,
     ball,
+    leftTri,
+    rightTri,
     bumperLeft,
     bumperRight,
     p1Mat,

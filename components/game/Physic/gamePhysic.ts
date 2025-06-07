@@ -24,6 +24,7 @@ import { registerInputListeners }  from "./input";
 import { movePaddles }             from "./paddle/paddleMovement";
 import { updateMiniPaddle }        from "./paddle/miniPaddleLogic";
 import { handleCollisions }        from "./collisions/handleCollisions";
+import { collideTrianglePrism }    from "./collisions/collisionTriangles";
 import type { GameState, GameRefs, GameObjects } from "../gameTypes";
 
 export const initgamePhysic = (
@@ -47,7 +48,8 @@ export const initgamePhysic = (
     ballMat,
     p1Mat,
     p2Mat,
-    camera,
+    leftTri,
+    rightTri,
   } = gameObjects;
 
   // Référentiel pour bloquer pause et mouvement
@@ -203,6 +205,9 @@ export const initgamePhysic = (
       }
     }
 
+
+
+
     // ─── Mouvement de la balle ─────────────────────────────────────
     ball.position.addInPlace(ballV.scale(deltaTime));
 
@@ -219,7 +224,9 @@ export const initgamePhysic = (
       ballMat,
       p1Mat,
       p2Mat,
-      allHitSounds
+      allHitSounds,
+      rightTri,
+      leftTri
     );
     ballV = collisionResult.newVelocity;
     currentSpeed = collisionResult.newSpeed;
