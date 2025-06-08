@@ -12,6 +12,7 @@ import { ArrowLeft } from "lucide-react"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfileCard } from "@/components/profile/UserInfo"
+import { useJWT } from "@/hooks/use-jwt"
 
 interface UserInfo {
   id: number
@@ -66,6 +67,7 @@ interface ProfileData {
   userInfo: UserInfo
   matchHistory: Match[]
   achievements: Achievements
+  isBlocked: boolean
 }
 
 export default function ProfilePage() {
@@ -76,11 +78,16 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const jwt = useJWT()
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await fetch(`/api/profile/${username}`)
+        const response = await fetch(`/api/profile/${username}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        })
         if (!response.ok) {
           throw new Error("Failed to fetch profile data")
         }
@@ -94,8 +101,10 @@ export default function ProfilePage() {
       }
     }
 
-    fetchProfileData()
-  }, [username])
+    if (jwt) {
+      fetchProfileData()
+    }
+  }, [username, jwt])
 
   if (isLoading) {
     return <ProfileSkeleton locale={locale} />
@@ -182,7 +191,7 @@ export default function ProfilePage() {
           {/* Sidebar - User Profile */}
           <div className="lg:col-span-4">
 
-          <UserProfileCard user={userInfo} locale={locale} />
+      <UserProfileCard user={userInfo} locale={locale} isBlocked={profileData.isBlocked} />
 
             <Card className="bg-card border shadow-sm mt-6">
               <CardHeader>

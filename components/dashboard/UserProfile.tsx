@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
-import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 interface User {

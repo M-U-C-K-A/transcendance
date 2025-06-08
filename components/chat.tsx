@@ -92,31 +92,31 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 const transformApiMessage = (apiMessage: any, currentUser: string): Message => {
   // Fallback values for missing data
   const sender = {
-    id: apiMessage.sender_id ?? apiMessage.user?.id ?? 0,
-    name: apiMessage.sender_name ?? apiMessage.user?.name ?? 'Unknown',
-    avatar: apiMessage.sender_avatar ?? `/profilepicture/${apiMessage.sender_id}.webp`,
-    win: apiMessage.sender_win ?? 0,
-    lose: apiMessage.sender_lose ?? 0,
-    elo: apiMessage.sender_elo ?? 0
+	id: apiMessage.sender_id ?? apiMessage.user?.id ?? 0,
+	name: apiMessage.sender_name ?? apiMessage.user?.name ?? 'Unknown',
+	avatar: apiMessage.sender_avatar ?? `/profilepicture/${apiMessage.sender_id}.webp`,
+	win: apiMessage.sender_win ?? 0,
+	lose: apiMessage.sender_lose ?? 0,
+	elo: apiMessage.sender_elo ?? 0
   };
 
   const recipient = apiMessage.recipient_id ? {
-    id: apiMessage.recipient_id,
-    name: apiMessage.recipient_name ?? 'Unknown',
-    avatar: apiMessage.recipient_avatar ?? `/profilepicture/${apiMessage.recipient_id}.webp`,
-    win: apiMessage.recipient_win ?? 0,
-    lose: apiMessage.recipient_lose ?? 0,
-    elo: apiMessage.recipient_elo ?? 0
+	id: apiMessage.recipient_id,
+	name: apiMessage.recipient_name ?? 'Unknown',
+	avatar: apiMessage.recipient_avatar ?? `/profilepicture/${apiMessage.recipient_id}.webp`,
+	win: apiMessage.recipient_win ?? 0,
+	lose: apiMessage.recipient_lose ?? 0,
+	elo: apiMessage.recipient_elo ?? 0
   } : null;
 
   return {
-    id: apiMessage.id,
-    user: sender,
-    recipient: recipient,
-    text: apiMessage.text ?? apiMessage.content ?? '',
-    timestamp: new Date(apiMessage.timestamp ?? apiMessage.sendAt ?? Date.now()),
-    isPrivate: !!apiMessage.isPrivate ?? !apiMessage.isGeneral,
-    isRead: !!apiMessage.isRead
+	id: apiMessage.id,
+	user: sender,
+	recipient: recipient,
+	text: apiMessage.text ?? apiMessage.content ?? '',
+	timestamp: new Date(apiMessage.timestamp ?? apiMessage.sendAt ?? Date.now()),
+	isPrivate: !!apiMessage.isPrivate ?? !apiMessage.isGeneral,
+	isRead: !!apiMessage.isRead
   };
 };
 
@@ -131,23 +131,23 @@ const fetchMessages = useCallback(async () => {
   setError(null);
 
   try {
-    const response = await fetch(`/api/chat/receive`, {
-      headers: getAuthHeaders()
-    });
+	const response = await fetch(`/api/chat/receive`, {
+	  headers: getAuthHeaders()
+	});
 
-    const rawData = await response.json();
-    console.log("RAW BACKEND RESPONSE:", rawData); // <-- Ajoutez ce log
+	const rawData = await response.json();
+	console.log("RAW BACKEND RESPONSE:", rawData); // <-- Ajoutez ce log
 
-    const transformedMessages = rawData.map(msg => transformApiMessage(msg, currentUser));
-    console.log("TRANSFORMED MESSAGES:", transformedMessages);
+	const transformedMessages = rawData.map(msg => transformApiMessage(msg, currentUser));
+	console.log("TRANSFORMED MESSAGES:", transformedMessages);
 
-    setMessages(transformedMessages);
+	setMessages(transformedMessages);
   } catch (err) {
-    console.error("Fetch messages error:", err);
-    setError("Impossible de se connecter au serveur de chat");
-    setMessages([]);
+	console.error("Fetch messages error:", err);
+	setError("Impossible de se connecter au serveur de chat");
+	setMessages([]);
   } finally {
-    setIsLoading(false);
+	setIsLoading(false);
   }
 }, [currentUser]);
 

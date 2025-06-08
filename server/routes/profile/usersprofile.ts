@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import getUserInfo from '../../request/profile/usersProfile'
+import authMiddleware from '@/server/authMiddleware'
 
 export default async function profileRoute(server: FastifyInstance) {
-	server.get('/profile/:username', async function (request, reply) {
+	server.get('/profile/:username', { preHandler: authMiddleware }, async function (request, reply) {
 		const { username } = request.params as { username: string }
+		const userId = request.user as {id: number}
 		request.log.info({ username }, 'Tentative d\'accès au profil')
 
 		if (!username) {
@@ -12,7 +14,7 @@ export default async function profileRoute(server: FastifyInstance) {
 		}
 
 		try {
-			const result = await getUserInfo(username)
+			const result = await getUserInfo(username, userId.id)
 			request.log.info({ username }, 'Profil récupéré avec succès')
 			return (reply.code(200).send(result))
 		} catch (err) {

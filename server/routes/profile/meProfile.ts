@@ -12,7 +12,6 @@ export default async function meProfile(server: FastifyInstance) {
 
 		try {
 			const result = await meProfileInfo(user.id)
-			console.log(result)
 			return reply.code(200).send(result)
 		} catch (err: any) {
 			if (err.message == `Failed to get user's info`)

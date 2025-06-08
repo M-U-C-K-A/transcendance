@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 const Prisma = new PrismaClient()
 
-export default async function getuser(username: string) {
+export default async function getuser(username: string, userId: number) {
 	const userInfo = await Prisma.user.findUnique({
 		where: {
 			username: username
@@ -40,6 +40,13 @@ export default async function getuser(username: string) {
 		},
 	});
 
+	const isBlocked = await Prisma.block.findFirst({
+		where: {
+			id1: userId,
+			id2: userInfo.id,
+		},
+	});
+
 	const matchHistory = await Prisma.match.findMany({
 	where: {
 		OR: [
@@ -51,5 +58,5 @@ export default async function getuser(username: string) {
 		}
 	},
 	});
-	return {userInfo, gameNumber, winRate, achievements, matchHistory}
+	return {userInfo, gameNumber, winRate, achievements, matchHistory, isBlocked}
 }

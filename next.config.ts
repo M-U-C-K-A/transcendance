@@ -54,6 +54,10 @@ const nextConfig: NextConfig = {
       {
         source: "/api/chat/send",
         destination: "http://localhost:3001/chat/send"
+      },
+      {
+        source: "/api/chat/block",
+        destination: "http://localhost:3001/chat/block"
       }
     ];
   },

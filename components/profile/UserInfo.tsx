@@ -6,13 +6,21 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useJWT } from "@/hooks/use-jwt";
 
 interface UserProfileCardProps {
-	user: UserInfo;
-	locale?: string; // Optionnel selon votre besoin
+  user: UserInfo
+  locale?: string
+  isBlocked?: boolean
 }
 
-export function UserProfileCard({ user, locale }: UserProfileCardProps) {
+export function UserProfileCard({ user, locale, isBlocked }: UserProfileCardProps) {
+	const [blocked, setBlocked] = useState(!!isBlocked)
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const jwt = useJWT();
 	const getInitials = (name: string) => {
 		return name
 			.split(' ')
@@ -20,6 +28,34 @@ export function UserProfileCard({ user, locale }: UserProfileCardProps) {
 			.join('')
 			.toUpperCase()
 			.substring(0, 2);
+	};
+
+	const handleBlock = async () => {
+		setLoading(true);
+		setError("");
+
+		try {
+			const res = await fetch("/api/chat/block", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${jwt}`,
+				},
+				body: JSON.stringify({ id: user.id }),
+			});
+
+			if (!res.ok) {
+				const errorMsg = await res.text();
+				throw new Error(errorMsg || "Échec du blocage");
+			}
+
+			setBlocked(true);
+		} catch (err: any) {
+			console.error("Erreur blocage:", err);
+			setError("Impossible de bloquer l'utilisateur.");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -30,14 +66,15 @@ export function UserProfileCard({ user, locale }: UserProfileCardProps) {
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
 					<AvatarImage
-						src={`/profilepicture/${user.id}.webp` || `/public/profilepicture/0.webp`}
+						src={`/profilepicture/${user.id}.webp`}
 						alt={user.username}
 					/>
-					<AvatarFallback>{user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+					<AvatarFallback>{getInitials(user.username)}</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
 				<p className="text-muted-foreground mb-2">@{user.username}</p>
 				<p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
+
 				<div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
 					<div>
 						<p className="text-2xl font-bold text-primary">{user.win}</p>
@@ -52,13 +89,30 @@ export function UserProfileCard({ user, locale }: UserProfileCardProps) {
 						<p className="text-xs text-muted-foreground">Tournois</p>
 					</div>
 				</div>
-				<div className="flex gap-2 mb-4">
+
+				<div className="flex flex-wrap justify-center gap-2 mb-6">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
 					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
 					<Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
 						{user.onlineStatus ? 'En ligne' : 'Hors ligne'}
 					</Badge>
 				</div>
+				<Button
+				variant={blocked ? "default" : "destructive"}
+				onClick={handleBlock}
+				disabled={loading}
+				className={`w-40 max-w-xs ${blocked ? "bg-green-500 hover:bg-green-600" : ""}`}
+				>
+				{loading
+					? blocked
+					? "Déblocage en cours..."
+					: "Blocage en cours..."
+					: blocked
+					? "Débloquer l'utilisateur"
+					: "Bloquer l'utilisateur"}
+				</Button>
+				{error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+
 			</CardContent>
 		</Card>
 	);
