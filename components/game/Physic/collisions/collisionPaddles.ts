@@ -2,7 +2,8 @@
 // --------------------
 
 
-import { Vector3, Color3 } from "@babylonjs/core";
+import { Vector3, Color3, Mesh, StandardMaterial } from "@babylonjs/core";
+import type { Sound } from "@babylonjs/core/Audio/sound";
 import {
   SPEED_INCREMENT,
   PADDLE_HALF_WIDTH,
@@ -10,6 +11,8 @@ import {
 } from "../constants";
 import { playRandomCollisionSound } from "../sound";
 
+// Cooldown de collision par paddle (module scope)
+let lastPaddleCollision = { p1: 0, p2: 0 };
 
 export function collidePaddle1(
   ball: Mesh,
@@ -22,14 +25,20 @@ export function collidePaddle1(
   setStamina?: (s: { player1: number; player2: number }) => void,
   superPad?: { player1: boolean; player2: boolean }
 ): { newVelocity: Vector3; newSpeed: number } | null {
+  const cooldown = 50; // ms
+  const now = Date.now();
   // Collision paddle1
   if (
     ball.position.z < -19 &&
     Math.abs(ball.position.x - paddle1.position.x) < PADDLE_HALF_WIDTH
   ) {
+    if (now - lastPaddleCollision.p1 < cooldown) return null;
+    lastPaddleCollision.p1 = now;
+    // Replace la balle juste à la limite
+    ball.position.z = -19;
     // Gestion stamina
     if (setStamina && stamina && stamina.player1 < 10) {
-      setStamina(prev => {
+      setStamina((prev: { player1: number; player2: number }) => {
         if (prev.player1 < 10) {
           return { ...prev, player1: prev.player1 + 1 };
         }
@@ -75,14 +84,20 @@ export function collidePaddle2(
   setStamina?: (s: { player1: number; player2: number }) => void,
   superPad?: { player1: boolean; player2: boolean }
 ): { newVelocity: Vector3; newSpeed: number } | null {
+  const cooldown = 50; // ms
+  const now = Date.now();
   // Collision paddle2
   if (
     ball.position.z > 19 &&
     Math.abs(ball.position.x - paddle2.position.x) < PADDLE_HALF_WIDTH
   ) {
+    if (now - lastPaddleCollision.p2 < cooldown) return null;
+    lastPaddleCollision.p2 = now;
+    // Replace la balle juste à la limite
+    ball.position.z = 19;
     // Gestion stamina
     if (setStamina && stamina && stamina.player2 < 10) {
-      setStamina(prev => {
+      setStamina((prev: { player1: number; player2: number }) => {
         if (prev.player2 < 10) {
           return { ...prev, player2: prev.player2 + 1 };
         }
