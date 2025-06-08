@@ -4,21 +4,34 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { CalendarIcon } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import Link from "next/link";
 
 
 type MessageProps = {
   message: {
-    id: number;
+    id: number
     user: {
-      name: string;
-      id: number;
-      username: string; // Ajout d'un champ username pour l'URL
-    };
-    text: string;
-    timestamp: Date;
-  };
+      id: number
+      name: string
+      avatar: string
+      win: number
+      lose: number
+      elo: number
+    }
+    recipient?: {
+      id: number | null
+      name: string | null
+      avatar: string | null
+      win: number | null
+      lose: number | null
+      elo: number | null
+    }
+    text: string
+    timestamp: Date
+    isPrivate: boolean
+    isRead: boolean
+  }
 };
 
 /**
@@ -29,9 +42,21 @@ type MessageProps = {
  * @prop {number} message.id
  * @prop {object} message.user
  * @prop {string} message.user.name
- * @prop {string} message.user.username
+ * @prop {string} message.user.avatar
+ * @prop {number} message.user.win
+ * @prop {number} message.user.lose
+ * @prop {number} message.user.elo
+ * @prop {object} message.recipient
+ * @prop {number} message.recipient.id
+ * @prop {string} message.recipient.name
+ * @prop {string} message.recipient.avatar
+ * @prop {number} message.recipient.win
+ * @prop {number} message.recipient.lose
+ * @prop {number} message.recipient.elo
  * @prop {string} message.text
  * @prop {Date} message.timestamp
+ * @prop {boolean} message.isPrivate
+ * @prop {boolean} message.isRead
  *
  * @returns {JSX.Element}
  */
@@ -42,69 +67,34 @@ export function Message({ message }: MessageProps) {
 
   return (
     <div className="flex items-start gap-3">
-      <Link href={`/profile/${message.user.name}`} passHref>
-        <Avatar className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-primary transition-all">
-          <AvatarImage
-            src={`/profilepicture/${message.user.id}.webp`}
-            alt={`Avatar de ${message.user.name}`}
-            loading="lazy"
-            decoding="async"
-            width="32"
-            height="32"
-          />
-          <AvatarFallback className="animate-pulse">
-            {message.user.name?.split(' ')[0][0].toUpperCase()}
-            {message.user.name?.split(' ')[0][1].toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      </Link>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <Link
-                href={`/profile/${message.user.name}`}
-                className="font-medium hover:underline cursor-pointer"
-              >
-                {message.user.name}
-              </Link>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-              <div className="flex justify-between space-x-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={`/profilepicture/${message.user.id}.webp`}
-                    alt={`Avatar de ${message.user.name}`}
-                  />
-                  <AvatarFallback>
-                    {message.user.name?.split(' ')[0][0].toUpperCase()}
-                    {message.user.name?.split(' ')[0][1].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="space-y-1 w-full">
-                  <h4 className="text-sm font-semibold">{message.user.name}</h4>
-				  <p className="text-sm text-muted-foreground max-w-[150px] truncate overflow-hidden">
-					{message.text}
-					</p>
-                  <div className="flex items-center pt-2">
-                    <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />
-                    <span className="text-xs text-muted-foreground">
-                      Membre depuis {message.timestamp.toLocaleDateString('fr-FR', {
-                        year: 'numeric',
-                        month: 'long',
-                      })}
-                    </span>
-                  </div>
-                  <Link
-                    href={`/profile/${message.user.name}`}
-                    className="inline-block mt-2 text-sm font-medium text-primary hover:underline"
-                  >
-                    Voir le profil complet →
-                  </Link>
-                </div>
+      <HoverCard>
+        <HoverCardTrigger>
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={message.user.avatar} alt={message.user.name} />
+            <AvatarFallback>{message.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80">
+          <div className="flex justify-between space-x-4">
+            <Avatar>
+              <AvatarImage src={message.user.avatar} />
+              <AvatarFallback>{message.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">{message.user.name}</h4>
+              <div className="flex items-center pt-2">
+                <CalendarDays className="mr-2 h-4 w-4 opacity-70" />
+                <span className="text-xs text-muted-foreground">
+                  Victoires: {message.user.win} | Défaites: {message.user.lose} | Elo: {message.user.elo}
+                </span>
               </div>
-            </HoverCardContent>
-          </HoverCard>
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <span className="font-medium">{message.user.name}</span>
           <span className="text-xs text-muted-foreground">
             {formatTime(message.timestamp)}
           </span>

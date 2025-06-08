@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useControls } from './ControlsContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ControlsConfigProps {
   isOpen: boolean;
@@ -16,7 +26,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
 
   useEffect(() => {
     setLocalControls(controls);
-  }, [controls]);
+  }, [controls, isOpen]); // Ajout de isOpen comme dépendance pour réinitialiser à l'ouverture
 
   const handleKeyPress = (e: React.KeyboardEvent, key: string) => {
     e.preventDefault();
@@ -33,110 +43,118 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-background p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4 text-foreground">Configuration des contrôles</h2>
-        
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h3 className="font-semibold mb-2 text-foreground">Joueur 1</h3>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1000px]">
+        <DialogHeader>
+          <DialogTitle>Configuration des contrôles</DialogTitle>
+        </DialogHeader>
+
+        <div className="grid grid-cols-2 gap-6">
+          {/* Joueur 1 */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Joueur 1</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <div>
-                  <label className="block text-sm text-foreground">Haut</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player1Up')}
-                    onKeyDown={(e) => editingKey === 'player1Up' && handleKeyPress(e, 'player1Up')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player1Up' ? 'Appuyez sur une touche...' : localControls.player1Up}
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm text-foreground">Bas</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player1Down')}
-                    onKeyDown={(e) => editingKey === 'player1Down' && handleKeyPress(e, 'player1Down')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player1Down' ? 'Appuyez sur une touche...' : localControls.player1Down}
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm text-foreground">Coup spécial</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player1Special')}
-                    onKeyDown={(e) => editingKey === 'player1Special' && handleKeyPress(e, 'player1Special')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player1Special' ? 'Appuyez sur une touche...' : localControls.player1Special}
-                  </button>
-                </div>
+                <Label htmlFor="player1Up">Haut</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player1Up')}
+                  onKeyDown={(e) => editingKey === 'player1Up' && handleKeyPress(e, 'player1Up')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player1Up' ? 'Appuyez sur une touche...' : localControls.player1Up}
+                </Button>
               </div>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-2 text-foreground">Joueur 2</h3>
+
               <div className="space-y-2">
-                <div>
-                  <label className="block text-sm text-foreground">Haut</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player2Up')}
-                    onKeyDown={(e) => editingKey === 'player2Up' && handleKeyPress(e, 'player2Up')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : localControls.player2Up}
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm text-foreground">Bas</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player2Down')}
-                    onKeyDown={(e) => editingKey === 'player2Down' && handleKeyPress(e, 'player2Down')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : localControls.player2Down}
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm text-foreground">Coup spécial</label>
-                  <button
-                    className="w-full p-2 border rounded bg-card text-foreground"
-                    onClick={() => setEditingKey('player2Special')}
-                    onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
-                    tabIndex={0}
-                  >
-                    {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : localControls.player2Special}
-                  </button>
-                </div>
+                <Label htmlFor="player1Down">Bas</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player1Down')}
+                  onKeyDown={(e) => editingKey === 'player1Down' && handleKeyPress(e, 'player1Down')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player1Down' ? 'Appuyez sur une touche...' : localControls.player1Down}
+                </Button>
               </div>
-            </div>
-          </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="player1Special">Coup spécial</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player1Special')}
+                  onKeyDown={(e) => editingKey === 'player1Special' && handleKeyPress(e, 'player1Special')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player1Special' ? 'Appuyez sur une touche...' : localControls.player1Special}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Joueur 2 */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Joueur 2</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="player2Up">Haut</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player2Up')}
+                  onKeyDown={(e) => editingKey === 'player2Up' && handleKeyPress(e, 'player2Up')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : localControls.player2Up}
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="player2Down">Bas</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player2Down')}
+                  onKeyDown={(e) => editingKey === 'player2Down' && handleKeyPress(e, 'player2Down')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : localControls.player2Down}
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="player2Special">Coup spécial</Label>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-lg font-mono"
+                  onClick={() => setEditingKey('player2Special')}
+                  onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
+                  tabIndex={0}
+                >
+                  {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : localControls.player2Special}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="mt-6 flex justify-end space-x-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded"
-          >
+        <div className="flex justify-end gap-2 mt-6">
+          <Button variant="outline" onClick={onClose}>
             Annuler
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
-          >
+          </Button>
+          <Button onClick={handleSave}>
             Sauvegarder
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
-}; 
+};

@@ -2,6 +2,18 @@ import React, { useState, useEffect } from "react"
 import { GameState } from "../../../../components/game/gameTypes"
 import { ControlsConfig } from "./ControlsConfig"
 import { useControls } from "./ControlsContext"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import { Dialog } from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
+import { Label } from "@/components/ui/label"
 
 export const GameUI: React.FC<{
   score: GameState["score"]
@@ -78,182 +90,194 @@ export const GameUI: React.FC<{
     <>
       {/* Score en haut */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center w-full pointer-events-none">
-        <div className="text-3xl font-extrabold text-foreground bg-background/80 px-8 py-2 rounded shadow-lg border border-border mb-2 pointer-events-auto">
-          {score.player1} - {score.player2}
-        </div>
+        <Card className="bg-background/80">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-3xl font-extrabold text-center">
+              {score.player1} - {score.player2}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        
         {/* Barre de chargement du Malus centrée sous le score */}
         {enableMaluses && (
           <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
-            <span className="mb-1 text-sm font-semibold text-red-700">Malus dans :</span>
-            <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300 relative">
-              <div
-                className="h-full bg-red-600 transition-all duration-500"
-                style={{ width: `${((Malus_INTERVAL - MalusTimer) / Malus_INTERVAL) * 100}%` }}
-              ></div>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white select-none">
-                {MalusTimer}s
-              </span>
-            </div>
+            <Label className="mb-1 text-sm font-semibold text-destructive">Malus dans : {MalusTimer}s</Label>
+            <Progress 
+              value={((Malus_INTERVAL - MalusTimer) / Malus_INTERVAL) * 100} 
+              className="w-64 h-2 bg-gray-200"
+              indicatorClassName="bg-destructive"
+            />
           </div>
         )}
       </div>
 
       {/* Touches visuelles + Stamina Joueur 1 */}
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20 space-y-4">
         <div className="flex flex-col space-y-2">
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+          <Button variant="outline" size="lg" className="w-12 h-12">
             {controls.player1Up}
-          </div>
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+          </Button>
+          <Button variant="outline" size="lg" className="w-12 h-12">
             {controls.player1Down}
-          </div>
+          </Button>
         </div>
+        
         {/* Affichage de la touche d'activation du coup spécial */}
         {enableSpecial && (
-          <>
+          <div className="flex flex-col items-center space-y-2">
             {superPad.player1 && (
-              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer1}s</div>
+              <Badge variant="secondary" className="text-cyan-700 font-bold">
+                Coup spécial: {specialTimer1}s
+              </Badge>
             )}
-            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+            <Button 
+              variant={superPad.player1 ? "default" : "outline"} 
+              size="lg"
+              className={`w-12 h-12 ${superPad.player1 ? 'bg-cyan-600 hover:bg-cyan-700 animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-400 hover:bg-yellow-500 text-yellow-800' : 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700')}`}
+            >
               {controls.player1Special || 'E'}
-            </div>
-          </>
-        )}
-        {/* Barre de stamina joueur 1 */}
-        {enableSpecial && (
-          <>
-            <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
-              <div
-                className={`h-full rounded-full transition-all duration-300 ${superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
-                style={{ width: `${(stamina.player1 / 10) * 100}%` }}
-              ></div>
-            </div>
-            <div className="text-xs text-center mt-1 font-semibold">
+            </Button>
+            
+            {/* Barre de stamina joueur 1 */}
+            <div className="flex flex-col items-center space-y-1">
+              <Progress 
+                value={(stamina.player1 / 10) * 100} 
+                className="w-12 h-2 bg-gray-200"
+                indicatorClassName={superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}
+              />
               {stamina.player1 < 10 ? (
-                <span className="bg-black text-white px-2 py-0.5 rounded">
+                <Badge variant="default">
                   {`${10 - stamina.player1} frappe${10 - stamina.player1 > 1 ? 's' : ''} restante${10 - stamina.player1 > 1 ? 's' : ''}`}
-                </span>
+                </Badge>
               ) : (
-                <span className="text-black">Coup spécial prêt !</span>
+                <Badge variant="secondary">Coup spécial prêt !</Badge>
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
+      
       {/* Touches visuelles + Stamina Joueur 2 */}
-      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20 space-y-4">
         <div className="flex flex-col space-y-2">
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+          <Button variant="outline" size="lg" className="w-12 h-12">
             {controls.player2Up}
-          </div>
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+          </Button>
+          <Button variant="outline" size="lg" className="w-12 h-12">
             {controls.player2Down}
-          </div>
+          </Button>
         </div>
+        
         {/* Affichage de la touche d'activation du coup spécial */}
         {enableSpecial && (
-          <>
+          <div className="flex flex-col items-center space-y-2">
             {superPad.player2 && (
-              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer2}s</div>
+              <Badge variant="secondary" className="text-cyan-700 font-bold">
+                Coup spécial: {specialTimer2}s
+              </Badge>
             )}
-            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+            <Button 
+              variant={superPad.player2 ? "default" : "outline"} 
+              size="lg"
+              className={`w-12 h-12 ${superPad.player2 ? 'bg-cyan-600 hover:bg-cyan-700 animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-400 hover:bg-yellow-500 text-yellow-800' : 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700')}`}
+            >
               {controls.player2Special || 'ArrowLeft'}
-            </div>
-          </>
-        )}
-        {/* Barre de stamina joueur 2 */}
-        {enableSpecial && (
-          <>
-            <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
-              <div
-                className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
-                style={{ width: `${(stamina.player2 / 10) * 100}%` }}
-              ></div>
-            </div>
-            <div className="text-xs text-center mt-1 font-semibold">
+            </Button>
+            
+            {/* Barre de stamina joueur 2 */}
+            <div className="flex flex-col items-center space-y-1">
+              <Progress 
+                value={(stamina.player2 / 10) * 100} 
+                className="w-12 h-2 bg-gray-200"
+                indicatorClassName={superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}
+              />
               {stamina.player2 < 10 ? (
-                <span className="bg-black text-white px-2 py-0.5 rounded">
+                <Badge variant="default">
                   {`${10 - stamina.player2} frappe${10 - stamina.player2 > 1 ? 's' : ''} restante${10 - stamina.player2 > 1 ? 's' : ''}`}
-                </span>
+                </Badge>
               ) : (
-                <span className="text-black">Coup spécial prêt !</span>
+                <Badge variant="secondary">Coup spécial prêt !</Badge>
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
 
       {/* Gagnant */}
       {winner && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
-          <div className="bg-background px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
-            <span className="text-green-500 text-4xl font-extrabold mb-6">
-              🏆 {winner} a gagné !
-            </span>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Rejouer
-              </button>
-              <button
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    const audio = (window as any).__GAME_AUDIO__;
-                    if (audio?.pause) audio.pause();
-                  }
-                  window.history.back();
-                }}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-              >
-                Quitter
-              </button>
-            </div>
+        <Dialog open={!!winner}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle className="text-center text-4xl font-extrabold text-green-600">
+                  🏆 {winner} a gagné !
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex justify-center space-x-4">
+                <Button 
+                  onClick={() => window.location.reload()}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Rejouer
+                </Button>
+                <Button 
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      const audio = (window as any).__GAME_AUDIO__;
+                      if (audio?.pause) audio.pause();
+                    }
+                    window.history.back();
+                  }}
+                  variant="destructive"
+                >
+                  Quitter
+                </Button>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </Dialog>
       )}
 
       {/* Décompte */}
       {countdown !== null && (
         <div className="absolute inset-0 bg-gray-400/40 flex items-center justify-center z-10">
-          <span className="text-foreground text-2xl font-bold">
-            {countdown}
-          </span>
+          <Card className="p-8">
+            <CardTitle className="text-6xl font-bold">
+              {countdown}
+            </CardTitle>
+          </Card>
         </div>
       )}
 
       {/* Contrôles et Pause */}
       <div className="absolute top-2 right-2 z-20 flex items-center space-x-2">
-        <button
+        <Button
           onClick={() => setIsControlsConfigOpen(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+          variant="outline"
+          size="icon"
         >
           ⚙️
-        </button>
-        <div className="bg-card border border-border rounded px-2 py-1 text-xs text-foreground">
+        </Button>
+        <Badge variant="outline" className="px-2 py-1">
           Échap
-        </div>
+        </Badge>
         {isPaused ? (
-          <button
+          <Button
             onClick={() => setIsPaused(false)}
             disabled={countdown !== null}
-            className={`bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded ${
-              countdown !== null ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={countdown !== null ? "opacity-50 cursor-not-allowed" : ""}
           >
             Reprendre
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={() => setIsPaused(true)}
             disabled={countdown !== null}
-            className={`bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded ${
-              countdown !== null ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            variant="secondary"
+            className={countdown !== null ? "opacity-50 cursor-not-allowed" : ""}
           >
             Pause
-          </button>
+          </Button>
         )}
       </div>
 
