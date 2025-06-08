@@ -6,6 +6,8 @@ import { SPEED_INCREMENT } from "../constants";
 import { playRandomCollisionSound } from "../sound";
 import type { Sound }             from "@babylonjs/core/Audio/sound";
 
+// Cooldown de collision par mur (module scope)
+let lastWallCollision = { left: 0, right: 0 };
 
 export function collideWalls(
   ball: Mesh,
@@ -13,9 +15,27 @@ export function collideWalls(
   currentSpeed: number,
   allHitSounds: Sound[]
 ): { newVelocity: Vector3; newSpeed: number } | null {
-  // Rebond murs latéraux
-  if (ball.position.x > 10 || ball.position.x < -10) {
-    const dirAfter = new Vector3(-ballV.x, 0, ballV.z).normalize();
+  const cooldown = 50; // ms
+  const now = Date.now();
+
+  // Rebond mur droit
+  if (ball.position.x > 10) {
+    if (now - lastWallCollision.right < cooldown) return null;
+    lastWallCollision.right = now;
+    // Replace la balle juste à la limite
+    ball.position.x = 10;
+    const dirAfter = new Vector3(-Math.abs(ballV.x), 0, ballV.z).normalize();
+    const newSpeed = currentSpeed * SPEED_INCREMENT;
+    const newVelocity = dirAfter.scale(newSpeed);
+    playRandomCollisionSound(allHitSounds);
+    return { newVelocity, newSpeed };
+  }
+  // Rebond mur gauche
+  if (ball.position.x < -10) {
+    if (now - lastWallCollision.left < cooldown) return null;
+    lastWallCollision.left = now;
+    ball.position.x = -10;
+    const dirAfter = new Vector3(Math.abs(ballV.x), 0, ballV.z).normalize();
     const newSpeed = currentSpeed * SPEED_INCREMENT;
     const newVelocity = dirAfter.scale(newSpeed);
     playRandomCollisionSound(allHitSounds);

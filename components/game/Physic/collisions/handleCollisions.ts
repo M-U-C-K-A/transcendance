@@ -25,7 +25,10 @@ export function handleCollisions(
   rightTriOuterLeft : Mesh | null, 
   leftTriOuterLeft: Mesh | null,
   rightTriOuterRight: Mesh | null,
-  leftTriOuterRight: Mesh | null
+  leftTriOuterRight: Mesh | null,
+  stamina?: { player1: number; player2: number },
+  setStamina?: (s: { player1: number; player2: number }) => void,
+  superPad?: { player1: boolean; player2: boolean }
 ): { newVelocity: Vector3; newSpeed: number } {
 
   // 1) Collision murs latéraux
@@ -44,7 +47,10 @@ export function handleCollisions(
     currentSpeed,
     ballMat,
     p1Mat,
-    allHitSounds
+    allHitSounds,
+    stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
+    setStamina,
+    superPad
   );
   if (p1Result) {
     return {
@@ -61,7 +67,10 @@ export function handleCollisions(
     currentSpeed,
     ballMat,
     p2Mat,
-    allHitSounds
+    allHitSounds,
+    stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
+    setStamina,
+    superPad
   );
   if (p2Result) {
     return {
@@ -77,7 +86,10 @@ export function handleCollisions(
       miniPaddle,
       ballV,
       currentSpeed,
-      allHitSounds
+      allHitSounds,
+      stamina,
+      setStamina,
+      superPad
     );
     if (miniResult) {
       return {
@@ -122,7 +134,7 @@ export function handleCollisions(
   }
 
   // 7) Collision avec les triangles (si définis)
- const tris: Array<Mesh | null> = [
+  const tris: Array<Mesh | null> = [
     rightTri,
     leftTri,
     rightTriOuterLeft,
@@ -131,7 +143,7 @@ export function handleCollisions(
     leftTriOuterRight,
   ];
   for (const tri of tris) {
-    if (tri) {
+    if (tri instanceof Mesh) {
       const triHit = collideTrianglePrism(ball, tri, ballV, currentSpeed, allHitSounds);
       if (triHit) {
         return { newVelocity: triHit.newVelocity, newSpeed: triHit.newSpeed };

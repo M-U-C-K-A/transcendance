@@ -5,11 +5,25 @@ type MessageListProps = {
 	messages: Array<{
 		id: number
 		user: {
-			name: string
 			id: number
+			name: string
+			avatar: string
+			win: number
+			lose: number
+			elo: number
+		}
+		recipient?: {
+			id: number | null
+			name: string | null
+			avatar: string | null
+			win: number | null
+			lose: number | null
+			elo: number | null
 		}
 		text: string
 		timestamp: Date
+		isPrivate: boolean
+		isRead: boolean
 	}>
 }
 
