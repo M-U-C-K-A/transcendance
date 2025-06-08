@@ -15,6 +15,10 @@ interface SettingsPanelProps {
   setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon" | null>>;
   canStart: boolean;
   onStart: () => void;
+  enableMaluses: boolean;
+  setEnableMaluses: Dispatch<SetStateAction<boolean>>;
+  enableSpecial: boolean;
+  setEnableSpecial: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function SettingsPanel({
@@ -29,13 +33,24 @@ export default function SettingsPanel({
   setMapStyle,
   canStart,
   onStart,
+  enableMaluses,
+  setEnableMaluses,
+  enableSpecial,
+  setEnableSpecial,
 }: SettingsPanelProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
 
   return (
     <div className="bg-card p-6 rounded-lg shadow-lg w-full max-w-md mx-auto space-y-6">
       {/* Intègre le composant pour le choix du style du sol */}
-      <MapChoice MapStyle={MapStyle} setMapStyle={setMapStyle} />
+      <MapChoice 
+        MapStyle={MapStyle} 
+        setMapStyle={setMapStyle}
+        enableMaluses={enableMaluses}
+        setEnableMaluses={setEnableMaluses}
+        enableSpecial={enableSpecial}
+        setEnableSpecial={setEnableSpecial}
+      />
 
       {/* Intègre le composant pour le choix des couleurs des joueurs */}
       <ColorChoice

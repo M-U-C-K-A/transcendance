@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { GameState } from "../../../../components/game/gameTypes"
 import { ControlsConfig } from "./ControlsConfig"
 import { useControls } from "./ControlsContext"
@@ -9,33 +9,178 @@ export const GameUI: React.FC<{
   countdown: GameState["countdown"]
   isPaused: GameState["isPaused"]
   setIsPaused: (paused: boolean) => void
-}> = ({ score, winner, countdown, isPaused, setIsPaused }) => {
+  enableMaluses?: boolean
+  MalusBarKey?: number
+  stamina: { player1: number; player2: number }
+  superPad: { player1: boolean; player2: boolean }
+  enableSpecial?: boolean
+}> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial }) => {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const { controls } = useControls();
 
+  // Gestion du timer pour le prochain Malus
+  const Malus_INTERVAL = 15; // secondes
+  const [MalusTimer, setMalusTimer] = useState(Malus_INTERVAL);
+  useEffect(() => {
+    setMalusTimer(Malus_INTERVAL);
+    const interval = setInterval(() => {
+      setMalusTimer((prev) => {
+        if (prev <= 1) return Malus_INTERVAL;
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [MalusBarKey]);
+
+  // Timers pour le coup spécial
+  const [specialTimer1, setSpecialTimer1] = useState(0);
+  const [specialTimer2, setSpecialTimer2] = useState(0);
+
+  useEffect(() => {
+    let interval1: NodeJS.Timeout | null = null;
+    if (superPad.player1) {
+      setSpecialTimer1(5);
+      interval1 = setInterval(() => {
+        setSpecialTimer1((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval1!);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setSpecialTimer1(0);
+    }
+    return () => { if (interval1) clearInterval(interval1); };
+  }, [superPad.player1]);
+
+  useEffect(() => {
+    let interval2: NodeJS.Timeout | null = null;
+    if (superPad.player2) {
+      setSpecialTimer2(5);
+      interval2 = setInterval(() => {
+        setSpecialTimer2((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval2!);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setSpecialTimer2(0);
+    }
+    return () => { if (interval2) clearInterval(interval2); };
+  }, [superPad.player2]);
+
   return (
     <>
-      {/* Score */}
-      <div className="flex justify-center mb-4 text-lg font-bold text-foreground">
-        {score.player1} - {score.player2}
+      {/* Score en haut */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center w-full pointer-events-none">
+        <div className="text-3xl font-extrabold text-foreground bg-background/80 px-8 py-2 rounded shadow-lg border border-border mb-2 pointer-events-auto">
+          {score.player1} - {score.player2}
+        </div>
+        {/* Barre de chargement du Malus centrée sous le score */}
+        {enableMaluses && (
+          <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
+            <span className="mb-1 text-sm font-semibold text-red-700">Malus dans :</span>
+            <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300 relative">
+              <div
+                className="h-full bg-red-600 transition-all duration-500"
+                style={{ width: `${((Malus_INTERVAL - MalusTimer) / Malus_INTERVAL) * 100}%` }}
+              ></div>
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white select-none">
+                {MalusTimer}s
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Touches visuelles */}
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {controls.player1Up}
+      {/* Touches visuelles + Stamina Joueur 1 */}
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
+        <div className="flex flex-col space-y-2">
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {controls.player1Up}
+          </div>
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {controls.player1Down}
+          </div>
         </div>
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {controls.player1Down}
-        </div>
+        {/* Affichage de la touche d'activation du coup spécial */}
+        {enableSpecial && (
+          <>
+            {superPad.player1 && (
+              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer1}s</div>
+            )}
+            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+              {controls.player1Special || 'E'}
+            </div>
+          </>
+        )}
+        {/* Barre de stamina joueur 1 */}
+        {enableSpecial && (
+          <>
+            <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
+                style={{ width: `${(stamina.player1 / 10) * 100}%` }}
+              ></div>
+            </div>
+            <div className="text-xs text-center mt-1 font-semibold">
+              {stamina.player1 < 10 ? (
+                <span className="bg-black text-white px-2 py-0.5 rounded">
+                  {`${10 - stamina.player1} frappe${10 - stamina.player1 > 1 ? 's' : ''} restante${10 - stamina.player1 > 1 ? 's' : ''}`}
+                </span>
+              ) : (
+                <span className="text-black">Coup spécial prêt !</span>
+              )}
+            </div>
+          </>
+        )}
       </div>
-      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 z-20">
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {controls.player2Up}
+      {/* Touches visuelles + Stamina Joueur 2 */}
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
+        <div className="flex flex-col space-y-2">
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {controls.player2Up}
+          </div>
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {controls.player2Down}
+          </div>
         </div>
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {controls.player2Down}
-        </div>
+        {/* Affichage de la touche d'activation du coup spécial */}
+        {enableSpecial && (
+          <>
+            {superPad.player2 && (
+              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer2}s</div>
+            )}
+            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+              {controls.player2Special || 'ArrowLeft'}
+            </div>
+          </>
+        )}
+        {/* Barre de stamina joueur 2 */}
+        {enableSpecial && (
+          <>
+            <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
+                style={{ width: `${(stamina.player2 / 10) * 100}%` }}
+              ></div>
+            </div>
+            <div className="text-xs text-center mt-1 font-semibold">
+              {stamina.player2 < 10 ? (
+                <span className="bg-black text-white px-2 py-0.5 rounded">
+                  {`${10 - stamina.player2} frappe${10 - stamina.player2 > 1 ? 's' : ''} restante${10 - stamina.player2 > 1 ? 's' : ''}`}
+                </span>
+              ) : (
+                <span className="text-black">Coup spécial prêt !</span>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Gagnant */}

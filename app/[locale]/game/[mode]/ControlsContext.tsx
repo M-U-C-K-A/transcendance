@@ -6,6 +6,8 @@ interface Controls {
   player1Down: string;
   player2Up: string;
   player2Down: string;
+  player1Special: string;
+  player2Special: string;
 }
 
 interface ControlsContextType {
@@ -18,6 +20,8 @@ const defaultControls: Controls = {
   player1Down: 'S',
   player2Up: 'ArrowUp',
   player2Down: 'ArrowDown',
+  player1Special: 'E',
+  player2Special: 'ArrowLeft',
 };
 
 const ControlsContext = createContext<ControlsContextType | undefined>(undefined);

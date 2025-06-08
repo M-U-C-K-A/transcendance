@@ -67,6 +67,17 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                     {editingKey === 'player1Down' ? 'Appuyez sur une touche...' : localControls.player1Down}
                   </button>
                 </div>
+                <div>
+                  <label className="block text-sm text-foreground">Coup spécial</label>
+                  <button
+                    className="w-full p-2 border rounded bg-card text-foreground"
+                    onClick={() => setEditingKey('player1Special')}
+                    onKeyDown={(e) => editingKey === 'player1Special' && handleKeyPress(e, 'player1Special')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player1Special' ? 'Appuyez sur une touche...' : localControls.player1Special}
+                  </button>
+                </div>
               </div>
             </div>
             
@@ -93,6 +104,17 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                     tabIndex={0}
                   >
                     {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : localControls.player2Down}
+                  </button>
+                </div>
+                <div>
+                  <label className="block text-sm text-foreground">Coup spécial</label>
+                  <button
+                    className="w-full p-2 border rounded bg-card text-foreground"
+                    onClick={() => setEditingKey('player2Special')}
+                    onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : localControls.player2Special}
                   </button>
                 </div>
               </div>

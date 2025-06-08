@@ -82,6 +82,8 @@ export default function Page() {
   const [colorP1, setColorP1] = useState<string | null>(null);
   const [colorP2, setColorP2] = useState<string | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [enableMaluses, setEnableMaluses] = useState(false);
+  const [enableSpecial, setEnableSpecial] = useState(false);
 
   type MapStyle = "classic" | "red" | "neon";
   const [MapStyle, setMapStyle] = useState<MapStyle | null>(null);
@@ -105,6 +107,8 @@ export default function Page() {
     setColorP1(null);
     setColorP2(null);
     setMapStyle(null);
+    setEnableMaluses(false);
+    setEnableSpecial(false);
     setCurrentTrackIndex(0);
     if (audioRef.current) {
       audioRef.current.pause();
@@ -142,6 +146,10 @@ export default function Page() {
               setMapStyle={setMapStyle}
               canStart={canStart}
               onStart={() => setGameStarted(true)}
+              enableMaluses={enableMaluses}
+              setEnableMaluses={setEnableMaluses}
+              enableSpecial={enableSpecial}
+              setEnableSpecial={setEnableSpecial}
             />
           ) : (
             <Buttons
@@ -160,6 +168,8 @@ export default function Page() {
               paddle1Color={colorP1 || "#000000"}
               paddle2Color={colorP2 || "#000000"}
               MapStyle={MapStyle || "classic"}
+              enableMaluses={enableMaluses}
+              enableSpecial={enableSpecial}
             />
           )}
         </div>
