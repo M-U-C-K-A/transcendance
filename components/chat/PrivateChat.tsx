@@ -8,21 +8,35 @@ import { PrivateConversationList } from "./PrivateConversationList";
 // Définition du type PrivateChatProps
 type PrivateChatProps = {
   messages: Array<{
-    id: number;
+    id: number
     user: {
-      name: string;
-      avatar: string;
-    };
-    text: string;
-    timestamp: Date;
+      id: number
+      name: string
+      avatar: string
+      win: number
+      lose: number
+      elo: number
+    }
+    recipient?: {
+      id: number | null
+      name: string | null
+      avatar: string | null
+      win: number | null
+      lose: number | null
+      elo: number | null
+    }
+    text: string
+    timestamp: Date
+    isPrivate: boolean
+    isRead: boolean
   }>;
   conversations: Array<{
-    id: number;
-    userName: string;
-    avatar: string;
-    unreadCount: number;
-    lastMessage?: string;
-    lastMessageTime?: Date;
+    id: number
+    userName: string
+    avatar: string
+    unreadCount: number
+    lastMessage?: string
+    lastMessageTime?: Date
   }>;
   selectedUser: string | null;
   newMessage: string;

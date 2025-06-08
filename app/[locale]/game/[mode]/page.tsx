@@ -72,12 +72,12 @@ export default function Page() {
   // Choix des couleurs et de la map
   // ──────────────────────────────────────────────────────────────────
   const COLORS = [
-    "#FF0000",
-    "#00FF00",
-    "#0000FF",
-    "#FFFF00",
-    "#FF00FF",
-    "#00FFFF",
+    "#f43f5e",
+    "#0ea5e9",
+    "#84cc16",
+    "#eab308",
+    "#a855f7",
+    "#14b8a6",
   ];
   const [colorP1, setColorP1] = useState<string | null>(null);
   const [colorP2, setColorP2] = useState<string | null>(null);

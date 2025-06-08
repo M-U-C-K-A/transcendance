@@ -5,11 +5,25 @@ type PublicChatProps = {
 	messages: Array<{
 		id: number
 		user: {
+			id: number
 			name: string
 			avatar: string
+			win: number
+			lose: number
+			elo: number
+		}
+		recipient?: {
+			id: number | null
+			name: string | null
+			avatar: string | null
+			win: number | null
+			lose: number | null
+			elo: number | null
 		}
 		text: string
 		timestamp: Date
+		isPrivate: boolean
+		isRead: boolean
 	}>
 	newMessage: string
 	onNewMessageChange: (value: string) => void
