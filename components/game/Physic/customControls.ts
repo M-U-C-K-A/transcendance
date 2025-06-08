@@ -5,13 +5,17 @@ interface Controls {
   player1Down: string;
   player2Up: string;
   player2Down: string;
+  player1Special: string;
+  player2Special: string;
 }
 
 let currentControls: Controls = {
   player1Up: 'W',
   player1Down: 'S',
   player2Up: 'ArrowUp',
-  player2Down: 'ArrowDown'
+  player2Down: 'ArrowDown',
+  player1Special: 'E',
+  player2Special: 'ArrowLeft',
 };
 
 export function updateControls(newControls: Controls) {

@@ -14,7 +14,7 @@ export function addCameraResetButton(camera: ArcRotateCamera) {
   resetCameraButton.style.fontSize = "16px";
   resetCameraButton.style.cursor = "pointer";
   resetCameraButton.onclick = () => {
-    camera.setPosition(new Vector3(35, 25, 0)); // Position d'origine de la caméra
+    camera.setPosition(new Vector3(35, 35, 0)); // Position d'origine de la caméra
     camera.setTarget(Vector3.Zero()); // Pointage vers l'origine
   };
   document.body.appendChild(resetCameraButton);
