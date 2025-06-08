@@ -21,13 +21,10 @@ import newMessageRoute from './routes/chat/newMessageRoute';
 import createMatchRoute from './routes/match/createMatchRoute';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
-import getOnlineUsers, { initSocket } from './websocket/onlineUser';
-import { setupWebSocket } from './websocket/websocket';
-import { createServer } from 'http';
+import blockUserRoute from './routes/chat/blockUserRoute';
 
 const app = Fastify({ logger: loggerConfig,
   bodyLimit: 20 * 1024 * 1024 });
-const httpServer = createServer(app.server);
 
 app.register(cors, {
 	origin: true,
@@ -39,8 +36,6 @@ app.register(cors, {
 app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
 })
-
-const onlineUsers = new Map<number, WebSocket>();
 
 
 async function main() {
@@ -64,9 +59,7 @@ async function main() {
 	await app.register(createMatchRoute)
 	await app.register(joinMatchRoute)
 	await app.register(matchResultRoute)
-	await app.register(getOnlineUsers)
-
-	initSocket(httpServer, app.jwt)
+	await app.register(blockUserRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
@@ -75,7 +68,6 @@ async function main() {
 		}
 		console.log(`Serveur démarré sur ${address}`);
 	});
-	setupWebSocket(app.server, app);
 }
 
 main();
