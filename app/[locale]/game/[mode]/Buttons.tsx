@@ -17,6 +17,8 @@ interface GameUIProps {
   paddle1Color: string;
   paddle2Color: string;
   MapStyle: "classic" | "red" | "neon";
+  enableMaluses: boolean;
+  enableSpecial: boolean;
 }
 
 export default function Buttons({
@@ -35,6 +37,8 @@ export default function Buttons({
   paddle1Color,
   paddle2Color,
   MapStyle,
+  enableMaluses,
+  enableSpecial,
 }: GameUIProps) {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
@@ -77,7 +81,7 @@ export default function Buttons({
         >
           ↺
         </button>
-        {/* Nouveau bouton : Réinitialiser la caméra */}
+        {/* Réinitialiser la caméra */}
         <button
           onClick={() => setCameraKey((prev) => prev + 1)}
           className="ml-2 bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"
@@ -112,6 +116,8 @@ export default function Buttons({
         paddle1Color={paddle1Color}
         paddle2Color={paddle2Color}
         MapStyle={MapStyle}
+        enableMaluses={enableMaluses}
+        enableSpecial={enableSpecial}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner"
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -84,13 +85,13 @@ export default function RootLayout({
   const locale = params.locale || "fr";
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`} salut="42">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
         {children}
-
+    <TailwindIndicator />
         <Toaster
           position="bottom-right"
           richColors
