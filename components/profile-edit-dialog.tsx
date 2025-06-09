@@ -126,7 +126,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       const payload = {
         newUsername: usernameToSend,
         newBio: bioToSend,
-        newAvatar: avatarToSend, // null si pas de changement
+        newAvatar: avatarToSend,
       }
 
       const response = await fetch("/api/editprofile", {
@@ -150,7 +150,6 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
         window.location.reload()
       }
 
-      // Si une nouvelle image a été uploadée, on rafraîchit l'URL
       if (avatarToSend) {
         setAvatarUrl(`/profilepicture/${id}.webp?t=${Date.now()}`) // Ajout d'un timestamp pour éviter le cache
       }
