@@ -7,6 +7,7 @@ import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
 import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/Malus";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
+import { updateControls } from "./Physic/customControls";
 
 export default function Pong3D({
   paddle1Color,
@@ -26,6 +27,7 @@ export default function Pong3D({
   const cameraRef = useRef<ArcRotateCamera | null>(null);
   const MalusSystemRef = useRef<MalusSystem | null>(null);
   const { controls } = useControls();
+  const controlsRef = useRef(controls);
 
   // ─── États React ─────────────────────────────────────────────
   const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
@@ -74,6 +76,11 @@ export default function Pong3D({
     }
   }, [score]);
 
+  // Mettre à jour la référence des contrôles
+  useEffect(() => {
+    controlsRef.current = controls;
+  }, [controls]);
+
   // ─── Handlers ───────────────────────────────────────────────
   const handleSetIsPaused = (paused: boolean) => {
     setIsPaused(paused);
@@ -105,7 +112,7 @@ export default function Pong3D({
       setWinner,
       setCountdown,
       setIsPaused,
-      controls,
+      controls: controlsRef.current,
       touchHistory,
       superPad,
       stamina,
@@ -152,7 +159,7 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, controls]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial]);
 
   // Reset de la caméra
   useEffect(() => {

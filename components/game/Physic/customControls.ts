@@ -19,7 +19,16 @@ let currentControls: Controls = {
 };
 
 export function updateControls(newControls: Controls) {
+  // Sauvegarde des anciennes touches
+  const oldControls = { ...currentControls };
+  
+  // Mise à jour des contrôles
   currentControls = newControls;
+  
+  // Suppression des anciennes touches du Set keys
+  Object.values(oldControls).forEach(key => {
+    keys.delete(key.toLowerCase());
+  });
 }
 
 export function getControls(): Controls {
