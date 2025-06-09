@@ -5,7 +5,6 @@ import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login';
 import registerRoute from './routes/auth/register';
-import getMessageRoute from './routes/chat/getMessage';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
@@ -22,6 +21,8 @@ import createMatchRoute from './routes/match/createMatchRoute';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
+import generalChatRoute from './routes/chat/generalChatRoute';
+import privateChatRoute from './routes/chat/privateChatRoute';
 
 const app = Fastify({ logger: loggerConfig,
   bodyLimit: 20 * 1024 * 1024 });
@@ -44,7 +45,8 @@ async function main() {
 	await app.register(health);
 	await app.register(registerRoute);
 	await app.register(loginRoute);
-	await app.register(getMessageRoute);
+	await app.register(generalChatRoute);
+	await app.register(privateChatRoute)
 	await app.register(editProfileRoute)
 	await app.register(sendMessageRoute);
 	await app.register(tournamentRoutes);
