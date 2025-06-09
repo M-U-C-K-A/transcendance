@@ -4,7 +4,7 @@ import matchList from "@/server/request/match/matchList";
 
 export default async function matchListRoute(server: FastifyInstance) {
 	server.get('/match/list', { preHandler: authMiddleware }, async function (request, reply) {
-		console.log("route")
+		console.log("test match list")
 	try {
 		const result = await matchList()
 		return (reply.code(200).send(result))

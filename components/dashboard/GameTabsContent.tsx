@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useI18n } from "@/i18n-client"
 import { useJWT } from "@/hooks/use-jwt"
 import { useState, useEffect } from "react"
+import { Match } from "@prisma/client"
 
 interface GameTabsContentProps {
   locale: string
@@ -113,7 +114,7 @@ export function CustomGameContent({ locale }: GameTabsContentProps) {
 			<p className="text-red-500 mx-2">{error}</p>
 		  ) : matches.length > 0 ? (
 			matches
-			  .filter((game) => game.p2Id === null) // facultatif : uniquement les parties à rejoindre
+			  .filter((game) => game.p2Id === null)
 			  .map((game) => (
 				<div
 				  key={game.id}
@@ -133,7 +134,7 @@ export function CustomGameContent({ locale }: GameTabsContentProps) {
 				</div>
 			  ))
 		  ) : (
-			<p className="text-sm text-muted-foreground mx-2">{t("dashboard.game.noAvailableGames")}</p>
+			<p className="text-sm text-muted-foreground mx-2">{("dashboard.game.noAvailableGames")}</p>
 		  )}
 		</div>
 	  </CardContent>
