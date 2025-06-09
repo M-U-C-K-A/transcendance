@@ -14,16 +14,17 @@ export default async function newMessageRoute(server: FastifyInstance) {
 
 		try {
 			const result = await newMessage(username, userId.id);
-			console.log(result)
 			return reply.code(200).send(result);
 		} catch (err: any) {
 			if (err.message === 'No User found') {
 				return reply.code(409).send({ error: 'No User found' });
+			} else if (err.message == "You blocked this user") {
+				return reply.code(409).send({ error: "You blocked this user"})
+			} else if (err.message == "This user blocked you") {
+				return reply.code(409).send({ error: "This user blocked you"})
+			} else {
+				return reply.code(500).send({ error: 'Internal server error' });
 			}
-			if (err.message == 'User blocked' ) {
-				return reply.code(409).send({ error: "Couln'd create the conversation due to block"})
-			}
-			return reply.code(500).send({ error: 'Internal server error' });
 		}
 	});
 }

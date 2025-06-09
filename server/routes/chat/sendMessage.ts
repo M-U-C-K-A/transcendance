@@ -19,8 +19,12 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		await sendMessage(senderId.id, data)
 		return (reply.code(200).send({ message: "Message send succesfully"}))
 	} catch (err: any) {
-		if (err.message === 'User not found , Could not send message') {
+		if (err.message == 'User not found , Could not send message') {
 			return reply.code(404).send({ error: 'User not found , Could not send message' })
+		} else if (err.message == "You blocked this user") {
+			return reply.code(409).send({ error: "You blocked this user"})
+		} else if (err.message == "This user blocked you") {
+			return reply.code(409).send({ error: "This user blocked you"})
 		}
 		return reply.code(500).send({ error: 'Internal server error' })
 	}

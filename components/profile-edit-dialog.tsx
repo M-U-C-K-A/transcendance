@@ -147,6 +147,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       if (data.token) {
         localStorage.setItem("token", data.token)
         setOriginalUsername(usernameToSend)
+        window.location.reload()
       }
 
       // Si une nouvelle image a été uploadée, on rafraîchit l'URL
