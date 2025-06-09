@@ -18,8 +18,7 @@ interface UserInfo {
   id: number
   username: string
   elo: number
-  avatar: string | null
-  bio: string
+  avatar?: string | null
   win: number
   lose: number
   onlineStatus: boolean
@@ -72,7 +71,7 @@ interface ProfileData {
 
 export default function ProfilePage() {
   const params = useParams()
-  const username = (params.username as string).toLowerCase()
+  const username = params.username as string
   const locale = params.locale as string
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
@@ -100,11 +99,11 @@ export default function ProfilePage() {
         setIsLoading(false)
       }
     }
+    if (jwt && username) {
+    fetchProfileData()
+  }
+}, [jwt, username])
 
-    if (jwt) {
-      fetchProfileData()
-    }
-  }, [username, jwt])
 
   if (isLoading) {
     return <ProfileSkeleton locale={locale} />
@@ -165,7 +164,7 @@ export default function ProfilePage() {
     return {
       id: match.id,
       date: new Date(match.MDate).toLocaleDateString(),
-      opponent: `User ${opponentId}`, // Replace with actual username if available
+      opponent: `User ${opponentId}`,
       result: match.winnerId === userInfo.id ? "Victoire" : "Défaite",
       score: `${playerScore}-${opponentScore}`,
       eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`
@@ -174,7 +173,6 @@ export default function ProfilePage() {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Header */}
       <Header locale={locale} />
 
       <div className="container mx-auto py-8">
@@ -188,7 +186,6 @@ export default function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sidebar - User Profile */}
           <div className="lg:col-span-4">
 
       <UserProfileCard user={userInfo} locale={locale} isBlocked={profileData.isBlocked} />

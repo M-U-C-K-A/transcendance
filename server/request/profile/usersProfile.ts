@@ -2,10 +2,11 @@ import { PrismaClient } from '@prisma/client'
 
 const Prisma = new PrismaClient()
 
-export default async function getuser(username: string, userId: number) {
-	const userInfo = await Prisma.user.findUnique({
+export default async function getuser(profileId: number, userId: number) {
+	console.log(profileId)
+	const userInfo = await Prisma.user.findFirst({
 		where: {
-			username: username
+			id: profileId
 		},
 		select: {
 			id: true,
@@ -20,10 +21,9 @@ export default async function getuser(username: string, userId: number) {
 			pointConcede: true,
 		},
 	});
-
+	console.log("test32")
 	if (!userInfo) {
-		console.log(`Failed to get ${username} info`)
-		throw new Error(`Failed to get ${username} info`)
+		throw new Error("Failed to get profile data")
 	}
 
 	const gameNumber = userInfo.win + userInfo.lose
@@ -48,15 +48,16 @@ export default async function getuser(username: string, userId: number) {
 	});
 
 	const matchHistory = await Prisma.match.findMany({
-	where: {
-		OR: [
-		{ p1Id: userInfo.id },
-		{ p2Id: userInfo.id },
-		],
-		winnerId: {
-			not: null
-		}
-	},
+		where: {
+			OR: [
+			{ p1Id: userInfo.id },
+			{ p2Id: userInfo.id },
+			],
+			winnerId: {
+				not: null
+			}
+		},
 	});
+
 	return {userInfo, gameNumber, winRate, achievements, matchHistory, isBlocked}
 }

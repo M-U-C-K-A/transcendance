@@ -124,8 +124,8 @@ export function ColleaguesList({ locale }: { locale: string }) {
 									</div>
 								</div>
 								<div className="flex items-center space-x-2">
-									<Link href={`/${locale}/profile/${friend.username}`}>
-										<Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${t('dashboard.colleagues.message')} ${friend.username}`}>
+									<Link href={`/${locale}/profile/${friend.id}`}>
+										<Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={`${('dashboard.colleagues.message')} ${friend.username}`}>
 											<SquareArrowOutUpRight className="h-4 w-4" />
 										</Button>
 									</Link>
@@ -141,7 +141,7 @@ export function ColleaguesList({ locale }: { locale: string }) {
 							</div>
 						))
 					) : (
-						<p className="text-sm text-muted-foreground">{t('dashboard.colleagues.noFriends')}</p>
+						<p className="text-sm text-muted-foreground">{('dashboard.colleagues.noFriends')}</p>
 					)}
 				</div>
 				<PendingInvitations locale={locale} />

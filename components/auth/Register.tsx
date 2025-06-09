@@ -37,7 +37,6 @@ export function Register({
     const formData = { email, username, password };
     const result = registerSchema.safeParse(formData);
 
-    // ❌ Invalid inputs
     if (!result.success) {
       const errors: { [key: string]: string } = {};
       result.error.errors.forEach(err => {
