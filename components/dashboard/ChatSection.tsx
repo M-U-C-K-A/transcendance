@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { MessageCircle } from "lucide-react"
-import { ChatComponent } from "@/components/chat"
+import { ChatComponent } from "@/components/chatComponent"
 import { useI18n } from "@/i18n-client"
 
 interface ChatSectionProps {

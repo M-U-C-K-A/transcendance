@@ -1,0 +1,196 @@
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { PublicChat } from "./chat/publicChat/PublicChat";
+import { PrivateChat } from "./chat/privateChat/PrivateChat";
+import { usePublicMessages } from "./chat/publicChat/usePublicMessages";
+import { usePrivateMessages } from "./chat/privateChat/usePrivateMessages";
+import { PrivateConversation } from "./chat/privateChat/type";
+
+type Tab = "public" | "private";
+
+interface ChatComponentProps {
+  placeholder?: string;
+  currentUser: string;
+}
+
+interface SendMessageData {
+  recipient?: number;
+  content: string;
+  messageType: string;
+}
+
+export function ChatComponent({ placeholder = "Écrivez un message...", currentUser }: ChatComponentProps) {
+  const [activeTab, setActiveTab] = useState<Tab>("public");
+  const [selectedPrivateUser, setSelectedPrivateUser] = useState<string | null>(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [newPrivateUser, setNewPrivateUser] = useState("");
+  const [privateConversations, setPrivateConversations] = useState<PrivateConversation[]>([]);
+
+  const {
+	messages: publicMessages,
+	fetchMessages,
+	isLoading: loadingPublic,
+	error: errorPublic
+  } = usePublicMessages(currentUser);
+
+  const {
+	messages: privateMessages,
+	fetchPrivateMessages,
+	isLoading: loadingPrivate,
+	error: errorPrivate
+  } = usePrivateMessages(currentUser);
+
+  useEffect(() => {
+	fetchMessages();
+	fetchPrivateMessages();
+  }, [fetchMessages, fetchPrivateMessages]);
+
+  useEffect(() => {
+	const conversationsMap = new Map<string, PrivateConversation>();
+
+	privateMessages.forEach(msg => {
+	  const isCurrentUserSender = msg.user.name === currentUser;
+	  const otherUser = isCurrentUserSender ? msg.recipient?.name : msg.user.name;
+
+	  if (!otherUser) return;
+
+	  const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
+	  const existing = conversationsMap.get(otherUser);
+
+	  conversationsMap.set(otherUser, {
+		id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
+		userName: otherUser,
+		avatar: `/profilepicture/${isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id}.webp`,
+		unreadCount: (existing?.unreadCount || 0) + unreadCount,
+		lastMessage: msg.text,
+		lastMessageTime: msg.timestamp,
+	  });
+	});
+
+	setPrivateConversations(Array.from(conversationsMap.values()));
+  }, [privateMessages, currentUser]);
+
+  const sendMessage = useCallback(async () => {
+	if (!newMessage.trim()) return;
+
+	const payload: SendMessageData = {
+	  content: newMessage,
+	  messageType: activeTab === "public" ? "GENERAL" : "PRIVATE",
+	};
+
+	if (activeTab === "private" && selectedPrivateUser) {
+		const recipientConversation = privateConversations.find(
+		conv => conv.userName === selectedPrivateUser
+		);
+
+		const recipientId = recipientConversation?.id;
+
+		if (!recipientId) {
+		console.error("ID du destinataire introuvable.");
+		return;
+		}
+	  payload.recipient = recipientId;
+	}
+
+	try {
+	  const res = await fetch("/api/chat/send", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		  Authorization: `Bearer ${localStorage.getItem("token")}`,
+		},
+		body: JSON.stringify(payload),
+	  });
+
+	  if (!res.ok) {
+		throw new Error("Échec de l'envoi du message.");
+	  }
+
+	  setNewMessage("");
+	  await (activeTab === "public" ? fetchMessages() : fetchPrivateMessages());
+	} catch (err) {
+	  console.error("Erreur lors de l'envoi du message :", err);
+	}
+  }, [newMessage, activeTab, selectedPrivateUser, fetchMessages, fetchPrivateMessages, privateMessages]);
+
+  const isLoading = activeTab === "public" ? loadingPublic : loadingPrivate;
+  const error = activeTab === "public" ? errorPublic : errorPrivate;
+
+const handleContactAdded = (contact: { id: number; userName: string }) => {
+  setSelectedPrivateUser(contact.userName);
+
+  const alreadyExists = privateConversations.some(
+    conv => conv.userName === contact.userName
+  );
+
+  if (!alreadyExists) {
+    const newConversation: PrivateConversation = {
+      id: contact.id,
+      userName: contact.userName,
+      avatar: `/profilepicture/${contact.id}.webp`,
+      unreadCount: 0,
+      lastMessage: "",
+      lastMessageTime: new Date(),
+    };
+
+    setPrivateConversations(prev => [newConversation, ...prev]);
+  }
+};
+
+
+return isLoading ? (
+  <div className="flex h-full justify-center items-center">Chargement...</div>
+) : error ? (
+  <div className="text-red-500 text-center">{error}</div>
+) : (
+  <Tabs
+    defaultValue="public"
+    onValueChange={(val) => {
+      setActiveTab(val as Tab);
+      if (val === "public") setSelectedPrivateUser(null);
+    }}
+    className="h-full flex flex-col"
+  >
+    <TabsList className="grid grid-cols-2">
+      <TabsTrigger value="public">Public</TabsTrigger>
+      <TabsTrigger value="private">Privé</TabsTrigger>
+    </TabsList>
+
+    <TabsContent value="public" className="flex-1">
+      <PublicChat
+        messages={publicMessages}
+        newMessage={newMessage}
+        onNewMessageChange={setNewMessage}
+        onSendMessage={e => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        placeholder={placeholder}
+      />
+    </TabsContent>
+
+    <TabsContent value="private" className="flex-1">
+      <PrivateChat
+        messages={privateMessages}
+        conversations={privateConversations}
+        selectedUser={selectedPrivateUser}
+        currentUser={currentUser}
+        newMessage={newMessage}
+        newPrivateUser={newPrivateUser}
+        onNewMessageChange={setNewMessage}
+        onNewPrivateUserChange={setNewPrivateUser}
+        onSendMessage={e => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        onAddNewUser={() => newPrivateUser && setSelectedPrivateUser(newPrivateUser)}
+        onSelectUser={setSelectedPrivateUser}
+        onBack={() => setSelectedPrivateUser(null)}
+        onContactAdded={handleContactAdded}
+      />
+    </TabsContent>
+  </Tabs>
+);
+
+}

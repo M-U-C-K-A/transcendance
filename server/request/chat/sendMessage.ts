@@ -21,6 +21,7 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 			console.log ("User not found , Could not send message")
 			throw new Error ("User not found , Could not send message")
 		}
+
 		recipientId = userInfo.id
 		isGeneral = false
 	}
