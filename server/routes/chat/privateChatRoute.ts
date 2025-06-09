@@ -5,7 +5,6 @@ import getPrivateChat from "@/server/request/chat/getPrivateChat";
 export default async function privateChatRoute(server: FastifyInstance) {
 	server.get('/chat/receive/private', {preHandler: authMiddleware}, async function (request, reply) {
 	const user = request.user as { id: number}
-	console.log("test test test test test")
 
 	if (!user) {
 		throw new Error ("No parameter")

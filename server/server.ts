@@ -23,6 +23,7 @@ import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
 import generalChatRoute from './routes/chat/generalChatRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
+import matchListRoute from './routes/match/matchListRoute';
 
 const app = Fastify({ logger: loggerConfig,
   bodyLimit: 20 * 1024 * 1024 });
@@ -62,6 +63,7 @@ async function main() {
 	await app.register(joinMatchRoute)
 	await app.register(matchResultRoute)
 	await app.register(blockUserRoute)
+	await app.register(matchListRoute)
 
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
