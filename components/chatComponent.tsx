@@ -204,7 +204,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
             e.preventDefault();
             sendMessage();
           }}
-          onAddNewUser={() => newPrivateUser && setSelectedPrivateUser(newPrivateUser)}
+          onAddNewUser={() => setNewPrivateUser("")}
           onSelectUser={setSelectedPrivateUser}
           onBack={() => setSelectedPrivateUser(null)}
           onContactAdded={handleContactAdded}

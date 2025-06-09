@@ -33,7 +33,6 @@ export default async function getPrivateChat(userId: number) {
 
 	const chat = rawMessages.map(msg => {
 		const isSender = msg.sender.id === userId;
-
 		return {
 			id: msg.id,
 			content: msg.content,
