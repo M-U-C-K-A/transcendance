@@ -23,6 +23,7 @@ interface PrivateChatProps {
   sendError: string | null;
 }
 
+
 export function PrivateChat({
   messages,
   conversations,
@@ -44,27 +45,12 @@ export function PrivateChat({
     ? `/profilepicture/${selectedConversation.id}.webp`
     : "/default-avatar.webp";
 
-  const filteredMessages = useMemo(() => {
-    if (!selectedUser || !currentUser) return [];
-
-    return messages
-      .filter(msg => {
-        if (!msg.isPrivate) return false;
-
-        const userName = msg.user?.name?.toLowerCase();
-        const recipientName = msg.recipient?.name?.toLowerCase();
-
-        if (!userName || !recipientName) return false;
-
-        const participants = [userName, recipientName];
-
-        return (
-          participants.includes(currentUser.toLowerCase()) &&
-          participants.includes(selectedUser.toLowerCase())
-        );
-      })
-      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-  }, [messages, selectedUser, currentUser]);
+const filteredMessages = useMemo(() => {
+  return messages.filter(msg =>
+    msg.user.name === selectedUser ||
+    (msg.recipient && msg.recipient.name === selectedUser)
+  );
+}, [messages, selectedUser]);
 
   return (
     <div className="flex flex-col h-full">
