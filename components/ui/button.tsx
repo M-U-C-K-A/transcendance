@@ -20,11 +20,11 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
-        hell: "bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/50 hover:from-red-700 hover:to-red-950 border border-red-400/50 hover:shadow-red-700/60 transition-all duration-300",
+        hell: "bg-gradient-to-br from-red-700 via-red-900 to-yellow-900 text-white shadow-xl shadow-red-900/60 hover:from-red-800 hover:to-yellow-800 hover:shadow-yellow-700/40 ring-2 ring-red-900/30 focus-visible:ring-yellow-400/40 animate-fire transition-all duration-300",
         neon: "bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 border border-purple-300/50 animate-pulse-slow transition-all duration-500",
         cyber: "bg-black text-cyan-400 border-2 border-cyan-400 shadow-lg shadow-cyan-400/20 hover:bg-cyan-400/10 font-mono tracking-wider transition-all duration-200",
         matrix: "bg-black text-emerald-400 border border-emerald-400 shadow-lg shadow-emerald-400/20 hover:bg-emerald-400/10 font-mono tracking-wider transition-all duration-200",
-        classic: "bg-blue-600 text-white shadow-md hover:bg-blue-700 border border-blue-400/50 transition-colors duration-200",
+        classic: "bg-gradient-to-br from-zinc-700 via-zinc-900 to-zinc-800 text-white shadow-xl shadow-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 hover:shadow-zinc-500/40 ring-2 ring-zinc-900/30 focus-visible:ring-zinc-200/40 animate-pulse-slow transition-all duration-300",
         arcade: "bg-yellow-400 text-black border-2 border-red-500 shadow-md hover:bg-yellow-300 font-bold tracking-wide transition-colors duration-200"
       
       },

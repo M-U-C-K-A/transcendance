@@ -23,14 +23,17 @@ export function collidePaddle1(
   allHitSounds: Sound[],
   stamina?: { player1: number; player2: number },
   setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean }
+  superPad?: { player1: boolean; player2: boolean },
+  volume: number = 0.5,
+  speedIncrement: number = 0.009
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50; // ms
   const now = Date.now();
   // Collision paddle1
+  const paddleWidth = (superPad && superPad.player1) ? PADDLE_HALF_WIDTH * 2 : PADDLE_HALF_WIDTH;
   if (
     ball.position.z < -19 &&
-    Math.abs(ball.position.x - paddle1.position.x) < PADDLE_HALF_WIDTH
+    Math.abs(ball.position.x - paddle1.position.x) < paddleWidth
   ) {
     if (now - lastPaddleCollision.p1 < cooldown) return null;
     lastPaddleCollision.p1 = now;
@@ -52,12 +55,12 @@ export function collidePaddle1(
       paddle1.scaling.x = 1;
     }
     // Calcule l'angle de rebond selon la position X relative au centre du paddle
-    const relativeIntersectX = (ball.position.x - paddle1.position.x) / PADDLE_HALF_WIDTH;
+    const relativeIntersectX = (ball.position.x - paddle1.position.x) / paddleWidth;
     const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE;
     const dirX = Math.sin(bounceAngle);
     const dirZ = Math.cos(bounceAngle);
     const dirAfter = new Vector3(dirX, 0, dirZ).normalize();
-    let newSpeed = currentSpeed * SPEED_INCREMENT;
+    let newSpeed = currentSpeed * (1 + speedIncrement);
     if (superPad && superPad.player1) newSpeed *= 4;
     const newVelocity = dirAfter.scale(newSpeed);
 
@@ -66,7 +69,7 @@ export function collidePaddle1(
       ballMat.diffuseColor = p1Mat.diffuseColor.clone();
     }
 
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, Math.max(0, Math.min(1, Number.isFinite(volume) ? volume : 0.5)));
     return { newVelocity, newSpeed };
   }
   return null;
@@ -82,14 +85,17 @@ export function collidePaddle2(
   allHitSounds: Sound[],
   stamina?: { player1: number; player2: number },
   setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean }
+  superPad?: { player1: boolean; player2: boolean },
+  volume: number = 0.5,
+  speedIncrement: number = 0.009
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50; // ms
   const now = Date.now();
   // Collision paddle2
+  const paddleWidth2 = (superPad && superPad.player2) ? PADDLE_HALF_WIDTH * 2 : PADDLE_HALF_WIDTH;
   if (
     ball.position.z > 19 &&
-    Math.abs(ball.position.x - paddle2.position.x) < PADDLE_HALF_WIDTH
+    Math.abs(ball.position.x - paddle2.position.x) < paddleWidth2
   ) {
     if (now - lastPaddleCollision.p2 < cooldown) return null;
     lastPaddleCollision.p2 = now;
@@ -111,12 +117,12 @@ export function collidePaddle2(
       paddle2.scaling.x = 1;
     }
     const relativeIntersectX =
-      (ball.position.x - paddle2.position.x) / PADDLE_HALF_WIDTH;
+      (ball.position.x - paddle2.position.x) / paddleWidth2;
     const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE;
     const dirX = Math.sin(bounceAngle);
     const dirZ = Math.cos(bounceAngle);
     const dirAfter = new Vector3(dirX, 0, -dirZ).normalize();
-    let newSpeed = currentSpeed * SPEED_INCREMENT;
+    let newSpeed = currentSpeed * (1 + speedIncrement);
     if (superPad && superPad.player2) newSpeed *= 2;
     const newVelocity = dirAfter.scale(newSpeed);
 
@@ -125,7 +131,7 @@ export function collidePaddle2(
       ballMat.diffuseColor = p2Mat.diffuseColor.clone();
     }
 
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, Math.max(0, Math.min(1, Number.isFinite(volume) ? volume : 0.5)));
     return { newVelocity, newSpeed };
   }
   return null;

@@ -16,6 +16,17 @@ interface ControlsConfigProps {
   onClose: () => void;
 }
 
+// Fonction utilitaire pour afficher les touches avec emoji flèche
+function displayKey(key: string) {
+  switch (key) {
+    case 'ArrowUp': return '🡅';
+    case 'ArrowDown': return '🡇';
+    case 'ArrowLeft': return '🡄';
+    case 'ArrowRight': return '🡆';
+    default: return key;
+  }
+}
+
 export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   isOpen,
   onClose,
@@ -30,7 +41,9 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
 
   const handleKeyPress = (e: React.KeyboardEvent, key: string) => {
     e.preventDefault();
-    const newKey = e.key.toUpperCase();
+    let newKey = e.key;
+    // Si c'est une lettre simple, on la met en majuscule
+    if (newKey.length === 1) newKey = newKey.toUpperCase();
     setLocalControls((prev) => ({
       ...prev,
       [key]: newKey,
@@ -66,7 +79,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player1Up' && handleKeyPress(e, 'player1Up')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player1Up' ? 'Appuyez sur une touche...' : localControls.player1Up}
+                  {editingKey === 'player1Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player1Up)}
                 </Button>
               </div>
 
@@ -79,7 +92,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player1Down' && handleKeyPress(e, 'player1Down')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player1Down' ? 'Appuyez sur une touche...' : localControls.player1Down}
+                  {editingKey === 'player1Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player1Down)}
                 </Button>
               </div>
 
@@ -92,7 +105,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player1Special' && handleKeyPress(e, 'player1Special')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player1Special' ? 'Appuyez sur une touche...' : localControls.player1Special}
+                  {editingKey === 'player1Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player1Special)}
                 </Button>
               </div>
             </CardContent>
@@ -113,7 +126,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player2Up' && handleKeyPress(e, 'player2Up')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : localControls.player2Up}
+                  {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Up)}
                 </Button>
               </div>
 
@@ -126,7 +139,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player2Down' && handleKeyPress(e, 'player2Down')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : localControls.player2Down}
+                  {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Down)}
                 </Button>
               </div>
 
@@ -139,7 +152,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
                   tabIndex={0}
                 >
-                  {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : localControls.player2Special}
+                  {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Special)}
                 </Button>
               </div>
             </CardContent>

@@ -10,7 +10,8 @@ export function collideBumper(
   bumper: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[]
+  allHitSounds: Sound[],
+  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   if (!ball || !bumper) return null;
 
@@ -32,7 +33,7 @@ export function collideBumper(
     const nx = dx / distanceXZ;
     const nz = dz / distanceXZ;
 
-    // 2b) Repositionner la balle à l’extérieur du cercle pour éviter “profondeur”
+    // 2b) Repositionner la balle à l'extérieur du cercle pour éviter "profondeur"
     ball.position.x = bumper.position.x + nx * (bumperRadius + ballRadius);
     ball.position.z = bumper.position.z + nz * (bumperRadius + ballRadius);
 
@@ -45,7 +46,7 @@ export function collideBumper(
     const newSpeed = currentSpeed * SPEED_INCREMENT;
     const newVelocity = dirAfter.scale(newSpeed);
 
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed };
   }
 

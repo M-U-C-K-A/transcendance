@@ -150,19 +150,29 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
-  @layer base {
-    * {
-      border-color: var(--border);
-      outline-color: var(--ring);
-      outline-offset: 0.5rem;
-    }
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-    }
-  }
+@keyframes goal-pop {
+  0% { opacity: 0; transform: scale(0.7); }
+  30% { opacity: 1; transform: scale(1.1); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.9); }
+}
+.animate-goal-pop {
+  animation: goal-pop 0.7s cubic-bezier(0.4,0,0.2,1);
+}
 
-  @layer base {
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+    outline-offset: 0.5rem;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+@layer base {
   * {
     @apply border-border outline-ring/50;
   }

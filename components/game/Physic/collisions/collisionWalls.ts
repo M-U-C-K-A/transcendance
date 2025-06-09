@@ -13,7 +13,8 @@ export function collideWalls(
   ball: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[]
+  allHitSounds: Sound[],
+  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50; // ms
   const now = Date.now();
@@ -27,7 +28,7 @@ export function collideWalls(
     const dirAfter = new Vector3(-Math.abs(ballV.x), 0, ballV.z).normalize();
     const newSpeed = currentSpeed * SPEED_INCREMENT;
     const newVelocity = dirAfter.scale(newSpeed);
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed };
   }
   // Rebond mur gauche
@@ -38,7 +39,7 @@ export function collideWalls(
     const dirAfter = new Vector3(Math.abs(ballV.x), 0, ballV.z).normalize();
     const newSpeed = currentSpeed * SPEED_INCREMENT;
     const newVelocity = dirAfter.scale(newSpeed);
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed };
   }
   return null;

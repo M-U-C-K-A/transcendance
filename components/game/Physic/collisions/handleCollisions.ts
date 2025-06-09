@@ -8,12 +8,12 @@ import type { Sound }                       from "@babylonjs/core/Audio/sound";
 
 
 export function handleCollisions(
-  ball: Mesh,
-  paddle1: Mesh,
-  paddle2: Mesh,
-  miniPaddle: Mesh,
-  bumperLeft: Mesh,
-  bumperRight: Mesh,
+  ball: Mesh | null,
+  paddle1: Mesh | null,
+  paddle2: Mesh | null,
+  miniPaddle: Mesh | null,
+  bumperLeft: Mesh | null,
+  bumperRight: Mesh | null,
   ballV: Vector3,
   currentSpeed: number,
   ballMat: StandardMaterial,
@@ -28,11 +28,16 @@ export function handleCollisions(
   leftTriOuterRight: Mesh | null,
   stamina?: { player1: number; player2: number },
   setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean }
+  superPad?: { player1: boolean; player2: boolean },
+  volume: number,
+  speedIncrement: number
 ): { newVelocity: Vector3; newSpeed: number } {
+  if (!ball || !paddle1 || !paddle2) {
+    return { newVelocity: ballV, newSpeed: currentSpeed };
+  }
 
   // 1) Collision murs latéraux
-  const wallResult = collideWalls(ball, ballV, currentSpeed, allHitSounds);
+  const wallResult = collideWalls(ball, ballV, currentSpeed, allHitSounds, volume);
   if (wallResult) {
     return {
       newVelocity: wallResult.newVelocity,
@@ -50,7 +55,9 @@ export function handleCollisions(
     allHitSounds,
     stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
     setStamina,
-    superPad
+    superPad,
+    volume,
+    speedIncrement
   );
   if (p1Result) {
     return {
@@ -70,7 +77,9 @@ export function handleCollisions(
     allHitSounds,
     stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
     setStamina,
-    superPad
+    superPad,
+    volume,
+    speedIncrement
   );
   if (p2Result) {
     return {
@@ -89,7 +98,8 @@ export function handleCollisions(
       allHitSounds,
       stamina,
       setStamina,
-      superPad
+      superPad,
+      volume
     );
     if (miniResult) {
       return {
@@ -106,7 +116,8 @@ export function handleCollisions(
       bumperLeft,
       ballV,
       currentSpeed,
-      allHitSounds
+      allHitSounds,
+      volume
     );
     if (bump1) {
       return {
@@ -123,7 +134,8 @@ export function handleCollisions(
       bumperRight,
       ballV,
       currentSpeed,
-      allHitSounds
+      allHitSounds,
+      volume
     );
     if (bump2) {
       return {
@@ -144,7 +156,7 @@ export function handleCollisions(
   ];
   for (const tri of tris) {
     if (tri instanceof Mesh) {
-      const triHit = collideTrianglePrism(ball, tri, ballV, currentSpeed, allHitSounds);
+      const triHit = collideTrianglePrism(ball, tri, ballV, currentSpeed, allHitSounds, volume);
       if (triHit) {
         return { newVelocity: triHit.newVelocity, newSpeed: triHit.newSpeed };
       }
