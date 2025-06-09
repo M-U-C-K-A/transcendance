@@ -23,7 +23,6 @@ interface PrivateChatProps {
   sendError: string | null;
 }
 
-
 export function PrivateChat({
   messages,
   conversations,
@@ -38,19 +37,22 @@ export function PrivateChat({
   onSelectUser,
   onBack,
   onContactAdded,
-  sendError
+  sendError,
 }: PrivateChatProps) {
-  const selectedConversation = conversations.find(c => c.userName === selectedUser);
+  const selectedConversation = conversations.find(
+    (c) => c.userName === selectedUser
+  );
   const selectedAvatar = selectedConversation
     ? `/profilepicture/${selectedConversation.id}.webp`
     : "/default-avatar.webp";
 
-const filteredMessages = useMemo(() => {
-  return messages.filter(msg =>
-    msg.user.name === selectedUser ||
-    (msg.recipient && msg.recipient.name === selectedUser)
-  );
-}, [messages, selectedUser]);
+  const filteredMessages = useMemo(() => {
+    return messages.filter(
+      (msg) =>
+        msg.user.name === selectedUser ||
+        (msg.recipient && msg.recipient.name === selectedUser)
+    );
+  }, [messages, selectedUser]);
 
   return (
     <div className="flex flex-col h-full">
@@ -76,15 +78,15 @@ const filteredMessages = useMemo(() => {
               ←
             </Button>
             <Avatar className="h-8 w-8">
-              <AvatarImage src={selectedAvatar} alt={selectedUser} />
+              <AvatarImage src={selectedAvatar} alt={selectedUser ?? ""} />
               <AvatarFallback>
-                {selectedUser.charAt(0).toUpperCase()}
+                {selectedUser?.charAt(0).toUpperCase() ?? "?"}
               </AvatarFallback>
             </Avatar>
             <span className="font-medium">{selectedUser}</span>
           </div>
 
-          <MessageList messages={filteredMessages} />
+          <MessageList messages={filteredMessages} currentUser={currentUser} />
 
           {sendError && (
             <div className="text-red-500 text-sm text-center px-4 py-2">
