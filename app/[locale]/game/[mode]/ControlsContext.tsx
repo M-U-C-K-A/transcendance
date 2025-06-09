@@ -49,7 +49,7 @@ export const ControlsProvider: React.FC<{ children: ReactNode }> = ({ children }
   // Mettre à jour les contrôles du jeu au chargement initial
   useEffect(() => {
     updateControls(controls);
-  }, []);
+  }, [controls]);
 
   return (
     <ControlsContext.Provider value={{ controls, updateControls: handleUpdateControls }}>
@@ -64,4 +64,4 @@ export const useControls = () => {
     throw new Error('useControls must be used within a ControlsProvider');
   }
   return context;
-}; 
+};

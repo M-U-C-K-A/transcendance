@@ -200,10 +200,10 @@ export const GameUI: React.FC<{
     {/* Gagnant */}
     {winner && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
-        <motion.div 
+        <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ 
+          transition={{
             type: "spring",
             stiffness: 260,
             damping: 20,
@@ -211,7 +211,7 @@ export const GameUI: React.FC<{
           }}
           className="bg-background px-8 py-6 rounded-lg shadow-lg flex flex-col items-center"
         >
-          <motion.span 
+          <motion.span
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -219,7 +219,7 @@ export const GameUI: React.FC<{
           >
             🏆 {winner} a gagné !
           </motion.span>
-          <motion.div 
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}

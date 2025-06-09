@@ -8,7 +8,6 @@ import { useI18n } from "@/i18n-client"
 import { LogIn } from "lucide-react"
 import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
 import { ProfileEditDialog } from "../profile-edit-dialog"
-import { useAvatarFromJWT } from "@/hooks/use-avatar-from-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 interface HeaderProps {
