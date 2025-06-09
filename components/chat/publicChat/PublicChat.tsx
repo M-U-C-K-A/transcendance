@@ -50,8 +50,8 @@ export function PublicChat({
   currentUser,
 }: PublicChatProps) {
   return (
-    <div className="flex flex-col h-full">
-      <MessageList messages={messages} currentUser={currentUser} />
+    <div className="flex flex-col h-full justify-between">
+      <MessageList messages={messages} currentUser={currentUser} className="max-h-[520px]"/>
       <MessageInput
         value={newMessage}
         onChange={onNewMessageChange}

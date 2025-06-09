@@ -170,9 +170,9 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
         setActiveTab(val as Tab);
         if (val === "public") setSelectedPrivateUser(null);
       }}
-      className="h-full flex flex-col"
+      className="h-full flex flex-col hoverflow-y-hidden"
     >
-      <TabsList className="grid grid-cols-2">
+      <TabsList className="grid grid-cols-2 w-full">
         <TabsTrigger value="public">Public</TabsTrigger>
         <TabsTrigger value="private">Privé</TabsTrigger>
       </TabsList>

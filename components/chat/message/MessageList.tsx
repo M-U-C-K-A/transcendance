@@ -26,6 +26,7 @@ type MessageListProps = {
     isRead: boolean;
   }>;
   currentUser: string;
+  className?: string;
 };
 
 /**
@@ -34,8 +35,9 @@ type MessageListProps = {
  * @param {Object} props - The component props.
  * @param {Array} props.messages - The list of messages to display, each containing an id, user details, text, and timestamp.
  * @param {string} props.currentUser - The name of the current user viewing the message list.
+ * @param {string} props.className - Additional CSS classes to apply to the message list container.
  */
-export function MessageList({ messages, currentUser }: MessageListProps) {
+export function MessageList({ messages, currentUser, className = "" }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -47,7 +49,7 @@ export function MessageList({ messages, currentUser }: MessageListProps) {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto mb-4 p-4 space-y-4 max-h-[600px] border-b-1 [&::-webkit-scrollbar]:w-2]">
+    <div className={`flex-1 overflow-y-auto space-y-4 [&::-webkit-scrollbar]:w-2 ${className}`}>
       {messages.map((message) => (
         <Message key={message.id} message={message} currentUser={currentUser} />
       ))}
