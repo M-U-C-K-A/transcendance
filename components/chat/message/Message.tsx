@@ -31,24 +31,55 @@ type MessageProps = {
     isPrivate: boolean;
     isRead: boolean;
   };
+  currentUser: string;
 };
 
-export function Message({ message }: MessageProps) {
+const formatUser = (user: {
+  id: number | null;
+  name: string | null;
+  avatar: string | null;
+  win: number | null;
+  lose: number | null;
+  elo: number | null;
+}): {
+  id: number;
+  name: string;
+  avatar: string;
+  win: number;
+  lose: number;
+  elo: number;
+} => {
+  return {
+    id: user.id ?? 0,
+    name: user.name ?? "Unknown",
+    avatar: user.avatar ?? "",
+    win: user.win ?? 0,
+    lose: user.lose ?? 0,
+    elo: user.elo ?? 1000,
+  };
+};
+
+export function Message({ message, currentUser }: MessageProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
+
+  const isSender = message.user.name === currentUser;
+
+  let displayUser = message.user;
+  if (message.isPrivate && !isSender && message.recipient) {
+    displayUser = formatUser(message.recipient);
+  }
 
   return (
     <div className="flex items-start gap-3">
       <HoverCard>
         <HoverCardTrigger asChild>
-          <Link href={`/profile/${message.user.id}`}>
+          <Link href={`/profile/${displayUser.id}`}>
             <Avatar className="h-8 w-8 cursor-pointer">
-              <AvatarImage src={message.user.avatar} alt={message.user.name} />
+              <AvatarImage src={displayUser.avatar} alt={displayUser.name} />
               <AvatarFallback>
-                {message.user.name
-                  ? message.user.name.charAt(0).toUpperCase()
-                  : "?"}
+                {displayUser.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Link>
@@ -56,24 +87,22 @@ export function Message({ message }: MessageProps) {
         <HoverCardContent className="w-80">
           <div className="flex justify-between space-x-4">
             <Avatar>
-              <AvatarImage src={message.user.avatar} />
+              <AvatarImage src={displayUser.avatar} />
               <AvatarFallback>
-                {message.user.name
-                  ? message.user.name.charAt(0).toUpperCase()
-                  : "?"}
+                {displayUser.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
               <Link
-                href={`/profile/${message.user.id}`}
+                href={`/profile/${displayUser.id}`}
                 className="text-sm font-semibold text-foreground hover:underline"
               >
-                {message.user.name}
+                {displayUser.name}
               </Link>
               <div className="flex items-center pt-2">
                 <CalendarDays className="mr-2 h-4 w-4 opacity-70" />
                 <span className="text-xs text-muted-foreground">
-                  Victoires: {message.user.win} | Défaites: {message.user.lose} | Elo: {message.user.elo}
+                  Victoires: {displayUser.win} | Défaites: {displayUser.lose} | Elo: {displayUser.elo}
                 </span>
               </div>
             </div>
@@ -84,10 +113,10 @@ export function Message({ message }: MessageProps) {
       <div className="flex-1">
         <div className="flex items-center gap-2">
           <Link
-            href={`/profile/${message.user.id}`}
+            href={`/profile/${displayUser.id}`}
             className="font-medium text-foreground hover:underline"
           >
-            {message.user.name}
+            {displayUser.name}
           </Link>
           <span className="text-xs text-muted-foreground">
             {formatTime(message.timestamp)}
