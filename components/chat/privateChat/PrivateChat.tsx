@@ -5,6 +5,7 @@ import { MessageInput } from "../message/MessageInput";
 import { PrivateConversationList } from "./PrivateConversationList";
 import { Conversation, privateMessage } from "./type";
 import { useMemo } from "react";
+import { ArrowLeft } from "lucide-react";
 
 interface PrivateChatProps {
   messages: privateMessage[];
@@ -44,7 +45,7 @@ export function PrivateChat({
   );
   const selectedAvatar = selectedConversation
     ? `/profilepicture/${selectedConversation.id}.webp`
-    : "/default-avatar.webp";
+    : "/profilepicture/0.webp";
 
   const filteredMessages = useMemo(() => {
     return messages.filter(
@@ -55,7 +56,7 @@ export function PrivateChat({
   }, [messages, selectedUser]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full justify-between">
       {!selectedUser ? (
         <PrivateConversationList
           conversations={conversations}
@@ -67,7 +68,7 @@ export function PrivateChat({
         />
       ) : (
         <>
-          <div className="flex items-center gap-3 p-4 border-b">
+          <div className="flex items-center gap-3 p-4 border-b h-[70px]">
             <Button
               variant="ghost"
               size="icon"
@@ -75,7 +76,7 @@ export function PrivateChat({
               className="h-8 w-8"
               aria-label="Retour"
             >
-              ←
+              <ArrowLeft className="h-4 w-4" />
             </Button>
             <Avatar className="h-8 w-8">
               <AvatarImage src={selectedAvatar} alt={selectedUser ?? ""} />
@@ -86,7 +87,7 @@ export function PrivateChat({
             <span className="font-medium">{selectedUser}</span>
           </div>
 
-          <MessageList messages={filteredMessages} currentUser={currentUser} />
+          <MessageList messages={filteredMessages} currentUser={currentUser} className="max-h-[450px]"/>
 
           {sendError && (
             <div className="text-red-500 text-sm text-center px-4 py-2">

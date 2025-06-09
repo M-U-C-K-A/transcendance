@@ -24,7 +24,7 @@ type MessageInputProps = {
 export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrivez un message..." }: MessageInputProps)
 {
 	return (
-		<form onSubmit={onSubmit} className="flex gap-2 p-4 pt-2 items-center">
+		<form onSubmit={onSubmit} className="flex gap-2 p-2 items-center border-t-1 w-full">
 			<Invitation/>
 			<Input
 				placeholder={placeholder}
