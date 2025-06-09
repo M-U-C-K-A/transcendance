@@ -16,6 +16,7 @@
     "docker:build": "docker compose up --build"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@auth/core": "^0.39.1",
     "@babylonjs/core": "^6.0.0",
     "@babylonjs/gui": "^6.0.0",

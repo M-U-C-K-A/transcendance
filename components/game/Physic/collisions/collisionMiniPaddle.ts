@@ -14,7 +14,8 @@ export function collideMiniPaddle(
   allHitSounds: Sound[],
   stamina?: { player1: number; player2: number },
   setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean }
+  superPad?: { player1: boolean; player2: boolean },
+  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision mini-paddle
   if (
@@ -40,10 +41,10 @@ export function collideMiniPaddle(
       const dirAfter = new Vector3(dirX, 0, dirZ).normalize();
       const newSpeed = currentSpeed * SPEED_INCREMENT * 4; // Vitesse x4 si superPad est actif
       const newVelocity = dirAfter.scale(newSpeed);
-      playRandomCollisionSound(allHitSounds);
+      playRandomCollisionSound(allHitSounds, volume);
       return { newVelocity, newSpeed };
     }
-    // Calcul d’un angle en [-π/4, +π/4] selon la position X relative
+    // Calcul d'un angle en [-π/4, +π/4] selon la position X relative
     const relativeX = (ball.position.x - miniPaddle.position.x) / 2;
     const bounceAngle = relativeX * (Math.PI / 4);
     const dirX = Math.sin(bounceAngle);
@@ -51,7 +52,7 @@ export function collideMiniPaddle(
     const dirAfter = new Vector3(dirX, 0, dirZ).normalize();
     const newSpeed = currentSpeed * SPEED_INCREMENT;
     const newVelocity = dirAfter.scale(newSpeed);
-    playRandomCollisionSound(allHitSounds);
+    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed };
   }
   return null;

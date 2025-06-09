@@ -38,7 +38,10 @@ export const initgamePhysic = (
   setSuperPad: SetSuperPadFunction,
   enableSpecial?: boolean,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
-  touchHistory?: TouchHistory[]
+  touchHistory?: TouchHistory[],
+  volumeRef?: React.RefObject<number>,
+  enableAcceleration: boolean = true,
+  speedIncrement: number = 0.009
 ): (() => void) => {
   const {
     ball,
@@ -291,10 +294,11 @@ export const initgamePhysic = (
     }
 
     // ─── Collisions & ajustement de vélocité ───────────────────────
+    if (!ball || !paddle1 || !paddle2) return;
     const collisionResult = handleCollisions(
-      ball,
-      paddle1,
-      paddle2,
+      ball as Mesh,
+      paddle1 as Mesh,
+      paddle2 as Mesh,
       miniPaddle,
       bumperLeft,
       bumperRight,
@@ -312,13 +316,16 @@ export const initgamePhysic = (
       leftTriOuterRight,
       stamina,
       setStamina,
-      superPadRef ? superPadRef.current : undefined
+      superPadRef ? superPadRef.current : undefined,
+      volumeRef?.current ?? 0.5,
+      enableAcceleration ? speedIncrement : 0
     );
+    if (!collisionResult) return;
     ballV = collisionResult.newVelocity;
     currentSpeed = collisionResult.newSpeed;
 
     // ─── Gestion du score (resetBall appelle startCountdownWrapper) ──
-    handleScoring(ball, scoreLocal, gameRefs.setScore, gameRefs.setWinner, resetBall, gameRefs);
+    handleScoring(ball, scoreLocal, gameRefs.setScore, gameRefs.setWinner, resetBall, gameRefs, volumeRef?.current ?? 0.5);
   });
 
   // Premier countdown avant le service initial

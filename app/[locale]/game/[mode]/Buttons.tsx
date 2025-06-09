@@ -19,6 +19,8 @@ interface GameUIProps {
   MapStyle: "classic" | "red" | "neon";
   enableMaluses: boolean;
   enableSpecial: boolean;
+  enableAcceleration: boolean;
+  speedIncrement: number;
 }
 
 export default function Buttons({
@@ -39,6 +41,8 @@ export default function Buttons({
   MapStyle,
   enableMaluses,
   enableSpecial,
+  enableAcceleration,
+  speedIncrement
 }: GameUIProps) {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
@@ -118,6 +122,9 @@ export default function Buttons({
         MapStyle={MapStyle}
         enableMaluses={enableMaluses}
         enableSpecial={enableSpecial}
+        volume={volume}
+        enableAcceleration={enableAcceleration}
+        speedIncrement={speedIncrement}
       />
     </div>
   );

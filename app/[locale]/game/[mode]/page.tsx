@@ -121,6 +121,9 @@ export default function Page() {
   // ──────────────────────────────────────────────────────────────────
   const [cameraKey, setCameraKey] = useState(0);
 
+  const [enableAcceleration, setEnableAcceleration] = useState(false);
+  const [speedIncrement, setSpeedIncrement] = useState(0.009);
+
   return (
     <ControlsProvider>
       {/* HEADER */}
@@ -150,6 +153,10 @@ export default function Page() {
               setEnableMaluses={setEnableMaluses}
               enableSpecial={enableSpecial}
               setEnableSpecial={setEnableSpecial}
+              enableAcceleration={enableAcceleration}
+              setEnableAcceleration={setEnableAcceleration}
+              speedIncrement={speedIncrement}
+              setSpeedIncrement={setSpeedIncrement}
             />
           ) : (
             <Buttons
@@ -170,6 +177,8 @@ export default function Page() {
               MapStyle={MapStyle || "classic"}
               enableMaluses={enableMaluses}
               enableSpecial={enableSpecial}
+              enableAcceleration={enableAcceleration}
+              speedIncrement={speedIncrement}
             />
           )}
         </div>

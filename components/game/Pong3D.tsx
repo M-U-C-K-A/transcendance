@@ -1,4 +1,3 @@
-// src/Pong3D.tsx
 import { useEffect, useRef, useState } from "react";
 import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Engine, Scene, Color3, Vector3, Color4, Mesh } from "@babylonjs/core";
@@ -16,7 +15,10 @@ export default function Pong3D({
   resetCamFlag,
   enableSpecial = false,
   enableMaluses = false,
-}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean }) {
+  volume = 0.2,
+  enableAcceleration = true,
+  speedIncrement = 0.009,
+}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, enableAcceleration?: boolean, speedIncrement?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const sceneRef = useRef<Scene | null>(null);
@@ -34,6 +36,9 @@ export default function Pong3D({
   const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
   const [superPad, setSuperPad] = useState({ player1: false, player2: false });
   const touchHistory: TouchHistory[] = [];
+  const [showGoal, setShowGoal] = useState(false);
+  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
+  const prevScore = useRef(score);
 
   // ─── Références pour synchroniser l'état ────────────────────
   const scoreRef = useRef(score);
@@ -41,12 +46,33 @@ export default function Pong3D({
   const countdownRef = useRef(countdown);
   const isPausedRef = useRef(isPaused);
   const superPadRef = useRef(superPad);
+  const volumeRef = useRef(volume);
 
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { winnerRef.current = winner; }, [winner]);
   useEffect(() => { countdownRef.current = countdown; }, [countdown]);
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { superPadRef.current = superPad; }, [superPad]);
+  useEffect(() => { volumeRef.current = volume; }, [volume]);
+
+  useEffect(() => {
+    if (
+      score.player1 !== prevScore.current.player1 ||
+      score.player2 !== prevScore.current.player2
+    ) {
+      // Détection du type de score
+      const diff1 = score.player1 - prevScore.current.player1;
+      const diff2 = score.player2 - prevScore.current.player2;
+      if ((diff1 > 0 && diff2 === 0) || (diff2 > 0 && diff1 === 0)) {
+        setLastScoreType('goal');
+      } else if ((diff1 < 0 && diff2 === 0) || (diff2 < 0 && diff1 === 0)) {
+        setLastScoreType('malus');
+      }
+      setShowGoal(true);
+      setTimeout(() => setShowGoal(false), 700);
+      prevScore.current = { ...score };
+    }
+  }, [score]);
 
   // ─── Handlers ───────────────────────────────────────────────
   const handleSetIsPaused = (paused: boolean) => {
@@ -81,6 +107,8 @@ export default function Pong3D({
       setIsPaused,
       controls,
       touchHistory,
+      superPad,
+      stamina,
     };
 
     // 4) Initialisation de la physique
@@ -93,7 +121,10 @@ export default function Pong3D({
       setSuperPad,
       enableSpecial,
       superPadRef,
-      touchHistory
+      touchHistory,
+      volumeRef,
+      enableAcceleration,
+      speedIncrement
     );
 
     // 5) Initialiser le système de Malus si activé
@@ -121,7 +152,7 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, controls]);
 
   // Reset de la caméra
   useEffect(() => {
@@ -140,6 +171,20 @@ export default function Pong3D({
     }
   }, [paddle1Color, paddle2Color]);
 
+  // Ajout du son d'applaudissements
+  useEffect(() => {
+    if (winner) {
+      const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
+      applause.volume = 0.7;
+      applause.play();
+    }
+  }, [winner]);
+
+  // S'assurer que volumeRef.current est mis à jour à chaque changement de volume
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
+
   return (
     <div className="relative w-full h-full">
       <canvas ref={canvasRef} className="w-full h-full" />
@@ -154,6 +199,8 @@ export default function Pong3D({
         stamina={enableSpecial ? stamina : { player1: 0, player2: 0 }}
         superPad={enableSpecial ? superPad : { player1: false, player2: false }}
         enableSpecial={enableSpecial}
+        showGoal={showGoal}
+        lastScoreType={lastScoreType}
       />
     </div>
   );
