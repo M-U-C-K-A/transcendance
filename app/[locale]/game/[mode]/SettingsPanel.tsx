@@ -53,8 +53,8 @@ export default function SettingsPanel({
     <div className="bg-card dark:bg-zinc-900 dark:text-white p-10 rounded-xl shadow-lg w-full max-w-2xl mx-auto space-y-10">
       {/* Intègre le composant pour le choix du style du sol */}
       <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4">
-        <MapChoice 
-          MapStyle={MapStyle} 
+        <MapChoice
+          MapStyle={MapStyle}
           setMapStyle={setMapStyle}
           enableMaluses={enableMaluses}
           setEnableMaluses={setEnableMaluses}
@@ -85,7 +85,7 @@ export default function SettingsPanel({
             onChange={setEnableAcceleration}
             className={`${enableAcceleration ? 'bg-green-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full`}
           >
-            <span className="sr-only">Activer l'accélération</span>
+            <span className="sr-only">Activer l&apos;accélération</span>
             <span
               className={`${enableAcceleration ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
             />
@@ -93,7 +93,7 @@ export default function SettingsPanel({
         </div>
         {enableAcceleration && (
           <div className="flex flex-col gap-2">
-            <label htmlFor="speedIncrement">Intensité de l'accélération : {(speedIncrement * 100).toFixed(1)}%</label>
+            <label htmlFor="speedIncrement">Intensité de l&apos;accélération : {(speedIncrement * 100).toFixed(1)}%</label>
             <input
               id="speedIncrement"
               type="range"

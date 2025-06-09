@@ -75,8 +75,8 @@ export function UserProfile({ locale }: { locale: string }) {
 				<div className="flex gap-2 mb-4">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
 					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
-					<Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-						{user.onlineStatus ? 'En ligne' : 'Hors ligne'}
+					<Badge variant={user.onlineStatus ? "online" : "offline"}>
+  						{user.onlineStatus ? "En ligne" : "Hors ligne"}
 					</Badge>
 				</div>
 			</CardContent>

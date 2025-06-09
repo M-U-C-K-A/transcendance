@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Button } from "../../../../components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "../../../../components/ui/tooltip";
 import { Toggle } from "../../../../components/ui/toggle";
+import Image from "next/image";
 
 interface MapChoiceProps {
   MapStyle: "classic" | "red" | "neon" | null;
@@ -12,7 +13,16 @@ interface MapChoiceProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
 }
 
-const maps = [
+type MapKey = "classic" | "red" | "neon";
+
+interface Map {
+  key: MapKey;
+  label: string;
+  img: string;
+  buttonVariant: string;
+}
+
+const maps: Map[] = [
   {
     key: "classic",
     label: "Classic",
@@ -33,12 +43,12 @@ const maps = [
   },
 ];
 
-export default function MapChoice({ 
-  MapStyle, 
-  setMapStyle, 
-  enableMaluses, 
-  setEnableMaluses, 
-  enableSpecial, 
+export default function MapChoice({
+  MapStyle,
+  setMapStyle,
+  enableMaluses,
+  setEnableMaluses,
+  enableSpecial,
   setEnableSpecial
 }: MapChoiceProps) {
   return (
@@ -48,7 +58,9 @@ export default function MapChoice({
       <div className="flex justify-center items-end space-x-8 mt-4">
         {maps.map((map) => (
           <div key={map.key} className="flex flex-col items-center">
-            <img
+            <Image
+              width={200}
+              height={200}
               src={map.img}
               alt={map.label}
               className={`w-40 h-28 object-cover rounded-lg border-4 mb-2
@@ -63,8 +75,8 @@ export default function MapChoice({
                 }`}
             />
             <Button
-              variant={map.buttonVariant as any}
-              onClick={() => setMapStyle(map.key as any)}
+              variant={map.buttonVariant as "classic" | "hell" | "neon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined}
+              onClick={() => setMapStyle(map.key)}
               className={`mt-1 w-32 text-center ${MapStyle === map.key ? "scale-105 shadow-lg" : "opacity-80"}`}
             >
               {map.label}
@@ -93,8 +105,8 @@ export default function MapChoice({
               <div className="space-y-2">
                 <h4 className="font-semibold">Système de Malus</h4>
                 <p className="text-sm text-muted-foreground">
-                  Un Malus "🟥" apparaît toutes les 15 secondes sur la map.<br />
-                  Le toucher retire 1 point à l'adversaire !
+                  Un Malus &quot;🟥&quot; apparaît toutes les 15 secondes sur la map.<br />
+                  Le toucher retire 1 point à l&apos;adversaire !
                 </p>
                 <p className="text-sm text-red-400 font-medium">
                   ⚠️ Arriver à -5 points signifie que vous avez perdu !
@@ -123,8 +135,8 @@ export default function MapChoice({
                 <h4 className="font-semibold">Coup Spécial</h4>
                 <p className="text-sm text-muted-foreground">
                   Chaque joueur remplit une barre en touchant la balle.<br />
-                  Après 10 frappes, vous pouvez activer un "coup spécial" :<br />
-                  votre pad grossit et renvoie la balle plus vite. L'effet dure 5 secondes.
+                  Après 10 frappes, vous pouvez activer un &quot;coup spécial&quot; :<br />
+                  votre pad grossit et renvoie la balle plus vite. L&apos;effet dure 5 secondes.
                 </p>
               </div>
             </TooltipContent>

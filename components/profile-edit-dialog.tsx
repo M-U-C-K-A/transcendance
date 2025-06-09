@@ -24,6 +24,7 @@ import { useBioFromJWT } from "@/hooks/use-bio-from-jwt"
 import { useJWT } from "@/hooks/use-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 import { toast } from "sonner"
+import Image from "next/image"
 
 // Zod schema
 const ProfileSchema = z.object({
@@ -216,7 +217,10 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
               {selectedFile && (
                 <div className="mt-2 flex items-center justify-between p-2 bg-muted rounded">
                   <div className="flex items-center gap-2">
-                    <img
+                    <Image
+                      width={40}
+                      height={40}
+                      quality={100}
                       src={URL.createObjectURL(selectedFile)}
                       alt="Preview"
                       className="h-10 w-10 object-cover rounded"

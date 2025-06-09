@@ -20,20 +20,20 @@ export function QuickMatchContent({ locale }: GameTabsContentProps) {
   const t = useI18n()
 
   return (
-	<Card className="flex h-full min-h-[650px] max-h-[650px] flex-col justify-between border bg-card py-6 shadow-sm">
+	<Card className="overflow-hidden flex h-full min-h-[650px] max-h-[650px] flex-col justify-between border bg-card py-6 shadow-sm">
 	  <CardHeader>
 		<CardTitle>{t("dashboard.game.quickMatch")}</CardTitle>
 		<CardDescription className="text-muted-foreground">
 		  {t("dashboard.game.quickMatchDesc")}
 		</CardDescription>
 	  </CardHeader>
-	  <CardContent>
-		<div className="mb-6 flex aspect-video items-center justify-center rounded-lg bg-muted">
-		  <div className="text-center">
-			<PlayCircle className="mx-auto mb-4 h-16 w-16 text-primary" />
+	  <CardContent className="flex w-full">
+		<div className="w-full mb-6 flex overflow-hidden aspect-video items-center justify-center rounded-lg bg-muted">
+			<div className="text-center">
+				<PlayCircle className="mx-auto mb-4 h-16 w-16 text-primary" />
 			<h3 className="mb-2 text-xl font-bold">{t("dashboard.game.readyToPlay")}</h3>
 			<p className="mb-4 text-muted-foreground">{t("dashboard.game.startDesc")}</p>
-		  </div>
+			</div>
 		</div>
 		{/*
 		<video className="w-full rounded-md" autoPlay loop muted>

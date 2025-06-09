@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Users, SquareArrowOutUpRight, Trash } from "lucide-react"
+import { Users, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState } from "react"
