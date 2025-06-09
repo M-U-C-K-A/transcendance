@@ -22,6 +22,21 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 			throw new Error ("User not found , Could not send message")
 		}
 
+		const isBlocked = await Prisma.block.findFirst({
+			where: {
+				OR: [
+				{ id1: userInfo.id, id2: sender },
+				{ id1: sender, id2: userInfo.id }
+				],
+			},
+		});
+
+		if (isBlocked?.id1 == sender) {
+			throw new Error ("You blocked this user")
+		} else if (isBlocked?.id2 == sender) {
+			throw new Error ("This user blocked you")
+		}
+
 		recipientId = userInfo.id
 		isGeneral = false
 	}
