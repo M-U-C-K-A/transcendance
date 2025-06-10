@@ -1,13 +1,98 @@
+import cors from '@fastify/cors';
+import Fastify from 'fastify';
+import fastifyJwt from '@fastify/jwt'
+import profileRoute from './routes/profile/usersprofile';
+import health from './routes/health';
+import loginRoute from './routes/auth/login';
+import registerRoute from './routes/auth/register';
+import sendMessageRoute from './routes/chat/sendMessage';
+import tournamentRoutes from './routes/tournament';
+import { loggerConfig } from './config/logger';
+import friendListRoute from './routes/friends/friendListRoute';
+import leaderboardRoute from './routes/user/leaderboardRoute';
+import friendRequestRoute from './routes/friends/friendRequestRoute';
+import meProfile from './routes/profile/meProfile';
+import editProfileRoute from './routes/profile/editProfile';
+import acceptRequestRoute from './routes/friends/treatRequestRoute';
+import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
+import removeFriendRoute from './routes/friends/removeFriendRoute';
+import newMessageRoute from './routes/chat/newMessageRoute';
+import createMatchRoute from './routes/match/createMatchRoute';
+import joinMatchRoute from './routes/match/joinMatchRoute';
+import matchResultRoute from './routes/match/matchResultRoute';
+import blockUserRoute from './routes/chat/blockUserRoute';
+import generalChatRoute from './routes/chat/generalChatRoute';
+import privateChatRoute from './routes/chat/privateChatRoute';
+import matchListRoute from './routes/match/matchListRoute';
+import { googleLogin } from './routes/auth/google';
+
+const dotenv = require('dotenv')
+dotenv.config();
+
+const app = Fastify({ logger: loggerConfig,
+  bodyLimit: 20 * 1024 * 1024 });
+
+app.register(cors, {
+	origin: true,
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	credentials: true,
+	exposedHeaders: ['Authorization'],
+});
+
+app.register(fastifyJwt, {
+	secret: process.env.JWT_SECRET || 'test',
+})
+
+
+async function main() {
+	const port = 3001;
+	await app.register(profileRoute);
+	await app.register(health);
+	await app.register(registerRoute);
+	await app.register(loginRoute);
+	await app.register(generalChatRoute);
+	await app.register(privateChatRoute)
+	await app.register(editProfileRoute)
+	await app.register(sendMessageRoute);
+	await app.register(tournamentRoutes);
+	await app.register(friendListRoute)
+	await app.register(leaderboardRoute)
+	await app.register(friendRequestRoute)
+	await app.register(meProfile)
+	await app.register(acceptRequestRoute)
+	await app.register(seeFriendRequestRoute)
+	await app.register(removeFriendRoute)
+	await app.register(newMessageRoute)
+	await app.register(createMatchRoute)
+	await app.register(joinMatchRoute)
+	await app.register(matchResultRoute)
+	await app.register(blockUserRoute)
+	await app.register(matchListRoute)
+	await app.register(googleLogin)
+
+	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
+		if (err) {
+			console.log(err);
+			process.exit(1);
+		}
+		console.log(`Serveur démarré sur ${address}`);
+	});
+}
+
+main();
+
+
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { z } from 'zod';
-import { Eye, EyeOff } from 'lucide-react'; // Import des icônes d'œil
+import { Eye, EyeOff } from 'lucide-react';
 
 const loginSchema = z.object({
 	email: z.string().email({ message: 'Email invalide' }),
@@ -21,8 +106,26 @@ export function Login({
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
-	const [showPassword, setShowPassword] = useState(false); // État pour afficher/cacher le mot de passe
+	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	useEffect(() => {
+		const errorFromUrl = searchParams.get('error');
+		if (errorFromUrl === 'google_login_failed') {
+			setError("Échec de la connexion avec Google");
+			const newUrl = window.location.pathname;
+			window.history.replaceState(null, '', newUrl);
+		}
+
+		const tokenFromUrl = searchParams.get('token');
+		if (tokenFromUrl) {
+			localStorage.setItem('token', tokenFromUrl);
+			const newUrl = window.location.pathname;
+			window.history.replaceState(null, '', newUrl);
+			router.push('/en/dashboard');
+		}
+	}, [searchParams, router]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -41,7 +144,7 @@ export function Login({
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ email, pass:password }),
+				body: JSON.stringify({ email, pass: password }),
 			});
 
 			const data = await response.json();
@@ -59,11 +162,11 @@ export function Login({
 
 	const handleGoogleLogin = async () => {
 		try {
-			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${
-				process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
-			}&redirect_uri=${encodeURIComponent(
-				process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || 'http://localhost:3001/auth/google/callback'
-			)}&response_type=code&scope=${encodeURIComponent('email profile')}`;
+			const clientId = process.env.GOOGLE_CLIENT_ID;
+			const redirectUri = encodeURIComponent('http://localhost:3001/auth/google/callback');
+			const scope = encodeURIComponent('email profile');
+
+			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
 
 			window.location.href = googleAuthUrl;
 		} catch {

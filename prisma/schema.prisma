@@ -19,7 +19,7 @@ model User {
 	username		String		@unique
 	alias			String?
 	email			String  @unique
-	pass			String
+	pass			String?
 	avatar			String?
 	bio				String?
 	onlineStatus	Boolean	@default(false)
