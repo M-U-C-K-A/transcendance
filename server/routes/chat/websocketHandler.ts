@@ -1,15 +1,13 @@
+import changeOnlineStatus from '@/server/request/profile/changeOnlineStatus';
 import { FastifyRequest } from 'fastify';
 import { WebSocket } from 'ws';
 
-// Stockage des connexions
 const connections = new Map<number, Set<WebSocket>>();
 
-// Interface pour typer la query string
 interface ChatQuery {
   token?: string;
 }
 
-// Interface pour le payload JWT attendu
 interface JwtPayload {
   id: number;
   [key: string]: any;
@@ -44,28 +42,28 @@ export async function chatWebSocketHandler(
 	const userId = decoded.id;
 
 	console.log(`✅ WebSocket connecté pour l'utilisateur ID ${userId}`);
-
 	// Stocker la connexion
 	if (!connections.has(userId)) {
-	  connections.set(userId, new Set());
+		await changeOnlineStatus(userId, true)
+		connections.set(userId, new Set());
 	}
 	connections.get(userId)!.add(connection);
 
 	console.log(`📡 Total de connexions pour l'utilisateur ${userId}: ${connections.get(userId)?.size}`);
 
-	// Nettoyage à la déconnexion
-	connection.on('close', () => {
-	  const userConnections = connections.get(userId);
-	  userConnections?.delete(connection);
-	  if (userConnections?.size === 0) {
-		connections.delete(userId);
-	  }
-	  console.log(`❌ Déconnexion WebSocket pour l'utilisateur ${userId}`);
+		connection.on('close', () => {
+		const userConnections = connections.get(userId);
+		userConnections?.delete(connection);
+		if (userConnections?.size === 0) {
+			connections.delete(userId);
+		}
+		changeOnlineStatus(userId, false)
+		console.log(`❌ Déconnexion WebSocket pour l'utilisateur ${userId}`);
 	});
 
   } catch (error) {
 	console.error('❌ Échec d\'authentification WebSocket :', error);
-	connection.close(1008, 'Authentification échouée');
+	connection.close(403, 'Authentification échouée');
   }
 }
 
