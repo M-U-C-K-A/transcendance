@@ -15,7 +15,7 @@ export async function downloadImage(url: string, filename: string) {
 
 	const buffer = await res.buffer();
 
-	const outputDir = path.join(process.cwd(), 'public/profilepicture');
+	const outputDir = path.join(process.cwd(), 'public', 'profilepicture');
 	await mkdir(outputDir, { recursive: true });
 
 	const filePath = path.join(outputDir, filename);
@@ -26,6 +26,7 @@ export async function downloadImage(url: string, filename: string) {
 
 	return (`/profilepicture/${filename}`);
 }
+
 
 export async function googleConnexion(email: string, username: string, googleId: string, avatar: string) {
 

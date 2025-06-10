@@ -25,8 +25,8 @@ import generalChatRoute from './routes/chat/generalChatRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google';
+import dotenv from 'dotenv';
 
-const dotenv = require('dotenv')
 dotenv.config();
 
 const app = Fastify({ logger: loggerConfig,
