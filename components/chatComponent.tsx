@@ -187,7 +187,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
             sendMessage();
           }}
           placeholder={placeholder}
-          currentUser={currentUser} // ✅ AJOUT ICI
+          currentUser={currentUser}
         />
       </TabsContent>
 

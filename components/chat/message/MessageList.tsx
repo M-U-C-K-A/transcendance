@@ -2,31 +2,31 @@ import { useRef, useEffect } from "react";
 import { Message } from "./Message";
 
 type MessageListProps = {
-  messages: Array<{
-    id: number;
-    user: {
-      id: number;
-      name: string;
-      avatar: string;
-      win: number;
-      lose: number;
-      elo: number;
-    };
-    recipient?: {
-      id: number | null;
-      name: string | null;
-      avatar: string | null;
-      win: number | null;
-      lose: number | null;
-      elo: number | null;
-    };
-    text: string;
-    timestamp: Date;
-    isPrivate: boolean;
-    isRead: boolean;
-  }>;
-  currentUser: string;
-  className?: string;
+	messages: Array<{
+		id: number;
+		user: {
+			id: number;
+			name: string;
+			avatar: string;
+			win: number;
+			lose: number;
+			elo: number;
+		};
+		recipient?: {
+			id: number | null;
+			name: string | null;
+			avatar: string | null;
+			win: number | null;
+			lose: number | null;
+			elo: number | null;
+		};
+		text: string;
+		timestamp: Date;
+		isPrivate: boolean;
+		isRead: boolean;
+	}>;
+	currentUser: string;
+	className?: string;
 };
 
 /**
@@ -38,22 +38,22 @@ type MessageListProps = {
  * @param {string} props.className - Additional CSS classes to apply to the message list container.
  */
 export function MessageList({ messages, currentUser, className = "" }: MessageListProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages]);
 
-  return (
-    <div className={`flex-1 overflow-y-auto space-y-4 [&::-webkit-scrollbar]:w-2 ${className}`}>
-      {messages.map((message) => (
-        <Message key={message.id} message={message} currentUser={currentUser} />
-      ))}
-      <div ref={messagesEndRef} />
-    </div>
-  );
+	return (
+		<div className={`flex-1 overflow-y-auto space-y-4 [&::-webkit-scrollbar]:w-2 ${className}`}>
+			{messages.map((message, index) => (
+			<Message key={message.id ?? index} message={message} currentUser={currentUser} />
+		))}
+			<div ref={messagesEndRef} />
+		</div>
+	);
 }
