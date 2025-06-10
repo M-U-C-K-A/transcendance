@@ -15,12 +15,9 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		}
 
 		try {
-			// Envoi du message dans la base de données
 			const sentMessage = await sendMessage(sender.id, data);
 
-			// Préparation de la réponse WebSocket
 			const wsMessage = {
-				id: sentMessage.id,
 				sender: {
 					id: sender.id,
 					username: sender.username,
@@ -30,19 +27,17 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 				messageType: data.messageType
 			};
 
-			// Diffusion en temps réel selon le type de message
 			if (!data.recipient) {
-				// Chat public - diffusion à tous
 				broadcastToAll({
 					type: 'NEW_PUBLIC_MESSAGE',
 					message: wsMessage
-				});
+			});
+
 			} else if (data.recipient) {
-				// Chat privé - diffusion aux deux parties
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: wsMessage
-				});
+				})
 
 				// Envoi aussi à l'expéditeur pour synchronisation
 				broadcastMessage(sender.id, {
