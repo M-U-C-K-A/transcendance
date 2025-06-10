@@ -2,32 +2,69 @@ import { FastifyInstance } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
+import { broadcastMessage, broadcastToAll } from './websocketHandler';
 
 export default async function sendMessageRoute(server: FastifyInstance) {
-	server.post('/chat/send', {preHandler: authMiddleware}, async function (request, reply) {
-	console.log("test ntm si sa marche pas")
-	const data = request.body as sendMessageData
-	const senderId = request.user as {id: number}
+	server.post('/chat/send', { preHandler: authMiddleware }, async function (request, reply) {
+		const data = request.body as sendMessageData;
+		const sender = request.user as { id: number, username: string };
 
-	if (!data)
-	{
-		console.log('No parameter passed in sendMessageRoute route')
-		return reply.code(400).send({ error: 'parameter is required' })
-	}
-
-	try {
-		await sendMessage(senderId.id, data)
-		return (reply.code(200).send({ message: "Message send succesfully"}))
-	} catch (err: any) {
-		if (err.message == 'User not found , Could not send message') {
-			return reply.code(404).send({ error: 'User not found , Could not send message' })
-		} else if (err.message == "You blocked this user") {
-			return reply.code(409).send({ error: "You blocked this user"})
-		} else if (err.message == "This user blocked you") {
-			return reply.code(409).send({ error: "This user blocked you"})
+		if (!data) {
+			console.log('No parameter passed in sendMessageRoute route');
+			return reply.code(400).send({ error: 'parameter is required' });
 		}
-		return reply.code(500).send({ error: 'Internal server error' })
-	}
-	})
-}
 
+		try {
+			// Envoi du message dans la base de données
+			const sentMessage = await sendMessage(sender.id, data);
+
+			// Préparation de la réponse WebSocket
+			const wsMessage = {
+				id: sentMessage.id,
+				sender: {
+					id: sender.id,
+					username: sender.username,
+				},
+				content: data.content,
+				sendAt: new Date().toISOString(),
+				messageType: data.messageType
+			};
+
+			// Diffusion en temps réel selon le type de message
+			if (!data.recipient) {
+				// Chat public - diffusion à tous
+				broadcastToAll({
+					type: 'NEW_PUBLIC_MESSAGE',
+					message: wsMessage
+				});
+			} else if (data.recipient) {
+				// Chat privé - diffusion aux deux parties
+				broadcastMessage(data.recipient, {
+					type: 'NEW_PRIVATE_MESSAGE',
+					message: wsMessage
+				});
+
+				// Envoi aussi à l'expéditeur pour synchronisation
+				broadcastMessage(sender.id, {
+					type: 'NEW_PRIVATE_MESSAGE',
+					message: wsMessage
+				});
+			}
+
+			return reply.code(200).send({
+				message: "Message sent successfully",
+				data: sentMessage
+			});
+
+		} catch (err: any) {
+			if (err.message === 'User not found , Could not send message') {
+				return reply.code(404).send({ error: 'User not found , Could not send message' });
+			} else if (err.message === "You blocked this user") {
+				return reply.code(403).send({ error: "You blocked this user" });
+			} else if (err.message === "This user blocked you") {
+				return reply.code(403).send({ error: "This user blocked you" });
+			}
+			return reply.code(500).send({ error: 'Internal server error' });
+		}
+	});
+}

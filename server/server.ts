@@ -26,11 +26,15 @@ import privateChatRoute from './routes/chat/privateChatRoute';
 import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google';
 import dotenv from 'dotenv';
+import fastifyWebSocket from '@fastify/websocket';
+import { chatWebSocketHandler } from '@/server/routes/chat/websocketHandler';
 
 dotenv.config();
 
 const app = Fastify({ logger: loggerConfig,
   bodyLimit: 20 * 1024 * 1024 });
+
+app.register(fastifyWebSocket);
 
 app.register(cors, {
 	origin: true,
@@ -80,3 +84,7 @@ async function main() {
 }
 
 main();
+
+app.register(async (fastify) => {
+  fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
+});
