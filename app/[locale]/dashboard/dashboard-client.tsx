@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/dashboard/Header"
 import { UserProfile } from "@/components/dashboard/UserProfile"
-import { ColleaguesList } from "@/components/dashboard/ColleaguesList"
+import { ColleaguesList } from "@/components/dashboard/Colleagues/ColleaguesList"
 import { GameTabs } from "@/components/dashboard/GameTabs"
 import { ChatSection } from "@/components/dashboard/ChatSection"
 

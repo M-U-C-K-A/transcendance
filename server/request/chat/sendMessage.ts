@@ -41,7 +41,7 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 		isGeneral = false
 	}
 
-	await Prisma.message.create({
+	const message = await Prisma.message.create({
 		data: {
 			senderId: sender,
 			recipientId: recipientId,
@@ -49,7 +49,14 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 			isGeneral: isGeneral,
 			messageType: data.messageType,
 		},
+		select: {
+			id: true,
+			senderId: true,
+			recipientId: true,
+			content: true,
+			sendAt: true,
+		},
 	});
 
-	return (true)
+	return (message)
 }

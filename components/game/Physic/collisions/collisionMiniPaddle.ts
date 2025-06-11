@@ -3,11 +3,8 @@
 
 
 import { Vector3 } from "@babylonjs/core";
-import type { Mesh } from "@babylonjs/core/Meshes/mesh";
-import type { Sound } from "@babylonjs/core/Audio/sound";
 import { SPEED_INCREMENT } from "../constants";
 import { playRandomCollisionSound } from "../sound";
-import type { SetStaminaFunction } from "../../gameTypes";
 
 export function collideMiniPaddle(
   ball: Mesh,
@@ -16,9 +13,9 @@ export function collideMiniPaddle(
   currentSpeed: number,
   allHitSounds: Sound[],
   stamina?: { player1: number; player2: number },
-  setStamina?: SetStaminaFunction,
+  setStamina?: (s: { player1: number; player2: number }) => void,
   superPad?: { player1: boolean; player2: boolean },
-  volume: number = 0.5
+  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision mini-paddle
   if (
@@ -27,10 +24,12 @@ export function collideMiniPaddle(
   ) {
     // Gestion stamina (si le mini-paddle est côté joueur 1)
     if (setStamina && stamina && stamina.player1 < 10) {
-      setStamina((prev: { player1: number; player2: number }) => ({
-        ...prev,
-        player1: Math.min(10, prev.player1 + 1)
-      }));
+      setStamina(prev => {
+        if (prev.player1 < 10) {
+          return { ...prev, player1: prev.player1 + 1 };
+        }
+        return prev;
+      });
     }
     // Gestion coup spécial (si le mini-paddle est côté joueur 1)
     if (superPad && superPad.player1) {

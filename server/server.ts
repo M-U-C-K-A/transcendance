@@ -27,7 +27,8 @@ import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google';
 import dotenv from 'dotenv';
 import fastifyWebSocket from '@fastify/websocket';
-import { chatWebSocketHandler } from '@/server/routes/chat/websocketHandler';
+import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
+import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 
 dotenv.config();
 
@@ -74,6 +75,14 @@ async function main() {
 	await app.register(matchListRoute)
 	await app.register(googleLogin)
 
+	app.register(async (fastify) => {
+		fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
+	});
+
+	app.register(async (fastify) => {
+		fastify.get('/ws/friends', { websocket: true }, friendsWebSocketHandler);
+	});
+
 	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
 			console.log(err);
@@ -85,6 +94,4 @@ async function main() {
 
 main();
 
-app.register(async (fastify) => {
-  fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
-});
+

@@ -1,7 +1,7 @@
 // input.ts
 // ----------------
 
-import { GameRefs } from "../gameTypes";
+import type { GameRefs } from "../gameTypes";
 
 export const keys = new Set<string>();
 
@@ -12,7 +12,7 @@ export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs) {
     // Coup spécial joueur 1 (touche personnalisée)
     if (
       gameRefs.controls &&
-      e.key.toLowerCase() === gameRefs.controls.current.player1Special?.toLowerCase() &&
+      e.key.toLowerCase() === gameRefs.controls.player1Special?.toLowerCase() &&
       gameRefs.triggerSuperPad
     ) {
       gameRefs.triggerSuperPad(1);
@@ -20,7 +20,7 @@ export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs) {
     // Coup spécial joueur 2 (touche personnalisée)
     if (
       gameRefs.controls &&
-      e.key.toLowerCase() === gameRefs.controls.current.player2Special?.toLowerCase() &&
+      e.key === gameRefs.controls.player2Special &&
       gameRefs.triggerSuperPad
     ) {
       gameRefs.triggerSuperPad(2);

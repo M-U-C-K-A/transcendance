@@ -2,7 +2,10 @@ import { FastifyInstance } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
-import { broadcastMessage, broadcastToAll } from './websocketHandler';
+import { broadcastMessage, broadcastToAll } from './websocketChat';
+import { PrismaClient } from "@prisma/client";
+
+const Prisma = new PrismaClient()
 
 export default async function sendMessageRoute(server: FastifyInstance) {
 	server.post('/chat/send', { preHandler: authMiddleware }, async function (request, reply) {
@@ -17,29 +20,54 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		try {
 			const sentMessage = await sendMessage(sender.id, data);
 
-			const wsMessage = {
-				sender: {
-					id: sender.id,
-					username: sender.username,
-				},
-				content: data.content,
-				sendAt: new Date().toISOString(),
-				messageType: data.messageType
-			};
-
 			if (!data.recipient) {
+				const wsMessage = {
+				id: sentMessage.id,
+				content: sentMessage.content,
+				sendAt: sentMessage,
+					sender: {
+						id: sender.id,
+						username: sender.username,
+					},
+			};
 				broadcastToAll({
 					type: 'NEW_PUBLIC_MESSAGE',
 					message: wsMessage
 			});
 
 			} else if (data.recipient) {
+				const collegueName = await Prisma.user.findFirst({
+					where: {
+						id: sentMessage.recipientId || 999999,
+					},
+					select: {
+						username: true,
+					},
+				});
+
+				const wsMessage = {
+					id: sentMessage.id,
+					content: sentMessage.content,
+					sendAt: sentMessage,
+					user: {
+						id: sender.id,
+						username: sender.username,
+					},
+					collegue: {
+						id: data.recipient,
+						username: collegueName?.username,
+					},
+					sender: {
+						id: sender.id,
+						username: sender.username,
+					},
+				}
+
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: wsMessage
 				})
 
-				// Envoi aussi à l'expéditeur pour synchronisation
 				broadcastMessage(sender.id, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: wsMessage

@@ -1,30 +1,23 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import { GameState } from "../../../../components/game/gameTypes"
+import { ControlsConfig } from "./ControlsConfig"
 import { useControls } from "./ControlsContext"
 import { motion } from "framer-motion"
-import { ControlsConfig } from "./ControlsConfig"
 
-declare global {
-  interface Window {
-    __GAME_AUDIO__?: { pause?: () => void };
-  }
-}
-
-interface GameUIProps {
-  score: { player1: number; player2: number };
-  winner: string | null;
-  countdown: number | null;
-  isPaused: boolean;
-  setIsPaused: (isPaused: boolean) => void;
-  enableMaluses: boolean;
-  MalusBarKey: number;
-  stamina: { player1: number; player2: number };
-  superPad: { player1: boolean; player2: boolean };
-  enableSpecial: boolean;
-  showGoal: boolean;
-  lastScoreType: 'goal' | 'malus';
-}
-
-export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial, showGoal, lastScoreType }) => {
+export const GameUI: React.FC<{
+  score: GameState["score"]
+  winner: GameState["winner"]
+  countdown: GameState["countdown"]
+  isPaused: GameState["isPaused"]
+  setIsPaused: (paused: boolean) => void
+  enableMaluses?: boolean
+  MalusBarKey?: number
+  stamina: { player1: number; player2: number }
+  superPad: { player1: boolean; player2: boolean }
+  enableSpecial?: boolean
+  showGoal?: boolean
+  lastScoreType?: 'goal' | 'malus'
+}> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial, showGoal, lastScoreType }) => {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const { controls } = useControls();
 
@@ -136,7 +129,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
               <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer1}s</div>
             )}
             <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
-              {displayKey(controls.player1Special)}
+              {controls.player1Special || 'E'}
             </div>
           </>
         )}
@@ -178,7 +171,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
               <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer2}s</div>
             )}
             <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
-              {displayKey(controls.player2Special)}
+              {controls.player2Special || 'ArrowLeft'}
             </div>
           </>
         )}
@@ -241,7 +234,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
             <button
               onClick={() => {
                 if (typeof window !== "undefined") {
-                  const audio = window.__GAME_AUDIO__ as { pause?: () => void };
+                  const audio = (window as any).__GAME_AUDIO__;
                   if (audio?.pause) audio.pause();
                 }
                 window.history.back();

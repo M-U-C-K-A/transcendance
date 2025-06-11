@@ -2,12 +2,6 @@
 // ----------------
 
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
-import type { GameRefs } from "../../gameTypes";
-
-interface Score {
-  player1: number;
-  player2: number;
-}
 
 // Ajout du son de but (sifflet aléatoire)
 const playGoalSound = (volume = 0.2) => {
@@ -29,76 +23,74 @@ const playApplause = (volume = 0.2) => {
   audio.play();
 };
 
-export function handleScoring(
+export const handleScoring = (
   ball: Mesh,
-  score: Score,
-  setScore: (score: Score) => void,
+  scoreLocal: { player1: number; player2: number },
+  setScore: (score: { player1: number; player2: number }) => void,
   setWinner: (winner: string | null) => void,
   resetBall: (loser: "player1" | "player2") => void,
-  gameRefs: GameRefs,
-  volume: number
-): void {
+  gameRefs: any, // on garde pour compatibilité, mais on n'utilise que les setters
+  volume: number = 0.2
+) => {
   if (ball.position.z < -20) {
     // Si le dernier marqueur était le joueur 1, c'est un malus pour le joueur 2
-    if (gameRefs.lastHitter?.current === 1) {
-      score.player2 -= 1;
-      setScore({ ...score });
+    if (gameRefs?.gameState?.lastScorer === 1) {
+      scoreLocal.player2 -= 1;
+      setScore({ ...scoreLocal });
       playGoalSound(volume);
       if (gameRefs.score.current) {
-        gameRefs.score.current = { ...score };
+        gameRefs.score.current = { ...scoreLocal };
       }
-      if (score.player2 <= -5) {
+      if (scoreLocal.player2 <= -3) {
         playApplause(volume);
         setWinner("Joueur 1");
         return;
       }
     } else {
-      score.player2 += 1;
-      setScore({ ...score });
+      scoreLocal.player2 += 1;
+      setScore({ ...scoreLocal });
       playGoalSound(volume);
       if (gameRefs.score.current) {
-        gameRefs.score.current = { ...score };
+        gameRefs.score.current = { ...scoreLocal };
       }
-      if (score.player2 >= 5) {
+      if (scoreLocal.player2 >= 5) {
         playApplause(volume);
         setWinner("Joueur 2");
         return;
       }
     }
-    if (gameRefs.lastHitter) gameRefs.lastHitter.current = 2;
+    if (gameRefs && gameRefs.gameState) gameRefs.gameState.lastScorer = 2;
     resetBall("player1");
-    if (gameRefs.lastHitter) gameRefs.lastHitter.current = null;
   }
 
   if (ball.position.z > 20) {
     // Si le dernier marqueur était le joueur 2, c'est un malus pour le joueur 1
-    if (gameRefs.lastHitter?.current === 2) {
-      score.player1 -= 1;
-      setScore({ ...score });
+    if (gameRefs?.gameState?.lastScorer === 2) {
+      scoreLocal.player1 -= 1;
+      setScore({ ...scoreLocal });
       playGoalSound(volume);
       if (gameRefs.score.current) {
-        gameRefs.score.current = { ...score };
+        gameRefs.score.current = { ...scoreLocal };
       }
-      if (score.player1 <= -5) {
+      if (scoreLocal.player1 <= -3) {
         playApplause(volume);
         setWinner("Joueur 2");
         return;
       }
     } else {
-      score.player1 += 1;
-      setScore({ ...score });
+      scoreLocal.player1 += 1;
+      setScore({ ...scoreLocal });
       playGoalSound(volume);
       if (gameRefs.score.current) {
-        gameRefs.score.current = { ...score };
+        gameRefs.score.current = { ...scoreLocal };
       }
-      if (score.player1 >= 5) {
+      if (scoreLocal.player1 >= 5) {
         playApplause(volume);
         setWinner("Joueur 1");
         return;
       }
     }
-    if (gameRefs.lastHitter) gameRefs.lastHitter.current = 1;
+    if (gameRefs && gameRefs.gameState) gameRefs.gameState.lastScorer = 1;
     resetBall("player2");
-    if (gameRefs.lastHitter) gameRefs.lastHitter.current = null;
   }
-}
+};

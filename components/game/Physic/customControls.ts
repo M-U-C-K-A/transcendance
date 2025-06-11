@@ -19,11 +19,20 @@ let currentControls: Controls = {
 };
 
 export function updateControls(newControls: Controls) {
+  // Sauvegarde des anciennes touches
+  const oldControls = { ...currentControls };
+  
   // Mise à jour des contrôles
   currentControls = newControls;
   
-  // Nettoyage des touches actuellement pressées
-  keys.clear();
+  // Suppression des anciennes touches du Set keys
+  Object.values(oldControls).forEach(key => {
+    keys.delete(key.toLowerCase());
+  });
+}
+
+export function getControls(): Controls {
+  return currentControls;
 }
 
 export function isPlayer1UpPressed(): boolean {
@@ -40,8 +49,4 @@ export function isPlayer2UpPressed(): boolean {
 
 export function isPlayer2DownPressed(): boolean {
   return keys.has(currentControls.player2Down.toLowerCase());
-}
-
-export function getCurrentControls(): Controls {
-  return { ...currentControls };
 } 

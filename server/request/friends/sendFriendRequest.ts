@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { id } from "../chat/interface";
+import { notifyFriend } from "@/server/routes/friends/websocketFriends";
 
 const Prisma = new PrismaClient()
 
 export default async function sendFriendRequest(userId: number, friendName: string) {
-	console.log(friendName)
-	console.log(userId)
 	const newFriend = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${friendName}`
@@ -24,11 +23,26 @@ export default async function sendFriendRequest(userId: number, friendName: stri
 		console.log("This user is already a friend")
 		throw new Error("This user is already a friend")
 	}
-	console.log('test')
 
 	await Prisma.$executeRaw`
 	INSERT INTO "Friends"(id1, id2)
 	VALUES (${userId}, ${newFriend[0].id})`
+
+	const currentUser = await Prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+		select: {
+			username: true,
+		},
+	});
+
+	notifyFriend(newFriend[0].id, {
+	type: "NEW_FRIEND_REQUEST",
+		from: {
+			id: userId,
+		}
+	})
 
 	return (true)
 }

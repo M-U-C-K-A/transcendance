@@ -4,7 +4,6 @@
 
 import { PADDLE_SPEED, PADDLE_BOUND_LEFT, PADDLE_BOUND_RIGHT } from "../constants";
 import { isPlayer1UpPressed, isPlayer1DownPressed, isPlayer2UpPressed, isPlayer2DownPressed } from "../customControls";
-import { Mesh } from "@babylonjs/core";
 
 export function movePaddles(paddle1: Mesh, paddle2: Mesh, deltaTime: number) {
   const moveAmount = PADDLE_SPEED * deltaTime;
