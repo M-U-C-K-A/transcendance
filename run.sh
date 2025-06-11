@@ -3,6 +3,7 @@
 # === Configuration ===
 TARGETS=(
     "http://10.12.8.6:3001/health"
+    "http://10.12.8.6:3000/en/dashboard"
 )
 LOOPS=1000           # Nombre total de requêtes (0 = infini)
 PARALLEL_REQS=10     # Requêtes simultanées

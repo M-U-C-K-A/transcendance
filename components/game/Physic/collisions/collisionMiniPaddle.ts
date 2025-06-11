@@ -13,8 +13,6 @@ export function collideMiniPaddle(
   ballV: Vector3,
   currentSpeed: number,
   allHitSounds: Sound[],
-  stamina: { player1: number; player2: number } = { player1: 0, player2: 0 },
-  setStamina?: (s: { player1: number; player2: number }) => void,
   superPad?: { player1: boolean; player2: boolean },
   volume: number = 0.5
 ): { newVelocity: Vector3; newSpeed: number } | null {

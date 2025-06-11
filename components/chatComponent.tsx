@@ -33,7 +33,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     fetchMessages,
     isLoading: loadingPublic,
     error: errorPublic
-  } = usePublicMessages(currentUser);
+  } = usePublicMessages();
 
   const {
     messages: privateMessages,
