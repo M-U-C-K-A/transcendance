@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { updateControls } from '../../../../components/game/Physic/customControls';
+import { updateControls } from "@/components/game/Physic/customControls";
 
 interface Controls {
   player1Up: string;

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { Button } from "../../../../components/ui/button";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "../../../../components/ui/tooltip";
-import { Toggle } from "../../../../components/ui/toggle";
+import { Button } from "@/components/ui/button";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Toggle } from "@/components/ui/toggle";
 import Image from "next/image";
 
 interface MapChoiceProps {
