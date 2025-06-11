@@ -1,6 +1,11 @@
+import fs from 'fs';
+import path from 'path';
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
-import fastifyJwt from '@fastify/jwt'
+import fastifyJwt from '@fastify/jwt';
+import dotenv from 'dotenv';
+import fastifyWebSocket from '@fastify/websocket';
+
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login';
@@ -25,73 +30,76 @@ import generalChatRoute from './routes/chat/generalChatRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google';
-import dotenv from 'dotenv';
-import fastifyWebSocket from '@fastify/websocket';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 
 dotenv.config();
 
-const app = Fastify({ logger: loggerConfig,
-  bodyLimit: 20 * 1024 * 1024 });
+// HTTPS config (key/cert from /app/ssl)
+const app = Fastify({
+  logger: loggerConfig,
+  bodyLimit: 20 * 1024 * 1024,
+  https: {
+    key: fs.readFileSync(path.join('/app/ssl/key.pem')),
+    cert: fs.readFileSync(path.join('/app/ssl/cert.pem')),
+  },
+});
 
 app.register(fastifyWebSocket);
 
 app.register(cors, {
-	origin: true,
-	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	credentials: true,
-	exposedHeaders: ['Authorization'],
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+  exposedHeaders: ['Authorization'],
 });
 
 app.register(fastifyJwt, {
-	secret: process.env.JWT_SECRET || 'test',
-})
-
+  secret: process.env.JWT_SECRET || 'test',
+});
 
 async function main() {
-	const port = 3001;
-	await app.register(profileRoute);
-	await app.register(health);
-	await app.register(registerRoute);
-	await app.register(loginRoute);
-	await app.register(generalChatRoute);
-	await app.register(privateChatRoute)
-	await app.register(editProfileRoute)
-	await app.register(sendMessageRoute);
-	await app.register(tournamentRoutes);
-	await app.register(friendListRoute)
-	await app.register(leaderboardRoute)
-	await app.register(friendRequestRoute)
-	await app.register(meProfile)
-	await app.register(acceptRequestRoute)
-	await app.register(seeFriendRequestRoute)
-	await app.register(removeFriendRoute)
-	await app.register(newMessageRoute)
-	await app.register(createMatchRoute)
-	await app.register(joinMatchRoute)
-	await app.register(matchResultRoute)
-	await app.register(blockUserRoute)
-	await app.register(matchListRoute)
-	await app.register(googleLogin)
+  const port = 3001;
 
-	app.register(async (fastify) => {
-		fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
-	});
+  await app.register(profileRoute);
+  await app.register(health);
+  await app.register(registerRoute);
+  await app.register(loginRoute);
+  await app.register(generalChatRoute);
+  await app.register(privateChatRoute);
+  await app.register(editProfileRoute);
+  await app.register(sendMessageRoute);
+  await app.register(tournamentRoutes);
+  await app.register(friendListRoute);
+  await app.register(leaderboardRoute);
+  await app.register(friendRequestRoute);
+  await app.register(meProfile);
+  await app.register(acceptRequestRoute);
+  await app.register(seeFriendRequestRoute);
+  await app.register(removeFriendRoute);
+  await app.register(newMessageRoute);
+  await app.register(createMatchRoute);
+  await app.register(joinMatchRoute);
+  await app.register(matchResultRoute);
+  await app.register(blockUserRoute);
+  await app.register(matchListRoute);
+  await app.register(googleLogin);
 
-	app.register(async (fastify) => {
-		fastify.get('/ws/friends', { websocket: true }, friendsWebSocketHandler);
-	});
+  app.register(async (fastify) => {
+    fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
+  });
 
-	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
-		if (err) {
-			console.log(err);
-			process.exit(1);
-		}
-		console.log(`Serveur démarré sur ${address}`);
-	});
+  app.register(async (fastify) => {
+    fastify.get('/ws/friends', { websocket: true }, friendsWebSocketHandler);
+  });
+
+  app.listen({ port, host: '0.0.0.0' }, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`✅ Serveur HTTPS lancé sur ${address}`);
+  });
 }
 
 main();
-
-

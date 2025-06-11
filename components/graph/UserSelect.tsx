@@ -41,7 +41,7 @@ export function UserSelect({ onUserSelect, selectedUserId }: UserSelectProps) {
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const response = await fetch('http://localhost:3001/stats/users')
+				const response = await fetch('https://localhost:3001/stats/users')
 				if (!response.ok) throw new Error('Erreur lors de la récupération des utilisateurs')
 				const data = await response.json()
 				setUsers(data)

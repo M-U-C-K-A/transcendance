@@ -108,8 +108,8 @@ export function GraphSection(selectedUserId: number) {
 				setLoading(true)
 				setError(null)
 				const [userResponse, globalResponse] = await Promise.all([
-					fetch(`http://localhost:3001/stats/user/${selectedUserId}`),
-					fetch("http://localhost:3001/stats/global"),
+					fetch(`https://localhost:3001/stats/user/${selectedUserId}`),
+					fetch("https://localhost:3001/stats/global"),
 				])
 
 				if (!userResponse.ok || !globalResponse.ok) {
