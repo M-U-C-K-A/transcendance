@@ -21,7 +21,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Settings, Upload, X } from "lucide-react"
 import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
 import { useBioFromJWT } from "@/hooks/use-bio-from-jwt"
-import { useJWT } from "@/hooks/use-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -36,7 +35,6 @@ const ProfileSchema = z.object({
 type ProfileFormData = z.infer<typeof ProfileSchema>
 
 export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWithoutRef<typeof AlertDialogTrigger>) {
-  const jwt = useJWT()
   const usernameFromJWT = useUsernameFromJWT()
   const bioFromJWT = useBioFromJWT()
   const id = useIdFromJWT()

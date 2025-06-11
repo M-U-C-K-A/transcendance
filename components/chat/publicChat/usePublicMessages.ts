@@ -110,7 +110,7 @@ export const usePublicMessages = () => {
       cleanupSocket?.();
       hasInitialized.current = false;
     };
-  }, []);
+  }, [fetchMessages, setupWebSocket]); // Ajout des dépendances manquantes
 
   return {
     messages,

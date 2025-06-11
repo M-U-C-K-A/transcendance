@@ -53,7 +53,7 @@ export default function ColorChoice({
       </div>
 
       <div className="flex justify-center">
-        <div className="grid grid-cols-3 gap-3 mx-auto">
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mx-auto">
           {COLORS.map((hex) => {
             const takenByP1 = colorP1 === hex;
             const takenByP2 = colorP2 === hex;
