@@ -1,12 +1,8 @@
 // src/Physic/gamePhysic.ts
 import { Vector3 } from "@babylonjs/core";
-import { Scene }   from "@babylonjs/core/scene";
-import { Mesh }    from "@babylonjs/core/Meshes/mesh";
-import type { StandardMaterial }  from "@babylonjs/core/Materials/standardMaterial";
-import type { ArcRotateCamera }   from "@babylonjs/core/Cameras/arcRotateCamera";
-import type { Sound }             from "@babylonjs/core/Audio/sound";
-import { Dispatch, SetStateAction } from "react";
-import type { TouchHistory, SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
+import { Scene } from "@babylonjs/core/scene";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import type { SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
 
 import {
   TOTAL_SPEED,
@@ -18,27 +14,23 @@ import {
   BUMPER_MID_RIGHT,       // ex. +4
 } from "./constants";
 
-import { serve as serveBall }      from "./paddle/serve";
-import { startCountdown }          from "./countdown";
-import { handleScoring }           from "./collisions/scoring";
-import { registerInputListeners }  from "./input";
-import { movePaddles }             from "./paddle/paddleMovement";
-import { updateMiniPaddle }        from "./paddle/miniPaddleLogic";
-import { handleCollisions }        from "./collisions/handleCollisions";
-import { collideTrianglePrism }    from "./collisions/collisionTriangles";
-import type { GameState, GameRefs, GameObjects } from "../gameTypes";
-import { collidePaddle1, collidePaddle2 } from "./collisions/collisionPaddles";
+import { serve as serveBall } from "./paddle/serve";
+import { startCountdown } from "./countdown";
+import { handleScoring } from "./collisions/scoring";
+import { registerInputListeners } from "./input";
+import { movePaddles } from "./paddle/paddleMovement";
+import { updateMiniPaddle } from "./paddle/miniPaddleLogic";
+import { handleCollisions } from "./collisions/handleCollisions";
+import type { GameRefs, GameObjects } from "../gameTypes";
 
 export const initgamePhysic = (
   scene: Scene,
   gameObjects: GameObjects,
-  gameState: GameState,
   gameRefs: GameRefs,
   setStamina: SetStaminaFunction,
   setSuperPad: SetSuperPadFunction,
   enableSpecial?: boolean,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
-  touchHistory?: TouchHistory[],
   volumeRef?: React.RefObject<number>,
   enableAcceleration: boolean = true,
   speedIncrement: number = 0.009
@@ -108,55 +100,55 @@ export const initgamePhysic = (
     });
   };
 
-  // Passe triggerSuperPad à gameRefs AVANT d'enregistrer les listeners
+  // Ajout de la logique de stamina et coup spécial
+  // const stamina = { player1: 0, player2: 0 };
+  // const superPad = { player1: false, player2: false };
+  const superPadTimeouts: { [key: string]: NodeJS.Timeout | null } = {
+    player1: null,
+    player2: null,
+  };
+
+  // Gestion du coup spécial
+  const triggerSuperPad = (player: 1 | 2) => {
+    setStamina((prev) => {
+      // On ne peut activer que si la stamina est exactement à 10 et le superPad n'est pas déjà actif
+      if (prev[`player${player}`] !== 10 || (superPadRef?.current && superPadRef.current[`player${player}`])) {
+        return prev;
+      }
+
+      // Activation immédiate du superPad
+      setSuperPad((prevPad) => {
+        if (prevPad[`player${player}`]) return prevPad;
+        if (player === 1 && paddle1) paddle1.scaling.x = 2;
+        if (player === 2 && paddle2) paddle2.scaling.x = 2;
+        return { ...prevPad, [`player${player}`]: true };
+      });
+
+      // Désactivation après 5 secondes
+      if (superPadTimeouts[`player${player}`]) {
+        clearTimeout(superPadTimeouts[`player${player}`]!);
+      }
+      superPadTimeouts[`player${player}`] = setTimeout(() => {
+        setSuperPad((prevPad) => {
+          if (player === 1 && paddle1) paddle1.scaling.x = 1;
+          if (player === 2 && paddle2) paddle2.scaling.x = 1;
+          return { ...prevPad, [`player${player}`]: false };
+        });
+        superPadTimeouts[`player${player}`] = null;
+      }, 5000);
+
+      // Reset la stamina du joueur à 0
+      return { ...prev, [`player${player}`]: 0 };
+    });
+  };
+
+  // Mise à jour des références
   gameRefs.triggerSuperPad = triggerSuperPad;
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused);
 
   let ballV = Vector3.Zero();
   let currentSpeed = TOTAL_SPEED;
   let scoreLocal = { player1: 0, player2: 0 };
-
-  // Ajout de la logique de stamina et coup spécial
-  let stamina = { player1: 0, player2: 0 };
-  let superPad = { player1: false, player2: false };
-  const superPadTimeouts: { [key: string]: NodeJS.Timeout | null } = {
-    player1: null,
-    player2: null
-  };
-
-  // Fonction pour activer le coup spécial
-  function triggerSuperPad(player: 1 | 2) {
-    if (!enableSpecial || !superPadRef) return;
-    
-    setStamina((prev: { player1: number; player2: number }) => {
-      if (prev[`player${player}`] === 10 && !superPadRef.current[`player${player}`]) {
-        setSuperPad((current: { player1: boolean; player2: boolean }) => ({
-          ...current,
-          [`player${player}`]: true
-        }));
-        
-        // Agrandit immédiatement le paddle
-        if (player === 1 && paddle1 && paddle1 instanceof Mesh) paddle1.scaling.x = 2;
-        if (player === 2 && paddle2 && paddle2 instanceof Mesh) paddle2.scaling.x = 2;
-        
-        if (superPadTimeouts[`player${player}`]) {
-          clearTimeout(superPadTimeouts[`player${player}`] as NodeJS.Timeout);
-        }
-        
-        superPadTimeouts[`player${player}`] = setTimeout(() => {
-          setSuperPad((current: { player1: boolean; player2: boolean }) => ({
-            ...current,
-            [`player${player}`]: false
-          }));
-          if (player === 1 && paddle1 && paddle1 instanceof Mesh) paddle1.scaling.x = 1;
-          if (player === 2 && paddle2 && paddle2 instanceof Mesh) paddle2.scaling.x = 1;
-        }, 5000) as unknown as NodeJS.Timeout;
-        
-        return { ...prev, [`player${player}`]: 0 };
-      }
-      return prev;
-    });
-  }
 
   const serve = (loserSide: "player1" | "player2") => {
     const { velocity, speed } = serveBall(loserSide);
@@ -165,6 +157,8 @@ export const initgamePhysic = (
   };
 
   const resetBall = (loser: "player1" | "player2") => {
+    if (!ball || !paddle1 || !paddle2) return;
+    
     const startY = 0.25;
     const startZ =
       loser === "player1"
@@ -181,7 +175,10 @@ export const initgamePhysic = (
     if (
       !gameRefs.isPaused ||
       !gameRefs.countdown ||
-      !gameRefs.winner
+      !gameRefs.winner ||
+      !ball ||
+      !paddle1 ||
+      !paddle2
     ) {
       return; // On sort si une ref est absente
     }
@@ -294,7 +291,6 @@ export const initgamePhysic = (
     }
 
     // ─── Collisions & ajustement de vélocité ───────────────────────
-    if (!ball || !paddle1 || !paddle2) return;
     const collisionResult = handleCollisions(
       ball as Mesh,
       paddle1 as Mesh,
@@ -314,18 +310,26 @@ export const initgamePhysic = (
       leftTriOuterLeft,
       rightTriOuterRight,
       leftTriOuterRight,
-      stamina,
-      setStamina,
-      superPadRef ? superPadRef.current : undefined,
       volumeRef?.current ?? 0.5,
-      enableAcceleration ? speedIncrement : 0
+      enableAcceleration ? speedIncrement : 0,
+      gameRefs.stamina.current,
+      setStamina,
+      gameRefs.superPad.current
     );
     if (!collisionResult) return;
     ballV = collisionResult.newVelocity;
     currentSpeed = collisionResult.newSpeed;
 
     // ─── Gestion du score (resetBall appelle startCountdownWrapper) ──
-    handleScoring(ball, scoreLocal, gameRefs.setScore, gameRefs.setWinner, resetBall, gameRefs, volumeRef?.current ?? 0.5);
+    handleScoring(
+      ball,
+      scoreLocal,
+      gameRefs.setScore,
+      (winner: string | null) => gameRefs.setWinner(winner),
+      resetBall,
+      gameRefs,
+      volumeRef?.current ?? 0.5
+    );
   });
 
   // Premier countdown avant le service initial
