@@ -62,6 +62,7 @@ export function ColleaguesList({ locale }: { locale: string }) {
 		switch (data.type) {
 			case "NEW_FRIEND":
 			case "REMOVED_FRIEND":
+			case "FRIEND_ONLINE_STATUS":
 				fetchFriends()
 				break
 		}

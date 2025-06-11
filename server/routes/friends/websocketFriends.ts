@@ -71,5 +71,10 @@ export function notifyFriend(userId: number, payload: any) {
 }
 
 export function notifyFriends(userIds: number[], payload: any) {
-  userIds.forEach(userId => notifyFriend(userId, payload));
+	console.log("🌯🌯🌯🌯🌯🌯🌯🌯", payload)
+	userIds.forEach(userId => {
+		const isConnected = friendConnections.has(userId);
+		console.log(`🧪 Is user ${userId} connected?`, isConnected);
+		notifyFriend(userId, payload);
+	});
 }
