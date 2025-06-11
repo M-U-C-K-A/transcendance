@@ -1,7 +1,7 @@
 // src/setupCameraReset.ts
 // -----------------------
 
-import { Vector3 } from "@babylonjs/core";
+import { Vector3, ArcRotateCamera } from "@babylonjs/core";
 
 export function addCameraResetButton(camera: ArcRotateCamera) {
   // === Bouton UI pour réinitialiser la caméra ===

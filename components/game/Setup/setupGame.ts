@@ -3,7 +3,7 @@
 
 import { setupGameObjects } from "./setupGameObjects";
 import { addCameraResetButton } from "./setupCameraReset";
-import { Scene } from "@babylonjs/core";
+import { Scene, Vector3 } from "@babylonjs/core";
 
 export const setupGame = (
   scene: Scene,
@@ -33,7 +33,7 @@ export const setupGame = (
     leftTriOuterRight
   } = setupGameObjects(scene, MapStyle, paddle1Color, paddle2Color);
 
-  // 2) Ajout du bouton “Réinitialiser la caméra”
+  // 2) Ajout du bouton "Réinitialiser la caméra"
   addCameraResetButton(camera);
 
   // 3) Retourne tous les objets créés pour manipulation ultérieure
@@ -55,6 +55,9 @@ export const setupGame = (
     rightTriOuterLeft,
     leftTriOuterLeft,
     rightTriOuterRight,
-    leftTriOuterRight
+    leftTriOuterRight,
+    malus: null,
+    ballV: new Vector3(0, 0, 0),
+    currentSpeed: 0.2
   };
 };
