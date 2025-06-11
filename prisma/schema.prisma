@@ -50,6 +50,15 @@ model User {
 	@@map("User")
 }
 
+model tmpUser {
+	id				Int @id @default(autoincrement())
+	username		String	@unique
+	email			String
+	pass			String?
+
+	@@map("tmpUser")
+}
+
 model Friends {
 	id1	Int
 	id2	Int

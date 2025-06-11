@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
 import Pong3D from "@/components/game/Pong3D";
-import { JSX } from "react";
 
 interface GameUIProps {
   showVolumeSlider: boolean;
@@ -44,7 +43,7 @@ export default function Buttons({
   enableSpecial,
   enableAcceleration,
   speedIncrement
-}: GameUIProps): JSX.Element {
+}: GameUIProps) {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
       {/* Contrôles Volume, Musique, Recommencer */}
@@ -115,6 +114,7 @@ export default function Buttons({
         </div>
       )}
 
+      {/* Le composant Pong3D reçoit maintenant resetCamFlag au lieu de key */}
       <Pong3D
         resetCamFlag={cameraKey}
         paddle1Color={paddle1Color}

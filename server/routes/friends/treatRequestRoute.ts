@@ -4,7 +4,7 @@ import treatRequest from "@/server/request/friends/treatRequest";
 
 export default async function acceptRequestRoute(server: FastifyInstance) {
 	server.post('/friends/accept', { preHandler: authMiddleware }, async function (request, reply) {
-	const user = request.user as { id: number }
+	const user = request.user as { id: number, username: string }
 	const param = request.body as { username: string, asAccepted: boolean }
 
 	if (!user)
@@ -14,7 +14,7 @@ export default async function acceptRequestRoute(server: FastifyInstance) {
 	}
 
 	try {
-		const result = await treatRequest(user.id, param.username, param.asAccepted)
+		const result = await treatRequest(user.id, param.username, param.asAccepted, user.username)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'Friend Id not found') {

@@ -94,10 +94,7 @@ export class MalusSystem {
         { trigger: ActionManager.OnIntersectionEnterTrigger, parameter: this.scene.getMeshByName("ball") },
         () => {
           // On retire 1 point à l'adversaire du dernier joueur ayant touché la balle
-          const newScore = {
-            player1: this.gameRefs.score.current.player1,
-            player2: this.gameRefs.score.current.player2
-          };
+          let newScore = { ...this.gameRefs.score.current };
           
           // Récupérer le dernier touché de l'historique
           const lastTouch = this.gameRefs.touchHistory?.[this.gameRefs.touchHistory.length - 1];

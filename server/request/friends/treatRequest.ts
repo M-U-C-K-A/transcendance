@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { id } from "../chat/interface";
+import { notifyFriend } from "@/server/routes/friends/websocketFriends";
 
 const Prisma = new PrismaClient();
 
-export default async function treatRequest(userId: number, friendName: string, asAccepted: boolean) {
+export default async function treatRequest(userId: number, friendName: string, asAccepted: boolean, username: string) {
 	const friendId = await Prisma.$queryRaw<id[]>`
 	SELECT id FROM "User"
 	WHERE username = ${friendName}`;
@@ -23,7 +24,6 @@ export default async function treatRequest(userId: number, friendName: string, a
 				status: true
 			}
 		});
-		console.log("Friend accepted successfully");
 	}
 	else {
 		await Prisma.friends.deleteMany({
@@ -32,8 +32,20 @@ export default async function treatRequest(userId: number, friendName: string, a
 				id2: userId,
 			},
 		});
-		console.log("Friend request refused successfully")
 	}
 
+	notifyFriend(userId, {
+	type: "NEW_FRIEND",
+		from: {
+			id: friendId[0].id,
+		}
+	})
+
+	notifyFriend(friendId[0].id, {
+	type: "NEW_FRIEND",
+		from: {
+			id: userId,
+		}
+	})
 	return (true);
 }

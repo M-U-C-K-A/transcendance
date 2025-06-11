@@ -2,17 +2,6 @@ import { FastifyInstance } from 'fastify';
 import { createTournament } from '../request/tournament/createTournament';
 import { joinTournament } from '../request/tournament/joinTournament';
 
-interface CreateTournamentBody {
-  hostUsername: string;
-  tournamentName: string;
-  slotCount: number;
-}
-
-interface JoinTournamentBody {
-  username: string;
-  tournamentName: string;
-}
-
 export default async function tournamentRoutes(server: FastifyInstance)
 {
 
@@ -22,7 +11,7 @@ export default async function tournamentRoutes(server: FastifyInstance)
   {
       try
       {
-        const { hostUsername, tournamentName, slotCount } = request.body as CreateTournamentBody;
+        const { hostUsername, tournamentName, slotCount } = request.body;
         const result = await createTournament(hostUsername, tournamentName, slotCount);
         return reply.code(201).send(result);
       }
@@ -41,7 +30,7 @@ export default async function tournamentRoutes(server: FastifyInstance)
   {
       try
       {
-        const { username, tournamentName } = request.body as JoinTournamentBody;
+        const { username, tournamentName } = request.body;
         await joinTournament(username, tournamentName);
         return reply.code(200).send({ success: true });
       }

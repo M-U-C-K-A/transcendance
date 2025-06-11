@@ -112,31 +112,11 @@ export const usePublicMessages = () => {
     };
   }, []);
 
-  const addTestMessage = useCallback((testMessage: string) => {
-    const testMsg: Message = {
-      id: Math.random() * 1000000,
-      user: {
-        id: 999,
-        name: "TestUser",
-        avatar: "/profilepicture/2.webp",
-        win: 0,
-        lose: 0,
-        elo: 1000,
-      },
-      text: testMessage,
-      timestamp: new Date(),
-      isPrivate: false,
-      isRead: true,
-    };
-    setMessages((prev) => [...prev, testMsg]);
-  }, []);
-
   return {
     messages,
     fetchMessages,
     isLoading,
     error,
-    addTestMessage,
     socketStatus: socket?.readyState,
   };
 };

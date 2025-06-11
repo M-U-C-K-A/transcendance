@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { Engine, Scene, Color3, Vector3, Color4 } from "@babylonjs/core";
+import { Engine, Scene, Color3, Vector3, Color4, Mesh } from "@babylonjs/core";
 import { setupGame } from "./Setup/setupGame";
 import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
 import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/Malus";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
-import type { Sound } from "@babylonjs/core/Audio/sound";
-import { handleCollisions } from "./Physic/collisions/handleCollisions";
+import { updateControls } from "./Physic/customControls";
 
 export default function Pong3D({
   paddle1Color,
@@ -38,11 +37,10 @@ export default function Pong3D({
   const [MalusBarKey, setMalusBarKey] = useState(0);
   const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
   const [superPad, setSuperPad] = useState({ player1: false, player2: false });
-  const touchHistory = useRef<TouchHistory[]>([]);
+  const touchHistory: TouchHistory[] = [];
   const [showGoal, setShowGoal] = useState(false);
   const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
   const prevScore = useRef(score);
-  const allHitSounds = useRef<Sound[]>([]);
 
   // ─── Références pour synchroniser l'état ────────────────────
   const scoreRef = useRef(score);
@@ -50,16 +48,13 @@ export default function Pong3D({
   const countdownRef = useRef(countdown);
   const isPausedRef = useRef(isPaused);
   const superPadRef = useRef(superPad);
-  const staminaRef = useRef(stamina);
   const volumeRef = useRef(volume);
-  const lastHitterRef = useRef<number | null>(null);
 
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { winnerRef.current = winner; }, [winner]);
   useEffect(() => { countdownRef.current = countdown; }, [countdown]);
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { superPadRef.current = superPad; }, [superPad]);
-  useEffect(() => { staminaRef.current = stamina; }, [stamina]);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
 
   useEffect(() => {
@@ -81,26 +76,34 @@ export default function Pong3D({
     }
   }, [score]);
 
+  // Mettre à jour la référence des contrôles
   useEffect(() => {
     controlsRef.current = controls;
   }, [controls]);
 
+  // ─── Handlers ───────────────────────────────────────────────
   const handleSetIsPaused = (paused: boolean) => {
     setIsPaused(paused);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // ─── Effet principal ────────────────────────────────────────
   useEffect(() => {
     if (!canvasRef.current) return;
+
+    // 1) Création de l'Engine et de la Scene
     const engine = new Engine(canvasRef.current, true);
     engineRef.current = engine;
     const scene = new Scene(engine);
     scene.clearColor = new Color4(1, 1, 1, 1);
     sceneRef.current = scene;
+
+    // 2) Appel à setupGame qui retourne un objet conforme à GameObjects
     const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
     cameraRef.current = objs.camera;
     gameObjectsRef.current = objs;
-    const gameRefs: GameRefs = {
+
+    // 3) Création de l'objet gameRefs pour la physique
+    const gameRefs = {
       score: scoreRef,
       winner: winnerRef,
       countdown: countdownRef,
@@ -109,35 +112,33 @@ export default function Pong3D({
       setWinner,
       setCountdown,
       setIsPaused,
-      controls: controlsRef,
-      touchHistory: touchHistory.current,
-      superPad: superPadRef,
-      stamina: staminaRef,
-      malusSound: null,
-      lastHitter: lastHitterRef,
-      triggerSuperPad: () => {},
+      controls: controlsRef.current,
+      touchHistory,
+      superPad,
+      stamina,
     };
+
+    // 4) Initialisation de la physique
     const cleanupPhysic = initgamePhysic(
       scene,
       objs,
+      { score, winner, countdown, isPaused },
       gameRefs,
       setStamina,
       setSuperPad,
       enableSpecial,
       superPadRef,
+      touchHistory,
       volumeRef,
       enableAcceleration,
       speedIncrement
     );
+
+    // 5) Initialiser le système de Malus si activé
     if (enableMaluses) {
       MalusSystemRef.current = new MalusSystem(
         scene,
-        { 
-          score: scoreRef.current, 
-          winner: winnerRef.current, 
-          countdown: countdownRef.current, 
-          isPaused: isPausedRef.current 
-        },
+        { score, winner, countdown, isPaused },
         gameRefs,
         () => setMalusBarKey((k) => k + 1),
         setScore,
@@ -145,8 +146,12 @@ export default function Pong3D({
       );
       MalusSystemRef.current.startMalusSystem();
     }
+
+    // 6) Boucle de rendu
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
+
+    // 7) Cleanup à la destruction du composant
     return () => {
       cleanupPhysic();
       if (MalusSystemRef.current) {
@@ -154,8 +159,9 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, enableAcceleration, speedIncrement]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial]);
 
+  // Reset de la caméra
   useEffect(() => {
     if (cameraRef.current) {
       cameraRef.current.setPosition(new Vector3(35, 35, 0));
@@ -163,6 +169,7 @@ export default function Pong3D({
     }
   }, [resetCamFlag]);
 
+  // Mettre à jour les couleurs
   useEffect(() => {
     if (gameObjectsRef.current) {
       const { p1Mat, p2Mat } = gameObjectsRef.current;
@@ -171,60 +178,18 @@ export default function Pong3D({
     }
   }, [paddle1Color, paddle2Color]);
 
+  // Ajout du son d'applaudissements
   useEffect(() => {
-    if (winner && (volumeRef.current ?? volume) > 0) {
+    if (winner) {
       const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
-      applause.volume = volumeRef.current ?? volume;
+      applause.volume = 0.7;
       applause.play();
     }
-  }, [winner, volume]);
+  }, [winner]);
 
+  // S'assurer que volumeRef.current est mis à jour à chaque changement de volume
   useEffect(() => {
-    if (!isPaused && !winner) {
-      const interval = setInterval(() => {
-        if (gameObjectsRef.current && sceneRef.current) {
-          const { ball, ballV, currentSpeed } = gameObjectsRef.current;
-          if (ball && ballV) {
-            const result = handleCollisions(
-              ball,
-              gameObjectsRef.current.paddle1,
-              gameObjectsRef.current.paddle2,
-              gameObjectsRef.current.miniPaddle,
-              gameObjectsRef.current.bumperLeft,
-              gameObjectsRef.current.bumperRight,
-              ballV,
-              currentSpeed,
-              gameObjectsRef.current.ballMat,
-              gameObjectsRef.current.p1Mat,
-              gameObjectsRef.current.p2Mat,
-              allHitSounds.current,
-              gameObjectsRef.current.rightTri,
-              gameObjectsRef.current.leftTri,
-              gameObjectsRef.current.rightTriOuterLeft,
-              gameObjectsRef.current.leftTriOuterLeft,
-              gameObjectsRef.current.rightTriOuterRight,
-              gameObjectsRef.current.leftTriOuterRight,
-              volumeRef.current,
-              speedIncrement,
-              stamina,
-              setStamina,
-              superPad
-            );
-            ballV.copyFrom(result.newVelocity);
-            gameObjectsRef.current.currentSpeed = result.newSpeed;
-          }
-        }
-      }, 1000 / 60);
-      return () => clearInterval(interval);
-    }
-  }, [isPaused, winner, countdown, enableAcceleration, score, speedIncrement, stamina, superPad]);
-
-  useEffect(() => {
-    if (allHitSounds.current.length > 0) {
-      allHitSounds.current.forEach((sound: Sound) => {
-        sound.setVolume(volume);
-      });
-    }
+    volumeRef.current = volume;
   }, [volume]);
 
   return (

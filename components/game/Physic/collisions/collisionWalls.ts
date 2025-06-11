@@ -7,7 +7,7 @@ import { playRandomCollisionSound } from "../sound";
 import type { Sound }             from "@babylonjs/core/Audio/sound";
 
 // Cooldown de collision par mur (module scope)
-const lastWallCollision = { left: 0, right: 0 };
+let lastWallCollision = { left: 0, right: 0 };
 
 export function collideWalls(
   ball: Mesh,

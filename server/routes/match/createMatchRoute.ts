@@ -6,7 +6,7 @@ export default async function createMatchRoute(server: FastifyInstance) {
 	server.post('/match/create', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
 	const { matchName } = request.body as { matchName: string}
-
+	console.log("match test create")
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}

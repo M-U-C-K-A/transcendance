@@ -2,7 +2,6 @@
 // ------------------------------------
 
 import { MINI_SPEED, MINI_BOUND_X } from "../constants";
-import { Mesh } from "@babylonjs/core";
 
 export function updateMiniPaddle(miniPaddle: Mesh, miniDirRef: { current: number }, deltaTime: number) {
   if (!miniPaddle) {
