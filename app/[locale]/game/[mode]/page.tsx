@@ -136,7 +136,7 @@ export default function Page() {
   // ──────────────────────────────────────────────────────────────────
   const [cameraKey, setCameraKey] = useState(0);
 
-  const [baseSpeed, setBaseSpeed] = useState(16);
+  const [baseSpeed, setBaseSpeed] = useState(24);
 
   return (
     <ControlsProvider>
