@@ -77,21 +77,17 @@ export const viewport = {
 
 export default function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
-  const locale = params.locale || "fr";
-
   return (
-    <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`} salut="42">
+    <html lang="fr" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
         {children}
-    <TailwindIndicator />
+        <TailwindIndicator />
         <Toaster
           position="bottom-right"
           richColors
@@ -109,4 +105,3 @@ export default function RootLayout({
     </html>
   );
 }
-

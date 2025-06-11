@@ -130,12 +130,10 @@ export const usePrivateMessages = (currentUser: string) => {
 
 	useEffect(() => {
 		fetchPrivateMessages();
-		setupWebSocket();
+		const cleanup = setupWebSocket();
 
 		return () => {
-			if (socket) {
-				socket.close();
-			}
+			if (cleanup) cleanup();
 		};
 	}, [fetchPrivateMessages, setupWebSocket]);
 

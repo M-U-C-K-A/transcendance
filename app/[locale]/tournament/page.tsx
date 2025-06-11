@@ -337,7 +337,7 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-1">
-              <ChatSection />
+              <ChatSection currentUser="Admin (Vous)" />
             </div>
           </div>
         )}

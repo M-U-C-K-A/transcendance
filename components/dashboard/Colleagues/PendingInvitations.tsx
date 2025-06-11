@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Check, Clock, X } from "lucide-react"
 import { useI18n } from "@/i18n-client"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useJWT } from "@/hooks/use-jwt"
 import { useFriendSocket } from "@/hooks/use-friends-socket"
 
@@ -13,7 +13,7 @@ interface PendingInvitation {
   avatar?: string;
 }
 
-export function PendingInvitations({ locale }: { locale: string }) {
+export function PendingInvitations() {
   const jwt = useJWT()
   const t = useI18n()
 
@@ -21,7 +21,7 @@ export function PendingInvitations({ locale }: { locale: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchPendingInvitations = async () => {
+  const fetchPendingInvitations = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/friends/pending`, {
@@ -37,11 +37,11 @@ export function PendingInvitations({ locale }: { locale: string }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [jwt])
 
   useEffect(() => {
     if (jwt) fetchPendingInvitations()
-  }, [jwt])
+  }, [jwt, fetchPendingInvitations])
 
   useFriendSocket((data) => {
     if (data?.type === "NEW_FRIEND_REQUEST") {

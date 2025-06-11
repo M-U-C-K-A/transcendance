@@ -22,7 +22,7 @@ interface User {
  * Utilise l'API "/api/user/me" pour récupérer les informations de l'utilisateur.
  * @returns Un composant JSX qui affiche le profil de l'utilisateur connecté.
  */
-export function UserProfile({ locale }: { locale: string }) {
+export function UserProfile() {
 	const jwt = useJWT()
 	const id = useIdFromJWT()
 	const [user, setUser] = useState<User | null>(null)

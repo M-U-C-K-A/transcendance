@@ -37,13 +37,19 @@ export function ColleaguesList({ locale }: { locale: string }) {
 			if (!response.ok) {
 				throw new Error('Failed to fetch friends')
 			}
-			const data = await response.json()
-			const transformed = data.map((friend: any): Friend => ({
-				id: friend.id,
-				username: friend.username,
-				status: friend.onlineStatus === true,
-				avatar: friend.avatar ?? undefined,
-			}))
+			const data = await response.json() as Array<{
+  id: number;
+  username: string;
+  onlineStatus: boolean;
+  avatar?: string;
+}>
+
+const transformed = data.map((friend): Friend => ({
+  id: friend.id,
+  username: friend.username,
+  status: friend.onlineStatus,
+  avatar: friend.avatar ?? undefined,
+}))
 			setFriends(transformed)
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Unknown error')
