@@ -63,7 +63,7 @@ export default function MapChoice({
               height={200}
               src={map.img}
               alt={map.label}
-              className={`w-40 h-28 object-cover rounded-lg border-4 mb-2
+              className={`w-30 h-18 object-cover rounded-lg border-4 mb-2
                 ${
                   MapStyle === map.key
                     ? map.key === 'neon'

@@ -2,6 +2,11 @@ import { Dispatch, SetStateAction, useState } from "react";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
 import { ControlsConfig } from "./ControlsConfig";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Toggle } from "@/components/ui/toggle";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -45,9 +50,9 @@ export default function SettingsPanel({
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
 
   return (
-    <div className="bg-card dark:bg-zinc-900 dark:text-white p-10 rounded-xl shadow-lg w-full max-w-2xl mx-auto space-y-10">
-      {/* Intègre le composant pour le choix du style du sol */}
-      <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4">
+    <Card className="p-6 rounded-xl shadow-lg w-full max-w-2xl mx-auto space-y-4">
+      {/* Choix du style du sol */}
+      <Card className="p-4">
         <MapChoice
           MapStyle={MapStyle}
           setMapStyle={setMapStyle}
@@ -56,10 +61,10 @@ export default function SettingsPanel({
           enableSpecial={enableSpecial}
           setEnableSpecial={setEnableSpecial}
         />
-      </div>
+      </Card>
 
-      {/* Intègre le composant pour le choix des couleurs des joueurs */}
-      <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4">
+      {/* Choix des couleurs des joueurs */}
+      <Card className="p-4">
         <ColorChoice
           COLORS={COLORS}
           currentPlayer={currentPlayer}
@@ -69,60 +74,66 @@ export default function SettingsPanel({
           colorP2={colorP2}
           setColorP2={setColorP2}
         />
-      </div>
+      </Card>
 
-      {/* Sélecteur de vitesse de base - version redesign */}
-      <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4 flex flex-col gap-2 items-center">
-        <span className="font-semibold mb-1 text-center">Vitesse de la balle</span>
+      {/* Sélecteur de vitesse de base */}
+      <Card className="p-4">
+        <Label className="block text-center font-semibold mb-3">Vitesse de la balle</Label>
         <div className="flex gap-2 justify-center">
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 16 ? 'bg-green-500 text-white border-green-700 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
-            onClick={() => setBaseSpeed(16)}
+          <Toggle
+            pressed={baseSpeed === 16}
+            onPressedChange={() => setBaseSpeed(16)}
+            className="px-4 py-2 data-[state=on]:bg-green-500 data-[state=on]:text-white"
             aria-label="Lent"
-          >🐢 Lent</button>
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 24 ? 'bg-yellow-400 text-white border-yellow-600 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
-            onClick={() => setBaseSpeed(24)}
+          >
+            🐢 Lent
+          </Toggle>
+          <Toggle
+            pressed={baseSpeed === 24}
+            onPressedChange={() => setBaseSpeed(24)}
+            className="px-4 py-2 data-[state=on]:bg-yellow-400 data-[state=on]:text-white"
             aria-label="Moyen"
-          >⚡ Moyen</button>
-          <button
-            type="button"
-            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 36 ? 'bg-red-500 text-white border-red-700 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
-            onClick={() => setBaseSpeed(36)}
+          >
+            ⚡ Moyen
+          </Toggle>
+          <Toggle
+            pressed={baseSpeed === 36}
+            onPressedChange={() => setBaseSpeed(36)}
+            className="px-4 py-2 data-[state=on]:bg-red-500 data-[state=on]:text-white"
             aria-label="Rapide"
-          >🔥 Rapide</button>
+          >
+            🔥 Rapide
+          </Toggle>
         </div>
-      </div>
+      </Card>
 
       {/* Boutons de configuration */}
       <div className="flex flex-col gap-3">
-        <button
+        <Button
+          variant="outline"
           onClick={() => setIsControlsConfigOpen(true)}
-          className="w-full bg-white dark:bg-zinc-800 dark:text-white text-black font-bold rounded-md border border-gray-200 dark:border-zinc-700 py-3 text-lg shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 transition"
+          className="w-full py-6 text-lg"
         >
           Configurer les contrôles
-        </button>
+        </Button>
+
         {/* Message d'erreur si les couleurs ne sont pas choisies */}
         {!canStart && (
-          <div className="w-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-center py-3 rounded-md">
-            <span className="text-red-500 dark:text-red-400 font-medium">
-              Veuillez sélectionner une couleur pour chaque joueur avant de commencer
-            </span>
-          </div>
+          <Alert variant="destructive">
+            <AlertDescription className="text-center">
+              Veuillez sélectionner une couleur ou une map pour chaque joueur avant de commencer
+            </AlertDescription>
+          </Alert>
         )}
-        <button
+
+        <Button
           onClick={onStart}
           disabled={!canStart}
-          className={`w-full py-3 text-lg font-bold rounded-md transition shadow-sm
-            ${canStart
-              ? "bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
-              : "bg-gray-400 dark:bg-zinc-700 text-white cursor-not-allowed"}
-          `}
+          className="w-full py-6 text-lg"
+          variant={canStart ? "default" : "secondary"}
         >
           Démarrer la partie
-        </button>
+        </Button>
       </div>
 
       {/* Modal de configuration des contrôles */}
@@ -130,6 +141,6 @@ export default function SettingsPanel({
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
       />
-    </div>
+    </Card>
   );
 }
