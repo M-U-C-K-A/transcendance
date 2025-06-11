@@ -2,7 +2,7 @@
 
 # === Configuration ===
 TARGETS=(
-    "http://10.12.8.5:3001/health"
+    "https://10.12.8.5:3001/health"
 )
 LOOPS=1000           # Nombre total de requêtes (0 = infini)
 PARALLEL_REQS=10     # Requêtes simultanées
