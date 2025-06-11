@@ -17,9 +17,8 @@ export default function Pong3D({
   enableSpecial = false,
   enableMaluses = false,
   volume = 0.2,
-  enableAcceleration = true,
-  speedIncrement = 0.009,
-}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, enableAcceleration?: boolean, speedIncrement?: number }) {
+  baseSpeed = 16,
+}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const sceneRef = useRef<Scene | null>(null);
@@ -86,7 +85,10 @@ export default function Pong3D({
     setIsPaused(paused);
   };
 
+<<<<<<< HEAD
   // ─── Effet principal ────────────────────────────────────────
+=======
+>>>>>>> e7042a0 (Fix on speed)
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -126,12 +128,16 @@ export default function Pong3D({
       gameRefs,
       setStamina,
       setSuperPad,
+<<<<<<< HEAD
       enableSpecial,
       superPadRef,
       touchHistory,
       volumeRef,
       enableAcceleration,
       speedIncrement
+=======
+      baseSpeed
+>>>>>>> e7042a0 (Fix on speed)
     );
 
     // 5) Initialiser le système de Malus si activé
@@ -189,7 +195,54 @@ export default function Pong3D({
 
   // S'assurer que volumeRef.current est mis à jour à chaque changement de volume
   useEffect(() => {
+<<<<<<< HEAD
     volumeRef.current = volume;
+=======
+    if (!isPaused && !winner) {
+      const interval = setInterval(() => {
+        if (gameObjectsRef.current && sceneRef.current) {
+          const { ball, ballV, currentSpeed } = gameObjectsRef.current;
+          if (ball && ballV) {
+            const result = handleCollisions(
+              ball,
+              gameObjectsRef.current.paddle1,
+              gameObjectsRef.current.paddle2,
+              gameObjectsRef.current.miniPaddle,
+              gameObjectsRef.current.bumperLeft,
+              gameObjectsRef.current.bumperRight,
+              ballV,
+              currentSpeed,
+              gameObjectsRef.current.ballMat,
+              gameObjectsRef.current.p1Mat,
+              gameObjectsRef.current.p2Mat,
+              allHitSounds.current,
+              gameObjectsRef.current.rightTri,
+              gameObjectsRef.current.leftTri,
+              gameObjectsRef.current.rightTriOuterLeft,
+              gameObjectsRef.current.leftTriOuterLeft,
+              gameObjectsRef.current.rightTriOuterRight,
+              gameObjectsRef.current.leftTriOuterRight,
+              volumeRef.current,
+              stamina,
+              setStamina,
+              superPad
+            );
+            ballV.copyFrom(result.newVelocity);
+            gameObjectsRef.current.currentSpeed = result.newSpeed;
+          }
+        }
+      }, 1000 / 60);
+      return () => clearInterval(interval);
+    }
+  }, [isPaused, winner, countdown, score, baseSpeed, stamina, superPad]);
+
+  useEffect(() => {
+    if (allHitSounds.current.length > 0) {
+      allHitSounds.current.forEach((sound: Sound) => {
+        sound.setVolume(volume);
+      });
+    }
+>>>>>>> e7042a0 (Fix on speed)
   }, [volume]);
 
   return (

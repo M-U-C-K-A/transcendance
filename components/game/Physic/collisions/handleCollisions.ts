@@ -30,7 +30,13 @@ export function handleCollisions(
   setStamina?: (s: { player1: number; player2: number }) => void,
   superPad?: { player1: boolean; player2: boolean },
   volume: number,
+<<<<<<< HEAD
   speedIncrement: number
+=======
+  stamina?: StaminaState,
+  setStamina?: SetStaminaFunction,
+  superPad?: { player1: boolean; player2: boolean }
+>>>>>>> e7042a0 (Fix on speed)
 ): { newVelocity: Vector3; newSpeed: number } {
   if (!ball || !paddle1 || !paddle2) {
     return { newVelocity: ballV, newSpeed: currentSpeed };
@@ -57,7 +63,13 @@ export function handleCollisions(
     setStamina,
     superPad,
     volume,
+<<<<<<< HEAD
     speedIncrement
+=======
+    stamina || { player1: 0, player2: 0 },
+    setStamina || (() => {}),
+    superPad
+>>>>>>> e7042a0 (Fix on speed)
   );
   if (p1Result) {
     return {
@@ -78,8 +90,7 @@ export function handleCollisions(
     stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
     setStamina,
     superPad,
-    volume,
-    speedIncrement
+    volume
   );
   if (p2Result) {
     return {

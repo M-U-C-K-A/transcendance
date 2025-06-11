@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
 import { ControlsConfig } from "./ControlsConfig";
-import { Switch } from "@headlessui/react";
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -20,10 +19,8 @@ interface SettingsPanelProps {
   setEnableMaluses: Dispatch<SetStateAction<boolean>>;
   enableSpecial: boolean;
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
-  enableAcceleration: boolean;
-  setEnableAcceleration: Dispatch<SetStateAction<boolean>>;
-  speedIncrement: number;
-  setSpeedIncrement: Dispatch<SetStateAction<number>>;
+  baseSpeed: number;
+  setBaseSpeed: Dispatch<SetStateAction<number>>;
 }
 
 export default function SettingsPanel({
@@ -42,10 +39,8 @@ export default function SettingsPanel({
   setEnableMaluses,
   enableSpecial,
   setEnableSpecial,
-  enableAcceleration,
-  setEnableAcceleration,
-  speedIncrement,
-  setSpeedIncrement,
+  baseSpeed,
+  setBaseSpeed,
 }: SettingsPanelProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
 
@@ -76,36 +71,29 @@ export default function SettingsPanel({
         />
       </div>
 
-      {/* Accélération de la balle */}
-      <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <span>Accélération de la balle</span>
-          <Switch
-            checked={enableAcceleration}
-            onChange={setEnableAcceleration}
-            className={`${enableAcceleration ? 'bg-green-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full`}
-          >
-            <span className="sr-only">Activer l&apos;accélération</span>
-            <span
-              className={`${enableAcceleration ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
-            />
-          </Switch>
+      {/* Sélecteur de vitesse de base - version redesign */}
+      <div className="bg-white dark:bg-zinc-800 dark:text-white rounded-xl shadow-lg p-4 flex flex-col gap-2 items-center">
+        <span className="font-semibold mb-1 text-center">Vitesse de la balle</span>
+        <div className="flex gap-2 justify-center">
+          <button
+            type="button"
+            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 16 ? 'bg-green-500 text-white border-green-700 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
+            onClick={() => setBaseSpeed(16)}
+            aria-label="Lent"
+          >🐢 Lent</button>
+          <button
+            type="button"
+            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 24 ? 'bg-yellow-400 text-white border-yellow-600 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
+            onClick={() => setBaseSpeed(24)}
+            aria-label="Moyen"
+          >⚡ Moyen</button>
+          <button
+            type="button"
+            className={`px-4 py-2 rounded-lg border font-bold transition speed-btn ${baseSpeed === 36 ? 'bg-red-500 text-white border-red-700 shadow-lg' : 'bg-white dark:bg-zinc-700 text-gray-800 dark:text-white border-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-600'}`}
+            onClick={() => setBaseSpeed(36)}
+            aria-label="Rapide"
+          >🔥 Rapide</button>
         </div>
-        {enableAcceleration && (
-          <div className="flex flex-col gap-2">
-            <label htmlFor="speedIncrement">Intensité de l&apos;accélération : {(speedIncrement * 100).toFixed(1)}%</label>
-            <input
-              id="speedIncrement"
-              type="range"
-              min={0}
-              max={0.5}
-              step={0.001}
-              value={speedIncrement}
-              onChange={e => setSpeedIncrement(Number(e.target.value))}
-              className="w-full"
-            />
-          </div>
-        )}
       </div>
 
       {/* Boutons de configuration */}

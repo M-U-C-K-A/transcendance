@@ -1,8 +1,13 @@
 // src/Physic/collisions/collideBumper.ts
 // --------------------------------------
 
+<<<<<<< HEAD
 import { Vector3 } from "@babylonjs/core";
 import { SPEED_INCREMENT } from "../constants";
+=======
+import { Vector3, Mesh } from "@babylonjs/core";
+import type { Sound } from "@babylonjs/core/Audio/sound";
+>>>>>>> e7042a0 (Fix on speed)
 import { playRandomCollisionSound } from "../sound";
 
 export function collideBumper(
@@ -43,11 +48,9 @@ export function collideBumper(
     const reflectZ = ballV.z - 2 * dot * nz;
     const dirAfter = new Vector3(reflectX, 0, reflectZ).normalize();
 
-    const newSpeed = currentSpeed * SPEED_INCREMENT;
-    const newVelocity = dirAfter.scale(newSpeed);
-
+    const newVelocity = dirAfter.scale(currentSpeed);
     playRandomCollisionSound(allHitSounds, volume);
-    return { newVelocity, newSpeed };
+    return { newVelocity, newSpeed: currentSpeed };
   }
 
   return null;
