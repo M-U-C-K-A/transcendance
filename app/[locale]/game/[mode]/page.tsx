@@ -2,10 +2,25 @@
 
 import { Header } from "@/components/dashboard/Header";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import SettingsPanel from "@/app/[locale]/game/[mode]/SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
+
+// Interface pour l'audio du jeu
+interface GameAudio {
+  pause?: () => void;
+}
+
+// Extension de Window
+interface GameWindow extends Window {
+  __GAME_AUDIO__?: GameAudio;
+}
+
+interface Track {
+  label: string;
+  src: string;
+}
 
 export default function Page() {
   const params = useParams();
@@ -18,11 +33,11 @@ export default function Page() {
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [volume, setVolume] = useState(0.2);
   const [showTrackMenu, setShowTrackMenu] = useState(false);
-  const TRACKS = [
+  const TRACKS = useMemo<Track[]>(() => [
     { label: "Force", src: "/sounds/AGST - Force (Royalty Free Music).mp3" },
     { label: "Envy", src: "/sounds/AGST - Envy (Royalty Free Music).mp3" },
     { label: "Arcadewave", src: "/sounds/Lupus Nocte - Arcadewave (Royalty Free Music).mp3" },
-  ];
+  ], []);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
   const [gameStarted, setGameStarted] = useState(false);
@@ -33,12 +48,12 @@ export default function Page() {
       audioRef.current.loop = true;
       audioRef.current.volume = volume;
       audioRef.current.play().catch(console.error);
-      (window as any).__GAME_AUDIO__ = audioRef.current;
+      (window as GameWindow).__GAME_AUDIO__ = audioRef.current;
     }
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
-  }, [gameStarted, currentTrackIndex, volume]);
+  }, [gameStarted, currentTrackIndex, volume, TRACKS]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -51,7 +66,7 @@ export default function Page() {
         audioRef.current.play().catch(console.error);
       }
     }
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex, TRACKS]);
 
   useEffect(() => {
     if (!gameStarted || !audioRef.current) return;
@@ -66,7 +81,7 @@ export default function Page() {
       return () =>
         document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
-  }, [gameStarted]);
+  }, [gameStarted, TRACKS]);
 
   // ──────────────────────────────────────────────────────────────────
   // Choix des couleurs et de la map
@@ -121,12 +136,12 @@ export default function Page() {
   // ──────────────────────────────────────────────────────────────────
   const [cameraKey, setCameraKey] = useState(0);
 
-  const [baseSpeed, setBaseSpeed] = useState(24);
+  const [baseSpeed, setBaseSpeed] = useState(16);
 
   return (
     <ControlsProvider>
       {/* HEADER */}
-      <Header locale={locale} />
+      <Header locale={locale as string} />
 
       <main className="flex min-h-screen flex-col items-center justify-center p-24">
         <div className="fixed inset-0 bg-background flex flex-col items-center justify-center px-4">

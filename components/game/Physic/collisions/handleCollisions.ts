@@ -4,8 +4,13 @@ import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideBumper } from "./collisionBumpers";
 import { collideTrianglePrism } from "./collisionTriangles";
 import { Mesh, Vector3, StandardMaterial } from "@babylonjs/core";
-import type { Sound }                       from "@babylonjs/core/Audio/sound";
+import type { Sound } from "@babylonjs/core/Audio/sound";
+import type { SetStaminaFunction } from "../../gameTypes";
 
+interface StaminaState {
+  player1: number;
+  player2: number;
+}
 
 export function handleCollisions(
   ball: Mesh | null,
@@ -22,21 +27,14 @@ export function handleCollisions(
   allHitSounds: Sound[],
   rightTri: Mesh | null,
   leftTri: Mesh | null,
-  rightTriOuterLeft : Mesh | null, 
+  rightTriOuterLeft: Mesh | null,
   leftTriOuterLeft: Mesh | null,
   rightTriOuterRight: Mesh | null,
   leftTriOuterRight: Mesh | null,
-  stamina?: { player1: number; player2: number },
-  setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean },
   volume: number,
-<<<<<<< HEAD
-  speedIncrement: number
-=======
   stamina?: StaminaState,
   setStamina?: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean }
->>>>>>> e7042a0 (Fix on speed)
 ): { newVelocity: Vector3; newSpeed: number } {
   if (!ball || !paddle1 || !paddle2) {
     return { newVelocity: ballV, newSpeed: currentSpeed };
@@ -55,21 +53,15 @@ export function handleCollisions(
   const p1Result = collidePaddle1(
     ball,
     paddle1,
+    ballV,
     currentSpeed,
     ballMat,
     p1Mat,
     allHitSounds,
-    stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
-    setStamina,
-    superPad,
     volume,
-<<<<<<< HEAD
-    speedIncrement
-=======
     stamina || { player1: 0, player2: 0 },
     setStamina || (() => {}),
     superPad
->>>>>>> e7042a0 (Fix on speed)
   );
   if (p1Result) {
     return {
@@ -87,8 +79,8 @@ export function handleCollisions(
     ballMat,
     p2Mat,
     allHitSounds,
-    stamina ? { player1: stamina.player1, player2: stamina.player2 } : undefined,
-    setStamina,
+    stamina || { player1: 0, player2: 0 },
+    setStamina || (() => {}),
     superPad,
     volume
   );
