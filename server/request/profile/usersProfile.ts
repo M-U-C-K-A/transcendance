@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const Prisma = new PrismaClient()
 
 export default async function getuser(profileId: number, userId: number) {
-	console.log(profileId)
+
 	const userInfo = await Prisma.user.findFirst({
 		where: {
 			id: profileId
@@ -21,7 +21,7 @@ export default async function getuser(profileId: number, userId: number) {
 			pointConcede: true,
 		},
 	});
-	console.log("test32")
+
 	if (!userInfo) {
 		throw new Error("Failed to get profile data")
 	}
