@@ -3,7 +3,7 @@
 
 
 import { Vector3 } from "@babylonjs/core";
-import { TOTAL_SPEED, MAX_ANGLE } from "../constants";
+import { MAX_ANGLE } from "../constants";
 
 export function serve(
   loserSide: "player1" | "player2",

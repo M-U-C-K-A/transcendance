@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { Engine, Scene, Color3, Vector3, Color4, Mesh } from "@babylonjs/core";
+import { Engine, Scene, Color3, Vector3, Color4 } from "@babylonjs/core";
 import { setupGame } from "./Setup/setupGame";
 import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
 import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/Malus";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
-import { updateControls } from "./Physic/customControls";
+import type { Sound } from "@babylonjs/core/Audio/sound";
+import { handleCollisions } from "./Physic/collisions/handleCollisions";
 
 export default function Pong3D({
   paddle1Color,
@@ -36,10 +37,11 @@ export default function Pong3D({
   const [MalusBarKey, setMalusBarKey] = useState(0);
   const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
   const [superPad, setSuperPad] = useState({ player1: false, player2: false });
-  const touchHistory: TouchHistory[] = [];
+  const touchHistory = useRef<TouchHistory[]>([]);
   const [showGoal, setShowGoal] = useState(false);
   const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
   const prevScore = useRef(score);
+  const allHitSounds = useRef<Sound[]>([]);
 
   // ─── Références pour synchroniser l'état ────────────────────
   const scoreRef = useRef(score);
@@ -47,13 +49,16 @@ export default function Pong3D({
   const countdownRef = useRef(countdown);
   const isPausedRef = useRef(isPaused);
   const superPadRef = useRef(superPad);
+  const staminaRef = useRef(stamina);
   const volumeRef = useRef(volume);
+  const lastHitterRef = useRef<number | null>(null);
 
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { winnerRef.current = winner; }, [winner]);
   useEffect(() => { countdownRef.current = countdown; }, [countdown]);
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { superPadRef.current = superPad; }, [superPad]);
+  useEffect(() => { staminaRef.current = stamina; }, [stamina]);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
 
   useEffect(() => {
@@ -75,37 +80,25 @@ export default function Pong3D({
     }
   }, [score]);
 
-  // Mettre à jour la référence des contrôles
   useEffect(() => {
     controlsRef.current = controls;
   }, [controls]);
 
-  // ─── Handlers ───────────────────────────────────────────────
   const handleSetIsPaused = (paused: boolean) => {
     setIsPaused(paused);
   };
 
-<<<<<<< HEAD
-  // ─── Effet principal ────────────────────────────────────────
-=======
->>>>>>> e7042a0 (Fix on speed)
   useEffect(() => {
     if (!canvasRef.current) return;
-
-    // 1) Création de l'Engine et de la Scene
     const engine = new Engine(canvasRef.current, true);
     engineRef.current = engine;
     const scene = new Scene(engine);
     scene.clearColor = new Color4(1, 1, 1, 1);
     sceneRef.current = scene;
-
-    // 2) Appel à setupGame qui retourne un objet conforme à GameObjects
     const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
     cameraRef.current = objs.camera;
     gameObjectsRef.current = objs;
-
-    // 3) Création de l'objet gameRefs pour la physique
-    const gameRefs = {
+    const gameRefs: GameRefs = {
       score: scoreRef,
       winner: winnerRef,
       countdown: countdownRef,
@@ -114,37 +107,34 @@ export default function Pong3D({
       setWinner,
       setCountdown,
       setIsPaused,
-      controls: controlsRef.current,
-      touchHistory,
-      superPad,
-      stamina,
+      controls: controlsRef,
+      touchHistory: touchHistory.current,
+      superPad: superPadRef,
+      stamina: staminaRef,
+      malusSound: null,
+      lastHitter: lastHitterRef,
+      triggerSuperPad: () => {},
     };
-
-    // 4) Initialisation de la physique
     const cleanupPhysic = initgamePhysic(
       scene,
       objs,
-      { score, winner, countdown, isPaused },
       gameRefs,
       setStamina,
       setSuperPad,
-<<<<<<< HEAD
+      baseSpeed,
       enableSpecial,
       superPadRef,
-      touchHistory,
-      volumeRef,
-      enableAcceleration,
-      speedIncrement
-=======
-      baseSpeed
->>>>>>> e7042a0 (Fix on speed)
+      volumeRef
     );
-
-    // 5) Initialiser le système de Malus si activé
     if (enableMaluses) {
       MalusSystemRef.current = new MalusSystem(
         scene,
-        { score, winner, countdown, isPaused },
+        { 
+          score: scoreRef.current, 
+          winner: winnerRef.current, 
+          countdown: countdownRef.current, 
+          isPaused: isPausedRef.current 
+        },
         gameRefs,
         () => setMalusBarKey((k) => k + 1),
         setScore,
@@ -152,12 +142,8 @@ export default function Pong3D({
       );
       MalusSystemRef.current.startMalusSystem();
     }
-
-    // 6) Boucle de rendu
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
-
-    // 7) Cleanup à la destruction du composant
     return () => {
       cleanupPhysic();
       if (MalusSystemRef.current) {
@@ -165,9 +151,8 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
 
-  // Reset de la caméra
   useEffect(() => {
     if (cameraRef.current) {
       cameraRef.current.setPosition(new Vector3(35, 35, 0));
@@ -175,7 +160,6 @@ export default function Pong3D({
     }
   }, [resetCamFlag]);
 
-  // Mettre à jour les couleurs
   useEffect(() => {
     if (gameObjectsRef.current) {
       const { p1Mat, p2Mat } = gameObjectsRef.current;
@@ -184,20 +168,15 @@ export default function Pong3D({
     }
   }, [paddle1Color, paddle2Color]);
 
-  // Ajout du son d'applaudissements
   useEffect(() => {
-    if (winner) {
+    if (winner && (volumeRef.current ?? volume) > 0) {
       const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
-      applause.volume = 0.7;
+      applause.volume = volumeRef.current ?? volume;
       applause.play();
     }
-  }, [winner]);
+  }, [winner, volume]);
 
-  // S'assurer que volumeRef.current est mis à jour à chaque changement de volume
   useEffect(() => {
-<<<<<<< HEAD
-    volumeRef.current = volume;
-=======
     if (!isPaused && !winner) {
       const interval = setInterval(() => {
         if (gameObjectsRef.current && sceneRef.current) {
@@ -222,19 +201,22 @@ export default function Pong3D({
               gameObjectsRef.current.leftTriOuterLeft,
               gameObjectsRef.current.rightTriOuterRight,
               gameObjectsRef.current.leftTriOuterRight,
+              enableSpecial,
               volumeRef.current,
               stamina,
               setStamina,
               superPad
             );
-            ballV.copyFrom(result.newVelocity);
-            gameObjectsRef.current.currentSpeed = result.newSpeed;
+            if (result) {
+              ballV.copyFrom(result.newVelocity);
+              gameObjectsRef.current.currentSpeed = result.newSpeed;
+            }
           }
         }
       }, 1000 / 60);
       return () => clearInterval(interval);
     }
-  }, [isPaused, winner, countdown, score, baseSpeed, stamina, superPad]);
+  }, [isPaused, winner, countdown, score, baseSpeed, stamina, superPad, enableSpecial]);
 
   useEffect(() => {
     if (allHitSounds.current.length > 0) {
@@ -242,7 +224,6 @@ export default function Pong3D({
         sound.setVolume(volume);
       });
     }
->>>>>>> e7042a0 (Fix on speed)
   }, [volume]);
 
   return (
