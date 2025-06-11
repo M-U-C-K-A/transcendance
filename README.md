@@ -67,4 +67,10 @@ nano ~/.docker/config.json
 
 
 
-test 2
+
+
+
+
+
+pnpm tsc --noEmit
+pnpm lint

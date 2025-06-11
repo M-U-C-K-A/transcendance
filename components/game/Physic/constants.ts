@@ -10,7 +10,7 @@
 export const TOTAL_SPEED = 24;
 
 // Incrément de vitesse à chaque rebond ou événement
-export const SPEED_INCREMENT = 1.009;
+
 
 // Vitesse de déplacement des mini-paddles (unités par seconde)
 export const MINI_SPEED = 24;

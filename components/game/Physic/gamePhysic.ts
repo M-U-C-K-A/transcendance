@@ -36,12 +36,10 @@ export const initgamePhysic = (
   gameRefs: GameRefs,
   setStamina: SetStaminaFunction,
   setSuperPad: SetSuperPadFunction,
-  enableSpecial?: boolean,
+  baseSpeed: number,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
   touchHistory?: TouchHistory[],
   volumeRef?: React.RefObject<number>,
-  enableAcceleration: boolean = true,
-  speedIncrement: number = 0.009
 ): (() => void) => {
   const {
     ball,
@@ -113,7 +111,7 @@ export const initgamePhysic = (
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused);
 
   let ballV = Vector3.Zero();
-  let currentSpeed = TOTAL_SPEED;
+  let currentSpeed = baseSpeed;
   let scoreLocal = { player1: 0, player2: 0 };
 
   // Ajout de la logique de stamina et coup spécial
@@ -159,7 +157,7 @@ export const initgamePhysic = (
   }
 
   const serve = (loserSide: "player1" | "player2") => {
-    const { velocity, speed } = serveBall(loserSide);
+    const { velocity, speed } = serveBall(loserSide, baseSpeed);
     ballV = velocity;
     currentSpeed = speed;
   };
@@ -314,7 +312,12 @@ export const initgamePhysic = (
       leftTriOuterLeft,
       rightTriOuterRight,
       leftTriOuterRight,
+<<<<<<< HEAD
       stamina,
+=======
+      volumeRef?.current ?? 0.5,
+      gameRefs.stamina.current,
+>>>>>>> e7042a0 (Fix on speed)
       setStamina,
       superPadRef ? superPadRef.current : undefined,
       volumeRef?.current ?? 0.5,
