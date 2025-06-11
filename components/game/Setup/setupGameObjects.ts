@@ -17,7 +17,7 @@ export function setupGameObjects(
   paddle1Color: string,
   paddle2Color: string
 ) {
-  // 1) Initialisation de l’environnement (caméra, lumières, sol, etc.)
+  // 1) Initialisation de l'environnement (caméra, lumières, sol, etc.)
   const { camera, allHitSounds, p1Mat, p2Mat, ballMat } = initEnvironment(
     scene,
     MapStyle,
@@ -185,6 +185,8 @@ export function setupGameObjects(
     paddle2,
     miniPaddle,
     ball,
+    ballV: new Vector3(0, 0, 0),
+    currentSpeed: 0.2,
     bumperLeft,
     bumperRight,
     p1Mat,
