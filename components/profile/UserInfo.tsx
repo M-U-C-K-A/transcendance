@@ -1,8 +1,8 @@
 import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardContent,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -11,109 +11,112 @@ import { useState } from "react";
 import { useJWT } from "@/hooks/use-jwt";
 
 interface UserProfileCardProps {
-  user: UserInfo
-  locale?: string
-  isBlocked?: boolean
+    user: UserInfo
+    locale?: string
+    isBlocked?: boolean
 }
 
-export function UserProfileCard({ user, locale, isBlocked }: UserProfileCardProps) {
-	const [blocked, setBlocked] = useState(!!isBlocked)
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
-	const jwt = useJWT();
-	const getInitials = (name: string) => {
-		return name
-			.split(' ')
-			.map((n) => n[0])
-			.join('')
-			.toUpperCase()
-			.substring(0, 2);
-	};
+export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
+    const [blocked, setBlocked] = useState(!!isBlocked)
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const jwt = useJWT();
 
-	const handleBlock = async () => {
-		setLoading(true);
-		setError("");
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')
+            .toUpperCase()
+            .substring(0, 2);
+    };
 
-		try {
-			const res = await fetch("/api/chat/block", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${jwt}`,
-				},
-				body: JSON.stringify({ id: user.id }),
-			});
+    const handleBlock = async () => {
+        setLoading(true);
+        setError("");
 
-			if (!res.ok) {
-				const errorMsg = await res.text();
-				throw new Error(errorMsg || "Échec du blocage");
-			}
+        try {
+            const res = await fetch("/api/chat/block", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: JSON.stringify({ id: user.id }),
+            });
 
-			setBlocked(true);
-		} catch (err: any) {
-			console.error("Erreur blocage:", err);
-			setError("Impossible de bloquer l'utilisateur.");
-		} finally {
-			setLoading(false);
-		}
-	};
+            if (!res.ok) {
+                const errorMsg = await res.text();
+                throw new Error(errorMsg || "Échec du blocage");
+            }
+            setBlocked(true);
+        } catch (err: unknown) {
+            console.error("Erreur blocage:", err);
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Impossible de bloquer l'utilisateur."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
-	return (
-		<Card className="bg-card border shadow-sm">
-			<CardHeader>
-				<CardTitle>Profil</CardTitle>
-			</CardHeader>
-			<CardContent className="flex flex-col items-center">
-				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage
-						src={`/profilepicture/${user.id}.webp`}
-						alt={user.username}
-					/>
-					<AvatarFallback>{getInitials(user.username)}</AvatarFallback>
-				</Avatar>
-				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
-				<p className="text-muted-foreground mb-2">@{user.username}</p>
-				<p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
+    return (
+        <Card className="bg-card border shadow-sm">
+            <CardHeader>
+                <CardTitle>Profil</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center">
+                <Avatar className="h-24 w-24 mb-4">
+                    <AvatarImage
+                        src={`/profilepicture/${user.id}.webp`}
+                        alt={user.username}
+                    />
+                    <AvatarFallback>{getInitials(user.username)}</AvatarFallback>
+                </Avatar>
+                <h2 className="text-xl font-bold mb-1">{user.username}</h2>
+                <p className="text-muted-foreground mb-2">@{user.username}</p>
+                <p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
 
-				<div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
-					<div>
-						<p className="text-2xl font-bold text-primary">{user.win}</p>
-						<p className="text-xs text-muted-foreground">Victoires</p>
-					</div>
-					<div>
-						<p className="text-2xl font-bold text-red-400">{user.lose}</p>
-						<p className="text-xs text-muted-foreground">Défaites</p>
-					</div>
-					<div>
-						<p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
-						<p className="text-xs text-muted-foreground">Tournois</p>
-					</div>
-				</div>
+                <div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
+                    <div>
+                        <p className="text-2xl font-bold text-primary">{user.win}</p>
+                        <p className="text-xs text-muted-foreground">Victoires</p>
+                    </div>
+                    <div>
+                        <p className="text-2xl font-bold text-red-400">{user.lose}</p>
+                        <p className="text-xs text-muted-foreground">Défaites</p>
+                    </div>
+                    <div>
+                        <p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
+                        <p className="text-xs text-muted-foreground">Tournois</p>
+                    </div>
+                </div>
 
-				<div className="flex flex-wrap justify-center gap-2 mb-6">
-					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
-					<Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-						{user.onlineStatus ? 'En ligne' : 'Hors ligne'}
-					</Badge>
-				</div>
-				<Button
-				variant={blocked ? "default" : "destructive"}
-				onClick={handleBlock}
-				disabled={loading}
-				className={`w-40 max-w-xs ${blocked ? "bg-green-500 hover:bg-green-600" : ""}`}
-				>
-				{loading
-					? blocked
-					? "Déblocage en cours..."
-					: "Blocage en cours..."
-					: blocked
-					? "Débloquer l'utilisateur"
-					: "Bloquer l'utilisateur"}
-				</Button>
-				{error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
-
-			</CardContent>
-		</Card>
-	);
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    <Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
+                    <Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
+                    <Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
+                        {user.onlineStatus ? 'En ligne' : 'Hors ligne'}
+                    </Badge>
+                </div>
+                <Button
+                    variant={blocked ? "default" : "destructive"}
+                    onClick={handleBlock}
+                    disabled={loading}
+                    className={`w-40 max-w-xs ${blocked ? "bg-green-500 hover:bg-green-600" : ""}`}
+                >
+                    {loading
+                        ? blocked
+                            ? "Déblocage en cours..."
+                            : "Blocage en cours..."
+                        : blocked
+                            ? "Débloquer l'utilisateur"
+                            : "Bloquer l'utilisateur"}
+                </Button>
+                {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+            </CardContent>
+        </Card>
+    );
 }

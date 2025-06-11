@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
+import Image from "next/image";
 import {
   FileArchiveIcon,
   FileAudioIcon,
@@ -490,6 +491,7 @@ function FileUploadRoot(props: FileUploadRootProps) {
       onValueChange,
       onAccept,
       onFileAccept,
+    onFilesUpload,
       onUpload,
       maxFiles,
       onFileValidate,
@@ -763,7 +765,7 @@ function FileUploadDropzone(props: FileUploadDropzoneProps) {
 
   return (
     <DropzonePrimitive
-      role="region"
+      role="application"
       id={context.dropzoneId}
       aria-controls={`${context.inputId} ${context.listId}`}
       aria-disabled={context.disabled}
@@ -850,7 +852,7 @@ function FileUploadList(props: FileUploadListProps) {
 
   return (
     <ListPrimitive
-      role="list"
+      role="listbox"
       id={context.listId}
       aria-orientation={orientation}
       data-orientation={orientation}
@@ -1040,15 +1042,16 @@ function FileUploadItemPreview(props: FileUploadItemPreviewProps) {
 
       if (itemContext.fileState?.file.type.startsWith("image/")) {
         return (
-          <img
-            src={URL.createObjectURL(file)}
-            alt={file.name}
-            className="size-full object-cover"
-            onLoad={(event) => {
-              if (!(event.target instanceof HTMLImageElement)) return;
-              URL.revokeObjectURL(event.target.src);
-            }}
-          />
+    <Image
+      src={URL.createObjectURL(file)}
+      alt={file.name}
+      width={40}
+      height={40}
+      className="size-full object-cover"
+      onLoadingComplete={(img) => {
+        URL.revokeObjectURL(img.src);
+      }}
+    />
         );
       }
 
