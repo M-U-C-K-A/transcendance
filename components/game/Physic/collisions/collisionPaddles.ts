@@ -1,38 +1,30 @@
 // collisionPaddles.ts
 // --------------------
 
-
 import { Vector3, Color3, Mesh, StandardMaterial } from "@babylonjs/core";
 import type { Sound } from "@babylonjs/core/Audio/sound";
 import {
-  SPEED_INCREMENT,
   PADDLE_HALF_WIDTH,
   MAX_BOUNCE_ANGLE,
 } from "../constants";
 import { playRandomCollisionSound } from "../sound";
+import type { SetStaminaFunction } from "../../gameTypes";
 
 // Cooldown de collision par paddle (module scope)
-let lastPaddleCollision = { p1: 0, p2: 0 };
+const lastPaddleCollision = { p1: 0, p2: 0 };
 
 export function collidePaddle1(
   ball: Mesh,
   paddle1: Mesh,
+  ballV: Vector3,
   currentSpeed: number,
   ballMat: StandardMaterial,
   p1Mat: StandardMaterial,
   allHitSounds: Sound[],
-<<<<<<< HEAD
-  stamina?: { player1: number; player2: number },
-  setStamina?: (s: { player1: number; player2: number }) => void,
-  superPad?: { player1: boolean; player2: boolean },
-  volume: number = 0.5,
-  speedIncrement: number = 0.009
-=======
   volume: number,
   stamina: { player1: number; player2: number },
   setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean }
->>>>>>> e7042a0 (Fix on speed)
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50; // ms
   const now = Date.now();
@@ -41,12 +33,8 @@ export function collidePaddle1(
   const PADDLE_HALF_HEIGHT = 1; // Hauteur du paddle
   if (
     ball.position.z < -19 &&
-<<<<<<< HEAD
-    Math.abs(ball.position.x - paddle1.position.x) < paddleWidth
-=======
-    Math.abs(ball.position.x - paddle.position.x) < paddleWidth &&
-    Math.abs(ball.position.y - paddle.position.y) < PADDLE_HALF_HEIGHT
->>>>>>> e7042a0 (Fix on speed)
+    Math.abs(ball.position.x - paddle1.position.x) < paddleWidth &&
+    Math.abs(ball.position.y - paddle1.position.y) < PADDLE_HALF_HEIGHT
   ) {
     if (now - lastPaddleCollision.p1 < cooldown) return null;
     lastPaddleCollision.p1 = now;
@@ -54,12 +42,7 @@ export function collidePaddle1(
     ball.position.z = -19;
     // Gestion stamina
     if (setStamina && stamina && stamina.player1 < 10) {
-      setStamina((prev: { player1: number; player2: number }) => {
-        if (prev.player1 < 10) {
-          return { ...prev, player1: prev.player1 + 1 };
-        }
-        return prev;
-      });
+      setStamina({ ...stamina, player1: Math.min(10, stamina.player1 + 1) });
     }
     // Gestion coup spécial
     if (superPad && superPad.player1) {
@@ -96,8 +79,8 @@ export function collidePaddle2(
   ballMat: StandardMaterial,
   p2Mat: StandardMaterial,
   allHitSounds: Sound[],
-  stamina?: { player1: number; player2: number },
-  setStamina?: (s: { player1: number; player2: number }) => void,
+  stamina: { player1: number; player2: number },
+  setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean },
   volume: number = 0.5
 ): { newVelocity: Vector3; newSpeed: number } | null {
@@ -117,12 +100,7 @@ export function collidePaddle2(
     ball.position.z = 19;
     // Gestion stamina
     if (setStamina && stamina && stamina.player2 < 10) {
-      setStamina((prev: { player1: number; player2: number }) => {
-        if (prev.player2 < 10) {
-          return { ...prev, player2: prev.player2 + 1 };
-        }
-        return prev;
-      });
+      setStamina({ ...stamina, player2: Math.min(10, stamina.player2 + 1) });
     }
     // Gestion coup spécial
     if (superPad && superPad.player2) {

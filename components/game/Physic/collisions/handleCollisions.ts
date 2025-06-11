@@ -1,21 +1,16 @@
-import { collideWalls } from "./collisionWalls";
-import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
-import { collideMiniPaddle } from "./collisionMiniPaddle";
-import { collideBumper } from "./collisionBumpers";
-import { collideTrianglePrism } from "./collisionTriangles";
-import { Mesh, Vector3, StandardMaterial } from "@babylonjs/core";
+import { Vector3, Mesh, StandardMaterial } from "@babylonjs/core";
 import type { Sound } from "@babylonjs/core/Audio/sound";
+import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
+import { collideBumper } from "./collisionBumpers";
+import { collideMiniPaddle } from "./collisionMiniPaddle";
+import { collideTrianglePrism } from "./collisionTriangles";
+import { collideWalls } from "./collisionWalls";
 import type { SetStaminaFunction } from "../../gameTypes";
 
-interface StaminaState {
-  player1: number;
-  player2: number;
-}
-
 export function handleCollisions(
-  ball: Mesh | null,
-  paddle1: Mesh | null,
-  paddle2: Mesh | null,
+  ball: Mesh,
+  paddle1: Mesh,
+  paddle2: Mesh,
   miniPaddle: Mesh | null,
   bumperLeft: Mesh | null,
   bumperRight: Mesh | null,
@@ -31,26 +26,14 @@ export function handleCollisions(
   leftTriOuterLeft: Mesh | null,
   rightTriOuterRight: Mesh | null,
   leftTriOuterRight: Mesh | null,
+  enableAcceleration: boolean,
   volume: number,
-  stamina?: StaminaState,
-  setStamina?: SetStaminaFunction,
+  stamina: { player1: number; player2: number },
+  setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean }
-): { newVelocity: Vector3; newSpeed: number } {
-  if (!ball || !paddle1 || !paddle2) {
-    return { newVelocity: ballV, newSpeed: currentSpeed };
-  }
-
-  // 1) Collision murs latéraux
-  const wallResult = collideWalls(ball, ballV, currentSpeed, allHitSounds, volume);
-  if (wallResult) {
-    return {
-      newVelocity: wallResult.newVelocity,
-      newSpeed: wallResult.newSpeed,
-    };
-  }
-
-  // 2) Collision paddle1
-  const p1Result = collidePaddle1(
+): { newVelocity: Vector3; newSpeed: number } | null {
+  // Collision avec les paddles
+  const paddle1Collision = collidePaddle1(
     ball,
     paddle1,
     ballV,
@@ -59,19 +42,13 @@ export function handleCollisions(
     p1Mat,
     allHitSounds,
     volume,
-    stamina || { player1: 0, player2: 0 },
-    setStamina || (() => {}),
+    stamina,
+    setStamina,
     superPad
   );
-  if (p1Result) {
-    return {
-      newVelocity: p1Result.newVelocity,
-      newSpeed: p1Result.newSpeed,
-    };
-  }
+  if (paddle1Collision) return paddle1Collision;
 
-  // 3) Collision paddle2
-  const p2Result = collidePaddle2(
+  const paddle2Collision = collidePaddle2(
     ball,
     paddle2,
     ballV,
@@ -79,21 +56,40 @@ export function handleCollisions(
     ballMat,
     p2Mat,
     allHitSounds,
-    stamina || { player1: 0, player2: 0 },
-    setStamina || (() => {}),
+    stamina,
+    setStamina,
     superPad,
     volume
   );
-  if (p2Result) {
-    return {
-      newVelocity: p2Result.newVelocity,
-      newSpeed: p2Result.newSpeed,
-    };
+  if (paddle2Collision) return paddle2Collision;
+
+  // Collision avec les bumpers
+  if (bumperLeft) {
+    const bumperLeftCollision = collideBumper(
+      ball,
+      bumperLeft,
+      ballV,
+      currentSpeed,
+      allHitSounds,
+      volume
+    );
+    if (bumperLeftCollision) return bumperLeftCollision;
+  }
+  if (bumperRight) {
+    const bumperRightCollision = collideBumper(
+      ball,
+      bumperRight,
+      ballV,
+      currentSpeed,
+      allHitSounds,
+      volume
+    );
+    if (bumperRightCollision) return bumperRightCollision;
   }
 
-  // 4) Collision mini-paddle (si défini)
+  // Collision avec le mini-paddle
   if (miniPaddle) {
-    const miniResult = collideMiniPaddle(
+    const miniPaddleCollision = collideMiniPaddle(
       ball,
       miniPaddle,
       ballV,
@@ -104,69 +100,34 @@ export function handleCollisions(
       superPad,
       volume
     );
-    if (miniResult) {
-      return {
-        newVelocity: miniResult.newVelocity,
-        newSpeed: miniResult.newSpeed,
-      };
+    if (miniPaddleCollision) return miniPaddleCollision;
+  }
+
+  // Collision avec les triangles
+  const triangles = [rightTri, leftTri, rightTriOuterLeft, leftTriOuterLeft, rightTriOuterRight, leftTriOuterRight];
+  for (const tri of triangles) {
+    if (tri) {
+      const triangleCollision = collideTrianglePrism(
+        ball,
+        tri,
+        ballV,
+        currentSpeed,
+        allHitSounds,
+        volume
+      );
+      if (triangleCollision) return triangleCollision;
     }
   }
 
-  // 5) Collision bumperLeft (si défini)
-  if (bumperLeft) {
-    const bump1 = collideBumper(
-      ball,
-      bumperLeft,
-      ballV,
-      currentSpeed,
-      allHitSounds,
-      volume
-    );
-    if (bump1) {
-      return {
-        newVelocity: bump1.newVelocity,
-        newSpeed: bump1.newSpeed,
-      };
-    }
-  }
+  // Collision avec les murs
+  const wallCollision = collideWalls(
+    ball,
+    ballV,
+    currentSpeed,
+    allHitSounds,
+    volume
+  );
+  if (wallCollision) return wallCollision;
 
-  // 6) Collision bumperRight (si défini)
-  if (bumperRight) {
-    const bump2 = collideBumper(
-      ball,
-      bumperRight,
-      ballV,
-      currentSpeed,
-      allHitSounds,
-      volume
-    );
-    if (bump2) {
-      return {
-        newVelocity: bump2.newVelocity,
-        newSpeed: bump2.newSpeed,
-      };
-    }
-  }
-
-  // 7) Collision avec les triangles (si définis)
-  const tris: Array<Mesh | null> = [
-    rightTri,
-    leftTri,
-    rightTriOuterLeft,
-    leftTriOuterLeft,
-    rightTriOuterRight,
-    leftTriOuterRight,
-  ];
-  for (const tri of tris) {
-    if (tri instanceof Mesh) {
-      const triHit = collideTrianglePrism(ball, tri, ballV, currentSpeed, allHitSounds, volume);
-      if (triHit) {
-        return { newVelocity: triHit.newVelocity, newSpeed: triHit.newSpeed };
-      }
-    }
-  }
-
-     
-  // 8) Pas de collision : on renvoie la vélocité inchangée
-  return { newVelocity: ballV, newSpeed: currentSpeed };
+  return null;
 }
