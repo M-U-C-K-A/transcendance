@@ -1,6 +1,10 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
 import { ControlsConfig } from "./ControlsConfig";
@@ -11,6 +15,23 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ChatSection } from "@/components/dashboard/ChatSection";
 import { useJWT } from "@/hooks/use-jwt";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+
+// Schema de validation pour la création de partie
+const gameCreationSchema = z.object({
+  name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
+  type: z.enum(["custom", "tournament"]),
+  playerCount: z.number().min(2).max(8).optional(),
+});
+
+type GameCreationData = z.infer<typeof gameCreationSchema>;
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -31,6 +52,20 @@ interface SettingsPanelProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
+}
+
+interface GameInfo {
+  id: string;
+  name: string;
+  players: {
+    id: string;
+    name: string;
+  }[];
+  upcomingMatches?: {
+    team1: string;
+    team2: string;
+    time: string;
+  }[];
 }
 
 export default function SettingsPanel({
@@ -54,50 +89,153 @@ export default function SettingsPanel({
   setBaseSpeed,
 }: SettingsPanelProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
-  const [gameInfo, setGameInfo] = useState<any>(null);
+  const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const jwtToken = useJWT();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const playerCount = gamemode === "tournaments"
+    ? parseInt(searchParams.get("players") || "2")
+    : undefined;
 
+  const form = useForm<GameCreationData>({
+    resolver: zodResolver(gameCreationSchema),
+    defaultValues: {
+      name: "",
+      type: gamemode === "tournaments" ? "tournament" : "custom",
+      playerCount: playerCount,
+    },
+  });
+
+  // Ouvre le dialogue si c'est une partie custom/tournament et qu'aucune info n'est chargée
   useEffect(() => {
-    const fetchGameInfo = async () => {
-      if (gamemode === "custom" || gamemode === "tournaments") {
-        try {
-          const res = await fetch("/api/game/infocreation");
-          const data = await res.json();
-          setGameInfo(data);
-        } catch (err) {
-          console.error("Erreur récupération info création :", err);
-        }
-      }
-    };
+    if ((gamemode === "custom" || gamemode === "tournaments") && !gameInfo) {
+      form.reset({
+        name: "",
+        type: gamemode === "tournaments" ? "tournament" : "custom",
+        playerCount: playerCount,
+      });
+    }
+  }, [gamemode, gameInfo]);
 
-    fetchGameInfo();
-  }, [gamemode]);
+  // Crée la partie via l'API
+  const createGame = async (data: GameCreationData) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/game/typecreation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify({
+          name: data.name,
+          playerCount: data.type === "tournament" ? data.playerCount : undefined,
+          type: data.type,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Erreur lors de la création de la partie");
+
+      const gameData = await response.json();
+      localStorage.setItem("currentGameId", gameData.id);
+      setGameInfo(gameData);
+    } catch (error) {
+      console.error("Erreur création partie:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Charge les infos de la partie existante
+  const fetchGameInfo = async () => {
+    if (gamemode !== "custom" && gamemode !== "tournaments") return;
+
+    try {
+      const res = await fetch("/api/game/infocreation");
+      const data = await res.json();
+      setGameInfo(data);
+      if (data?.id) {
+        localStorage.setItem("currentGameId", data.id);
+      }
+    } catch (err) {
+      console.error("Erreur récupération info création :", err);
+    }
+  };
 
   return (
     <div className="flex gap-6 w-full px-4">
-      {/* Colonne gauche : joueurs et matchs si custom/tournaments */}
-      {(gamemode === "custom" || gamemode === "tournaments") && (
+      {/* Dialogue de création de partie */}
+      <Dialog open={!gameInfo && (gamemode === "custom" || gamemode === "tournaments")}
+              onOpenChange={(open) => !open && router.push("/")}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Créer une {gamemode === "tournaments" ? "tournoi" : "partie custom"}
+            </DialogTitle>
+            <DialogDescription>
+              Donnez un nom à votre {gamemode === "tournaments" ? "tournoi" : "partie"} pour commencer
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={form.handleSubmit(createGame)} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                placeholder={`Nom du ${gamemode === "tournaments" ? "tournoi" : "match"}`}
+                {...form.register("name")}
+                disabled={isLoading}
+              />
+              {form.formState.errors.name && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.name.message}
+                </p>
+              )}
+            </div>
+
+            {gamemode === "tournaments" && (
+              <div className="text-sm text-muted-foreground">
+                Tournoi avec {playerCount} joueurs
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Création..." : "Créer la partie"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Colonne gauche : joueurs et matchs */}
+      {(gamemode === "custom" || gamemode === "tournaments") && gameInfo && (
         <div className="w-1/4 space-y-4">
           <Card className="p-4">
             <h2 className="text-xl font-semibold mb-2">En attente</h2>
             <div className="space-y-2">
-              {gameInfo ? (
-                gameInfo.players?.map((player: any, index: number) => (
-                  <Card key={index} className="p-2">👤 {player.name}</Card>
+              {gameInfo.players?.length > 0 ? (
+                gameInfo.players.map((player, index) => (
+                  <Card key={index} className="p-2 flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full bg-primary"></span>
+                    <span>{player.name}</span>
+                  </Card>
                 ))
               ) : (
-                <p>Chargement des joueurs...</p>
+                <p className="text-muted-foreground">Aucun joueur connecté</p>
               )}
             </div>
           </Card>
 
-          {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
+          {gamemode === "tournaments" && gameInfo.upcomingMatches && (
             <Card className="p-4">
               <h2 className="text-xl font-semibold mb-2">Prochains matchs</h2>
-              <ul className="list-disc pl-5 space-y-1">
-                {gameInfo.upcomingMatches.map((match: any, idx: number) => (
-                  <li key={idx}>
-                    {match.team1} vs {match.team2} - {match.time}
+              <ul className="space-y-2">
+                {gameInfo.upcomingMatches.map((match, idx) => (
+                  <li key={idx} className="text-sm">
+                    <div className="font-medium">{match.team1}</div>
+                    <div className="text-center">vs</div>
+                    <div className="font-medium">{match.team2}</div>
+                    <div className="text-muted-foreground text-xs mt-1">
+                      {match.time}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -106,9 +244,10 @@ export default function SettingsPanel({
         </div>
       )}
 
-      {/* Centre : configuration */}
-      <div className="w-2/4">
-        <Card className="p-6 rounded-xl shadow-lg w-full space-y-4">
+      {/* Centre : configuration du jeu */}
+      <div className={`${gamemode === "custom" || gamemode === "tournaments" ? "w-2/4" : "w-3/4"}`}>
+        <Card className="p-6 rounded-xl shadow-lg w-full space-y-6">
+          {/* Configuration de la map */}
           <Card className="p-4">
             <MapChoice
               MapStyle={MapStyle}
@@ -120,6 +259,7 @@ export default function SettingsPanel({
             />
           </Card>
 
+          {/* Choix des couleurs */}
           <Card className="p-4">
             <ColorChoice
               COLORS={COLORS}
@@ -132,33 +272,29 @@ export default function SettingsPanel({
             />
           </Card>
 
+          {/* Vitesse de la balle */}
           <Card className="p-4">
-            <Label className="block text-center font-semibold mb-3">Vitesse de la balle</Label>
+            <Label className="block text-center font-semibold mb-3">
+              Vitesse de la balle
+            </Label>
             <div className="flex gap-2 justify-center">
-              <Toggle
-                pressed={baseSpeed === 16}
-                onPressedChange={() => setBaseSpeed(16)}
-                className="px-4 py-2 data-[state=on]:bg-green-500 data-[state=on]:text-white"
-              >
-                🐢 Lent
-              </Toggle>
-              <Toggle
-                pressed={baseSpeed === 24}
-                onPressedChange={() => setBaseSpeed(24)}
-                className="px-4 py-2 data-[state=on]:bg-yellow-400 data-[state=on]:text-white"
-              >
-                ⚡ Moyen
-              </Toggle>
-              <Toggle
-                pressed={baseSpeed === 36}
-                onPressedChange={() => setBaseSpeed(36)}
-                className="px-4 py-2 data-[state=on]:bg-red-500 data-[state=on]:text-white"
-              >
-                🔥 Rapide
-              </Toggle>
+              {[16, 24, 36].map((speed) => (
+                <Toggle
+                  key={speed}
+                  pressed={baseSpeed === speed}
+                  onPressedChange={() => setBaseSpeed(speed)}
+                  className="px-4 py-2 data-[state=on]:bg-primary data-[state=on]:text-white"
+                  aria-label={`Vitesse ${speed}`}
+                >
+                  {speed === 16 && "🐢 Lent"}
+                  {speed === 24 && "⚡ Moyen"}
+                  {speed === 36 && "🔥 Rapide"}
+                </Toggle>
+              ))}
             </div>
           </Card>
 
+          {/* Boutons d'action */}
           <div className="flex flex-col gap-3">
             <Button
               variant="outline"
@@ -171,7 +307,7 @@ export default function SettingsPanel({
             {!canStart && (
               <Alert variant="destructive">
                 <AlertDescription className="text-center">
-                  Veuillez sélectionner une couleur ou une map pour chaque joueur avant de commencer
+                  Sélectionnez une couleur et une map pour chaque joueur
                 </AlertDescription>
               </Alert>
             )}
@@ -182,23 +318,24 @@ export default function SettingsPanel({
               className="w-full py-6 text-lg"
               variant={canStart ? "default" : "secondary"}
             >
-              Démarrer la partie
+              {gamemode === "tournaments" ? "Commencer le tournoi" : "Démarrer la partie"}
             </Button>
           </div>
-
-          <ControlsConfig
-            isOpen={isControlsConfigOpen}
-            onClose={() => setIsControlsConfigOpen(false)}
-          />
         </Card>
       </div>
 
       {/* Colonne droite : chat */}
       <div className="w-1/4">
-        <div className="border rounded-md h-full">
+        <Card className="h-full">
           <ChatSection currentUser={jwtToken} />
-        </div>
+        </Card>
       </div>
+
+      {/* Configuration des contrôles */}
+      <ControlsConfig
+        isOpen={isControlsConfigOpen}
+        onClose={() => setIsControlsConfigOpen(false)}
+      />
     </div>
   );
 }
