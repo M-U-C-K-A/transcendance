@@ -34,10 +34,14 @@ export async function friendsWebSocketHandler(
 	const decoded = await request.jwtVerify<JwtPayload>();
 	const userId = decoded.id;
 
+
 	if (!friendConnections.has(userId)) {
 	  friendConnections.set(userId, new Set());
 	}
 	friendConnections.get(userId)!.add(connection);
+	console.log(`🚨🚨🚨🚨ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LES AMIS🚨🚨🚨🚨`)
+
+	await changeOnlineStatus(userId, true)
 
 	connection.on('close', () => {
 	  const userConns = friendConnections.get(userId);
@@ -45,6 +49,7 @@ export async function friendsWebSocketHandler(
 	  if (userConns?.size === 0) {
 		friendConnections.delete(userId);
 	  }
+	  	changeOnlineStatus(userId, false)
 	});
 
   } catch (error) {
@@ -68,13 +73,5 @@ export function notifyFriend(userId: number, payload: any) {
 	} catch (err) {
 			console.error("WebSocket send error for user", userId, err);
 		}
-	});
-}
-
-export function notifyFriends(userIds: number[], payload: any) {
-	console.log("🌯🌯🌯🌯🌯🌯🌯🌯", payload)
-	userIds.forEach(userId => {
-		const isConnected = friendConnections.has(userId);
-		notifyFriend(userId, payload);
 	});
 }

@@ -34,7 +34,7 @@ export async function chatWebSocketHandler(
 	const decoded = await request.jwtVerify<JwtPayload>();
 	const userId = decoded.id;
 
-	console.log(`WebSocket connecté pour l'utilisateur ID ${userId}`);
+	console.log(`👺👺👺👺ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LE CHAT👺👺👺👺`)
 
 	if (!connections.has(userId)) {
 		connections.set(userId, new Set());
@@ -77,11 +77,13 @@ export function broadcastToAll(message: any) {
 	const messageString = JSON.stringify(message);
 	connections.forEach((userConnections, userId) => {
 	userConnections.forEach(ws => {
+		console.log(message)
+		console.log(`👤 Socket ${userId} state: ${ws.readyState}`);
 		if (ws.readyState === ws.OPEN) {
 			ws.send(messageString);
 		}
 	});
 });
-	console.log(`Utilisateurs WebSocket connectés : ${connections.size}`);
+	console.log(`Utilisateurs WebSocket Chat connectés : ${connections.size}`);
 	console.log(`🎅🎅🎅🎅🎅🎅Message diffusé à tous les utilisateurs connectés`);
 }

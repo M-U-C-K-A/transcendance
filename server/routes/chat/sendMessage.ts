@@ -18,50 +18,15 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		}
 
 		try {
-			const sentMessage = await sendMessage(sender.id, data);
+			const wsMessage = await sendMessage(sender.id, data);
 
 			if (!data.recipient) {
-				const wsMessage = {
-				id: sentMessage.id,
-				content: sentMessage.content,
-				sendAt: sentMessage,
-					sender: {
-						id: sender.id,
-						username: sender.username,
-					},
-			};
 				broadcastToAll({
 					type: 'NEW_PUBLIC_MESSAGE',
 					message: wsMessage
 			});
 
 			} else if (data.recipient) {
-				const collegueName = await Prisma.user.findFirst({
-					where: {
-						id: sentMessage.recipientId || 999999,
-					},
-					select: {
-						username: true,
-					},
-				});
-
-				const wsMessage = {
-					id: sentMessage.id,
-					content: sentMessage.content,
-					sendAt: sentMessage,
-					user: {
-						id: sender.id,
-						username: sender.username,
-					},
-					collegue: {
-						id: data.recipient,
-						username: collegueName?.username,
-					},
-					sender: {
-						id: sender.id,
-						username: sender.username,
-					},
-				}
 
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
@@ -76,7 +41,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 
 			return reply.code(200).send({
 				message: "Message sent successfully",
-				data: sentMessage
+				data: wsMessage
 			});
 
 		} catch (err: any) {
