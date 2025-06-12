@@ -23,15 +23,38 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 
-// Schema de validation pour la création de partie
 const gameCreationSchema = z.object({
   name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
   type: z.enum(["custom", "tournament"]),
-  playerCount: z.number().min(2).max(8).optional(),
+  playerCount: z.number().min(2).max(16).refine(val => val % 2 === 0, {
+    message: "Le nombre de joueurs doit être un multiple de 2",
+  }),
 });
 
 type GameCreationData = z.infer<typeof gameCreationSchema>;
+
+interface Player {
+  id: string;
+  name: string;
+  ready?: boolean;
+}
+
+interface Match {
+  team1: string;
+  team2: string;
+  time: string;
+  status?: "pending" | "ongoing" | "completed";
+}
+
+interface GameInfo {
+  id: string;
+  name: string;
+  players: Player[];
+  upcomingMatches?: Match[];
+  status?: "waiting" | "starting" | "ongoing";
+}
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -52,20 +75,6 @@ interface SettingsPanelProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
-}
-
-interface GameInfo {
-  id: string;
-  name: string;
-  players: {
-    id: string;
-    name: string;
-  }[];
-  upcomingMatches?: {
-    team1: string;
-    team2: string;
-    time: string;
-  }[];
 }
 
 export default function SettingsPanel({
@@ -93,32 +102,26 @@ export default function SettingsPanel({
   const [isLoading, setIsLoading] = useState(false);
   const jwtToken = useJWT();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const playerCount = gamemode === "tournaments"
-    ? parseInt(searchParams.get("players") || "2")
-    : undefined;
 
   const form = useForm<GameCreationData>({
     resolver: zodResolver(gameCreationSchema),
     defaultValues: {
       name: "",
       type: gamemode === "tournaments" ? "tournament" : "custom",
-      playerCount: playerCount,
+      playerCount: 4,
     },
   });
 
-  // Ouvre le dialogue si c'est une partie custom/tournament et qu'aucune info n'est chargée
   useEffect(() => {
     if ((gamemode === "custom" || gamemode === "tournaments") && !gameInfo) {
       form.reset({
         name: "",
         type: gamemode === "tournaments" ? "tournament" : "custom",
-        playerCount: playerCount,
+        playerCount: 4,
       });
     }
   }, [gamemode, gameInfo]);
 
-  // Crée la partie via l'API
   const createGame = async (data: GameCreationData) => {
     setIsLoading(true);
     try {
@@ -134,7 +137,7 @@ export default function SettingsPanel({
         }),
       });
 
-      if (!response.ok) throw new Error("Erreur lors de la création de la partie");
+      if (!response.ok) throw new Error("Erreur lors de la création");
 
       const gameData = await response.json();
       localStorage.setItem("currentGameId", gameData.id);
@@ -146,7 +149,6 @@ export default function SettingsPanel({
     }
   };
 
-  // Charge les infos de la partie existante
   const fetchGameInfo = async () => {
     if (gamemode !== "custom" && gamemode !== "tournaments") return;
 
@@ -158,29 +160,31 @@ export default function SettingsPanel({
         localStorage.setItem("currentGameId", data.id);
       }
     } catch (err) {
-      console.error("Erreur récupération info création :", err);
+      console.error("Erreur récupération info:", err);
     }
   };
 
   return (
-    <div className="flex gap-6 w-full px-4">
-      {/* Dialogue de création de partie */}
+    <div className="flex gap-6 w-full px-4 h-full">
+      {/* Dialogue de création */}
       <Dialog open={!gameInfo && (gamemode === "custom" || gamemode === "tournaments")}
               onOpenChange={(open) => !open && router.push("/")}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>
-              Créer une {gamemode === "tournaments" ? "tournoi" : "partie custom"}
+            <DialogTitle className="text-2xl">
+              {gamemode === "tournaments" ? "Nouveau Tournoi" : "Partie Custom"}
             </DialogTitle>
             <DialogDescription>
-              Donnez un nom à votre {gamemode === "tournaments" ? "tournoi" : "partie"} pour commencer
+              Configurez les paramètres de base
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={form.handleSubmit(createGame)} className="space-y-4">
-            <div className="space-y-2">
+          <form onSubmit={form.handleSubmit(createGame)} className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="gameName">Nom</Label>
               <Input
-                placeholder={`Nom du ${gamemode === "tournaments" ? "tournoi" : "match"}`}
+                id="gameName"
+                placeholder={`Mon ${gamemode === "tournaments" ? "Tournoi" : "Match"}`}
                 {...form.register("name")}
                 disabled={isLoading}
               />
@@ -192,61 +196,116 @@ export default function SettingsPanel({
             </div>
 
             {gamemode === "tournaments" && (
-              <div className="text-sm text-muted-foreground">
-                Tournoi avec {playerCount} joueurs
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <Label>Nombre de joueurs</Label>
+                  <span className="font-bold text-lg">
+                    {form.watch("playerCount")}
+                  </span>
+                </div>
+                <Slider
+                  defaultValue={[4]}
+                  min={2}
+                  max={16}
+                  step={2}
+                  onValueChange={(value) => form.setValue("playerCount", value[0])}
+                  value={[form.watch("playerCount")]}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground px-2">
+                  {[2, 4, 6, 8, 10, 12, 14, 16].map(num => (
+                    <span key={num}>{num}</span>
+                  ))}
+                </div>
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Création..." : "Créer la partie"}
+            <Button
+              type="submit"
+              className="w-full py-6 text-lg"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="animate-pulse">Création en cours...</span>
+              ) : (
+                `Créer ${gamemode === "tournaments" ? "le Tournoi" : "la Partie"}`
+              )}
             </Button>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Colonne gauche : joueurs et matchs */}
+      {/* Colonne gauche */}
       {(gamemode === "custom" || gamemode === "tournaments") && gameInfo && (
-        <div className="w-1/4 space-y-4">
-          <Card className="p-4">
-            <h2 className="text-xl font-semibold mb-2">En attente</h2>
-            <div className="space-y-2">
+        <div className="w-1/4 space-y-6">
+          <Card className="p-4 h-fit">
+            <h2 className="text-xl font-semibold mb-3">Participants</h2>
+            <div className="space-y-3">
               {gameInfo.players?.length > 0 ? (
-                gameInfo.players.map((player, index) => (
-                  <Card key={index} className="p-2 flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-primary"></span>
-                    <span>{player.name}</span>
+                gameInfo.players.map((player) => (
+                  <Card key={player.id} className="p-3 flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${
+                      player.ready ? 'bg-green-500' : 'bg-yellow-500'
+                    }`} />
+                    <span className="font-medium">{player.name}</span>
+                    {player.id === jwtToken?.id && (
+                      <span className="ml-auto text-xs bg-primary/10 px-2 py-1 rounded">
+                        Vous
+                      </span>
+                    )}
                   </Card>
                 ))
               ) : (
-                <p className="text-muted-foreground">Aucun joueur connecté</p>
+                <Card className="p-3 text-center text-muted-foreground">
+                  En attente de joueurs...
+                </Card>
               )}
             </div>
           </Card>
 
           {gamemode === "tournaments" && gameInfo.upcomingMatches && (
-            <Card className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Prochains matchs</h2>
-              <ul className="space-y-2">
+            <Card className="p-4 h-fit">
+              <h2 className="text-xl font-semibold mb-3">Arbre du Tournoi</h2>
+              <div className="space-y-4">
                 {gameInfo.upcomingMatches.map((match, idx) => (
-                  <li key={idx} className="text-sm">
-                    <div className="font-medium">{match.team1}</div>
-                    <div className="text-center">vs</div>
-                    <div className="font-medium">{match.team2}</div>
-                    <div className="text-muted-foreground text-xs mt-1">
-                      {match.time}
+                  <div key={idx} className="border rounded-lg p-3">
+                    <div className="flex justify-between items-center">
+                      <span className={`font-medium ${
+                        match.status === 'completed' ? 'line-through' : ''
+                      }`}>
+                        {match.team1}
+                      </span>
+                      <span className="text-xs bg-muted px-2 py-1 rounded">
+                        vs
+                      </span>
+                      <span className={`font-medium ${
+                        match.status === 'completed' ? 'line-through' : ''
+                      }`}>
+                        {match.team2}
+                      </span>
                     </div>
-                  </li>
+                    <div className="mt-2 text-xs text-muted-foreground flex justify-between">
+                      <span>{match.time}</span>
+                      {match.status === 'ongoing' && (
+                        <span className="text-green-500">• En cours</span>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </Card>
           )}
         </div>
       )}
 
-      {/* Centre : configuration du jeu */}
-      <div className={`${gamemode === "custom" || gamemode === "tournaments" ? "w-2/4" : "w-3/4"}`}>
-        <Card className="p-6 rounded-xl shadow-lg w-full space-y-6">
-          {/* Configuration de la map */}
+      {/* Colonne centrale */}
+      <div className={`${
+        gamemode === "custom" || gamemode === "tournaments"
+          ? "w-2/4"
+          : "w-3/4"
+      }`}>
+        <Card className="p-6 rounded-xl h-full flex flex-col gap-6">
+          {/* Configuration Map */}
           <Card className="p-4">
             <MapChoice
               MapStyle={MapStyle}
@@ -258,7 +317,7 @@ export default function SettingsPanel({
             />
           </Card>
 
-          {/* Choix des couleurs */}
+          {/* Choix Couleurs */}
           <Card className="p-4">
             <ColorChoice
               COLORS={COLORS}
@@ -271,36 +330,37 @@ export default function SettingsPanel({
             />
           </Card>
 
-          {/* Vitesse de la balle */}
+          {/* Vitesse Balle */}
           <Card className="p-4">
             <Label className="block text-center font-semibold mb-3">
               Vitesse de la balle
             </Label>
             <div className="flex gap-2 justify-center">
-              {[16, 24, 36].map((speed) => (
+              {[
+                { speed: 16, label: "🐢 Lent", color: "bg-green-500" },
+                { speed: 24, label: "⚡ Moyen", color: "bg-yellow-400" },
+                { speed: 36, label: "🔥 Rapide", color: "bg-red-500" },
+              ].map((item) => (
                 <Toggle
-                  key={speed}
-                  pressed={baseSpeed === speed}
-                  onPressedChange={() => setBaseSpeed(speed)}
-                  className="px-4 py-2 data-[state=on]:bg-primary data-[state=on]:text-white"
-                  aria-label={`Vitesse ${speed}`}
+                  key={item.speed}
+                  pressed={baseSpeed === item.speed}
+                  onPressedChange={() => setBaseSpeed(item.speed)}
+                  className={`px-4 py-2 data-[state=on]:${item.color} data-[state=on]:text-white`}
                 >
-                  {speed === 16 && "🐢 Lent"}
-                  {speed === 24 && "⚡ Moyen"}
-                  {speed === 36 && "🔥 Rapide"}
+                  {item.label}
                 </Toggle>
               ))}
             </div>
           </Card>
 
-          {/* Boutons d'action */}
-          <div className="flex flex-col gap-3">
+          {/* Boutons Actions */}
+          <div className="flex flex-col gap-3 mt-auto">
             <Button
               variant="outline"
               onClick={() => setIsControlsConfigOpen(true)}
               className="w-full py-6 text-lg"
             >
-              Configurer les contrôles
+              🎮 Configurer les contrôles
             </Button>
 
             {!canStart && (
@@ -317,20 +377,20 @@ export default function SettingsPanel({
               className="w-full py-6 text-lg"
               variant={canStart ? "default" : "secondary"}
             >
-              {gamemode === "tournaments" ? "Commencer le tournoi" : "Démarrer la partie"}
+              {gamemode === "tournaments"
+                ? "🏆 Démarrer le Tournoi"
+                : "🚀 Lancer la Partie"}
             </Button>
           </div>
         </Card>
       </div>
 
-      {/* Colonne droite : chat */}
+      {/* Colonne droite - Chat */}
       <div className="w-1/4">
-        <Card className="h-full">
           <ChatSection currentUser={jwtToken} />
-        </Card>
       </div>
 
-      {/* Configuration des contrôles */}
+      {/* Config Contrôles */}
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
