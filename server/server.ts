@@ -21,7 +21,6 @@ import acceptRequestRoute from './routes/friends/treatRequestRoute';
 import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
 import removeFriendRoute from './routes/friends/removeFriendRoute';
 import newMessageRoute from './routes/chat/newMessageRoute';
-import createMatchRoute from './routes/match/createMatchRoute';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
@@ -32,6 +31,7 @@ import { googleLogin } from './routes/auth/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 import fastifyCookie from '@fastify/cookie';
+import gameCreationRoute from './routes/match/gameCreation';
 
 
 dotenv.config();
@@ -82,12 +82,12 @@ async function main() {
 	await app.register(seeFriendRequestRoute);
 	await app.register(removeFriendRoute);
 	await app.register(newMessageRoute);
-	await app.register(createMatchRoute);
 	await app.register(joinMatchRoute);
 	await app.register(matchResultRoute);
 	await app.register(blockUserRoute);
 	await app.register(matchListRoute);
 	await app.register(googleLogin);
+	await app.register(gameCreationRoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);

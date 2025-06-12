@@ -66,7 +66,11 @@ const nextConfig: NextConfig = {
       {
         source: "/api/chat/block",
         destination: "https://backend/chat/block"
-      }
+      },
+      {
+        source: "/api/game/typecreation",
+        destination: "https://backend/game/typecreation"
+      },
     ];
   },
   async headers() {

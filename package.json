@@ -72,6 +72,7 @@
     "faker": "^6.6.6",
     "fastify": "^5.3.2",
     "framer-motion": "^12.11.4",
+    "hashids": "^2.3.0",
     "input-otp": "^1.4.2",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
