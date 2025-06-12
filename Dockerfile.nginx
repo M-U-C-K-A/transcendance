@@ -1,0 +1,6 @@
+FROM nginx:latest
+
+COPY generate_ssl.sh /usr/local/bin/generate_ssl.sh
+RUN chmod +x /usr/local/bin/generate_ssl.sh
+
+CMD ["/usr/local/bin/generate_ssl.sh"]
