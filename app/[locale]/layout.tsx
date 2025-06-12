@@ -22,7 +22,10 @@ export default async function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-        >
+        ><script
+        crossOrigin="anonymous"
+        src="//unpkg.com/react-scan/dist/auto.global.js"
+      />
           <Provider locale={locale}>
             <ThemePersistence lang={locale} />
             {children}

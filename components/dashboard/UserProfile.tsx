@@ -53,7 +53,7 @@ export function UserProfile() {
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
 					<AvatarImage src={`/profilepicture/${id}.webp`} alt={user.username} />
-					<AvatarFallback className="text-2xl">jd</AvatarFallback>
+					<AvatarFallback className="text-2xl">{user?.username?.slice(0, 2).toUpperCase() || "??"}</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
 				<p className="text-muted-foreground mb-2">@{user.username}</p>
@@ -75,12 +75,11 @@ export function UserProfile() {
 				<div className="flex gap-2 mb-4">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
 					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
-					<Badge variant={user.onlineStatus ? "offline" : "online"}>
-  						{user.onlineStatus ? "En ligne" : "Hors ligne"}
+					<Badge variant={user.onlineStatus ? "online" : "offline"}>
+						{user.onlineStatus ? "En ligne" : "Hors ligne"}
 					</Badge>
 				</div>
 			</CardContent>
 		</Card>
 	)
 }
-
