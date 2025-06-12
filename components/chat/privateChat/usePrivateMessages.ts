@@ -63,7 +63,7 @@ export const usePrivateMessages = (currentUser: string) => {
 		const token = localStorage.getItem("token");
 		if (!token) return;
 
-		const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
+		const wsUrl = `wss://c1r3p11.42lehavre.fr:3001/wss/chat`;
 
 		const newSocket = new WebSocket(wsUrl, [token]);
 
@@ -130,10 +130,12 @@ export const usePrivateMessages = (currentUser: string) => {
 
 	useEffect(() => {
 		fetchPrivateMessages();
-		const cleanup = setupWebSocket();
+		setupWebSocket();
 
 		return () => {
-			if (cleanup) cleanup();
+			if (socket) {
+				socket.close();
+			}
 		};
 	}, [fetchPrivateMessages, setupWebSocket]);
 

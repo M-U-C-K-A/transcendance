@@ -39,6 +39,7 @@ export async function chatWebSocketHandler(
 	if (!connections.has(userId)) {
 		connections.set(userId, new Set());
 	}
+
 	connections.get(userId)!.add(connection);
 
 	await changeOnlineStatus(userId, true)
@@ -68,6 +69,7 @@ export function broadcastMessage(userId: number, message: any) {
 			ws.send(messageString);
 		}
 	});
+	console.log(message)
 	console.log(`Message envoyé à l'utilisateur ${userId}`);
 	}
 }

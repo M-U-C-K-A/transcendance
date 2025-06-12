@@ -10,6 +10,9 @@ export default {
     "statistics": "Statistics",
     "dashboard": "Dashboard",
     "back": "Back",
+    "cancel": "Cancel",
+    "removing": "Removing",
+    "remove": "Remove",
     "copyright": "© 2025 PongMaster Enterprise. All rights reserved."
   },
   "landing": {
@@ -74,6 +77,13 @@ export default {
       "online": "Online",
       "offline": "Offline",
       "add": "Add colleague",
+      "notLoggedIn": "Your not logged",
+      "viewProfile": "View Profile",
+      "noFriends": "You have no friends",
+      "remove": "Remove friend",
+      "removeFriendTitle": "Remove friend",
+      "removeFriendConfirmation": "Do you really wanna remove this friend ",
+      "pendingInvitations": "Pending friends invitation",
       "addDialog": {
         "title": "Add colleague",
         "usernameLabel": "Username",

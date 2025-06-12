@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 // Liste manuelle des langues supportées
-const locales = ["en", "fr"] as const
+const locales = ["en", "fr", "es"] as const
 type Locale = (typeof locales)[number]
 
 const languageData: Record<Locale, { name: string; flag: string }> = {
 	en: { name: "English", flag: "🇬🇧" },
 	fr: { name: "Français", flag: "🇫🇷" },
+	es: { name: "Español", flag: "🇪🇸" },
 }
 
 /**

@@ -38,17 +38,17 @@ export function ColleaguesList({ locale }: { locale: string }) {
 				throw new Error('Failed to fetch friends')
 			}
 			const data = await response.json() as Array<{
-  id: number;
-  username: string;
-  onlineStatus: boolean;
-  avatar?: string;
+	id: number;
+	username: string;
+	onlineStatus: boolean;
+	avatar?: string;
 }>
 
 const transformed = data.map((friend): Friend => ({
-  id: friend.id,
-  username: friend.username,
-  status: friend.onlineStatus,
-  avatar: friend.avatar ?? undefined,
+	id: friend.id,
+	username: friend.username,
+	status: friend.onlineStatus,
+	avatar: friend.avatar ?? undefined,
 }))
 			setFriends(transformed)
 		} catch (err) {
@@ -174,7 +174,7 @@ const transformed = data.map((friend): Friend => ({
 				</div>
 
 				{/* ✅ Invitations en attente */}
-				<PendingInvitations locale={locale} />
+				<PendingInvitations />
 			</CardContent>
 			<CardFooter>
 				<AddColleagueDialog />

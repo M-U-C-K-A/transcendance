@@ -30,7 +30,7 @@ export function Header({ locale }: HeaderProps) {
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <>
-                <ProfileEditDialog username={username} />
+                <ProfileEditDialog />
               <Link href="/stats">
                 <Button variant="ghost" size="sm" aria-label="Stats">
                   <BarChart className="h-5 w-5" />
