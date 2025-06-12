@@ -35,7 +35,10 @@ export const usePublicMessages = () => {
 
     try {
       const response = await fetch(`/api/chat/receive/general`, {
-        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (!response.ok) throw new Error("Erreur serveur");
@@ -64,13 +67,16 @@ export const usePublicMessages = () => {
 
     fetchMessages();
 
-    const wssUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT;
-    if (!wssUrl) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT;
+    if (!wsUrl) {
       console.error("❌ WebSocket URL non définie");
       return;
     }
 
-    const socket = new WebSocket(wssUrl);
+    const socket = new WebSocket(wsUrl, [token]);
     socketRef.current = socket;
 
     socket.onopen = () => {

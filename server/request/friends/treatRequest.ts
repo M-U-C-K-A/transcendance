@@ -33,7 +33,7 @@ export default async function treatRequest(userId: number, friendName: string, a
 			},
 		});
 	}
-
+	
 	notifyFriend(userId, {
 	type: "NEW_FRIEND",
 		from: {

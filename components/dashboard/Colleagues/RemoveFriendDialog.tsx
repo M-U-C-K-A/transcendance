@@ -31,7 +31,10 @@ export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFr
       setError(null)
       const response = await fetch(`/api/friends/remove`, {
         method: 'POST',
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ id: userId })
       })
 

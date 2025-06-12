@@ -9,28 +9,14 @@ export default async function loginRoute(server: FastifyInstance) {
 
 		try {
 			const user = await login(data)
-
 			const token = server.jwt.sign({
 				id: user[0].id,
 				email: user[0].email,
 				username: user[0].username,
 				bio: user[0].bio,
-			}, {
-				expiresIn: '7d',
 			})
-
-			reply
-				.setCookie('token', token, {
-					path: '/',
-					httpOnly: true,
-					secure: true,
-					sameSite: 'lax',
-					maxAge: 60 * 60 * 24 * 7,
-					domain: process.env.COOKIE_DOMAIN || 'c2r11p1.42lehavre.fr',
-				})
-				.code(202)
-				.send({ message: 'User logged successfully' })
-
+			request.log.info({ email: data.email }, 'Connexion réussie')
+			return reply.code(202).send({ message: 'User logged successfully', token })
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {
 				request.log.warn({ email: data.email }, 'Tentative de connexion avec un compte inexistant')

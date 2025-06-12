@@ -83,7 +83,9 @@ export default function ProfilePage() {
     const fetchProfileData = async () => {
       try {
         const response = await fetch(`/api/profile/${username}`, {
-            credentials: "include",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
         })
         if (!response.ok) {
           throw new Error("Failed to fetch profile data")

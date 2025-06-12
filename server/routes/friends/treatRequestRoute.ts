@@ -7,9 +7,7 @@ export default async function acceptRequestRoute(server: FastifyInstance) {
 	const user = request.user as { id: number, username: string }
 	const param = request.body as { username: string, asAccepted: boolean }
 
-	if (!user)
-	{
-		console.log('No parameter passed in friendListRoute route')
+	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
