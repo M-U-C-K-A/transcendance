@@ -67,7 +67,7 @@ export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFr
         <DialogHeader>
           <DialogTitle>{t('dashboard.colleagues.removeFriendTitle')}</DialogTitle>
           <DialogDescription>
-            {t('dashboard.colleagues.removeFriendConfirmation', { username })}
+            {t('dashboard.colleagues.removeFriendConfirmation')}
           </DialogDescription>
         </DialogHeader>
 

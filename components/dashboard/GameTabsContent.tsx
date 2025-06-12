@@ -63,7 +63,7 @@ export function CustomGameContent({ locale }: GameTabsContentProps) {
   useEffect(() => {
 	const fetchMatches = async () => {
 	  try {
-		const res = await fetch("/api/match/list/", {
+		const res = await fetch("/api/match/list", {
 		  headers: {
 			Authorization: `Bearer ${jwt}`,
 		  },

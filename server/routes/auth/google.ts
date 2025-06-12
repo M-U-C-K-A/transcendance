@@ -17,7 +17,7 @@ export async function googleLogin(server: FastifyInstance) {
 				code,
 				client_id: process.env.GOOGLE_CLIENT_ID || '',
 				client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
-				redirect_uri: process.env.GOOGLE_REDIRECT_URI || '',
+				redirect_uri: "https://c1r3p11.42lehavre.fr:3001/auth/google/callback",
 				grant_type: 'authorization_code',
 			}),
 		});
@@ -50,7 +50,7 @@ export async function googleLogin(server: FastifyInstance) {
 			bio: result.bio,
 		});
 
-		reply.redirect(`https://c2r11p1.42lehavre.fr:8443/en/auth?token=${token}`);
+		reply.redirect(`https://c1r3p11.42lehavre.fr:8443/en/auth?token=${token}`);
 	} catch (err: any) {
 		console.error('Google login error:', err);
 		reply.redirect('/en/auth?error=internal_error');

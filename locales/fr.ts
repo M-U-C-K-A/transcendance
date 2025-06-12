@@ -4,25 +4,28 @@ export default {
   "back_to_home": "Retour à l'accueil",
   "common": {
     "appName": "PongMaster",
-    "login": "Se connecter",
-    "register": "S'inscrire", 
-    "freeRegister": "S'inscrire gratuitement",
+    "login": "Connexion",
+    "register": "Inscription",
+    "freeRegister": "Inscription gratuite",
     "statistics": "Statistiques",
     "dashboard": "Tableau de bord",
     "back": "Retour",
+    "cancel": "Annuler",
+    "removing": "Suppression",
+    "remove": "Supprimer",
     "copyright": "© 2025 PongMaster Enterprise. Tous droits réservés."
   },
   "landing": {
     "hero": {
       "title": "PongMaster Enterprise",
-      "subtitle": "La plateforme professionnelle de Pong pour les entreprises et les joueurs compétitifs.",
+      "subtitle": "La plateforme Pong professionnelle pour les entreprises et les joueurs compétitifs.",
       "cta": "Commencer à jouer"
     },
     "features": {
       "title": "Fonctionnalités",
       "gameModes": {
         "title": "Modes de jeu",
-        "description": "Partie classique, personnalisée ou tournoi. Choisissez votre façon de jouer et défiez vos adversaires."
+        "description": "Classique, personnalisé ou tournoi. Choisissez votre façon de jouer et défiez vos adversaires."
       },
       "chat": {
         "title": "Chat en temps réel",
@@ -30,7 +33,7 @@ export default {
       },
       "elo": {
         "title": "Suivi ELO",
-        "description": "Suivez votre progression avec notre système de classement ELO et comparez vos performances."
+        "description": "Suivez vos progrès avec notre système de classement ELO et comparez vos performances."
       }
     },
     "cta": {
@@ -41,15 +44,15 @@ export default {
   "auth": {
     "login": {
       "title": "Connexion",
-      "description": "Connectez-vous pour accéder à votre compte PongMaster",
+      "description": "Connectez-vous à votre compte PongMaster",
       "email": "Email",
       "password": "Mot de passe",
-      "forgotPassword": "Mot de passe oublié?",
+      "forgotPassword": "Mot de passe oublié ?",
       "continueWithGoogle": "Continuer avec Google",
       "submit": "Se connecter"
     },
     "register": {
-      "title": "Inscription", 
+      "title": "Inscription",
       "description": "Créez un compte pour commencer à jouer à PongMaster",
       "username": "Nom d'utilisateur",
       "email": "Email",
@@ -59,13 +62,13 @@ export default {
     }
   },
   "dashboard": {
-    "title": "Tableau de bord",
+    "title": "tableau de bord",
     "welcome": "Bienvenue",
     "profile": {
       "title": "Profil",
-      "edit": "Éditer le profil",
+      "edit": "Modifier le profil",
       "wins": "Victoires",
-      "losses": "Défaites", 
+      "losses": "Défaites",
       "tournaments": "Tournois",
       "level": "Niveau"
     },
@@ -73,33 +76,60 @@ export default {
       "title": "Collègues",
       "online": "En ligne",
       "offline": "Hors ligne",
-      "add": "Ajouter un collègue"
+      "add": "Ajouter un collègue",
+      "notLoggedIn": "Vous n'êtes pas connecté",
+      "viewProfile": "Voir le profil",
+      "noFriends": "Vous n'avez pas d'amis",
+      "remove": "Supprimer un ami",
+      "removeFriendTitle": "Supprimer un ami",
+      "removeFriendConfirmation": "Voulez-vous vraiment supprimer cet ami ",
+      "pendingInvitations": "Invitations en attente",
+      "addDialog": {
+        "title": "Ajouter un collègue",
+        "usernameLabel": "Nom d'utilisateur",
+        "usernamePlaceholder": "Entrez le nom d'utilisateur de la personne à ajouter",
+        "submit": "Ajouter",
+        "submitting": "Ajout en cours...",
+        "errors": {
+          "tooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères.",
+          "tooLong": "Le nom d'utilisateur doit comporter au maximum 20 caractères.",
+          "invalidChars": "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des underscores."
+        },
+        "success": {
+          "title": "Collègue ajouté",
+          "description": "Vous avez ajouté {username} comme collègue avec succès"
+        },
+        "error": {
+          "title": "Erreur lors de l'ajout",
+          "description": "Une erreur s'est produite lors de l'ajout du collègue."
+        }
+      }
     },
     "game": {
-      "quickMatch": "Partie Rapide",
-      "customGame": "Partie Personnalisée",
+      "quickMatch": "Match rapide",
+      "customGame": "Partie personnalisée",
       "tournament": "Tournoi",
       "quickMatchDesc": "Jouez une partie classique de Pong contre un adversaire aléatoire",
       "customGameDesc": "Créez une partie avec vos propres règles ou rejoignez une partie existante",
       "tournamentDesc": "Participez à des tournois et gagnez des récompenses",
       "readyToPlay": "Prêt à jouer ?",
       "startDesc": "Cliquez sur le bouton ci-dessous pour commencer",
-      "start": "Commencer une partie rapide",
+      "start": "Lancer un match rapide",
       "create": "Créer",
       "join": "Rejoindre",
       "availableGames": "Parties disponibles",
       "players": "joueurs",
       "createTournament": "Créer un tournoi",
       "createTournamentDesc": "Organisez votre propre tournoi et invitez des participants",
-      "activeTournaments": "Tournois actifs",
+      "activeTournaments": "Tournois en cours",
       "activeTournamentsDesc": "Rejoignez un tournoi en cours et affrontez d'autres joueurs",
       "view": "Voir",
       "upcomingTournaments": "Tournois à venir",
       "register": "S'inscrire"
     },
     "chat": {
-      "title": "Chat Général",
-      "placeholder": "Écrivez un message..."
+      "title": "Chat général",
+      "placeholder": "Écrire un message..."
     }
   },
   "game": {
@@ -114,24 +144,24 @@ export default {
       "player2": "Joueur 2"
     },
     "controls": {
-      "player1": "Contrôles Joueur 1:",
+      "player1": "Contrôles Joueur 1 :",
       "player1Keys": "W (haut) / S (bas)",
-      "player2": "Contrôles Joueur 2:",
+      "player2": "Contrôles Joueur 2 :",
       "player2Keys": "↑ (haut) / ↓ (bas)",
       "playAgain": "Rejouer"
     },
     "chat": {
-      "title": "Chat de partie"
+      "title": "Chat de la partie"
     },
     "winner": "a gagné !",
-    "finalScore": "Score final:"
+    "finalScore": "Score final :"
   },
   "stats": {
-    "title": "Statistiques et Classement ELO",
+    "title": "Statistiques et classement ELO",
     "period": "Période",
-    "lastMonth": "Dernier mois",
-    "lastQuarter": "Dernier trimestre", 
-    "lastYear": "Dernière année",
+    "lastMonth": "Le mois dernier",
+    "lastQuarter": "Le dernier trimestre",
+    "lastYear": "L'année dernière",
     "all": "Tout",
     "profile": {
       "title": "Profil",
@@ -139,25 +169,25 @@ export default {
       "losses": "Défaites",
       "tournaments": "Tournois",
       "elo": "ELO",
-      "rank": "Rang"
+      "rank": "Classement"
     },
     "statistics": {
       "title": "Statistiques",
       "gamesPlayed": "Parties jouées",
       "winRate": "Taux de victoire",
       "pointsScored": "Points marqués",
-      "pointsConceded": "Points concédés",
+      "pointsConceded": "Points encaissés",
       "bestStreak": "Meilleure série",
       "tournamentsWon": "Tournois gagnés"
     },
     "elo": {
       "title": "Évolution de votre ELO",
-      "description": "Suivez l'évolution de votre classement ELO au fil du temps",
+      "description": "Suivez l'évolution de votre classement ELO dans le temps",
       "progression": "Progression sur la période",
       "bestElo": "Meilleur ELO atteint"
     },
     "matches": {
-      "title": "Historique des matchs récents",
+      "title": "Historique des derniers matchs",
       "description": "Consultez vos derniers matchs et leur impact sur votre ELO",
       "date": "Date",
       "opponent": "Adversaire",
@@ -170,11 +200,11 @@ export default {
     "ranking": {
       "title": "Classement global",
       "description": "Découvrez votre position dans le classement des meilleurs joueurs",
-      "rank": "Rang",
+      "rank": "Classement",
       "player": "Joueur",
       "elo": "ELO",
       "games": "Parties",
-      "winRate": "% Victoires",
+      "winRate": "% Victoire",
       "you": "Vous"
     }
   }

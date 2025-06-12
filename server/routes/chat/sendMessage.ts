@@ -28,14 +28,32 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 
 			} else if (data.recipient) {
 
+				const privateMessage = {
+					id: wsMessage.id,
+					content: wsMessage.content,
+					sendAt: wsMessage.sendAt,
+					user: {
+						id: sender.id,
+						username: sender.username,
+					},
+					collegue: {
+						id: data.recipient,
+						username: "PROUTMAN",
+					},
+					sender: {
+						id: sender.id,
+						username: sender.username,
+					},
+				};
+
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
-					message: wsMessage
+					message: privateMessage
 				})
 
 				broadcastMessage(sender.id, {
 					type: 'NEW_PRIVATE_MESSAGE',
-					message: wsMessage
+					message: privateMessage
 				});
 			}
 

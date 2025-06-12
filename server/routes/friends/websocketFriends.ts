@@ -38,26 +38,28 @@ export async function friendsWebSocketHandler(
 	if (!friendConnections.has(userId)) {
 	  friendConnections.set(userId, new Set());
 	}
+
 	friendConnections.get(userId)!.add(connection);
 	console.log(`🚨🚨🚨🚨ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LES AMIS🚨🚨🚨🚨`)
 
 	await changeOnlineStatus(userId, true)
 
 	connection.on('close', () => {
-	  const userConns = friendConnections.get(userId);
-	  userConns?.delete(connection);
-	  if (userConns?.size === 0) {
-		friendConnections.delete(userId);
-	  }
-	  	changeOnlineStatus(userId, false)
+		const userDelete = friendConnections.get(userId);
+		userDelete?.delete(connection);
+		if (userDelete?.size === 0) {
+			friendConnections.delete(userId);
+		}
+		changeOnlineStatus(userId, false)
 	});
 
-  } catch (error) {
-	connection.close(403, 'Authentification échouée');
-  }
+	} catch (error) {
+		connection.close(403, 'Authentification échouée');
+	}
 }
 
 export function notifyFriend(userId: number, payload: any) {
+	console.log("TEST BROADCAST FRIENDLIST")
 	const conns = friendConnections.get(userId);
 	if (!conns) {
 		return
