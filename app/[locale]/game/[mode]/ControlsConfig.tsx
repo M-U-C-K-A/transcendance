@@ -52,11 +52,17 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
 
   const handleSave = () => {
     updateControls(localControls);
-    onClose();
+    onClose(); // Appel à onClose pour fermer le modal de configuration
+  };
+
+  const handleCancel = () => {
+    onClose(); // Appel à onClose pour fermer le modal sans sauvegarder
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) onClose(); // S'assurer que onClose est appelé quand le modal est fermé
+    }}>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1000px]">
         <DialogHeader>
           <DialogTitle>Configuration des contrôles</DialogTitle>
@@ -159,7 +165,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={handleCancel}>
             Annuler
           </Button>
           <Button onClick={handleSave}>
