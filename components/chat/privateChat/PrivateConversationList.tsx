@@ -62,9 +62,9 @@ export function PrivateConversationList({
 			const response = await fetch('/api/chat/create', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('token')}`,
+				"Content-Type": "application/json",
 				},
+				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 

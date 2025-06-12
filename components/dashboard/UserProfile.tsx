@@ -6,6 +6,7 @@ import { useJWT } from "@/hooks/use-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 
 interface User {
+	id: number
 	username: string
 	avatar?: string
 	bio?: string
@@ -23,23 +24,23 @@ interface User {
  * @returns Un composant JSX qui affiche le profil de l'utilisateur connecté.
  */
 export function UserProfile() {
-	const jwt = useJWT()
-	const id = useIdFromJWT()
 	const [user, setUser] = useState<User | null>(null)
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			const response = await fetch("/api/profile/me", {
-				headers: {
-					Authorization: `Bearer ${jwt}`,
-				},
-			})
-			console.log(response)
-			const data = await response.json()
-			setUser(data)
-		}
-		fetchUser()
-	}, [jwt])
+				method: 'GET',
+				credentials: 'include',
+			});
+			if (!response.ok) {
+				console.error("Erreur lors de la récupération du profil");
+				return;
+			}
+			const data = await response.json();
+			setUser(data);
+		};
+		fetchUser();
+	}, []);
 
 	if (!user) {
 		return null
@@ -52,7 +53,7 @@ export function UserProfile() {
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage src={`/profilepicture/${id}.webp`} alt={user.username} />
+					<AvatarImage src={`/profilepicture/${user.id}.webp`} alt={user.username} />
 					<AvatarFallback className="text-2xl">jd</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>

@@ -23,12 +23,11 @@ export async function googleLogin(server: FastifyInstance) {
 			});
 
 			const tokenData = await tokenRes.json();
-
+			const hostname = process.env.HOSTNAME
 			if (!tokenRes.ok) {
 				console.error('OAuth Token Error:', tokenData);
-				return reply.redirect('https://c2r7p5.42lehavre.fr:3000/en/auth?error=google_login_failed');
+				return reply.redirect(`https://c2r11p1.42lehavre.fr:8443/en/auth?error=google_login_failed`);
 			}
-
 
 			const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
 				headers: {
@@ -50,9 +49,20 @@ export async function googleLogin(server: FastifyInstance) {
 				email: result.email,
 				username: result.username,
 				bio: result.bio,
-			})
+			}, {
+				expiresIn: '7d'
+			});
 
-			return reply.redirect(`https://c2r7p5.42lehavre.fr:3000/en/auth?token=${token}`);
+		reply
+			.setCookie('token', token, {
+				path: '/',
+				httpOnly: true,
+				secure: true,
+				sameSite: 'lax',
+				maxAge: 60 * 60 * 24 * 7,
+				domain: process.env.COOKIE_DOMAIN || 'c2r11p1.42lehavre.fr',
+			})
+			.redirect('https://c2r11p1.42lehavre.fr:8443/en/dashboard');
 		} catch (err: any) {
 			if (err.message == "User not found after insertion") {
 				return reply.code(500).send({ error: "Failed to create user account"})

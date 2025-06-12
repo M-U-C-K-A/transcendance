@@ -18,7 +18,7 @@ export async function chatWebSocketHandler(
   request: FastifyRequest<{ Querystring: ChatQuery }>
 ) {
   try {
-
+	console.log("WEBSOCKET CHAT")
 	const authHeader = request.headers['authorization'] as string | undefined;
 	const tokenFromQuery = request.query.token;
 	const wsProtocolToken = request.headers['sec-websocket-protocol'] as string | undefined;
@@ -60,7 +60,6 @@ export async function chatWebSocketHandler(
 }
 
 export function broadcastMessage(userId: number, message: any) {
-
 	const userConnections = connections.get(userId);
 	if (userConnections) {
 	const messageString = JSON.stringify(message);
@@ -74,6 +73,7 @@ export function broadcastMessage(userId: number, message: any) {
 }
 
 export function broadcastToAll(message: any) {
+	console.log(message)
 	const messageString = JSON.stringify(message);
 	connections.forEach((userConnections, userId) => {
 	userConnections.forEach(ws => {
@@ -82,5 +82,6 @@ export function broadcastToAll(message: any) {
 		}
 	});
 });
-	console.log(`Message diffusé à tous les utilisateurs connectés`);
+	console.log(`Utilisateurs WebSocket connectés : ${connections.size}`);
+	console.log(`🎅🎅🎅🎅🎅🎅Message diffusé à tous les utilisateurs connectés`);
 }

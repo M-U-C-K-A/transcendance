@@ -31,6 +31,8 @@ import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
+import fastifyCookie from '@fastify/cookie';
+
 
 dotenv.config();
 
@@ -54,6 +56,10 @@ app.register(cors, {
 
 app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
+});
+
+app.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET || 'a_secret_key',
 });
 
 async function main() {
@@ -91,7 +97,7 @@ async function main() {
 		fastify.get('/wss/friends', { websocket: true }, friendsWebSocketHandler);
 	});
 
-	app.listen({ port, host: process.env.HOSTNAME }, (err, address) => {
+	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 		if (err) {
 			console.error(err);
 			process.exit(1);

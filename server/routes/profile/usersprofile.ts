@@ -3,10 +3,10 @@ import getUserInfo from '../../request/profile/usersProfile'
 import authMiddleware from '@/server/authMiddleware'
 
 export default async function profileRoute(server: FastifyInstance) {
-  server.get('/profile/:id', { preHandler: authMiddleware }, async function (request: any, reply) {
-	const id = parseInt(request.params.id, 10)
+  server.get('/profile/:username', { preHandler: authMiddleware }, async function (request: any, reply) {
+	const id = parseInt(request.params.username, 10)
 	const userId = request.user
-
+	console.log("TESTTESTESTSETE")
 	if (!id || !userId) {
 		return reply.code(400).send({ error: 'Valid user ID is required' })
 	}
