@@ -2,90 +2,60 @@ import changeOnlineStatus from '@/server/request/profile/changeOnlineStatus';
 import { FastifyRequest } from 'fastify';
 import { WebSocket } from 'ws';
 
-const connections = new Map<number, Set<WebSocket>>();
+// One socket per user
+const connections = new Map<number, WebSocket>();
 
-interface ChatQuery {
-  token?: string;
-}
-
-interface JwtPayload {
-  id: number;
-  [key: string]: any;
-}
+interface ChatQuery { token?: string; }
+interface JwtPayload { id: number; [key: string]: any; }
 
 export async function chatWebSocketHandler(
   connection: WebSocket,
   request: FastifyRequest<{ Querystring: ChatQuery }>
 ) {
   try {
-	console.log("WEBSOCKET CHAT")
-	const authHeader = request.headers['authorization'] as string | undefined;
-	const tokenFromQuery = request.query.token;
-	const wsProtocolToken = request.headers['sec-websocket-protocol'] as string | undefined;
+    const authHeader = request.headers['authorization'] as string | undefined;
+    const tokenFromQuery = request.query.token;
+    const wsProtocolToken = request.headers['sec-websocket-protocol'] as string | undefined;
 
-	if (!authHeader && !tokenFromQuery && wsProtocolToken) {
-	  request.headers['authorization'] = `Bearer ${wsProtocolToken}`;
-	}
+    if (!authHeader && !tokenFromQuery && wsProtocolToken) {
+      request.headers['authorization'] = `Bearer ${wsProtocolToken}`;
+    }
+    if (!request.headers['authorization'] && !tokenFromQuery) {
+      throw new Error('Token manquant');
+    }
 
-	if (!request.headers['authorization'] && !tokenFromQuery) {
-	  throw new Error('Token manquant');
-	}
+    const decoded = await request.jwtVerify<JwtPayload>();
+    const userId = decoded.id;
 
-	const decoded = await request.jwtVerify<JwtPayload>();
-	const userId = decoded.id;
+    // Close existing socket if any
+    const prevSocket = connections.get(userId);
+    if (prevSocket && prevSocket.readyState === WebSocket.OPEN) {
+      prevSocket.close(1000, 'New connection');
+    }
 
-	console.log(`👺👺👺👺ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LE CHAT👺👺👺👺`)
+    connections.set(userId, connection);
+    await changeOnlineStatus(userId, true);
 
-	if (!connections.has(userId)) {
-		connections.set(userId, new Set());
-	}
+    console.log(`User ${userId} connected to chat WebSocket`);
 
-	connections.get(userId)!.add(connection);
-
-	await changeOnlineStatus(userId, true)
-
-		connection.on('close', () => {
-		const userConnections = connections.get(userId);
-		userConnections?.delete(connection);
-		if (userConnections?.size === 0) {
-			connections.delete(userId);
-		}
-		changeOnlineStatus(userId, false)
-		console.log(`Déconnexion WebSocket pour l'utilisateur ${userId}`);
-	});
+    connection.on('close', () => {
+      connections.delete(userId);
+      changeOnlineStatus(userId, false);
+      console.log(`User ${userId} disconnected from chat WebSocket`);
+    });
 
   } catch (error) {
-	console.error('Échec d\'authentification WebSocket :', error);
-	connection.close(403, 'Authentification échouée');
+    console.error('WebSocket auth failed:', error);
+    connection.close(403, 'Authentification échouée');
   }
 }
 
-export function broadcastMessage(userId: number, message: any) {
-	const userConnections = connections.get(userId);
-	if (userConnections) {
-	const messageString = JSON.stringify(message);
-	userConnections.forEach(ws => {
-		if (ws.readyState === ws.OPEN) {
-			ws.send(messageString);
-		}
-	});
-	console.log(message)
-	console.log(`Message envoyé à l'utilisateur ${userId}`);
-	}
-}
-
 export function broadcastToAll(message: any) {
-	console.log(message)
-	const messageString = JSON.stringify(message);
-	connections.forEach((userConnections, userId) => {
-	userConnections.forEach(ws => {
-		console.log(message)
-		console.log(`👤 Socket ${userId} state: ${ws.readyState}`);
-		if (ws.readyState === ws.OPEN) {
-			ws.send(messageString);
-		}
-	});
-});
-	console.log(`Utilisateurs WebSocket Chat connectés : ${connections.size}`);
-	console.log(`🎅🎅🎅🎅🎅🎅Message diffusé à tous les utilisateurs connectés`);
+  const messageString = JSON.stringify(message);
+  connections.forEach((ws, userId) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(messageString);
+    }
+  });
+  console.log(`Broadcasted to ${connections.size} users`);
 }

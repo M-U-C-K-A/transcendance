@@ -6,8 +6,8 @@ export const usePublicMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-
+  const socketRef = useRef<WebSocket | null>(null);
+  const reconnectTimer = useRef<NodeJS.Timeout | null>(null);
   const hasInitialized = useRef(false);
 
   const transformApiMessage = (apiMessage: generalMessage): Message => {
@@ -31,16 +31,15 @@ export const usePublicMessages = () => {
   };
 
   const setupWebSocket = useCallback(() => {
-    if (socket?.readyState === WebSocket.OPEN || socket?.readyState === WebSocket.CONNECTING) {
+    const current = socketRef.current;
+    if (current && (current.readyState === WebSocket.OPEN || current.readyState === WebSocket.CONNECTING)) {
       console.warn("⛔ WebSocket déjà actif, aucune nouvelle connexion.");
-      return () => {};
+      return;
     }
-
     const token = localStorage.getItem("token");
-    if (!token) return () => {};
+    if (!token) return;
 
     const wsUrl = `wss://c1r3p11.42lehavre.fr:3001/wss/chat`;
-
     const newSocket = new WebSocket(wsUrl, [token]);
 
     newSocket.onopen = () => {
@@ -51,48 +50,39 @@ export const usePublicMessages = () => {
       const data = JSON.parse(event.data);
       if (data.type === "NEW_PUBLIC_MESSAGE") {
         const newMessage = transformApiMessage(data.message);
-        setMessages((prev) => [...prev, newMessage]);
+        setMessages(prev => {
+          if (prev.some(m => m.id === newMessage.id)) return prev;
+          return [...prev, newMessage];
+        });
       }
     };
 
     newSocket.onclose = () => {
       console.log("🔌 WebSocket disconnected, attempting reconnect...");
-      setTimeout(() => setupWebSocket(), 3000);
+      reconnectTimer.current = setTimeout(() => setupWebSocket(), 3000);
     };
 
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.close();
-    };
-  }, [socket]);
+    socketRef.current = newSocket;
+  }, []);
 
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-
     try {
       const response = await fetch(`/api/chat/receive/general`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
       if (!response.ok) throw new Error("Erreur serveur");
-
       const rawData: generalMessage[] = await response.json();
-      const transformedMessages = rawData
+      const transformed = rawData
         .sort((a, b) => a.id - b.id)
         .map(transformApiMessage);
-
-      setMessages(transformedMessages);
+      setMessages(transformed);
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Impossible de charger les messages généraux.";
-      setError(errorMessage);
+      setError(err instanceof Error ? err.message : "Impossible de charger les messages généraux.");
       setMessages([]);
     } finally {
       setIsLoading(false);
@@ -102,21 +92,21 @@ export const usePublicMessages = () => {
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
-
     fetchMessages();
-    const cleanupSocket = setupWebSocket();
+    setupWebSocket();
 
     return () => {
-      cleanupSocket?.();
       hasInitialized.current = false;
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      socketRef.current?.close();
     };
-  }, []);
+  }, [fetchMessages, setupWebSocket]);
 
   return {
     messages,
     fetchMessages,
     isLoading,
     error,
-    socketStatus: socket?.readyState,
+    socketStatus: socketRef.current?.readyState,
   };
 };
