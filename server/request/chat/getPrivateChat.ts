@@ -43,5 +43,5 @@ export default async function getPrivateChat(userId: number) {
 		};
 	});
 
-	return chat;
+	return (chat);
 }
