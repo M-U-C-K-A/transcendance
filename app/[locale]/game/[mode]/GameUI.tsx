@@ -27,6 +27,27 @@ interface GameUIProps {
 export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial, showGoal, lastScoreType }) => {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const { controls } = useControls();
+  
+  // Mettre le jeu en pause lorsque les contrôles sont ouverts
+  const [wasPausedBeforeControls, setWasPausedBeforeControls] = useState(false);
+  
+  const openControlsConfig = () => {
+    // Enregistrer l'état de pause actuel avant d'ouvrir les contrôles
+    setWasPausedBeforeControls(isPaused);
+    // Mettre le jeu en pause
+    setIsPaused(true);
+    // Ouvrir le modal de configuration
+    setIsControlsConfigOpen(true);
+  };
+  
+  const closeControlsConfig = () => {
+    // Fermer le modal de configuration
+    setIsControlsConfigOpen(false);
+    // Restaurer l'état de pause précédent uniquement si le jeu n'était pas en pause
+    if (!wasPausedBeforeControls && countdown === null) {
+      setIsPaused(false);
+    }
+  };
 
   // Gestion du timer pour le prochain Malus
   const Malus_INTERVAL = 15; // secondes
@@ -267,7 +288,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       {/* Contrôles et Pause */}
     <div className="absolute top-2 right-2 z-20 flex items-center space-x-2">
         <button
-          onClick={() => setIsControlsConfigOpen(true)}
+          onClick={openControlsConfig}
           className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
         >
           ⚙️
@@ -301,7 +322,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       {/* Modal de configuration des contrôles */}
       <ControlsConfig
         isOpen={isControlsConfigOpen}
-        onClose={() => setIsControlsConfigOpen(false)}
+        onClose={closeControlsConfig}
       />
 
       {/* Animation GOAL/MALUS */}
