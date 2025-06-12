@@ -78,7 +78,7 @@ export function Login({
 	const handleGoogleLogin = async () => {
 		try {
 			const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-			const redirectUri = encodeURIComponent('https://localhost:3001/auth/google/callback');
+			const redirectUri = encodeURIComponent('https://c2r7p5.42lehavre.fr:3001/auth/google/callback');
 			const scope = encodeURIComponent('email profile');
 
 			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;

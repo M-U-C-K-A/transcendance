@@ -48,7 +48,7 @@ export function Register({
 
     try {
 
-      const response = await fetch('/api/auth/zregister', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

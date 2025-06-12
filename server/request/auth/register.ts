@@ -1,105 +1,97 @@
-import cors from '@fastify/cors';
-import Fastify from 'fastify';
-import fastifyJwt from '@fastify/jwt';
-import fastifyWebSocket from '@fastify/websocket';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client'
+import { connectionData } from '@/server/routes/auth/interface'
+import bcrypt from 'bcrypt'
+import fs from 'fs'
+import path from 'path'
+import sharp from 'sharp'
 
-import profileRoute from './routes/profile/usersprofile';
-import health from './routes/health';
-import loginRoute from './routes/auth/login';
-import registerRoute from './routes/auth/register';
-import sendMessageRoute from './routes/chat/sendMessage';
-import tournamentRoutes from './routes/tournament';
-import { loggerConfig } from './config/logger';
-import friendListRoute from './routes/friends/friendListRoute';
-import leaderboardRoute from './routes/user/leaderboardRoute';
-import friendRequestRoute from './routes/friends/friendRequestRoute';
-import meProfile from './routes/profile/meProfile';
-import editProfileRoute from './routes/profile/editProfile';
-import acceptRequestRoute from './routes/friends/treatRequestRoute';
-import seeFriendRequestRoute from './routes/friends/seeFriendRequestRoute';
-import removeFriendRoute from './routes/friends/removeFriendRoute';
-import newMessageRoute from './routes/chat/newMessageRoute';
-import createMatchRoute from './routes/match/createMatchRoute';
-import joinMatchRoute from './routes/match/joinMatchRoute';
-import matchResultRoute from './routes/match/matchResultRoute';
-import blockUserRoute from './routes/chat/blockUserRoute';
-import generalChatRoute from './routes/chat/generalChatRoute';
-import privateChatRoute from './routes/chat/privateChatRoute';
-import matchListRoute from './routes/match/matchListRoute';
-import { googleLogin } from './routes/auth/google';
-import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
-import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
+const Prisma = new PrismaClient()
 
-dotenv.config();
+async function createProfilePicture(username: string, id: number) {
+  try {
+	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`
 
-// ➤ HTTPS Configuration with self-signed certs
-const app = Fastify({
-	logger: loggerConfig,
-	bodyLimit: 20 * 1024 * 1024,
-	https: {
-		key: fs.readFileSync(path.join(__dirname, '../ssl/key.pem')),
-		cert: fs.readFileSync(path.join(__dirname, '../ssl/cert.pem')),
-	},
-});
+	const dir = path.resolve('public/profilepicture')
+	if (!fs.existsSync(dir)) {
+	  fs.mkdirSync(dir, { recursive: true })
+	}
 
-app.register(fastifyWebSocket);
+	const response = await fetch(defaultAvatar)
+	if (!response.ok) throw new Error(`Erreur téléchargement avatar: ${response.statusText}`)
+	const svgText = await response.text()
 
-app.register(cors, {
-	origin: true,
-	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	credentials: true,
-	exposedHeaders: ['Authorization'],
-});
+	const webpBuffer = await sharp(Buffer.from(svgText))
+	  .resize(256, 256)
+	  .webp({ quality: 80 })
+	  .toBuffer()
 
-app.register(fastifyJwt, {
-	secret: process.env.JWT_SECRET || 'test',
-});
+	const filePath = path.join(dir, `${id}.webp`)
+	await fs.promises.writeFile(filePath, webpBuffer)
 
-async function main() {
-	const port = 3001;
-
-	await app.register(profileRoute);
-	await app.register(health);
-	await app.register(registerRoute);
-	await app.register(loginRoute);
-	await app.register(generalChatRoute);
-	await app.register(privateChatRoute);
-	await app.register(editProfileRoute);
-	await app.register(sendMessageRoute);
-	await app.register(tournamentRoutes);
-	await app.register(friendListRoute);
-	await app.register(leaderboardRoute);
-	await app.register(friendRequestRoute);
-	await app.register(meProfile);
-	await app.register(acceptRequestRoute);
-	await app.register(seeFriendRequestRoute);
-	await app.register(removeFriendRoute);
-	await app.register(newMessageRoute);
-	await app.register(createMatchRoute);
-	await app.register(joinMatchRoute);
-	await app.register(matchResultRoute);
-	await app.register(blockUserRoute);
-	await app.register(matchListRoute);
-	await app.register(googleLogin);
-
-	app.register(async (fastify) => {
-		fastify.get('/ws/chat', { websocket: true }, chatWebSocketHandler);
-	});
-
-	app.register(async (fastify) => {
-		fastify.get('/ws/friends', { websocket: true }, friendsWebSocketHandler);
-	});
-
-	app.listen({ port, host: '0.0.0.0' }, (err, address) => {
-		if (err) {
-			console.error(err);
-			process.exit(1);
-		}
-		console.log(`✅ Serveur HTTPS démarré sur ${address}`);
-	});
+	console.log(`Avatar WebP créé pour ${username} dans ${filePath}`)
+	} catch (error) {
+		console.error('Erreur création avatar WebP:', error)
+	}
 }
 
-main();
+export default async function register(data: connectionData) {
+	const existingUser = await Prisma.user.findFirst({
+		where: {
+			OR: [
+			{ username: data.username },
+			{ email: data.email },
+			],
+		},
+		select: {
+			username: true,
+			email: true,
+		},
+	})
+
+
+	if (existingUser) {
+		if (existingUser.username == data.username) {
+			console.log('Username already taken')
+			throw new Error('Username already taken')
+		}
+		if (existingUser.email == data.email) {
+			console.log('Email already taken')
+			throw new Error('Email already taken')
+		}
+	}
+
+	const hashedPass = await bcrypt.hash(data.pass, 10)
+	const defaultBio = "👐 Hello i'm new here"
+
+	const newUser = await Prisma.user.create({
+		data: {
+			username: data.username,
+			email: data.email,
+			pass: hashedPass,
+			alias: data.username,
+			bio: defaultBio,
+		},
+	})
+
+	await Prisma.achievement.create({
+		data: {
+			id: newUser.id,
+		},
+	})
+
+	const user = await Prisma.user.findUnique({
+		where: { username: data.username },
+		select: { id: true },
+	})
+
+	if (!user) {
+		throw new Error('User not found after insertion')
+	}
+
+	const id = user.id
+
+	await createProfilePicture(data.username, id)
+
+	console.log(`User ${data.username} has been registered`)
+	return (true)
+}

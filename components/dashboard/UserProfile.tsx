@@ -29,7 +29,7 @@ export function UserProfile() {
 
 	useEffect(() => {
 		const fetchUser = async () => {
-			const response = await fetch("/api/user/me", {
+			const response = await fetch("/api/profile/me", {
 				headers: {
 					Authorization: `Bearer ${jwt}`,
 				},
