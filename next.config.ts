@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         destination: "https://backend/auth/:path*"
       },
       {
-        source: "/api/user/me",
+        source: "/api/profile/me",
         destination: "https://backend/profile/me"
       },
       {

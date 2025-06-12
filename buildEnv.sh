@@ -4,6 +4,7 @@ ENV_FILE=".env"
 
 # Récupère la première IP locale (hors loopback)
 LOCAL_IP=$(hostname -I | awk '{print $1}')
+HOSTNAME=$(hostname | awk '{print $1}')
 
 if [[ -z "$LOCAL_IP" ]]; then
   echo "❌ Impossible de récupérer l'adresse IP locale."
@@ -22,6 +23,7 @@ fi
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_CHAT=ws://${LOCAL_IP}:3001/ws/chat" >> "$ENV_FILE"
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=ws://${LOCAL_IP}:3001/ws/friends" >> "$ENV_FILE"
   echo "LOCAL_IP=$LOCAL_IP" >> "$ENV_FILE"
+  echo "HOSTNAME=$HOSTNAME" >> "$ENV_FILE"
 
   echo "✅ Fichier $ENV_FILE créé avec succès."
   exit 0

@@ -39,7 +39,7 @@ export const usePublicMessages = () => {
     const token = localStorage.getItem("token");
     if (!token) return () => {};
 
-    const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
+    const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT;
 
     const newSocket = new WebSocket(wsUrl, [token]);
 

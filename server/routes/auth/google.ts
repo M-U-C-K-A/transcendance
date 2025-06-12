@@ -26,7 +26,7 @@ export async function googleLogin(server: FastifyInstance) {
 
 			if (!tokenRes.ok) {
 				console.error('OAuth Token Error:', tokenData);
-				return reply.redirect('https://localhost:3000/en/auth?error=google_login_failed');
+				return reply.redirect('https://c2r7p5.42lehavre.fr:3000/en/auth?error=google_login_failed');
 			}
 
 
@@ -52,7 +52,7 @@ export async function googleLogin(server: FastifyInstance) {
 				bio: result.bio,
 			})
 
-			return reply.redirect(`https://localhost:3000/en/auth?token=${token}`);
+			return reply.redirect(`https://c2r7p5.42lehavre.fr:3000/en/auth?token=${token}`);
 		} catch (err: any) {
 			if (err.message == "User not found after insertion") {
 				return reply.code(500).send({ error: "Failed to create user account"})
