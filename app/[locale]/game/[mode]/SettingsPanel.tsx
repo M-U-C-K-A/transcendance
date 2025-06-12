@@ -131,7 +131,6 @@ export default function SettingsPanel({
         body: JSON.stringify({
           name: data.name,
           playerCount: data.type === "tournament" ? data.playerCount : undefined,
-          type: data.type,
         }),
       });
 
