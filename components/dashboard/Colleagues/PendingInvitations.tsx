@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Check, Clock, X } from "lucide-react"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState, useCallback } from "react"
-import { useJWT } from "@/hooks/use-jwt"
 import { useFriendSocket } from "@/hooks/use-friends-socket"
 
 interface PendingInvitation {
@@ -14,7 +13,6 @@ interface PendingInvitation {
 }
 
 export function PendingInvitations() {
-  const jwt = useJWT()
   const t = useI18n()
 
   const [pendingInvitations, setPendingInvitations] = useState<PendingInvitation[]>([])
@@ -25,9 +23,7 @@ export function PendingInvitations() {
     try {
       setLoading(true)
       const response = await fetch(`/api/friends/pending`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
+        credentials: "include",
       })
       if (!response.ok) throw new Error('Failed to fetch pending invitations')
       const data = await response.json()
@@ -37,11 +33,11 @@ export function PendingInvitations() {
     } finally {
       setLoading(false)
     }
-  }, [jwt])
+  }, [])
 
   useEffect(() => {
-    if (jwt) fetchPendingInvitations()
-  }, [jwt, fetchPendingInvitations])
+    fetchPendingInvitations()
+  }, [fetchPendingInvitations])
 
   useFriendSocket((data) => {
     if (data?.type === "NEW_FRIEND_REQUEST") {
@@ -53,9 +49,9 @@ export function PendingInvitations() {
     try {
       const response = await fetch(`/api/friends/accept`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({
           username,
@@ -73,8 +69,6 @@ export function PendingInvitations() {
       setError(err instanceof Error ? err.message : 'Unknown error')
     }
   }
-
-  if (!jwt) return null
 
   if (error) {
     return (

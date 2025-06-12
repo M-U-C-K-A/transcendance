@@ -32,15 +32,7 @@ export function Login({
 			const newUrl = window.location.pathname;
 			window.history.replaceState(null, '', newUrl);
 		}
-
-		const tokenFromUrl = searchParams.get('token');
-		if (tokenFromUrl) {
-			localStorage.setItem('token', tokenFromUrl);
-			const newUrl = window.location.pathname;
-			window.history.replaceState(null, '', newUrl);
-			router.push('/en/dashboard');
-		}
-	}, [searchParams, router]);
+	}, [searchParams]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -59,6 +51,7 @@ export function Login({
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				credentials: 'include', // IMPORTANT pour envoyer le cookie
 				body: JSON.stringify({ email, pass: password }),
 			});
 
@@ -68,8 +61,7 @@ export function Login({
 				throw new Error(data.message || 'Erreur lors de la connexion');
 			}
 
-			localStorage.setItem('token', data.token);
-			router.push(`/en/dashboard`);
+			router.push('/en/dashboard');
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Une erreur est survenue');
 		}
@@ -78,7 +70,8 @@ export function Login({
 	const handleGoogleLogin = async () => {
 		try {
 			const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-			const redirectUri = encodeURIComponent('https://c2r7p5.42lehavre.fr:3001/auth/google/callback');
+			const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+			const redirectUri = encodeURIComponent(`https://${hostname}:3001/auth/google/callback`);
 			const scope = encodeURIComponent('email profile');
 
 			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;

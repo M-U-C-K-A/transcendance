@@ -105,11 +105,6 @@ export const usePrivateMessages = (currentUser: string) => {
 
 		try {
 			const response = await fetch('/api/chat/receive/private', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('token')}`
-				},
 				credentials: 'include'
 			});
 

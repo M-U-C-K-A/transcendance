@@ -43,11 +43,6 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   } = usePrivateMessages(currentUser);
 
   useEffect(() => {
-    fetchMessages();
-    fetchPrivateMessages();
-  }, [fetchMessages, fetchPrivateMessages]);
-
-  useEffect(() => {
     const conversationsMap = new Map<string, PrivateConversation>();
 
     privateMessages.forEach(msg => {
@@ -75,14 +70,19 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   const sendMessage = useCallback(async () => {
     if (!newMessage.trim()) return;
 
-    setSendError(null); // Reset any previous error
+    setSendError(null);
 
     const payload: SendMessageData = {
       content: newMessage,
       messageType: activeTab === "public" ? "GENERAL" : "PRIVATE",
     };
 
-    if (activeTab === "private" && selectedPrivateUser) {
+    if (activeTab === "private") {
+      if (!selectedPrivateUser) {
+        setSendError("Aucun destinataire sélectionné.");
+        return;
+      }
+
       const recipientConversation = privateConversations.find(
         conv => conv.userName === selectedPrivateUser
       );
@@ -97,28 +97,27 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     }
 
     try {
-		const res = await fetch("/api/chat/send", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token")}`,
-		},
-		body: JSON.stringify(payload),
-		});
+      const res = await fetch("/api/chat/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-		const responseBody = await res.json();
+      const responseBody = await res.json();
 
-		if (!res.ok) {
-		if (responseBody.error === "This user blocked you") {
-			setSendError("Cet utilisateur vous a bloqué.");
-		} else if (responseBody.error == "You blocked this user") {
-			setSendError("Vous avez bloqué cet utilisateur.")
-		} else {
-			setSendError("Échec de l'envoi du message.");
-
-		}
-		return;
-		}
+      if (!res.ok) {
+        if (responseBody.error === "This user blocked you") {
+          setSendError("Cet utilisateur vous a bloqué.");
+        } else if (responseBody.error === "You blocked this user") {
+          setSendError("Vous avez bloqué cet utilisateur.");
+        } else {
+          setSendError("Échec de l'envoi du message.");
+        }
+        return;
+      }
 
       setNewMessage("");
       await (activeTab === "public" ? fetchMessages() : fetchPrivateMessages());
@@ -168,9 +167,10 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
       defaultValue="public"
       onValueChange={(val) => {
         setActiveTab(val as Tab);
+        setNewMessage(""); // Nettoyage du champ message
         if (val === "public") setSelectedPrivateUser(null);
       }}
-      className="h-full flex flex-col hoverflow-y-hidden"
+      className="h-full flex flex-col overflow-y-hidden"
     >
       <TabsList className="grid grid-cols-2 w-full">
         <TabsTrigger value="public">Public</TabsTrigger>

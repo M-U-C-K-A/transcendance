@@ -6,6 +6,7 @@ export default async function friendListRoute(server: FastifyInstance) {
 	server.get('/friends', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
 
+	console.log("TEST FIRENDS LIST")
 	if (!user) {
 		console.log('No parameter passed in friendListRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
