@@ -7,6 +7,7 @@ import SettingsPanel from "@/app/[locale]/game/[mode]/SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
 
+
 // Interface pour l'audio du jeu
 interface GameAudio {
   pause?: () => void;
@@ -24,6 +25,7 @@ interface Track {
 
 export default function Page() {
   const params = useParams();
+  const gamemode = params?.mode ?? "quickmatch";
   const locale = params?.locale ?? "fr";
 
   // ──────────────────────────────────────────────────────────────────
@@ -139,6 +141,7 @@ export default function Page() {
   const [baseSpeed, setBaseSpeed] = useState(24);
 
   return (
+
     <ControlsProvider>
       {/* HEADER */}
       <Header locale={locale as string} />
@@ -153,6 +156,7 @@ export default function Page() {
           {!gameStarted ? (
             <SettingsPanel
               COLORS={COLORS}
+              gamemode={gamemode}
               currentPlayer={currentPlayer}
               setCurrentPlayer={setCurrentPlayer}
               colorP1={colorP1}

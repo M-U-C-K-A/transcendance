@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useState } from "react";
+"use client";
+
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
 import { ControlsConfig } from "./ControlsConfig";
@@ -7,6 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Toggle } from "@/components/ui/toggle";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ChatSection } from "@/components/dashboard/ChatSection";
+import { useJWT } from "@/hooks/use-jwt";
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -15,6 +19,7 @@ interface SettingsPanelProps {
   colorP1: string | null;
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
+  gamemode: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
   MapStyle: "classic" | "red" | "neon" | null;
   setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon" | null>>;
@@ -36,6 +41,7 @@ export default function SettingsPanel({
   setColorP1,
   colorP2,
   setColorP2,
+  gamemode,
   MapStyle,
   setMapStyle,
   canStart,
@@ -48,99 +54,151 @@ export default function SettingsPanel({
   setBaseSpeed,
 }: SettingsPanelProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
+  const [gameInfo, setGameInfo] = useState<any>(null);
+  const jwtToken = useJWT();
+
+  useEffect(() => {
+    const fetchGameInfo = async () => {
+      if (gamemode === "custom" || gamemode === "tournaments") {
+        try {
+          const res = await fetch("/api/game/infocreation");
+          const data = await res.json();
+          setGameInfo(data);
+        } catch (err) {
+          console.error("Erreur récupération info création :", err);
+        }
+      }
+    };
+
+    fetchGameInfo();
+  }, [gamemode]);
 
   return (
-    <Card className="p-6 rounded-xl shadow-lg w-full max-w-2xl mx-auto space-y-4">
-      {/* Choix du style du sol */}
-      <Card className="p-4">
-        <MapChoice
-          MapStyle={MapStyle}
-          setMapStyle={setMapStyle}
-          enableMaluses={enableMaluses}
-          setEnableMaluses={setEnableMaluses}
-          enableSpecial={enableSpecial}
-          setEnableSpecial={setEnableSpecial}
-        />
-      </Card>
+    <div className="flex gap-6 w-full px-4">
+      {/* Colonne gauche : joueurs et matchs si custom/tournaments */}
+      {(gamemode === "custom" || gamemode === "tournaments") && (
+        <div className="w-1/4 space-y-4">
+          <Card className="p-4">
+            <h2 className="text-xl font-semibold mb-2">En attente</h2>
+            <div className="space-y-2">
+              {gameInfo ? (
+                gameInfo.players?.map((player: any, index: number) => (
+                  <Card key={index} className="p-2">👤 {player.name}</Card>
+                ))
+              ) : (
+                <p>Chargement des joueurs...</p>
+              )}
+            </div>
+          </Card>
 
-      {/* Choix des couleurs des joueurs */}
-      <Card className="p-4">
-        <ColorChoice
-          COLORS={COLORS}
-          currentPlayer={currentPlayer}
-          setCurrentPlayer={setCurrentPlayer}
-          colorP1={colorP1}
-          setColorP1={setColorP1}
-          colorP2={colorP2}
-          setColorP2={setColorP2}
-        />
-      </Card>
-
-      {/* Sélecteur de vitesse de base */}
-      <Card className="p-4">
-        <Label className="block text-center font-semibold mb-3">Vitesse de la balle</Label>
-        <div className="flex gap-2 justify-center">
-          <Toggle
-            pressed={baseSpeed === 16}
-            onPressedChange={() => setBaseSpeed(16)}
-            className="px-4 py-2 data-[state=on]:bg-green-500 data-[state=on]:text-white"
-            aria-label="Lent"
-          >
-            🐢 Lent
-          </Toggle>
-          <Toggle
-            pressed={baseSpeed === 24}
-            onPressedChange={() => setBaseSpeed(24)}
-            className="px-4 py-2 data-[state=on]:bg-yellow-400 data-[state=on]:text-white"
-            aria-label="Moyen"
-          >
-            ⚡ Moyen
-          </Toggle>
-          <Toggle
-            pressed={baseSpeed === 36}
-            onPressedChange={() => setBaseSpeed(36)}
-            className="px-4 py-2 data-[state=on]:bg-red-500 data-[state=on]:text-white"
-            aria-label="Rapide"
-          >
-            🔥 Rapide
-          </Toggle>
+          {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
+            <Card className="p-4">
+              <h2 className="text-xl font-semibold mb-2">Prochains matchs</h2>
+              <ul className="list-disc pl-5 space-y-1">
+                {gameInfo.upcomingMatches.map((match: any, idx: number) => (
+                  <li key={idx}>
+                    {match.team1} vs {match.team2} - {match.time}
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
         </div>
-      </Card>
+      )}
 
-      {/* Boutons de configuration */}
-      <div className="flex flex-col gap-3">
-        <Button
-          variant="outline"
-          onClick={() => setIsControlsConfigOpen(true)}
-          className="w-full py-6 text-lg"
-        >
-          Configurer les contrôles
-        </Button>
+      {/* Centre : configuration */}
+      <div className="w-2/4">
+        <Card className="p-6 rounded-xl shadow-lg w-full space-y-4">
+          <Card className="p-4">
+            <MapChoice
+              MapStyle={MapStyle}
+              setMapStyle={setMapStyle}
+              enableMaluses={enableMaluses}
+              setEnableMaluses={setEnableMaluses}
+              enableSpecial={enableSpecial}
+              setEnableSpecial={setEnableSpecial}
+            />
+          </Card>
 
-        {/* Message d'erreur si les couleurs ne sont pas choisies */}
-        {!canStart && (
-          <Alert variant="destructive">
-            <AlertDescription className="text-center">
-              Veuillez sélectionner une couleur ou une map pour chaque joueur avant de commencer
-            </AlertDescription>
-          </Alert>
-        )}
+          <Card className="p-4">
+            <ColorChoice
+              COLORS={COLORS}
+              currentPlayer={currentPlayer}
+              setCurrentPlayer={setCurrentPlayer}
+              colorP1={colorP1}
+              setColorP1={setColorP1}
+              colorP2={colorP2}
+              setColorP2={setColorP2}
+            />
+          </Card>
 
-        <Button
-          onClick={onStart}
-          disabled={!canStart}
-          className="w-full py-6 text-lg"
-          variant={canStart ? "default" : "secondary"}
-        >
-          Démarrer la partie
-        </Button>
+          <Card className="p-4">
+            <Label className="block text-center font-semibold mb-3">Vitesse de la balle</Label>
+            <div className="flex gap-2 justify-center">
+              <Toggle
+                pressed={baseSpeed === 16}
+                onPressedChange={() => setBaseSpeed(16)}
+                className="px-4 py-2 data-[state=on]:bg-green-500 data-[state=on]:text-white"
+              >
+                🐢 Lent
+              </Toggle>
+              <Toggle
+                pressed={baseSpeed === 24}
+                onPressedChange={() => setBaseSpeed(24)}
+                className="px-4 py-2 data-[state=on]:bg-yellow-400 data-[state=on]:text-white"
+              >
+                ⚡ Moyen
+              </Toggle>
+              <Toggle
+                pressed={baseSpeed === 36}
+                onPressedChange={() => setBaseSpeed(36)}
+                className="px-4 py-2 data-[state=on]:bg-red-500 data-[state=on]:text-white"
+              >
+                🔥 Rapide
+              </Toggle>
+            </div>
+          </Card>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setIsControlsConfigOpen(true)}
+              className="w-full py-6 text-lg"
+            >
+              Configurer les contrôles
+            </Button>
+
+            {!canStart && (
+              <Alert variant="destructive">
+                <AlertDescription className="text-center">
+                  Veuillez sélectionner une couleur ou une map pour chaque joueur avant de commencer
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <Button
+              onClick={onStart}
+              disabled={!canStart}
+              className="w-full py-6 text-lg"
+              variant={canStart ? "default" : "secondary"}
+            >
+              Démarrer la partie
+            </Button>
+          </div>
+
+          <ControlsConfig
+            isOpen={isControlsConfigOpen}
+            onClose={() => setIsControlsConfigOpen(false)}
+          />
+        </Card>
       </div>
 
-      {/* Modal de configuration des contrôles */}
-      <ControlsConfig
-        isOpen={isControlsConfigOpen}
-        onClose={() => setIsControlsConfigOpen(false)}
-      />
-    </Card>
+      {/* Colonne droite : chat */}
+      <div className="w-1/4">
+        <div className="border rounded-md h-full">
+          <ChatSection currentUser={jwtToken} />
+        </div>
+      </div>
+    </div>
   );
 }
