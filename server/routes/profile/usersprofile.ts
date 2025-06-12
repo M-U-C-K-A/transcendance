@@ -4,6 +4,7 @@ import authMiddleware from '@/server/authMiddleware'
 
 export default async function profileRoute(server: FastifyInstance) {
   server.get('/profile/:username', { preHandler: authMiddleware }, async function (request: any, reply) {
+	console.log("TEST TEST TEST")
 	const id = parseInt(request.params.username, 10)
 	const userId = request.user
 	console.log("TESTTESTESTSETE")

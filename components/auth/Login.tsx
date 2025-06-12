@@ -32,7 +32,19 @@ export function Login({
 			const newUrl = window.location.pathname;
 			window.history.replaceState(null, '', newUrl);
 		}
-	}, [searchParams]);
+
+		const tokenFromUrl = searchParams.get('token');
+
+		if (tokenFromUrl) {
+
+			localStorage.setItem('token', tokenFromUrl);
+			const cleanUrl = new URL(window.location.href);
+			cleanUrl.searchParams.delete('token');
+			window.history.replaceState(null, '', cleanUrl.pathname);
+
+			router.push('/en/dashboard');
+		}
+	}, [searchParams, router]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -51,7 +63,6 @@ export function Login({
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				credentials: 'include', // IMPORTANT pour envoyer le cookie
 				body: JSON.stringify({ email, pass: password }),
 			});
 
@@ -61,25 +72,22 @@ export function Login({
 				throw new Error(data.message || 'Erreur lors de la connexion');
 			}
 
-			router.push('/en/dashboard');
+			localStorage.setItem('token', data.token);
+			router.push(`/en/dashboard`);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Une erreur est survenue');
 		}
 	};
 
 	const handleGoogleLogin = async () => {
-		try {
-			const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-			const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
-			const redirectUri = encodeURIComponent(`https://${hostname}:3001/auth/google/callback`);
-			const scope = encodeURIComponent('email profile');
+		const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+		const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+		const redirectUri = encodeURIComponent(`https://${hostname}:3001/auth/google/callback`);
+		const scope = encodeURIComponent('email profile');
 
-			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+		const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
 
-			window.location.href = googleAuthUrl;
-		} catch {
-			setError('Erreur lors de la connexion avec Google');
-		}
+		window.location.href = googleAuthUrl;
 	};
 
 	return (

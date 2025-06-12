@@ -57,7 +57,8 @@ export function notifyFriend(userId: number, payload: any) {
 	if (!conns) {
 		return
 	};
-	console.log("🎅🎅🎅🎅🎅🎅🎅", payload)
+	console.log("FRIENDS CONNECTION SIZE:", friendConnections.size)
+	console.log("🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅", userId)
 	const msg = JSON.stringify(payload);
 	conns.forEach(ws => {
 	try {
@@ -74,7 +75,6 @@ export function notifyFriends(userIds: number[], payload: any) {
 	console.log("🌯🌯🌯🌯🌯🌯🌯🌯", payload)
 	userIds.forEach(userId => {
 		const isConnected = friendConnections.has(userId);
-		console.log(`🧪 Is user ${userId} connected?`, isConnected);
 		notifyFriend(userId, payload);
 	});
 }

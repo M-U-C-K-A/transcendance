@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import authMiddleware from "@/server/authMiddleware";
 import newMessage from "@/server/request/chat/newMessage";
-import { error } from "console";
 
 export default async function newMessageRoute(server: FastifyInstance) {
 	server.post('/chat/create', { preHandler: authMiddleware }, async function (request, reply) {
