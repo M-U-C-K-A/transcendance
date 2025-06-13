@@ -15,6 +15,7 @@ export default async function getPrivateChat(userId: number) {
 			id: true,
 			content: true,
 			sendAt: true,
+			messageType: true,
 			sender: {
 				select: {
 					id: true,
