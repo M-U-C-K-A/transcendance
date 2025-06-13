@@ -57,7 +57,7 @@ export default async function login(data: loginData) {
 				<br/>
 				<p>— The Pong Master Team</p>`,})
 
-				return {code: authCode, email: data.email}
+				return (true)
 		}
 
 	}
