@@ -136,16 +136,34 @@ export default function SettingsPanel({
           playerCount: data.type === "tournament" ? data.playerCount : undefined,
         }),
       });
-
       if (!response.ok) throw new Error("Erreur lors de la création");
 
       const gameData = await response.json();
-      localStorage.setItem("currentGameId", gameData.code);
-      localStorage.setItem("currentGameName" gameData.name);
+      localStorage.setItem("currentGameId", gameData.hashedCode);
+      localStorage.setItem("currentGameName", gameData.name);
       setGameInfo(gameData);
-    } catch (error) {
-      console.error("Erreur création partie:", error);
-    } finally {
+      // Ajout de style CSS dans les consoles log
+      console.log(
+        "%c✔ Partie créée avec succès !",
+        "color: white; background: #22c55e; font-weight: bold; padding: 2px 8px; border-radius: 4px;"
+      );
+      console.log(
+        "%cNom: %c" + gameData.name,
+        "color: #64748b; font-weight: bold;",
+        "color: #0ea5e9; font-weight: bold;"
+      );
+      console.log(
+        "%cCode: %c" + gameData.hashedCode,
+        "color: #64748b; font-weight: bold;",
+        "color: #f59e42; font-weight: bold;"
+      );
+        } catch (error) {
+      console.error(
+        "%cErreur création partie:",
+        "color: white; background: #ef4444; font-weight: bold; padding: 2px 8px; border-radius: 4px;",
+        error
+      );
+        } finally {
       setIsLoading(false);
     }
   };
