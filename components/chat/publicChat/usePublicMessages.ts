@@ -28,6 +28,7 @@ const transformApiMessage = useCallback((apiMessage: generalMessage): Message =>
 	  timestamp: new Date(apiMessage.sendAt),
 	  isPrivate: false,
 	  isRead: true,
+	  typeMessage: apiMessage.messageType,
 	};
   }, []);
 
