@@ -113,7 +113,7 @@ export function CustomGameContent({ locale }: GameTabsContentProps) {
         </Alert>
 
         {/* Main Creation Card */}
-        <Card className="border bg-muted/50">
+        <Card className="border">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-3">
               <Settings2Icon className="h-5 w-5 text-primary" />
@@ -201,7 +201,7 @@ export function TournamentContent({ locale }: GameTabsContentProps) {
           </Alert>
 
           {/* Main Tournament Card */}
-          <Card className="border bg-muted/50">
+          <Card className="border">
             <CardHeader className="pb-2">
               <div className="flex items-center gap-3">
                 <Settings2Icon className="h-5 w-5 text-primary" />
