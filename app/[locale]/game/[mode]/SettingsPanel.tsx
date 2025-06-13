@@ -140,7 +140,8 @@ export default function SettingsPanel({
       if (!response.ok) throw new Error("Erreur lors de la création");
 
       const gameData = await response.json();
-      localStorage.setItem("currentGameId", gameData.id);
+      localStorage.setItem("currentGameId", gameData.code);
+      localStorage.setItem("currentGameName" gameData.name);
       setGameInfo(gameData);
     } catch (error) {
       console.error("Erreur création partie:", error);
