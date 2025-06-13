@@ -113,16 +113,20 @@ export function Register({
 				},
 				body: JSON.stringify({ email, code: otpCode }),
 			});
-
-			if (response.ok) {
-				// Nettoyer le stockage et rediriger
-				localStorage.removeItem('temp_2fa_email');
-				router.push('/dashboard');
-			} else {
-				const data = await response.json();
-				throw new Error(data.message || 'Code 2FA incorrect');
-			}
-		} catch (err) {
+      if (response.ok) {
+        const data = await response.json();
+        // Stocker le token JWT dans le localStorage
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
+        // Nettoyer le stockage et rediriger
+        localStorage.removeItem('temp_2fa_email');
+        router.push('/dashboard');
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || 'Code 2FA incorrect');
+      }
+    } catch (err) {
 			setOtpError(err instanceof Error ? err.message : 'Erreur lors de la vérification');
 		} finally {
 			setIsSubmitting(false);
