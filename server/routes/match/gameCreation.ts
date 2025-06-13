@@ -22,7 +22,7 @@ export default async function gameCreationRoute(server: FastifyInstance) {
 			const result = await matchCreate(matchInfo.name, user.id)
 			const hashids = new Hashids("CACA BOUDIN", 8)
 			const code = hashids.encode(result.id)
-			return (reply.code(200).send(code))
+			return (reply.code(200).send({ code }))
 		}
 	} catch (err: any) {
 		return reply.code(500).send({ error: 'Internal server error' })

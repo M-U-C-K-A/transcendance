@@ -42,7 +42,7 @@ export async function friendsWebSocketHandler(
 	friendConnections.get(userId)!.add(connection);
 	console.log(`🚨🚨🚨🚨ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LES AMIS🚨🚨🚨🚨`)
 
-	await changeOnlineStatus(userId, true)
+	// await changeOnlineStatus(userId, true)
 
 	connection.on('close', () => {
 		const userDelete = friendConnections.get(userId);
@@ -50,7 +50,7 @@ export async function friendsWebSocketHandler(
 		if (userDelete?.size === 0) {
 			friendConnections.delete(userId);
 		}
-		changeOnlineStatus(userId, false)
+		// changeOnlineStatus(userId, false)
 	});
 
 	} catch (error) {
