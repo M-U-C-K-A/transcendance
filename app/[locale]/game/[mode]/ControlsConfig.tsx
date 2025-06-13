@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ControlsConfigProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ function displayKey(key: string) {
     case 'ArrowDown': return '🡇';
     case 'ArrowLeft': return '🡄';
     case 'ArrowRight': return '🡆';
-    default: return key;
+    default: return key.length > 3 ? key.substring(0, 3) : key;
   }
 }
 
@@ -33,6 +34,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   const { controls, updateControls } = useControls();
   const [localControls, setLocalControls] = useState(controls);
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     setLocalControls(controls);
@@ -43,6 +45,19 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
     let newKey = e.key;
     // Si c'est une lettre simple, on la met en majuscule
     if (newKey.length === 1) newKey = newKey.toUpperCase();
+
+    // Vérifier si la touche est déjà assignée
+    const isKeyAlreadyAssigned = Object.entries(localControls).some(
+      ([existingKey, existingValue]) => 
+        existingKey !== key && existingValue === newKey
+    );
+
+    if (isKeyAlreadyAssigned) {
+      setErrorMessage(`La touche "${displayKey(newKey)}" est déjà assignée à une autre commande.`);
+      return;
+    }
+
+    setErrorMessage(null);
     setLocalControls((prev) => ({
       ...prev,
       [key]: newKey,
@@ -67,6 +82,12 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
         <DialogHeader>
           <DialogTitle>Configuration des contrôles</DialogTitle>
         </DialogHeader>
+
+        {errorMessage && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        )}
 
         <div className="grid grid-cols-2 gap-6">
           {/* Joueur 1 */}
