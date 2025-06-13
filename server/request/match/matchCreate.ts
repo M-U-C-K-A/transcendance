@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { userAgent } from 'next/server'
 
 const Prisma = new PrismaClient()
 
