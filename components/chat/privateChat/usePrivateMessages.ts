@@ -63,7 +63,7 @@ export const usePrivateMessages = (currentUser: string) => {
 		const token = localStorage.getItem("token");
 		if (!token) return;
 
-		const wsUrl = `wss://c1r3p11.42lehavre.fr:3001/wss/chat`;
+		const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
 
 		const newSocket = new WebSocket(wsUrl, [token]);
 
