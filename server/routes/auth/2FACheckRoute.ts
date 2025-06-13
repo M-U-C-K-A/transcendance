@@ -7,8 +7,14 @@ export default async function Check2FARoute(server: FastifyInstance) {
 		const data = request.body as {email: string, code: string}
 
 		try {
-			const result = await check2FA(data.email, data.code)
-			await register(data.email)
+			await check2FA(data.email, data.code)
+			const result = await register(data.email)
+			const token = server.jwt.sign({
+				id: result.id,
+				email: result.email,
+				username: result.username,
+				bio: result.bio,
+			})
 			console.log(result)
 			return reply.code(200).send({ result })
 		} catch (err: any) {

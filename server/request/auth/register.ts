@@ -58,62 +58,65 @@ export default async function register(email: string) {
 		},
 	});
 
-	const existingUser = await Prisma.user.findFirst({
-		where: {
-			OR: [
-			{ username: data.username },
-			{ email: data.email },
-			],
-		},
-		select: {
-			username: true,
-			email: true,
-		},
-	})
+	if (data) {
+		const existingUser = await Prisma.user.findFirst({
+			where: {
+				OR: [
+				{ username: data.username },
+				{ email: data.email },
+				],
+			},
+			select: {
+				username: true,
+				email: true,
+			},
+		})
 
 
-	if (existingUser) {
-		if (existingUser.username == data.username) {
-			console.log('Username already taken')
-			throw new Error('Username already taken')
+		if (existingUser) {
+			if (existingUser.username == data.username) {
+				console.log('Username already taken')
+				throw new Error('Username already taken')
+			}
+			if (existingUser.email == data.email) {
+				console.log('Email already taken')
+				throw new Error('Email already taken')
+			}
 		}
-		if (existingUser.email == data.email) {
-			console.log('Email already taken')
-			throw new Error('Email already taken')
+
+		const defaultBio = "👐 Hello i'm new here"
+
+		const newUser = await Prisma.user.create({
+			data: {
+				username: data.username,
+				email: data.email,
+				pass: data.pass,
+				alias: data.username,
+				bio: defaultBio,
+			},
+		})
+
+		await Prisma.achievement.create({
+			data: {
+				id: newUser.id,
+			},
+		})
+
+		const user = await Prisma.user.findUnique({
+			where: { username: data.username },
+			select: { id: true },
+		})
+
+		if (!user) {
+			throw new Error('User not found after insertion')
 		}
+
+		const id = user.id
+
+		await createProfilePicture(data.username, id)
+
+		console.log(`User ${data.username} has been registered`)
+		return (newUser)
 	}
-
-	const defaultBio = "👐 Hello i'm new here"
-
-	const newUser = await Prisma.user.create({
-		data: {
-			username: data.username,
-			email: data.email,
-			pass: data.pass,
-			alias: data.username,
-			bio: defaultBio,
-		},
-	})
-
-	await Prisma.achievement.create({
-		data: {
-			id: newUser.id,
-		},
-	})
-
-	const user = await Prisma.user.findUnique({
-		where: { username: data.username },
-		select: { id: true },
-	})
-
-	if (!user) {
-		throw new Error('User not found after insertion')
-	}
-
-	const id = user.id
-
-	await createProfilePicture(data.username, id)
-
-	console.log(`User ${data.username} has been registered`)
-	return (true)
+	throw new Error("Error while creating account")
 }
