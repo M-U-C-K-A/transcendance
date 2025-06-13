@@ -30,6 +30,7 @@ type MessageProps = {
     timestamp: Date;
     isPrivate: boolean;
     isRead: boolean;
+    typeMessage: string;
   };
   currentUser: string;
 };
@@ -69,6 +70,50 @@ export function Message({ message, currentUser }: MessageProps) {
   let displayUser = message.user;
   if (message.isPrivate && !isSender && message.recipient) {
     displayUser = formatUser(message.recipient);
+  }
+  // Log message data in a styled console.table for debugging
+  if (typeof window !== "undefined" && message) {
+    const styleHeader = "color: white; background: #6366f1; font-weight: bold; padding: 2px 6px; border-radius: 3px;";
+    const styleRow = "color: #334155; background: #e0e7ff; padding: 2px 6px; border-radius: 3px;";
+    // Prepare a flat object for console.table
+    const logData = {
+      ID: message.id,
+      Sender: message.user.name,
+      Recipient: message.recipient?.name ?? "-",
+      Text: message.text,
+      Time: formatTime(message.timestamp),
+      Private: message.isPrivate ? "Oui" : "Non",
+      Read: message.isRead ? "Oui" : "Non",
+      typeMessage: message.typeMessage ?? "message",
+    };
+    // Print styled header
+    console.log("%cMessage Debug", styleHeader);
+    // Print table
+    console.table([logData]);
+  }
+
+  if (message.typeMessage === "INVITATION") {
+    return (
+      <div className="flex items-center justify-center w-full my-4">
+        <div className="bg-card border rounded-lg p-4 shadow-md flex flex-col items-center">
+          <span className="mb-2 flex gap-2 items-center">
+            {displayUser.name}
+            <Avatar className="h-8 w-8 cursor-pointer">
+              <AvatarImage src={displayUser.avatar} alt={displayUser.name} />
+              <AvatarFallback>
+                {displayUser.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </span>
+          <Link
+            href={`/game/invite/${message.text}`}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
+          >
+            Rejoindre la partie
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (

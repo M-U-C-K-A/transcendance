@@ -22,6 +22,7 @@ interface RawMessage {
 	content: string;
 	sendAt: string;
 	isRead: boolean;
+	messageType: string;
 }
 
 export const usePrivateMessages = (currentUser: string) => {
@@ -56,7 +57,8 @@ export const usePrivateMessages = (currentUser: string) => {
 			text: rawMsg.content,
 			timestamp: new Date(rawMsg.sendAt),
 			isPrivate: true,
-			isRead: rawMsg.isRead || false
+			isRead: rawMsg.isRead || false,
+			typeMessage: rawMsg.messageType,
 		};
 	}, [currentUser]);
 

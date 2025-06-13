@@ -10,6 +10,7 @@ export interface generalMessage {
 	};
 	content: string;
 	sendAt: string;
+  messageType: string;
 }
 
 export type Message = {
@@ -34,4 +35,5 @@ export type Message = {
   timestamp: Date;
   isPrivate: boolean;
   isRead: boolean;
+  typeMessage: string;
 };
