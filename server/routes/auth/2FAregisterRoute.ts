@@ -3,7 +3,7 @@ import { connectionData } from './interface'
 import register2FA from '@/server/request/auth/2FAregister'
 
 export default async function register2FARoute(server: FastifyInstance) {
-	server.post('/auth/register2FA', async (request, reply) => {
+	server.post('/auth/register', async (request, reply) => {
 		const data = request.body as connectionData
 
 		try {

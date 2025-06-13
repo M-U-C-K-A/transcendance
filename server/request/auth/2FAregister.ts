@@ -97,5 +97,5 @@ export default async function register2FA(data: connectionData) {
 		<p>— The Pong Master Team</p>`,})
 	console.log("LA CHANCLA", newUser)
 
-	return (newUser.email, newUser.code)
+	return (true)
 }

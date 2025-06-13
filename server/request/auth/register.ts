@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { connectionData } from '@/server/routes/auth/interface'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
 import path from 'path'
@@ -48,7 +47,19 @@ try {
 }
 
 
-export default async function register(data: connectionData) {
+export default async function register(email: string) {
+
+	const data = await Prisma.tmpUser.findFirst({
+		where: {
+			email: email,
+		},
+		select: {
+			username: true,
+			email: true,
+			pass: true,
+		},
+	});
+
 	const existingUser = await Prisma.user.findFirst({
 		where: {
 			OR: [
@@ -74,14 +85,13 @@ export default async function register(data: connectionData) {
 		}
 	}
 
-	const hashedPass = await bcrypt.hash(data.pass, 10)
 	const defaultBio = "👐 Hello i'm new here"
 
 	const newUser = await Prisma.user.create({
 		data: {
 			username: data.username,
 			email: data.email,
-			pass: hashedPass,
+			pass: data.pass,
 			alias: data.username,
 			bio: defaultBio,
 		},
