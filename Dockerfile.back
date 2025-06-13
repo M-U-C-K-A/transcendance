@@ -23,3 +23,34 @@ EXPOSE 3001
 
 # Lancer l'application en mode développement
 CMD ["pnpm", "run", "dev:server"]
+
+
+
+
+
+
+
+
+# VERSION PLUS SIMPLE
+
+# FROM node:18-alpine
+
+
+# WORKDIR /app
+
+
+# RUN npm install -g pnpm
+# COPY package.json pnpm-lock.yaml ./
+# RUN pnpm install --frozen-lockfile
+
+
+
+# COPY server/ ./server
+# COPY prisma/ ./prisma
+
+
+# RUN pnpm run generate-prisma
+
+# EXPOSE 3001
+
+# CMD ["pnpm", "run", "dev:server"]
