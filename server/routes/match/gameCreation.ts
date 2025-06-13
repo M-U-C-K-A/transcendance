@@ -1,5 +1,6 @@
 import authMiddleware from "@/server/authMiddleware";
 import matchCreate from "@/server/request/match/matchCreate";
+import { match } from "assert";
 import { FastifyInstance } from "fastify";
 import Hashids from 'hashids';
 
@@ -13,16 +14,16 @@ export default async function gameCreationRoute(server: FastifyInstance) {
 	}
 
 	try {
-		if (matchInfo.playerCount) {
+		console.log("👺👺👺👺👺👺👺👺")
+		console.log(matchInfo)
+		console.log(user)
+		console.log("👺👺👺👺👺👺👺👺")
+		if (!matchInfo.playerCount || matchInfo.playerCount <= 2) {
 			const result = await matchCreate(matchInfo.name, user.id)
 			const hashids = new Hashids("CACA BOUDIN", 8)
 			const code = hashids.encode(result.id)
 			return (reply.code(200).send(code))
 		}
-		// else {
-		// 	const result = await tournamentCreate(matchInfo.name, matchInfo.playerCount, user.id)
-		// 	return (reply.code(200).send(result))
-		// }
 	} catch (err: any) {
 		return reply.code(500).send({ error: 'Internal server error' })
 	}
