@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { updateControls } from "@/components/game/Physic/customControls";
 
 interface Controls {
@@ -10,9 +10,9 @@ interface Controls {
   player2Special: string;
 }
 
-interface ControlsContextType {
-  controls: Controls;
-  updateControls: (newControls: Controls) => void;
+interface ControlsContextType { // Structure du contexte
+  controls: Controls; // Les touches actuelles
+  updateControls: (newControls: Controls) => void; // Fonction pour modifier les touches
 }
 
 const defaultControls: Controls = {
@@ -24,44 +24,65 @@ const defaultControls: Controls = {
   player2Special: 'ArrowLeft',
 };
 
-const ControlsContext = createContext<ControlsContextType | undefined>(undefined);
+const ControlsContext = createContext<ControlsContextType | undefined>(undefined); // Crée le contexte React ( comme pour passer un bout d html ou js  mais la c est que pour des variables pas d affichage.)
 
-export const ControlsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+
+
+
+
+// la ft qui fournit le contexte à toute l'application
+  // ReactNode = tout ce que react peut afficher ( en gros de type react)
+
+function ControlsProvider({ children }: { children: React.ReactNode }) {
+  // On crée un état local pour stocker les touches du jeu
   const [controls, setControls] = useState<Controls>(() => {
-    // Essayer de charger les contrôles depuis le localStorage
+    // Verif  qu'on est dans un navigateur (pas sur serv par ex)
     if (typeof window !== 'undefined') {
-      const savedControls = localStorage.getItem('gameControls');
+      const savedControls = localStorage.getItem('gameControls'); //  recup  controls save dans le navigateur (local storage = stockage local du navigateur), je cree la clef gameControls. pour stocker les controls.
       if (savedControls) {
-        return JSON.parse(savedControls);
+        return JSON.parse(savedControls); // met en json
       }
     }
-    return defaultControls;
+    return defaultControls; // sinon control par defaut
   });
 
-  const handleUpdateControls = (newControls: Controls) => {
-    setControls(newControls);
-    // Sauvegarder dans le localStorage pour persistance
-    localStorage.setItem('gameControls', JSON.stringify(newControls));
-    // Mettre à jour les contrôles du jeu
-    updateControls(newControls);
-  };
+  function handleUpdateControls(newControls: Controls) {
+    setControls(newControls); // rappel la ft au dessus (new control dans interface du dessus.)
+    localStorage.setItem('gameControls', JSON.stringify(newControls)); // save dans le navigateur a la clef donnee.
 
-  // Mettre à jour les contrôles du jeu au chargement initial
+    // envoit les controls dans la logique du jeu ( custom controls)
+    updateControls(newControls);
+  }
+
+  // on MAJ update control a chque changement de control dans l interface.
   useEffect(() => {
     updateControls(controls);
-  }, [controls]);
+  }, [controls]); 
 
+  //  dit que tout ce qui sera entre les balise controlsprovider aura l acces aux context des touches.  (voir page.tsx)
   return (
     <ControlsContext.Provider value={{ controls, updateControls: handleUpdateControls }}>
       {children}
     </ControlsContext.Provider>
   );
-};
+}
 
-export const useControls = () => {
+
+
+
+
+
+
+function useControls() {
   const context = useContext(ControlsContext);
   if (context === undefined) {
     throw new Error('useControls must be used within a ControlsProvider');
   }
   return context;
-};
+}
+
+
+
+
+
+export { ControlsProvider, useControls };
