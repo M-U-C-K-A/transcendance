@@ -7,7 +7,8 @@ export function useFriendSocket(onMessage: (data: any) => void) {
   useEffect(() => {
 	if (!token) return
 
-	const socket = new WebSocket(`wss://c1r3p11.42lehavre.fr:3001/wss/friends` , [token])
+	const ws = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS || ""
+	const socket = new WebSocket(ws , [token])
 
 	socket.onmessage = (event) => {
 	  const data = JSON.parse(event.data)

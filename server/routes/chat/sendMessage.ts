@@ -36,13 +36,13 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 						id: sender.id,
 						username: sender.username,
 					},
-					collegue: {
-						id: data.recipient,
-						username: "PROUTMAN",
+					recipient: {
+						id: sender.id,
+						username: sender.username,
 					},
 					sender: {
 						id: sender.id,
-						username: sender.username,
+						username: "PROUTMAN",
 					},
 				};
 

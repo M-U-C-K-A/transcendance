@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { Message } from "../publicChat/types";
+import { WS_URL } from "../publicChat/usePublicMessages";
 
 interface RawMessage {
 	id: number;
@@ -63,9 +64,7 @@ export const usePrivateMessages = (currentUser: string) => {
 		const token = localStorage.getItem("token");
 		if (!token) return;
 
-		const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
-
-		const newSocket = new WebSocket(wsUrl, [token]);
+		const newSocket = new WebSocket(WS_URL, [token]);
 
 		newSocket.onopen = () => {
 			console.log("WebSocket connected for private chat");
