@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    server_name localhost;
+
+    return 301 https://$host$request_uri/;
+}
+
+server {
+    listen 443 ssl;
+    server_name localhost;
+
+    ssl_certificate /etc/nginx/certs/cert.pem;
+    ssl_certificate_key /etc/nginx/certs/key.pem;
+
+    # FRONTEND
+    location / {
+        proxy_pass http://frontend:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # BACKEND API (route vers Fastify en HTTPS sur port 3001)
+    location /api/ {
+        proxy_pass https://backend:3001/;
+        proxy_ssl_verify off;  # ⛔ sinon le cert auto-signé est rejeté
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
