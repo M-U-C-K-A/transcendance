@@ -62,9 +62,9 @@ export function PrivateConversationList({
 			const response = await fetch('/api/chat/create', {
 				method: 'POST',
 				headers: {
-				"Content-Type": "application/json",
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 
@@ -144,7 +144,11 @@ export function PrivateConversationList({
 											src={`/profilepicture/${conversation.id}.webp`}
 											alt={"conversation"}
 										/>
-										<AvatarFallback>{conversation.userName.charAt(0)}</AvatarFallback>
+										<AvatarFallback>
+										{conversation.userName && conversation.userName.length > 0
+											? conversation.userName.charAt(0).toUpperCase()
+											: "?"}
+										</AvatarFallback>
 									</Avatar>
 									<div className="flex-1 min-w-0">
 										<div className="flex justify-between items-center">

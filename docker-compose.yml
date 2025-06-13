@@ -18,6 +18,7 @@ services:
       - ./server:/app/server
       - ./prisma:/app/prisma
       - ./ssl:/app/ssl
+      - ./public/profilepicture:/app/public/profilepicture
     environment:
       - NODE_ENV=development
 

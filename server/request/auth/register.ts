@@ -8,31 +8,45 @@ import sharp from 'sharp'
 const Prisma = new PrismaClient()
 
 async function createProfilePicture(username: string, id: number) {
-  try {
-	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`
+try {
+	console.log('🔧 Début création avatar');
 
-	const dir = path.resolve('public/profilepicture')
+	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`;
+	console.log(`🌐 URL avatar: ${defaultAvatar}`);
+
+	const dir = path.resolve(process.cwd(), 'public', 'profilepicture');
+
 	if (!fs.existsSync(dir)) {
-	  fs.mkdirSync(dir, { recursive: true })
+		fs.mkdirSync(dir, { recursive: true });
 	}
 
-	const response = await fetch(defaultAvatar)
-	if (!response.ok) throw new Error(`Erreur téléchargement avatar: ${response.statusText}`)
-	const svgText = await response.text()
+	const response = await fetch(defaultAvatar);
 
-	const webpBuffer = await sharp(Buffer.from(svgText))
-	  .resize(256, 256)
-	  .webp({ quality: 80 })
-	  .toBuffer()
+	if (!response.ok) {
+	  throw new Error(`Erreur téléchargement avatar: ${response.statusText}`);
+	}
 
-	const filePath = path.join(dir, `${id}.webp`)
-	await fs.promises.writeFile(filePath, webpBuffer)
+	const svgText = await response.text();
 
-	console.log(`Avatar WebP créé pour ${username} dans ${filePath}`)
+	const buffer = Buffer.from(svgText, 'utf-8');
+
+	const webpBuffer = await sharp(buffer, { density: 300 })
+		.resize(256, 256)
+		.webp({ quality: 80 })
+		.toBuffer();
+
+	const filePath = path.join(dir, `${id}.webp`);
+
+	await fs.promises.writeFile(filePath, webpBuffer);
+
 	} catch (error) {
-		console.error('Erreur création avatar WebP:', error)
+			console.error('Erreur création avatar WebP:', {
+			message: (error as Error).message,
+			stack: (error as Error).stack,
+		});
 	}
 }
+
 
 export default async function register(data: connectionData) {
 	const existingUser = await Prisma.user.findFirst({

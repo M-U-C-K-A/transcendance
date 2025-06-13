@@ -1,16 +1,17 @@
-"use client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { generalMessage, Message } from "./types";
 
+export const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
+
 export const usePublicMessages = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+const [messages, setMessages] = useState<Message[]>([]);
+const [isLoading, setIsLoading] = useState<boolean>(true);
+const [error, setError] = useState<string | null>(null);
+const socketRef = useRef<WebSocket | null>(null);
+const reconnectTimer = useRef<number | null>(null);
+const hasConnected = useRef(false);
 
-  const hasInitialized = useRef(false);
-
-  const transformApiMessage = (apiMessage: generalMessage): Message => {
+const transformApiMessage = useCallback((apiMessage: generalMessage): Message => {
 	const sender = apiMessage.sender;
 	return {
 	  id: apiMessage.id,
@@ -28,49 +29,11 @@ export const usePublicMessages = () => {
 	  isPrivate: false,
 	  isRead: true,
 	};
-  };
-
-  const setupWebSocket = useCallback(() => {
-	if (socket?.readyState === WebSocket.OPEN || socket?.readyState === WebSocket.CONNECTING) {
-	  console.warn("⛔ WebSocket déjà actif, aucune nouvelle connexion.");
-	  return () => {};
-	}
-
-	const token = localStorage.getItem("token");
-	if (!token) return () => {};
-
-	const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
-
-	const newSocket = new WebSocket(wsUrl, [token]);
-
-	newSocket.onopen = () => {
-	  console.log("✅ WebSocket connected for public chat");
-	};
-
-	newSocket.onmessage = (event) => {
-	  const data = JSON.parse(event.data);
-	  if (data.type === "NEW_PUBLIC_MESSAGE") {
-		const newMessage = transformApiMessage(data.message);
-		setMessages((prev) => [...prev, newMessage]);
-	  }
-	};
-
-	newSocket.onclose = () => {
-	  console.log("🔌 WebSocket disconnected, attempting reconnect...");
-	  setTimeout(() => setupWebSocket(), 3000);
-	};
-
-	setSocket(newSocket);
-
-	return () => {
-	  newSocket.close();
-	};
-  }, [socket]);
+  }, []);
 
   const fetchMessages = useCallback(async () => {
 	setIsLoading(true);
 	setError(null);
-
 	try {
 	  const response = await fetch(`/api/chat/receive/general`, {
 		headers: {
@@ -78,45 +41,67 @@ export const usePublicMessages = () => {
 		  Authorization: `Bearer ${localStorage.getItem("token")}`,
 		},
 	  });
-
-	  if (!response.ok) throw new Error("Erreur serveur");
+	  if (!response.ok) throw new Error(`Erreur serveur ${response.status}`);
 
 	  const rawData: generalMessage[] = await response.json();
-	  const transformedMessages = rawData
-		.sort((a, b) => a.id - b.id)
-		.map(transformApiMessage);
-
-	  setMessages(transformedMessages);
+	  const sorted = rawData.sort((a, b) => a.id - b.id);
+	  setMessages(sorted.map(transformApiMessage));
 	} catch (err: unknown) {
-	  const errorMessage =
-		err instanceof Error
-		  ? err.message
-		  : "Impossible de charger les messages généraux.";
-	  setError(errorMessage);
+	  setError(err instanceof Error ? err.message : "Impossible de charger les messages généraux.");
 	  setMessages([]);
 	} finally {
 	  setIsLoading(false);
 	}
-  }, []);
+  }, [transformApiMessage]);
 
   useEffect(() => {
-	if (hasInitialized.current) return;
-	hasInitialized.current = true;
+	if (hasConnected.current) return;
+	hasConnected.current = true;
 
-	fetchMessages();
-	const cleanupSocket = setupWebSocket();
+	const token = localStorage.getItem("token");
+	if (!token) return;
+
+	const ws = new WebSocket(WS_URL, [token]);
+	socketRef.current = ws;
+
+	ws.onopen = () => {
+	  console.log("✅ WebSocket connecté pour le chat public");
+	};
+
+	ws.onmessage = (event) => {
+	  try {
+		const data = JSON.parse(event.data);
+		if (data.type === "NEW_PUBLIC_MESSAGE") {
+		  const newMsg = transformApiMessage(data.message);
+		  setMessages((prev) => [...prev, newMsg]);
+		}
+	  } catch (e) {
+		console.error("Erreur parsing WS message", e);
+	  }
+	};
+
+	ws.onclose = () => {
+	  console.log("🔌 WebSocket déconnecté, tentative de reconnexion dans 3s...");
+	  reconnectTimer.current = window.setTimeout(() => {
+		hasConnected.current = false;
+	  }, 3000);
+	};
 
 	return () => {
-	  cleanupSocket?.();
-	  hasInitialized.current = false;
+	  if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+	  ws.close();
 	};
-  }, []);
+  }, [transformApiMessage]);
+
+  useEffect(() => {
+	fetchMessages();
+  }, [fetchMessages]);
 
   return {
 	messages,
 	fetchMessages,
 	isLoading,
 	error,
-	socketStatus: socket?.readyState,
+	socketStatus: socketRef.current?.readyState,
   };
 };
