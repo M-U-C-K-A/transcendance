@@ -8,7 +8,6 @@ import fastifyWebSocket from '@fastify/websocket';
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login';
-import registerRoute from './routes/auth/caca';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
@@ -71,7 +70,6 @@ async function main() {
 
 	await app.register(profileRoute);
 	await app.register(health);
-	await app.register(registerRoute);
 	await app.register(loginRoute);
 	await app.register(generalChatRoute);
 	await app.register(privateChatRoute);

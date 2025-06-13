@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcrypt'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
@@ -45,7 +44,6 @@ try {
 		});
 	}
 }
-
 
 export default async function register(email: string) {
 
