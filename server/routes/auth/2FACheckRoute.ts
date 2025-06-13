@@ -3,7 +3,7 @@ import check2FA from '@/server/request/auth/2FACheck'
 import register from '@/server/request/auth/register'
 
 export default async function Check2FARoute(server: FastifyInstance) {
-	server.post('/auth/verify2FA', async (request, reply) => {
+	server.post('/auth/register/2fa/verify', async (request, reply) => {
 		const data = request.body as {email: string, code: string}
 
 		try {
