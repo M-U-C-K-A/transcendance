@@ -55,6 +55,7 @@ model tmpUser {
 	username		String	@unique
 	email			String
 	pass			String?
+	code			String
 
 	@@map("tmpUser")
 }

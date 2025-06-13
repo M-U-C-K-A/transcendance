@@ -32,6 +32,7 @@ import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 import fastifyCookie from '@fastify/cookie';
 import gameCreationRoute from './routes/match/gameCreation';
+import register2FARoute from './routes/auth/2FAregisterRoute';
 
 dotenv.config();
 
@@ -90,6 +91,7 @@ async function main() {
 	await app.register(matchListRoute);
 	await app.register(googleLogin);
 	await app.register(gameCreationRoute)
+	await app.register(register2FARoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);
