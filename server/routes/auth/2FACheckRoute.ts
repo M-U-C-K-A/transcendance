@@ -16,7 +16,7 @@ export default async function Check2FARoute(server: FastifyInstance) {
 				bio: result.bio,
 			})
 			console.log(result)
-			return reply.code(200).send({ result })
+			return reply.code(200).send({ token })
 		} catch (err: any) {
 			if (err.message === 'Wrong Code') {
 				return reply.code(403).send({ error: 'Wrong Code' })

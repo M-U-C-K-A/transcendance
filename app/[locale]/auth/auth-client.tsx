@@ -51,15 +51,13 @@ export function LoginPage() {
 				</div>
 			</div>
 			<div className="relative hidden bg-muted lg:block">
-				{false ? (
 				  <Image
 					width={661}
 					height={882}
-					src=""
+					src="/school.jpeg"
 					alt="DuckFace"
-					className="absolute inset-0 w-full h-full object-cover opacity-50"
+					className="absolute inset-0 w-full h-full object-cover opacity-70"
 				  />
-				) : null}
 			</div>
 		</div>
 	);
