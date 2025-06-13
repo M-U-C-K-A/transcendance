@@ -34,8 +34,8 @@ export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrive
 
 	useEffect(() => {
 		// Vérifier le localStorage au montage du composant
-		const gameID = localStorage.getItem('gameID');
-		const gameNAME = localStorage.getItem('gameNAME');
+		const gameID = localStorage.getItem('currentGameId');
+		const gameNAME = localStorage.getItem('currentGameName');
 
 		if (gameID && gameNAME) {
 			setHasGame(true);
@@ -47,7 +47,7 @@ export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrive
 		e.preventDefault();
 		if (hasGame) {
 			// Créer un message avec le lien du jeu
-			const gameMessage = `Rejoignez ma partie "${gameData.name}": [lien du jeu](${gameData.id})`;
+			const gameMessage = `Rejoignez ma partie "${gameData.name}": [lien du jeu](${gameData.id}) <a href="https://c2r8p5.42lehavre.fr:8443/en/game/custom/${gameData.id}">`;
 			onChange(gameMessage);
 		}
 	};
