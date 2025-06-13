@@ -33,8 +33,10 @@ import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 import fastifyCookie from '@fastify/cookie';
 import gameCreationRoute from './routes/match/gameCreation';
 
-
 dotenv.config();
+
+const ws = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || ""
+console.log(ws)
 
 const app = Fastify({
 	logger: loggerConfig,
