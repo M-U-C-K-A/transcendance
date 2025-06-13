@@ -35,8 +35,10 @@ export async function chatWebSocketHandler(
 		connections.set(userId, connection);
 
 		console.log(`👺👺👺👺👺User ${userId} connected to chat WebSocket👺👺👺👺👺👺`);
+		changeOnlineStatus(userId, true)
 
 		connection.on('close', () => {
+			changeOnlineStatus(userId, false)
 			connections.delete(userId);
 			console.log(`User ${userId} disconnected from chat WebSocket`);
 		});
