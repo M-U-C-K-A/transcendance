@@ -43,7 +43,7 @@ export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFr
       }
 
       setOpen(false)
-      onRemove() // Callback pour mettre à jour l'état parent
+      onRemove()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
