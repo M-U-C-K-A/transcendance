@@ -1,21 +1,56 @@
-FROM node:18-alpine
-
+FROM node:18-alpine3.18 
+#node js pour avoir npm  +  leger + pour le back
 
 WORKDIR /app
 
-
 RUN npm install -g pnpm
+
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
 
-
+RUN pnpm install --frozen-lockfile  # Assure qu'il n'y a pas de changement dans le lockfile
 
 COPY server/ ./server
 COPY prisma/ ./prisma
 
-
+# Générer Prisma (si nécessaire)
 RUN pnpm run generate-prisma
 
+# Copier tout le reste du projet
+COPY . .
+
+# Exposer le port de l'application (ici le backend sur le port 3001)
 EXPOSE 3001
 
+# Lancer l'application en mode développement
 CMD ["pnpm", "run", "dev:server"]
+
+
+
+
+
+
+
+
+# VERSION PLUS SIMPLE
+
+# FROM node:18-alpine
+
+
+# WORKDIR /app
+
+
+# RUN npm install -g pnpm
+# COPY package.json pnpm-lock.yaml ./
+# RUN pnpm install --frozen-lockfile
+
+
+
+# COPY server/ ./server
+# COPY prisma/ ./prisma
+
+
+# RUN pnpm run generate-prisma
+
+# EXPOSE 3001
+
+# CMD ["pnpm", "run", "dev:server"]
