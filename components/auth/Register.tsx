@@ -3,11 +3,17 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '../ui/alert-dialog';
+import { Input } from '../ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
 
 const registerSchema = z.object({
   email: z.string().email({ message: 'Email invalide' }),
@@ -86,8 +92,8 @@ export function Register({
   };
 
   const handle2FASubmit = async () => {
-    if (otpCode.length !== 6 || !/^\d+$/.test(otpCode)) {
-      setOtpError('Le code doit contenir exactement 6 chiffres');
+    if (otpCode.length !== 6) {
+      setOtpError('Veuillez entrer un code complet à 6 chiffres');
       return;
     }
 
@@ -125,70 +131,76 @@ export function Register({
 
   return (
     <>
-
-    <form className={cn("flex flex-col gap-6", className)} onSubmit={handleRegisterSubmit} {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Créer un compte</h1>
-        <p className="text-sm text-muted-foreground">
-          Entrez vos informations pour créer votre compte
-        </p>
-      </div>
-
-      {error && (
-        <div className="p-2 text-sm text-red-500 bg-red-50 rounded">
-          {error}
-        </div>
-      )}
-
-      <div className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {fieldErrors.email && <p className="text-sm text-red-500">{fieldErrors.email}</p>}
+      <form className={cn("flex flex-col gap-6", className)} onSubmit={handleRegisterSubmit} {...props}>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Créer un compte</h1>
+          <p className="text-sm text-muted-foreground">
+            Entrez vos informations pour créer votre compte
+          </p>
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="username">Nom d&apos;utilisateur</Label>
-          <Input
-            id="username"
-            type="text"
-            placeholder="johndoe"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {fieldErrors.username && <p className="text-sm text-red-500">{fieldErrors.username}</p>}
+        {error && (
+          <div className="p-2 text-sm text-red-500 bg-red-50 rounded">
+            {error}
+          </div>
+        )}
+
+        <div className="grid gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {fieldErrors.email && <p className="text-sm text-red-500">{fieldErrors.email}</p>}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="username">Nom d&apos;utilisateur</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="johndoe"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            {fieldErrors.username && <p className="text-sm text-red-500">{fieldErrors.username}</p>}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="password">Mot de passe</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {fieldErrors.password && <p className="text-sm text-red-500">{fieldErrors.password}</p>}
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? 'Inscription en cours...' : 'S&apos;inscrire'}
+          </Button>
         </div>
+      </form>
 
-        <div className="grid gap-2">
-          <Label htmlFor="password">Mot de passe</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {fieldErrors.password && <p className="text-sm text-red-500">{fieldErrors.password}</p>}
-        </div>
-
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Inscription en cours...' : 'S&apos;inscrire'}
-        </Button>
-      </div>
-    </form>
-
-      {/* Popup 2FA */}
-      <AlertDialog open={show2FAModal} onOpenChange={setShow2FAModal}>
-        <AlertDialogContent>
+      {/* Popup 2FA avec InputOTP */}
+      <AlertDialog open={show2FAModal} onOpenChange={(open) => {
+        if (!open) {
+          // Si on ferme la popup, nettoyer le code
+          setOtpCode('');
+          setOtpError('');
+        }
+        setShow2FAModal(open);
+      }}>
+        <AlertDialogContent className="sm:max-w-[425px]">
           <AlertDialogHeader>
             <AlertDialogTitle>Vérification en 2 étapes</AlertDialogTitle>
             <AlertDialogDescription>
-              Un code à 6 chiffres a été envoyé à {email}
+              Entrez le code à 6 chiffres envoyé à {email}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -199,27 +211,45 @@ export function Register({
               </div>
             )}
 
-            <div className="grid gap-2">
-              <Label htmlFor="otp">Code de vérification</Label>
-              <Input
-                id="otp"
-                type="text"
-                placeholder="123456"
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value)}
+            <div className="flex flex-col items-center gap-2">
+              <InputOTP
                 maxLength={6}
-                pattern="\d{6}"
-                inputMode="numeric"
-                required
-              />
+                value={otpCode}
+                onChange={(value) => {
+                  setOtpCode(value);
+                  setOtpError(''); // Effacer l'erreur quand l'utilisateur tape
+                }}
+                onComplete={handle2FASubmit} // Soumet automatiquement quand complet
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <p className="text-sm text-muted-foreground">
+                Code à 6 chiffres
+              </p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex justify-end gap-2">
               <Button
                 type="button"
-                className="w-full"
+                variant="outline"
+                onClick={() => setShow2FAModal(false)}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="button"
                 onClick={handle2FASubmit}
-                disabled={isSubmitting}
+                disabled={isSubmitting || otpCode.length !== 6}
               >
                 {isSubmitting ? 'Vérification...' : 'Vérifier'}
               </Button>
@@ -228,4 +258,5 @@ export function Register({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
+}
