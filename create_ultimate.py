@@ -238,7 +238,7 @@ def generate_messages(count, user_ids):
             'sendAt': fake.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S'),
             'readStatus': random.choice([True, False]),
             'isGeneral': not is_private,  # Inversé pour correspondre au schéma
-            'messageType': random.choice(["Message", "Notification"]),
+            'messageType': "Message",
             'recipientId': recipient_id  # Peut être None
         }
 
