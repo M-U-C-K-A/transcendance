@@ -1,23 +1,25 @@
-x-buildkit: &buildkit-args # meilleurs perf de build
+
+
+x-buildkit: &buildkit-args
   args:
-    - DOCKER_BUILDKIT=1 # active buildkit
+    - DOCKER_BUILDKIT=1
 
 services:
   backend:
     build:
-      context: .  # L endroit d ou on va build + pouvoir use les fichier le cpy et use le dockerfile.
+      context: .
       dockerfile: Dockerfile.back
       <<: *buildkit-args
     container_name: transcendance-back
-    working_dir: /app # la ou on va exec les cmds
+    working_dir: /app
     ports:
-      - "3001:3001" # gauche = ma machine, droite = le container.
-    volumes: # donnes persistentes. non bind-mount ici car declarer dans volumes en bas (donc pas co a ma machine : faut rebuild si changement)
-      - backend_data:/app/server
-      - prisma_data:/app/prisma
-      - ssl_data:/app/ssl
-       - ./public/profilepicture:/app/public/profilepicture
-    environment: #var environnement.
+      - "3001:3001"
+    volumes:
+      - ./server:/app/server
+      - ./prisma:/app/prisma
+      - ./ssl:/app/ssl
+      - ./public/profilepicture:/app/public/profilepicture
+    environment:
       - NODE_ENV=development
 
   frontend:
@@ -30,7 +32,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - frontend_data:/app
+      - ./:/app
       - node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
@@ -40,12 +42,14 @@ services:
       context: .
       dockerfile: Dockerfile.nginx
     ports:
-      - "8443:443" #port standard https
+      - "8443:443"
+      - "8080:80"
     volumes:
-      - nginx_conf:/etc/nginx/conf.d/default.conf
-      - ssl_data:/etc/nginx/certs
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/certs
     depends_on:
       - frontend
+
 
   studio:
     build:
@@ -57,17 +61,12 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - studio_data:/app
+      - ./:/app
       - node_modules:/app/node_modules
     environment:
       - DATABASE_URL=file:./prisma/data/test.sqlite
     depends_on:
       - backend
 
-volumes: # gerer par docker + shared entre les containers.
+volumes:
   node_modules:
-  backend_data:
-  prisma_data:
-  ssl_data:
-  nginx_conf:
-  studio_data:
