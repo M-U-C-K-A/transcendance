@@ -15,6 +15,7 @@ export default {
     "remove": "Remove",
     "copyright": "© 2025 PongMaster Enterprise. All rights reserved."
   },
+
   "landing": {
     "hero": {
       "title": "PongMaster Enterprise",
@@ -71,6 +72,30 @@ export default {
       "losses": "Losses",
       "tournaments": "Tournaments",
       "level": "Level"
+    },
+    "tournament": {
+      "title": "Gestion des tournois",
+      "description": "Créez et gérez des tournois personnalisés",
+      "featuresTitle": "Fonctionnalités des tournois",
+      "feature1": "Brackets personnalisables",
+      "feature2": "Gestion des participants",
+      "feature3": "Calendrier intégré",
+      "createTitle": "Nouveau tournoi",
+      "createDescription": "Configurez un tournoi avec vos règles et préférences",
+      "participants": "Participants",
+      "participantsDesc": "Invitez jusqu'à 128 joueurs",
+      "schedule": "Calendrier",
+      "scheduleDesc": "Planifiez les matchs sur plusieurs jours",
+      "proTip": "Astuce Pro",
+      "proTipContent": "Préparez vos règles à l'avance pour une configuration rapide",
+      "createButton": "Créer",
+      "templatesButton": "Modèles",
+      "browse": "Parcourir",
+      "browseDesc": "Rejoignez des tournois publics",
+      "history": "Historique",
+      "historyDesc": "Vos tournois précédents",
+      "stats": "Statistiques",
+      "statsDesc": "Vos performances"
     },
     "colleagues": {
       "title": "Colleagues",
