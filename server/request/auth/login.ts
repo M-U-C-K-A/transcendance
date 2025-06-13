@@ -30,7 +30,6 @@ export default async function login(data: loginData) {
 
 	}
 	else {
-		console.log('Wrong password');
 		throw new Error ('Wrong password')
 	}
 }
