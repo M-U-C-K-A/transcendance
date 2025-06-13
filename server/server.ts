@@ -8,7 +8,7 @@ import fastifyWebSocket from '@fastify/websocket';
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login';
-import registerRoute from './routes/auth/register';
+import registerRoute from './routes/auth/caca';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
@@ -33,6 +33,7 @@ import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 import fastifyCookie from '@fastify/cookie';
 import gameCreationRoute from './routes/match/gameCreation';
 import register2FARoute from './routes/auth/2FAregisterRoute';
+import Check2FARoute from './routes/auth/2FACheckRoute';
 
 dotenv.config();
 
@@ -92,6 +93,7 @@ async function main() {
 	await app.register(googleLogin);
 	await app.register(gameCreationRoute)
 	await app.register(register2FARoute)
+	await app.register(Check2FARoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);
