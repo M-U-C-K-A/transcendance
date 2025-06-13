@@ -1,6 +1,5 @@
 import authMiddleware from "@/server/authMiddleware";
 import matchCreate from "@/server/request/match/matchCreate";
-import { match } from "assert";
 import { FastifyInstance } from "fastify";
 import Hashids from 'hashids';
 
@@ -21,8 +20,9 @@ export default async function gameCreationRoute(server: FastifyInstance) {
 		if (!matchInfo.playerCount || matchInfo.playerCount <= 2) {
 			const result = await matchCreate(matchInfo.name, user.id)
 			const hashids = new Hashids("CACA BOUDIN", 8)
-			const code = hashids.encode(result.id)
-			return (reply.code(200).send({ code }))
+			const hashedCode = hashids.encode(result.id)
+			const name = matchInfo.name
+			return (reply.code(200).send({ hashedCode, name }))
 		}
 	} catch (err: any) {
 		return reply.code(500).send({ error: 'Internal server error' })
