@@ -11,6 +11,7 @@ export default async function meProfile(server: FastifyInstance) {
 		}
 
 		try {
+			console.log(user.id)
 			const result = await meProfileInfo(user.id)
 			return reply.code(200).send(result)
 		} catch (err: any) {
