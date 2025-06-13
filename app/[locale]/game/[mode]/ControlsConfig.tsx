@@ -31,8 +31,8 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { controls, updateControls } = useControls();
-  const [localControls, setLocalControls] = useState(controls);
+  const { controls, updateControls } = useControls();  // importe context controls = Control  de ControlContext.tsx  . changement dans toute l appli (car utilise le context react dans  ControlContext.tsx)
+  const [localControls, setLocalControls] = useState(controls); // local control = same mais copie temporaire pdt la modif dans l interface.  va voir les changement dans l interface.
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -43,8 +43,10 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   const handleKeyPress = (e: React.KeyboardEvent, key: string) => {
     e.preventDefault();
     let newKey = e.key;
-    // Si c'est une lettre simple, on la met en majuscule
-    if (newKey.length === 1) newKey = newKey.toUpperCase();
+
+    // Si lettre simple minsucule on la met en majuscule = better UI et constance d affi.
+    if (newKey.length === 1) 
+      newKey = newKey.toUpperCase();
 
     // Vérifier si la touche est déjà assignée
     const isKeyAlreadyAssigned = Object.entries(localControls).some(
@@ -67,11 +69,11 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
 
   const handleSave = () => {
     updateControls(localControls);
-    onClose(); // Appel à onClose pour fermer le modal de configuration
+    onClose(); // Appel onClose pour fermer + save
   };
 
   const handleCancel = () => {
-    onClose(); // Appel à onClose pour fermer le modal sans sauvegarder
+    onClose(); // Appel  onClose pour fermer sans sauve
   };
 
   return (
