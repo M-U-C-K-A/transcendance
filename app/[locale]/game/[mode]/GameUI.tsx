@@ -112,7 +112,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       case 'ArrowDown': return '🡇';
       case 'ArrowLeft': return '🡄';
       case 'ArrowRight': return '🡆';
-      default: return key;
+      default: return key.length > 3 ? key.substring(0, 3) : key;
     }
   }
 
