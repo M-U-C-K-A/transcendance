@@ -8,7 +8,8 @@ export default async function register2FARoute(server: FastifyInstance) {
 
 		try {
 			const result = await register2FA(data)
-			return reply.code(201).send({ message: 'User registered successfully' })
+			console.log(result)
+			return reply.code(201).send({ result })
 		} catch (err: any) {
 			if (err.message === 'Username already taken') {
 				return reply.code(403).send({ error: 'Username already taken' })

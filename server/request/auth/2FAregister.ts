@@ -57,6 +57,7 @@ export default async function register2FA(data: connectionData) {
 
 	const authCode = Math.floor(100000 + Math.random() * 900000).toString()
 
+	console.log("TEST CREATION GAME")
 	const newUser = await Prisma.tmpUser.create ({
 		data: {
 			username: data.username,
@@ -64,8 +65,13 @@ export default async function register2FA(data: connectionData) {
 			pass: hashedPass,
 			code: authCode,
 		},
+		select: {
+			username: true,
+			email: true,
+			code: true,
+		}
 	});
-
+	console.log("TEST APRES CREATION GAME")
 	console.log(newUser)
 	return (newUser)
 }
