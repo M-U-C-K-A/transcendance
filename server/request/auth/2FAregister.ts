@@ -6,13 +6,13 @@ import nodemailer from 'nodemailer'
 const Prisma = new PrismaClient()
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+	host: 'smtp.gmail.com',
+	port: Number(process.env.SMTP_PORT || 587),
+	secure: process.env.SMTP_SECURE === 'true',
+	auth: {
+		user: 'pongmaster12345@gmail.com',
+		pass: 'jipk czwd ozxs seys',
+	},
 })
 
 export default async function register2FA(data: connectionData) {
@@ -84,7 +84,7 @@ export default async function register2FA(data: connectionData) {
 	});
 	console.log("TEST APRES CREATION GAME")
 	await transporter.sendMail({
-		from: `"Your App Name" <pongmaster12345>`,
+		from: `"Your App Name" <pongmaster12345@gmail.com>`,
 		to: newUser.email,
 		subject: 'Your Two‑Factor Authentication Code',
 		text: `Hello ${newUser.username},\n\nYour authentication code is: ${newUser.code}\n\nEnter this code to complete your registration.`,
