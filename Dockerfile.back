@@ -1,5 +1,4 @@
-
-FROM node:18-alpine3.18 AS builder
+FROM node:18-alpine3.18
 
 WORKDIR /app
 RUN npm install -g pnpm
@@ -8,59 +7,13 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
-COPY server/   ./server
-COPY prisma/   ./prisma
+COPY server/ ./server
+COPY prisma/ ./prisma
 
 RUN pnpm run generate-prisma
 
-
-
-FROM node:18-alpine3.18 AS dev
-
-WORKDIR /app
-RUN npm install -g pnpm
-
-COPY package.json pnpm-lock.yaml ./
-
-RUN pnpm install --frozen-lockfile
-
-COPY --from=builder /app/node_modules ./node_modules
-
-COPY --from=builder /app/server  ./server
-COPY --from=builder /app/prisma  ./prisma
-
 COPY . .
-
 
 EXPOSE 3001
 
 CMD ["pnpm", "run", "dev:server"]
-
-
-
-
-
-
-# VERSION PLUS SIMPLE
-
-# FROM node:18-alpine
-
-
-# WORKDIR /app
-
-
-# RUN npm install -g pnpm
-# COPY package.json pnpm-lock.yaml ./
-# RUN pnpm install --frozen-lockfile
-
-
-
-# COPY server/ ./server
-# COPY prisma/ ./prisma
-
-
-# RUN pnpm run generate-prisma
-
-# EXPOSE 3001
-
-# CMD ["pnpm", "run", "dev:server"]
