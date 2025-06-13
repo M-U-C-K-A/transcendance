@@ -5,28 +5,19 @@ x-buildkit: &buildkit-args # meilleurs perf de build
 services:
   backend:
     build:
-      context: .  # L endroit d ou on va build + pouvoir use les fichier le cpy et use le dockerfile.   
+      context: .  # L endroit d ou on va build + pouvoir use les fichier le cpy et use le dockerfile.
       dockerfile: Dockerfile.back
       <<: *buildkit-args
     container_name: transcendance-back
     working_dir: /app # la ou on va exec les cmds
     ports:
-<<<<<<< HEAD
-      - "3001:3001"
-    volumes:
-      - ./server:/app/server
-      - ./prisma:/app/prisma
-      - ./ssl:/app/ssl
-      - ./public/profilepicture:/app/public/profilepicture
-    environment:
-=======
       - "3001:3001" # gauche = ma machine, droite = le container.
     volumes: # donnes persistentes. non bind-mount ici car declarer dans volumes en bas (donc pas co a ma machine : faut rebuild si changement)
       - backend_data:/app/server
       - prisma_data:/app/prisma
       - ssl_data:/app/ssl
+       - ./public/profilepicture:/app/public/profilepicture
     environment: #var environnement.
->>>>>>> refs/remotes/origin/main
       - NODE_ENV=development
 
   frontend:
