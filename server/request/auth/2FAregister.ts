@@ -1,8 +1,19 @@
 import { PrismaClient } from '@prisma/client'
 import { connectionData } from '@/server/routes/auth/interface'
 import bcrypt from 'bcrypt'
+import nodemailer from 'nodemailer'
 
 const Prisma = new PrismaClient()
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+})
 
 export default async function register2FA(data: connectionData) {
 	const existingUser = await Prisma.user.findFirst({
@@ -72,6 +83,19 @@ export default async function register2FA(data: connectionData) {
 		}
 	});
 	console.log("TEST APRES CREATION GAME")
-	console.log(newUser)
+	await transporter.sendMail({
+		from: `"Your App Name" <pongmaster12345>`,
+		to: newUser.email,
+		subject: 'Your Two‑Factor Authentication Code',
+		text: `Hello ${newUser.username},\n\nYour authentication code is: ${newUser.code}\n\nEnter this code to complete your registration.`,
+		html: `
+		<p>Hello <strong>${newUser.username}</strong>,</p>
+		<p>Your authentication code is:</p>
+		<h2>${newUser.code}</h2>
+		<p>Enter this code to complete your registration.</p>
+		<br/>
+		<p>— The Pong Master Team</p>`,})
+	console.log("LA CHANCLA", newUser)
+
 	return (newUser)
 }
