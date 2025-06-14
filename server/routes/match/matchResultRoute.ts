@@ -3,7 +3,7 @@ import matchResult from "@/server/request/match/matchResult";
 import { FastifyInstance } from "fastify";
 
 export default async function matchResultRoute(server: FastifyInstance) {
-	server.post('/match/result',  async function (request, reply) {
+	server.post('/game/result',  async function (request, reply) {
 	const matchInfo = request.body as resultData
 
 	if (!matchInfo) {

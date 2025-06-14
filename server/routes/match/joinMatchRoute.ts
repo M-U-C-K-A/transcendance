@@ -3,16 +3,16 @@ import authMiddleware from '../../authMiddleware';
 import joinMatch from "@/server/request/match/joinMatch";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
-	server.post('/game/join', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/game/travel', { preHandler: authMiddleware }, async function (request, reply) {
 	const user = request.user as { id: number }
-	const { matchId } = request.body as { matchId: string}
+	const { code } = request.body as { code: string }
 
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	try {
-		const result = await joinMatch(user.id, matchId)
+		const result = await joinMatch(user.id, code)
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 		if (err.message === 'User not found') {
