@@ -26,6 +26,10 @@ export function updateControls(newControls: Controls) {
   keys.clear();
 }
 
+
+// indique juste que touche a été pressé + est dynamique car lié au context
+
+// to lower pour unifier que soit un MAJ ou non.
 export function isPlayer1UpPressed(): boolean {
   return keys.has(currentControls.player1Up.toLowerCase());
 }
