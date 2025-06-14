@@ -112,15 +112,31 @@ export default function SettingsPanel({
     },
   });
 
+  // Initialize game info from localStorage
   useEffect(() => {
-    if ((gamemode === "custom" || gamemode === "tournaments") && !gameInfo) {
+    const storedGameId = localStorage.getItem("currentGameId");
+    const storedGameName = localStorage.getItem("currentGameName");
+
+    if (storedGameId && storedGameName && !gameInfo) {
+      setGameInfo({
+        id: storedGameId,
+        name: storedGameName,
+        players: [],
+        status: "waiting"
+      });
+    }
+  }, []); // Empty dependency array to run only once on mount
+
+  // Reset form when gamemode changes
+  useEffect(() => {
+    if (gamemode === "custom" || gamemode === "tournaments") {
       form.reset({
         name: "",
         type: gamemode === "tournaments" ? "tournament" : "custom",
         playerCount: 4,
       });
     }
-  }, [gamemode, gameInfo]);
+  }, [gamemode]); // Only run when gamemode changes
 
   const createGame = async (data: GameCreationData) => {
     setIsLoading(true);
@@ -141,8 +157,10 @@ export default function SettingsPanel({
       const gameData = await response.json();
       localStorage.setItem("currentGameId", gameData.hashedCode);
       localStorage.setItem("currentGameName", gameData.name);
-      setGameInfo(gameData);
-      // Ajout de style CSS dans les consoles log
+      setGameInfo({
+        ...gameData,
+        players: []
+      });
       console.log(
         "%c✔ Partie créée avec succès !",
         "color: white; background: #22c55e; font-weight: bold; padding: 2px 8px; border-radius: 4px;"
@@ -157,13 +175,13 @@ export default function SettingsPanel({
         "color: #64748b; font-weight: bold;",
         "color: #f59e42; font-weight: bold;"
       );
-        } catch (error) {
+    } catch (error) {
       console.error(
         "%cErreur création partie:",
         "color: white; background: #ef4444; font-weight: bold; padding: 2px 8px; border-radius: 4px;",
         error
       );
-        } finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -177,17 +195,27 @@ export default function SettingsPanel({
       setGameInfo(data);
       if (data?.id) {
         localStorage.setItem("currentGameId", data.id);
+        localStorage.setItem("currentGameName", data.name);
       }
     } catch (err) {
       console.error("Erreur récupération info:", err);
     }
   };
 
+  // Vérifier si on doit afficher le dialogue de création
+  const shouldShowCreationDialog = () => {
+    if (gamemode !== "custom" && gamemode !== "tournaments") return false;
+    if (localStorage.getItem("currentGameId")) return false;
+    return !gameInfo;
+  };
+
   return (
     <div className="flex gap-6 w-full px-4 h-full">
       {/* Dialogue de création */}
-      <Dialog open={!gameInfo && (gamemode === "custom" || gamemode === "tournaments")}
-              onOpenChange={(open) => !open && router.push("/")}>
+      <Dialog
+        open={shouldShowCreationDialog()}
+        onOpenChange={(open) => !open && router.push("/")}
+      >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-2xl">
@@ -254,13 +282,13 @@ export default function SettingsPanel({
         </DialogContent>
       </Dialog>
 
-      {/* Colonne gauche */}
-      {(gamemode === "custom" || gamemode === "tournaments") && gameInfo && (
+      {/* Colonne gauche - Toujours visible pour les modes custom/tournaments */}
+      {(gamemode === "custom" || gamemode === "tournaments") && (
         <div className="w-1/4 space-y-6">
           <Card className="p-4 h-fit">
             <h2 className="text-xl font-semibold mb-3">Participants</h2>
             <div className="space-y-3">
-              {gameInfo.players?.length > 0 ? (
+              {gameInfo?.players?.length > 0 ? (
                 gameInfo.players.map((player) => (
                   <Card key={player.id} className="p-3 flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${
@@ -276,13 +304,13 @@ export default function SettingsPanel({
                 ))
               ) : (
                 <Card className="p-3 text-center text-muted-foreground">
-                  En attente de joueurs...
+                  {gameInfo ? "En attente de joueurs..." : "Partie non créée"}
                 </Card>
               )}
             </div>
           </Card>
 
-          {gamemode === "tournaments" && gameInfo.upcomingMatches && (
+          {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
             <Card className="p-4 h-fit">
               <h2 className="text-xl font-semibold mb-3">Arbre du Tournoi</h2>
               <div className="space-y-4">
