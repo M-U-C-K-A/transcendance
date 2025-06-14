@@ -6,12 +6,12 @@ import nodemailer from 'nodemailer'
 const Prisma = new PrismaClient()
 
 export const transporter = nodemailer.createTransport({
-	host: 'smtp.gmail.com',
+	host: "smtp.gmail.com",
 	port: Number(process.env.SMTP_PORT || 587),
 	secure: process.env.SMTP_SECURE === 'true',
 	auth: {
-		user: 'pongmaster12345@gmail.com',
-		pass: 'jipk czwd ozxs seys',
+		user: "pongmaster12345@gmail.com",
+		pass: "jipk czwd ozxs seys",
 	},
 })
 
