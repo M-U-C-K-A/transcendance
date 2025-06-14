@@ -28,5 +28,17 @@ export default async function editData(
 		},
 	});
 
-	return (true)
+	const newToken = await Prisma.user.findFirst({
+		where: {
+			id: userId,
+		},
+		select: {
+			id: true,
+			email: true,
+			username: true,
+			bio: true,
+		},
+	});
+
+	return (newToken)
 }
