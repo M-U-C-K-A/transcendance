@@ -20,7 +20,7 @@ export function ChatSection({ currentUser }: ChatSectionProps) {
 	const t = useI18n()
 
 	return (
-		<Card className="bg-card border shadow-sm h-full max-h-[768px] min-h-[768px]">
+		<Card className="bg-card border shadow-sm h-full max-h-[768px] min-h-[768px] min-w-[400px]">
 			<CardHeader>
 				<CardTitle className="flex items-center">
 					<MessageCircle className="mr-2 h-5 w-5" /> {t('dashboard.chat.title')}
