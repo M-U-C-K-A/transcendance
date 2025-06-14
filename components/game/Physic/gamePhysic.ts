@@ -13,12 +13,12 @@ import {
   BUMPER_MID_RIGHT,       // ex. +4
 } from "./constants";
 
-import { serve as serveBall } from "./paddle/serve";
+import { serve as serveBall } from "./movements/serve";
 import { startCountdown } from "./countdown";
 import { handleScoring } from "./collisions/scoring";
 import { registerInputListeners } from "./input";
-import { movePaddles } from "./paddle/paddleMovement";
-import { updateMiniPaddle } from "./paddle/miniPaddleLogic";
+import { movePaddles } from "./movements/paddleMovement";
+import { updateMiniPaddle } from "./movements/miniPaddleLogic";
 import { handleCollisions } from "./collisions/handleCollisions";
 import type { GameRefs, GameObjects } from "../gameTypes";
 
