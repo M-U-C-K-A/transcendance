@@ -4,16 +4,26 @@ import { FastifyInstance } from "fastify";
 
 export default async function editDataRoute(server: FastifyInstance) {
 	server.post('/gdpr/send', { preHandler: authMiddleware }, async function (request, reply) {
-	const user = request.user as { id: number, username: string }
-	const data = request.body as { email: string, pass: string, resetAvatar: boolean }
+	const user = request.user as { id: number }
+	const data = request.body as { username: string, email: string, password: string, removeAvatar: boolean }
 
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
-
+	console.log("🌯🌯🌯🌯🌯DATA EDIT PROFILE RGPD🌯🌯🌯🌯", user.id, data)
 	try {
-		const result = await editData(user.id, user.username, data.email, data.pass, data.resetAvatar)
-		return (reply.code(200).send(result))
+		const result = await editData(user.id, data.username, data.email, data.password, data.removeAvatar)
+		if (result) {
+			const token = server.jwt.sign({
+				id: result.id,
+				email: result.email,
+				username: result.username,
+				bio: result.bio,
+			})
+			return (reply.code(200).send({ token}))
+		} else {
+			throw new Error("Internal server error")
+		}
 	} catch (err: any) {
 			if (err.message === 'This user does not exist') {
 				return reply.code(404).send({ error: 'This user does not exist' })

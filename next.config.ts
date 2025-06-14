@@ -75,6 +75,10 @@ const nextConfig: NextConfig = {
         source: "/api/gdpr/verify",
         destination: "https://backend/gdr/verify"
       },
+      {
+        source: "/api/gdpr/delete",
+        destination: "https://backend/gdr/delete"
+      },
     ];
   },
   async headers() {
