@@ -152,7 +152,7 @@ export function PendingInvitations() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">Aucune demande en attente</p>
+          <p className="text-sm text-muted-foreground">					{t('dashboard.colleagues.nofriendswaiting')}</p>
         )}
       </CardContent>
     </Card>
