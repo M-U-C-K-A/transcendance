@@ -53,10 +53,10 @@ export const BUMPER_MID_RIGHT = +2
 
 // --- Angles ---
 // Angle maximum d'émission de la balle lors du service (en radians)
-export const MAX_ANGLE = Math.PI / 4;  // 45 degres max (on calcul en radians)
+export const MAX_ANGLE = Math.PI / 4;
 
 // Angle maximum de rebond sur la raquette (en radians)
-export const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 degres max
+export const MAX_BOUNCE_ANGLE = Math.PI / 3;
 
 // Dimensions des paddles (utilisées pour la physique)
 export const PADDLE_HALF_WIDTH = 3;
