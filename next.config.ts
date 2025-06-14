@@ -71,6 +71,10 @@ const nextConfig: NextConfig = {
         source: "/api/game/typecreation",
         destination: "https://backend/game/typecreation"
       },
+      {
+        source: "/api/gdpr/verify",
+        destination: "https://backend/gdr/view"
+      },
     ];
   },
   async headers() {
