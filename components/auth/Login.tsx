@@ -42,14 +42,12 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Redirection si déjà authentifié
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
       if (!token || token === 'undefined' || token === 'null') return;
 
       try {
-        // Vérification supplémentaire de la validité du token
         const res = await fetch('/api/auth/verify', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -57,7 +55,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
         if (res.ok) {
           router.push('/en/dashboard');
         } else {
-          // Token invalide, on nettoie
           localStorage.removeItem('token');
         }
       } catch (err) {
@@ -68,7 +65,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
     checkAuth();
 
-    // Gestion des erreurs depuis l'URL
     const errorFromUrl = searchParams.get('error');
     if (errorFromUrl === 'google_login_failed') {
       setError("Échec de la connexion avec Google");
@@ -81,7 +77,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
     setError('');
     setIsSubmitting(true);
 
-    // Validation des champs
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       setError(result.error.issues[0]?.message || 'Champs invalides');
@@ -96,20 +91,13 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
         body: JSON.stringify({ email, pass: password }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Erreur lors de la connexion');
-      }
-
-      if (data.requires2FA) {
+      if (response.ok) {
+        // Si la réponse est OK, on ouvre directement la modale OTP
         localStorage.setItem('temp_2fa_email', email);
         setShow2FAModal(true);
-      } else if (data.token) {
-        localStorage.setItem('token', data.token);
-        router.push('/en/dashboard');
       } else {
-        throw new Error('Réponse du serveur invalide');
+        const data = await response.json();
+        throw new Error(data.message || 'Erreur lors de la connexion');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
@@ -119,7 +107,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
   };
 
   const handle2FASubmit = async () => {
-    // Validation du code OTP
     const result = otpSchema.safeParse(otpCode);
     if (!result.success) {
       setOtpError(result.error.issues[0]?.message || 'Code invalide');
@@ -143,10 +130,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
       if (!response.ok) {
         throw new Error(data.message || 'Code 2FA incorrect');
-      }
-
-      if (!data.token) {
-        throw new Error('Token manquant dans la réponse');
       }
 
       localStorage.setItem('token', data.token);
@@ -313,6 +296,6 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+	      </>
   );
 }
