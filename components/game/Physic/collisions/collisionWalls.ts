@@ -2,7 +2,6 @@
 // -----------------
 
 import { Vector3, Mesh } from "@babylonjs/core";
-import { playRandomCollisionSound } from "../sound";
 import type { Sound } from "@babylonjs/core/Audio/sound";
 
 // Cooldown de collision par mur (module scope)
@@ -26,7 +25,6 @@ export function collideWalls(
     ball.position.x = 10;
     const dirAfter = new Vector3(-Math.abs(ballV.x), 0, ballV.z).normalize();
     const newVelocity = dirAfter.scale(currentSpeed);
-    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed: currentSpeed };
   }
   // Rebond mur gauche
@@ -36,7 +34,6 @@ export function collideWalls(
     ball.position.x = -10;
     const dirAfter = new Vector3(Math.abs(ballV.x), 0, ballV.z).normalize();
     const newVelocity = dirAfter.scale(currentSpeed);
-    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed: currentSpeed };
   }
   return null;

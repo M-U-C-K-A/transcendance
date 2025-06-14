@@ -4,7 +4,6 @@
 import { Vector3 } from "@babylonjs/core";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { Sound } from "@babylonjs/core/Audio/sound";
-import { playRandomCollisionSound } from "../sound";
 
 export function collideMiniPaddle(
   ball: Mesh,
@@ -29,7 +28,6 @@ export function collideMiniPaddle(
     
     // Le mini-pad garde la vitesse normale
     const newVelocity = dirAfter.scale(currentSpeed);
-    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed: currentSpeed };
   }
   return null;
