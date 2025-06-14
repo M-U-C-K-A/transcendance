@@ -1,12 +1,12 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { toast } from "sonner";
-import { z } from "zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import { toast } from "sonner"
+import { z } from "zod"
 import {
   Dialog,
   DialogContent,
@@ -14,135 +14,191 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
-// Schéma Zod pour la vérification du mot de passe
+// Schémas de validation
 const passwordSchema = z.object({
   password: z.string().min(1, "Le mot de passe est requis"),
-});
+})
 
-// Schéma Zod pour les données utilisateur
 const userDataSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   username: z.string().min(1, "Le nom d'utilisateur est requis"),
   email: z.string().email("Email invalide"),
-  password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères"),
-});
+  password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères").optional(),
+  removeAvatar: z.boolean().optional(),
+})
 
 export default function GdprPage() {
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showUserDataModal, setShowUserDataModal] = useState(false);
-  const [password, setPassword] = useState("");
+  // États pour les modales
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showUserDataModal, setShowUserDataModal] = useState(false)
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+
+  // États pour les formulaires
+  const [password, setPassword] = useState("")
   const [userData, setUserData] = useState({
-    id: "",
+    id: 0,
     username: "",
     email: "",
     password: "",
-  });
-  const [loading, setLoading] = useState(false);
+  })
+  const [removeAvatar, setRemoveAvatar] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
+  // Vérification du mot de passe
   const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      // Validation avec Zod
-      passwordSchema.parse({ password });
+      passwordSchema.parse({ password })
 
       const response = await fetch("/api/gdpr/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
         },
         body: JSON.stringify({ password }),
-      });
+      })
 
-      if (response.status === 200) {
-        const data = await response.json();
-        // Validation des données reçues avec Zod
-        const validatedData = userDataSchema.parse(data);
-        setUserData(validatedData);
-        setShowPasswordModal(false);
-        setShowUserDataModal(true);
-        toast.success("Vérification réussie");
+      if (response.ok) {
+        const data = await response.json()
+        const validatedData = userDataSchema.parse(data)
+        setUserData(validatedData)
+        setShowPasswordModal(false)
+        setShowUserDataModal(true)
+        toast.success("Vérification réussie")
       } else {
-        throw new Error("Mot de passe incorrect");
+        throw new Error("Mot de passe incorrect")
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast.error(error.errors[0].message);
-      } else {
-        toast.error(error instanceof Error ? error.message : "Une erreur est survenue");
-      }
+      handleError(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
+  // Soumission des modifications
   const handleUserDataSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      // Validation avec Zod
-      const validatedData = userDataSchema.parse(userData);
+      const validatedData = userDataSchema.parse({
+        ...userData,
+        removeAvatar,
+        password: userData.password || undefined,
+      })
 
       const response = await fetch("/api/gdpr/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
         },
         body: JSON.stringify(validatedData),
-      });
+      })
 
       if (response.ok) {
-        toast.success("Vos informations ont été mises à jour");
-        setShowUserDataModal(false);
+        toast.success("Vos informations ont été mises à jour")
+        setShowUserDataModal(false)
+        setRemoveAvatar(false)
       } else {
-        throw new Error("Échec de la mise à jour");
+        throw new Error("Échec de la mise à jour")
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast.error(error.errors[0].message);
-      } else {
-        toast.error(error instanceof Error ? error.message : "Une erreur est survenue");
-      }
+      handleError(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  // Suppression du compte
+  const handleAccountDeletion = async () => {
+    setDeleteLoading(true)
+
+    try {
+      const response = await fetch("/api/gdpr/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
+        },
+      })
+
+      if (response.ok) {
+        toast.success("Votre compte a été supprimé avec succès")
+        // Redirection ou déconnexion ici
+        window.location.href = "/"
+      } else {
+        throw new Error("Échec de la suppression du compte")
+      }
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setDeleteLoading(false)
+      setShowDeleteAlert(false)
+    }
+  }
+
+  // Gestion des erreurs
+  const handleError = (error: unknown) => {
+    if (error instanceof z.ZodError) {
+      toast.error(error.errors[0].message)
+    } else {
+      toast.error(error instanceof Error ? error.message : "Une erreur est survenue")
+    }
+  }
 
   return (
-    <div className="max-w-3xl mx-auto py-10">
-      {/* Popup de vérification du mot de passe */}
+    <div className="max-w-3xl mx-auto py-10 space-y-6">
+      {/* Modale de vérification du mot de passe */}
       <Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Vérification requise</DialogTitle>
-            <DialogDescription>
-              Veuillez entrer votre mot de passe pour accéder à vos informations.
+            <DialogTitle className="text-lg font-semibold">Confirmation de sécurité</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Pour accéder à vos données personnelles, veuillez confirmer votre identité.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handlePasswordSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="password" className="text-right">
-                  Mot de passe
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="col-span-3"
-                  disabled={loading}
-                />
-              </div>
+
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="current-password">Mot de passe actuel</Label>
+              <Input
+                id="current-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Entrez votre mot de passe"
+                disabled={loading}
+              />
             </div>
+
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowPasswordModal(false)} disabled={loading}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowPasswordModal(false)}
+                disabled={loading}
+              >
                 Annuler
               </Button>
               <Button type="submit" disabled={loading}>
@@ -153,115 +209,244 @@ export default function GdprPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Popup de modification des informations */}
+      {/* Modale de modification des données */}
       <Dialog open={showUserDataModal} onOpenChange={setShowUserDataModal}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Modifier vos informations</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">Gestion de vos données</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleUserDataSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Nom d'utilisateur
-                </Label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={userData.username}
-                  onChange={(e) => setUserData({...userData, username: e.target.value})}
-                  className="col-span-3"
-                  disabled={loading}
-                />
+
+          <form onSubmit={handleUserDataSubmit} className="space-y-6">
+            {/* Section Avatar */}
+            <div className="space-y-4">
+              <Label>Photo de profil</Label>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16 border">
+                  {removeAvatar ? (
+                    <AvatarFallback>DEL</AvatarFallback>
+                  ) : (
+                    <>
+                      <AvatarImage
+                        src={`/profilepicture/${userData.id}.webp`}
+                        alt="Votre avatar"
+                      />
+                      <AvatarFallback>
+                        {userData.username.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </>
+                  )}
+                </Avatar>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="remove-avatar"
+                    checked={removeAvatar}
+                    onCheckedChange={setRemoveAvatar}
+                  />
+                  <Label htmlFor="remove-avatar">Supprimer l'avatar</Label>
+                </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="email" className="text-right">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={userData.email}
-                  onChange={(e) => setUserData({...userData, email: e.target.value})}
-                  className="col-span-3"
-                  disabled={loading}
-                />
+            </div>
+
+            {/* Section Informations */}
+            <div className="space-y-4">
+              <Label>Informations personnelles</Label>
+
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username">Nom d'utilisateur</Label>
+                  <Input
+                    id="username"
+                    value={userData.username}
+                    onChange={(e) => setUserData({...userData, username: e.target.value})}
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Adresse email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={userData.email}
+                    onChange={(e) => setUserData({...userData, email: e.target.value})}
+                    disabled={loading}
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="newPassword" className="text-right">
-                  Nouveau mot de passe
-                </Label>
+            </div>
+
+            {/* Section Mot de passe */}
+            <div className="space-y-4">
+              <Label>Changer le mot de passe</Label>
+              <div className="space-y-2">
+                <Label htmlFor="new-password">Nouveau mot de passe (optionnel)</Label>
                 <Input
-                  id="newPassword"
+                  id="new-password"
                   type="password"
                   value={userData.password}
                   onChange={(e) => setUserData({...userData, password: e.target.value})}
-                  className="col-span-3"
+                  placeholder="Laissez vide pour ne pas modifier"
                   disabled={loading}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Minimum 8 caractères
+                </p>
               </div>
             </div>
+
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowUserDataModal(false)} disabled={loading}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowUserDataModal(false)
+                  setRemoveAvatar(false)
+                }}
+                disabled={loading}
+              >
                 Annuler
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Envoi..." : "Enregistrer"}
+                {loading ? "Enregistrement..." : "Enregistrer les modifications"}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
+      {/* Alerte de suppression de compte */}
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action supprimera définitivement votre compte et toutes vos données.
+              Vous ne pourrez pas annuler cette opération.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteLoading}>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleAccountDeletion}
+              className="bg-destructive hover:bg-destructive/90"
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? "Suppression..." : "Supprimer mon compte"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Contenu principal */}
       <Card>
         <CardHeader>
-          <CardTitle>Politique de Confidentialité (GDPR)</CardTitle>
+          <CardTitle className="text-2xl font-bold">Gestion de vos données personnelles</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-semibold">Vos données personnelles</h1>
-            <Button onClick={() => setShowPasswordModal(true)}>
-              Modifier ses informations
-            </Button>
-          </div>
 
-          <Skeleton className="h-[125px] w-full rounded-xl" />
+        <CardContent className="space-y-6">
+          {/* Section Données personnelles */}
+          <section className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-lg font-semibold">Vos données personnelles</h2>
+                <p className="text-sm text-muted-foreground">
+                  Consultez et modifiez les informations associées à votre compte
+                </p>
+              </div>
+              <Button onClick={() => setShowPasswordModal(true)}>
+                Gérer mes données
+              </Button>
+            </div>
 
-          <p>
-            Cette page décrit les dispositions prises par l&apos;application Transcendance pour se conformer au Règlement Général sur la Protection des Données (GDPR).
-          </p>
-          <Separator className="my-4" />
-          <h2>Responsables de traitement</h2>
-          <ul>
-            <li><strong>Hugo Delacour</strong> - hugo.delacour@email.com</li>
-            <li><strong>Jean Dupont</strong> - jean.dupont@email.com</li>
-            <li><strong>Marie Martin</strong> - marie.martin@email.com</li>
-          </ul>
-          <Separator className="my-4" />
-          <h2>Données collectées</h2>
-          <ul>
-            <li>Identifiants de connexion</li>
-            <li>Adresse email</li>
-            <li>Statistiques d&apos;utilisation</li>
-          </ul>
-          <h2>Finalités du traitement</h2>
-          <ul>
-            <li>Gestion des comptes utilisateurs</li>
-            <li>Amélioration de l&apos;expérience utilisateur</li>
-            <li>Sécurité et prévention de la fraude</li>
-          </ul>
-          <h2>Vos droits</h2>
-          <ul>
-            <li>Droit d&apos;accès, de rectification et de suppression de vos données</li>
-            <li>Droit à la portabilité</li>
-            <li>Droit d&apos;opposition et de limitation du traitement</li>
-          </ul>
-          <h2>Contact</h2>
-          <p>
-            Pour toute question ou demande concernant vos données personnelles, veuillez contacter l&apos;un des responsables de traitement listés ci-dessus.
-          </p>
+            <Skeleton className="h-[120px] w-full rounded-lg" />
+          </section>
+
+          <Separator />
+
+          {/* Section Politique de confidentialité */}
+          <section className="space-y-4">
+            <h2 className="text-lg font-semibold">Politique de confidentialité</h2>
+
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium">Responsables de traitement</h3>
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                  <li>• Hugo Delacour - hugo.delacour@email.com</li>
+                  <li>• Jean Dupont - jean.dupont@email.com</li>
+                  <li>• Marie Martin - marie.martin@email.com</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-medium">Données collectées</h3>
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                  <li>• Identifiants de connexion</li>
+                  <li>• Adresse email</li>
+                  <li>• Photo de profil</li>
+                  <li>• Statistiques d'utilisation</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-medium">Finalités du traitement</h3>
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                  <li>• Gestion des comptes utilisateurs</li>
+                  <li>• Personnalisation de l'expérience</li>
+                  <li>• Amélioration de nos services</li>
+                  <li>• Sécurité et prévention des abus</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-medium">Vos droits RGPD</h3>
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                  <li>• Droit d'accès à vos données</li>
+                  <li>• Droit de rectification</li>
+                  <li>• Droit à l'effacement</li>
+                  <li>• Droit à la portabilité</li>
+                  <li>• Droit d'opposition</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <Separator />
+
+          {/* Section Actions critiques */}
+          <section className="space-y-4">
+            <h2 className="text-lg font-semibold text-destructive">Actions critiques</h2>
+
+            <div className="rounded-lg border border-destructive/30 p-4 space-y-3">
+              <div>
+                <h3 className="font-medium">Suppression du compte</h3>
+                <p className="text-sm text-muted-foreground">
+                  Cette action est irréversible. Toutes vos données seront définitivement supprimées.
+                </p>
+              </div>
+
+              <Button
+                variant="destructive"
+                onClick={() => setShowDeleteAlert(true)}
+                className="w-full sm:w-auto"
+              >
+                Supprimer mon compte
+              </Button>
+            </div>
+          </section>
+
+          <Separator />
+
+          {/* Section Contact */}
+          <section className="space-y-2">
+            <h2 className="text-lg font-semibold">Contact</h2>
+            <p className="text-sm text-muted-foreground">
+              Pour toute question concernant vos données personnelles ou notre politique de confidentialité,
+              veuillez contacter l'un de nos responsables de traitement.
+            </p>
+          </section>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
