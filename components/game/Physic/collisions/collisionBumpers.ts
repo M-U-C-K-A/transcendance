@@ -3,7 +3,6 @@
 
 import { Vector3, Mesh } from "@babylonjs/core";
 import type { Sound } from "@babylonjs/core/Audio/sound";
-import { playRandomCollisionSound } from "../sound";
 
 export function collideBumper(
   ball: Mesh,
@@ -44,7 +43,6 @@ export function collideBumper(
     const dirAfter = new Vector3(reflectX, 0, reflectZ).normalize();
 
     const newVelocity = dirAfter.scale(currentSpeed);
-    playRandomCollisionSound(allHitSounds, volume);
     return { newVelocity, newSpeed: currentSpeed };
   }
 

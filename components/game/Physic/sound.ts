@@ -4,16 +4,7 @@
 
 import { Sound } from "@babylonjs/core";
 
-// Son aléatoire lors des collisions
-export const playRandomCollisionSound = (sounds: Sound[], volume: number = 0.5) => {
-  // Mise à jour du volume pour tous les sons avant de jouer
-  updateAllSoundsVolume(sounds, volume);
-  
-  const randomIndex = Math.floor(Math.random() * sounds.length);
-  if (sounds[randomIndex]) {
-    sounds[randomIndex].play();
-  }
-};
+
 
 // Mise à jour du volume pour tous les sons
 export const updateAllSoundsVolume = (sounds: Sound[], volume: number) => {

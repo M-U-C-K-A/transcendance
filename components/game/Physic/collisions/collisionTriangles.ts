@@ -1,7 +1,6 @@
 // src/Physic/collisions/collisionTriangles.ts
 import { Mesh, Vector3 } from "@babylonjs/core";
 import type { Sound }             from "@babylonjs/core/Audio/sound";
-import { playRandomCollisionSound } from "../sound";
 
 interface CollisionResult {
   newVelocity: Vector3;
@@ -68,8 +67,6 @@ export function collideTrianglePrism(
       .normalize()
       .scale(currentSpeed);
 
-    // Son de collision
-    playRandomCollisionSound(allHitSounds, volume);
 
     return { newVelocity: dir, newSpeed: currentSpeed };
   }
