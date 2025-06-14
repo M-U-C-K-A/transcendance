@@ -170,6 +170,19 @@ export const initgamePhysic = (
     );
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+// observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
   scene.onBeforeRenderObservable.add(() => {
     if (
       !gameRefs.isPaused ||
@@ -333,9 +346,24 @@ export const initgamePhysic = (
 
   });
 
+
+
+
+
+
+
+
+
+
   startCountdownWrapper(5, safeSetIsPaused, gameRefs.setCountdown, () =>
     serve(Math.random() > 0.5 ? "player1" : "player2")
   );
+
+
+
+
+
+
 
   return () => {
     unregisterInputs();
