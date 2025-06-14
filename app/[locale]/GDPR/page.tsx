@@ -147,6 +147,7 @@ export default function GdprPage() {
 
       if (response.ok) {
         toast.success("Votre compte a été supprimé avec succès")
+        localStorage.removeItem("token")
         // Redirection ou déconnexion ici
         window.location.href = "/"
       } else {

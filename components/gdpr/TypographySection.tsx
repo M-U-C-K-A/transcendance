@@ -283,11 +283,15 @@ If you have any questions about this Privacy Policy, You can contact us:</p>
 
 <li>
     <p className="leading-7 [&:not(:first-child)]:mt-6">
-By email:  hdelacou@student.42lehavre.fr</p>
+By email:      <code className="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+hdelacou@student.42lehavre.fr
+</code>
+</p>
 </li>
 <li>
     <p className="leading-7 [&:not(:first-child)]:mt-6">
-By visiting this page on our website: <a href="https://github.com/M-U-C-K-A/transcendance" rel="external nofollow noopener" target="_blank">https://github.com/M-U-C-K-A/transcendance</a></p>
+By visiting this page on our website:     <code className="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+<a href="https://github.com/M-U-C-K-A/transcendance" rel="external nofollow noopener" target="_blank">https://github.com/M-U-C-K-A/transcendance</a></code></p>
 </li>
 </ul>
     </div>
