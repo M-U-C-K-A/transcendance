@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
@@ -92,29 +93,58 @@ export function Message({ message, currentUser }: MessageProps) {
     console.table([logData]);
   }
 
-  if (message.typeMessage === "INVITATION") {
-    return (
-      <div className="flex items-center justify-center w-full my-4">
-        <div className="bg-card border rounded-lg p-4 shadow-md flex flex-col items-center">
-          <span className="mb-2 flex gap-2 items-center">
-            {displayUser.name}
-            <Avatar className="h-8 w-8 cursor-pointer">
-              <AvatarImage src={displayUser.avatar} alt={displayUser.name} />
-              <AvatarFallback>
-                {displayUser.name.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </span>
-          <Link
-            href={`/game/invite/${message.text}`}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
-          >
-            Rejoindre la partie
-          </Link>
-        </div>
+if (message.typeMessage === "INVITATION") {
+  return (
+    <div className="w-full my-2 mb-4">
+      <div className="bg-card border rounded-lg px-3 py-2 shadow-sm w-full flex items-center justify-between gap-2">
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Link href={`/profile/${displayUser.id}`} className="flex items-center gap-2 hover:underline">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={displayUser.avatar} alt={displayUser.name} />
+                <AvatarFallback>
+                  {displayUser.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium text-foreground truncate max-w-[150px]">
+                {displayUser.name}
+              </span>
+            </Link>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-72 p-3">
+            <div className="flex items-start space-x-3">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={displayUser.avatar} />
+                <AvatarFallback>
+                  {displayUser.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-1 text-sm">
+                <Link
+                  href={`/profile/${displayUser.id}`}
+                  className="font-semibold text-foreground hover:underline"
+                >
+                  {displayUser.name}
+                </Link>
+                <div className="text-xs text-muted-foreground">
+                  🏆 {displayUser.win}V | ❌ {displayUser.lose}D | ⭐ {displayUser.elo} Elo
+                </div>
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+
+        <Link
+          href={`/game/invite/${message.text}`}
+          className="text-xs px-3 py-1 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition whitespace-nowrap"
+        >
+          🎮 Rejoindre
+        </Link>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   return (
     <div className="flex items-start gap-3">
