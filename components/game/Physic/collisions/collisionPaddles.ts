@@ -7,7 +7,6 @@ import {
   PADDLE_HALF_WIDTH,
   MAX_BOUNCE_ANGLE,
 } from "../constants";
-import { playRandomCollisionSound } from "../sound";
 import type { SetStaminaFunction } from "../../gameTypes";
 
 // Cooldown de collision par paddle (module scope)
@@ -65,7 +64,6 @@ export function collidePaddle1(
       ballMat.diffuseColor = p1Mat.diffuseColor.clone();
     }
 
-    playRandomCollisionSound(allHitSounds, Math.max(0, Math.min(1, Number.isFinite(volume) ? volume : 0.5)));
     return { newVelocity, newSpeed: speed };
   }
   return null;
@@ -123,7 +121,6 @@ export function collidePaddle2(
       ballMat.diffuseColor = p2Mat.diffuseColor.clone();
     }
 
-    playRandomCollisionSound(allHitSounds, Math.max(0, Math.min(1, Number.isFinite(volume) ? volume : 0.5)));
     return { newVelocity, newSpeed: speed };
   }
   return null;
