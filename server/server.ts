@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import fastifyWebSocket from '@fastify/websocket';
 import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
-import loginRoute from './routes/auth/login';
+import loginRoute from './routes/auth/login/login';
 import sendMessageRoute from './routes/chat/sendMessage';
 import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
@@ -26,13 +26,14 @@ import blockUserRoute from './routes/chat/blockUserRoute';
 import generalChatRoute from './routes/chat/generalChatRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import matchListRoute from './routes/match/matchListRoute';
-import { googleLogin } from './routes/auth/google';
+import { googleLogin } from './routes/auth/google/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
 import fastifyCookie from '@fastify/cookie';
 import gameCreationRoute from './routes/match/gameCreation';
-import register2FARoute from './routes/auth/2FAregisterRoute';
-import Check2FARoute from './routes/auth/2FACheckRoute';
+import register2FARoute from './routes/auth/register/2FAregisterRoute';
+import Check2FARoute from './routes/auth/register/2FACheckRoute';
+import Check2FALoginRoute from './routes/auth/login/2FALoginCheck';
 
 dotenv.config();
 
@@ -92,6 +93,7 @@ async function main() {
 	await app.register(gameCreationRoute)
 	await app.register(register2FARoute)
 	await app.register(Check2FARoute)
+	await app.register(Check2FALoginRoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);
