@@ -20,7 +20,7 @@ export default async function viewData(userId: number, pass: string) {
 	if (userData.pass) {
 		const hashed = await bcrypt.compare(pass, userData.pass)
 		if (hashed) {
-			return {id: userId, email: userData.email, pass}
+			return {id:userId, email: userData.email, password : pass}
 		} else {
 			throw new Error("Wrong password")
 		}
