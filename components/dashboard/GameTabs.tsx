@@ -18,7 +18,7 @@ export function GameTabs({ locale }: GameTabsProps) {
 
 	return (
 		<Tabs defaultValue="quickMatch" className="w-full">
-			<TabsList className="grid grid-cols-3 mb-6">
+			<TabsList className="grid grid-cols-3 mb-6 w-full">
 				<TabsTrigger value="quickMatch">{t('dashboard.game.quickMatch')}</TabsTrigger>
 				<TabsTrigger value="customGame">{t('dashboard.game.customGame')}</TabsTrigger>
 				<TabsTrigger value="tournament">{t('dashboard.game.tournament')}</TabsTrigger>
