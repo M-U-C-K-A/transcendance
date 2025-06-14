@@ -22,6 +22,7 @@ model User {
 	pass			String?
 	avatar			String?
 	bio				String?
+	code			String?
 	onlineStatus	Boolean	@default(false)
 	elo				Int			@default(1200)
 	win				Int			@default(0)

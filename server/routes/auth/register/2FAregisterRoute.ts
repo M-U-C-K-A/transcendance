@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
-import { connectionData } from './interface'
-import register2FA from '@/server/request/auth/2FAregister'
+import { connectionData } from '../interface'
+import register2FA from '@/server/request/auth/register/2FAregister'
 
 export default async function register2FARoute(server: FastifyInstance) {
 	server.post('/auth/register', async (request, reply) => {

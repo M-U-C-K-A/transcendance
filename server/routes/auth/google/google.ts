@@ -1,4 +1,4 @@
-import { googleConnexion } from '@/server/request/auth/google';
+import { googleConnexion } from '@/server/request/auth/google/google';
 import { FastifyInstance } from 'fastify';
 
 export async function googleLogin(server: FastifyInstance) {
