@@ -69,6 +69,9 @@ export default function Pong3D({
   useEffect(() => { staminaRef.current = stamina; }, [stamina]);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
 
+
+
+  
   useEffect(() => {
     if (!canvasRef.current) return; // si plus de convas on sort.
     const engine = new Engine(canvasRef.current, true);  // declare l engine, true pour activer le rendu WebGL
@@ -211,6 +214,50 @@ export default function Pong3D({
       });
     }
   }, [volume]);
+
+
+
+
+  useEffect(() => 
+  {
+    if (winner) 
+    {
+      const sendScore = async () => 
+      {
+
+        try 
+        {
+          const response = await fetch('/api/game/result', {
+            method: 'POST',
+            headers: 
+            {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify({
+              player1Score: score.player1,
+              player2Score: score.player2,
+              gameId: -1,
+            })
+          });
+          
+          if (response.ok) 
+          {
+            console.log('Score envoyé avec succès !');
+          } 
+        } 
+        
+        catch (error) 
+        {
+          console.error('Erreur, winneur non envoyé :', error);
+        }
+
+
+      };
+  
+      sendScore();
+    }
+  }, [winner, score]);
 
 
 

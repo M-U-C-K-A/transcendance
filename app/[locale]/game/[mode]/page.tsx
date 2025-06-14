@@ -7,7 +7,6 @@ import SettingsPanel from "@/app/[locale]/game/[mode]/SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
 
-
 // Interface pour l'audio du jeu
 interface GameAudio {
   pause?: () => void;
@@ -140,6 +139,11 @@ export default function Page() {
 
   const [baseSpeed, setBaseSpeed] = useState(24);
 
+
+
+
+
+      {/* le <> === fragment vide pour tout renvoyer d un coup */}
   return (
 <>
     <ControlsProvider>
