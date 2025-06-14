@@ -144,7 +144,7 @@ export default {
       "stats": "Statistics",
       "statsDesc": "Your performances"
     },
-"colleagues": {
+    "colleagues": {
       "title": "Colleagues",
       "online": "Online",
       "offline": "Offline",
