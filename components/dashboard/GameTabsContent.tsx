@@ -1,7 +1,6 @@
 import Link from "next/link"
 import {
   PlayCircle,
-  Trophy,
   RocketIcon,
   Settings2Icon,
   CheckCircle2Icon,
@@ -13,7 +12,6 @@ import {
   AwardIcon,
   BookmarkIcon,
   SearchIcon,
-  HistoryIcon,
   BarChart2Icon
 } from "lucide-react"
 
@@ -24,7 +22,6 @@ import { Separator } from "@/components/ui/separator"
 import { useI18n } from "@/i18n-client"
 import { useJWT } from "@/hooks/use-jwt"
 import { useState, useEffect } from "react"
-import { Match } from "@prisma/client"
 
 interface GameTabsContentProps {
   locale: string

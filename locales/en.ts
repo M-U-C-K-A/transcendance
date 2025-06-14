@@ -2,6 +2,7 @@ export default {
   "page_not_found": "Page Not Found",
   "page_not_found_description": "The page you are looking for does not exist.",
   "back_to_home": "Back to Home",
+
   "common": {
     "appName": "PongMaster",
     "login": "Login",
@@ -42,6 +43,7 @@ export default {
       "subtitle": "Join our community of professional players and start improving now."
     }
   },
+
   "auth": {
     "login": {
       "title": "Login",
@@ -62,9 +64,11 @@ export default {
       "submit": "Create account"
     }
   },
+
   "dashboard": {
-    "title": "dashboard",
+    "title": "Dashboard",
     "welcome": "Welcome",
+
     "profile": {
       "title": "Profile",
       "edit": "Edit profile",
@@ -73,63 +77,7 @@ export default {
       "tournaments": "Tournaments",
       "level": "Level"
     },
-    "tournament": {
-      "title": "Gestion des tournois",
-      "description": "Créez et gérez des tournois personnalisés",
-      "featuresTitle": "Fonctionnalités des tournois",
-      "feature1": "Brackets personnalisables",
-      "feature2": "Gestion des participants",
-      "feature3": "Calendrier intégré",
-      "createTitle": "Nouveau tournoi",
-      "createDescription": "Configurez un tournoi avec vos règles et préférences",
-      "participants": "Participants",
-      "participantsDesc": "Invitez jusqu'à 128 joueurs",
-      "schedule": "Calendrier",
-      "scheduleDesc": "Planifiez les matchs sur plusieurs jours",
-      "proTip": "Astuce Pro",
-      "proTipContent": "Préparez vos règles à l'avance pour une configuration rapide",
-      "createButton": "Créer",
-      "templatesButton": "Modèles",
-      "browse": "Parcourir",
-      "browseDesc": "Rejoignez des tournois publics",
-      "history": "Historique",
-      "historyDesc": "Vos tournois précédents",
-      "stats": "Statistiques",
-      "statsDesc": "Vos performances"
-    },
-    "colleagues": {
-      "title": "Colleagues",
-      "online": "Online",
-      "offline": "Offline",
-      "add": "Add colleague",
-      "notLoggedIn": "Your not logged",
-      "viewProfile": "View Profile",
-      "noFriends": "You have no friends",
-      "remove": "Remove friend",
-      "removeFriendTitle": "Remove friend",
-      "removeFriendConfirmation": "Do you really wanna remove this friend ",
-      "pendingInvitations": "Pending friends invitation",
-      "addDialog": {
-        "title": "Add colleague",
-        "usernameLabel": "Username",
-        "usernamePlaceholder": "Enter the username of the person you want to add as a colleague",
-        "submit": "Add",
-        "submitting": "Adding...",
-        "errors": {
-          "tooShort": "Your username should be at least 3 characters long.",
-          "tooLong": "Your username should be at most 20 characters long.",
-          "invalidChars": "Your username should only contain letters, numbers or underscores."
-        },
-        "success": {
-          "title": "Colleague added",
-          "description": "You have successfully added {username} as a colleague"
-        },
-        "error": {
-          "title": "Error adding colleague",
-          "description": "An error occurred while adding the colleague."
-        }
-      }
-    },
+
     "game": {
       "quickMatch": "Quick Match",
       "customGame": "Custom Game",
@@ -150,13 +98,109 @@ export default {
       "activeTournamentsDesc": "Join an ongoing tournament and compete against other players",
       "view": "View",
       "upcomingTournaments": "Upcoming tournaments",
-      "register": "Register"
+      "register": "Register",
+      "whatIsQuickMatch": "What is Quick Match?",
+      "quickMatchExplanation1": "Quick Match is the fastest way to start playing PongMaster.",
+      "quickMatchExplanation2": "You'll be matched with an opponent of similar skill level for a fair and competitive game.",
+      "howItWorks": "How it works",
+      "step1": "Find an opponent",
+      "step1Desc": "Our system will find you a suitable opponent based on your ELO rating",
+      "step2": "Connect with players",
+      "step2Desc": "Play against real opponents from around the world",
+      "step3": "Compete and win",
+      "step3Desc": "Climb the rankings by winning matches",
+      "step4": "Track your progress",
+      "step4Desc": "See how your skills improve over time with detailed statistics",
+      "customGameFeatures": "Custom Game Features",
+      "feature1": "Create private matches with friends",
+      "feature2": "Customize game rules and settings",
+      "feature3": "Invite specific players to your game",
+      "advantage1": "Full control over game parameters",
+      "advantage2": "Play with friends at your own pace",
+      "advantage3": "Experiment with different game modes",
+      "proTipContent": "Save your favorite settings as presets for quick access"
     },
+
+    "tournament": {
+      "title": "Tournaments",
+      "description": "Create and manage custom tournaments",
+      "featuresTitle": "Tournament Features",
+      "feature1": "Customizable brackets",
+      "feature2": "Participant management",
+      "feature3": "Integrated calendar",
+      "createTitle": "New Tournament",
+      "createDescription": "Configure a tournament with your rules and preferences",
+      "participants": "Participants",
+      "participantsDesc": "Invite up to 128 players",
+      "schedule": "Schedule",
+      "scheduleDesc": "Plan matches over multiple days",
+      "proTipContent": "Prepare your rules in advance for quick setup",
+      "createButton": "Create",
+      "templatesButton": "Templates",
+      "browse": "Browse",
+      "browseDesc": "Join public tournaments",
+      "history": "History",
+      "historyDesc": "Your previous tournaments",
+      "stats": "Statistics",
+      "statsDesc": "Your performances"
+    },
+"colleagues": {
+      "title": "Colleagues",
+      "online": "Online",
+      "offline": "Offline",
+      "add": "Add colleague",
+      "notLoggedIn": "You're not logged in",
+      "viewProfile": "View profile",
+      "noFriends": "You don't have any colleagues yet",
+      "remove": "Remove",
+      "removeFriendTitle": "Remove colleague",
+      "removeFriendConfirmation": "Are you sure you want to remove this colleague?",
+      "pendingInvitations": "Pending invitations",
+      "nofriendswaiting": "No friends in waitlist",
+      "addDialog": {
+        "title": "Add a colleague",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Enter your colleague's username",
+        "submit": "Send invitation",
+        "submitting": "Sending...",
+        "errors": {
+          "tooShort": "Username must be at least 3 characters",
+          "tooLong": "Username must be less than 20 characters",
+          "invalidChars": "Only letters, numbers and underscores are allowed",
+          "selfAdd": "You can't add yourself as colleague",
+          "alreadyFriends": "This user is already your colleague",
+          "pendingRequest": "Invitation already sent to this user"
+        },
+        "success": {
+          "title": "Invitation sent",
+          "description": "An invitation has been sent to {username}"
+        },
+        "error": {
+          "title": "Error",
+          "description": "Couldn't send invitation to {username}",
+          "userNotFound": "User not found"
+        }
+      },
+      "invitations": {
+        "title": "Pending invitations",
+        "received": "Received invitations",
+        "sent": "Sent invitations",
+        "accept": "Accept",
+        "decline": "Decline",
+        "cancel": "Cancel",
+        "empty": "No pending invitations",
+        "acceptSuccess": "Invitation accepted",
+        "declineSuccess": "Invitation declined",
+        "cancelSuccess": "Invitation canceled"
+      }
+    },
+
     "chat": {
       "title": "General Chat",
       "placeholder": "Write a message..."
     }
   },
+
   "game": {
     "back": "Back to dashboard",
     "info": {
@@ -181,6 +225,7 @@ export default {
     "winner": "has won!",
     "finalScore": "Final score:"
   },
+
   "stats": {
     "title": "Statistics and ELO Ranking",
     "period": "Period",
@@ -233,4 +278,4 @@ export default {
       "you": "You"
     }
   }
-} as const
+}

@@ -1,5 +1,5 @@
 import { Scene, Mesh, Vector3, StandardMaterial, Color3, ActionManager, ExecuteCodeAction } from "@babylonjs/core";
-import { GameState, GameRefs } from "../gameTypes";
+import { GameRefs } from "../gameTypes";
 
 export class MalusSystem {
   private scene: Scene;
@@ -7,7 +7,6 @@ export class MalusSystem {
   private MalusMaterial: StandardMaterial;
   private spawnInterval: number = 15000; // 15 secondes
   private spawnTimer: number | null = null;
-  private gameState: GameState;
   private gameRefs: GameRefs;
   private MalusTextMesh: Mesh | null = null;
   private onMalusSpawn?: () => void;
@@ -16,14 +15,12 @@ export class MalusSystem {
 
   constructor(
     scene: Scene, 
-    gameState: GameState, 
     gameRefs: GameRefs,
     onMalusSpawn?: () => void, 
     setScore?: (score: { player1: number; player2: number }) => void, 
     setWinner?: (winner: string | null) => void
   ) {
     this.scene = scene;
-    this.gameState = gameState;
     this.gameRefs = gameRefs;
     this.onMalusSpawn = onMalusSpawn;
     this.setScore = setScore;
