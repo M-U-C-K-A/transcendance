@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import check2FA from '@/server/request/auth/register/2FACheck'
-import register from '@/server/request/auth/register/register'
+import { register } from '@/server/request/auth/register/register'
 
 export default async function Check2FARoute(server: FastifyInstance) {
 	server.post('/auth/register/2fa/verify', async (request, reply) => {

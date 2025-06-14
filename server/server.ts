@@ -35,6 +35,7 @@ import register2FARoute from './routes/auth/register/2FAregisterRoute';
 import Check2FARoute from './routes/auth/register/2FACheckRoute';
 import Check2FALoginRoute from './routes/auth/login/2FALoginCheck';
 import viewDataRoute from './routes/gdpr/viewDataRoute';
+import editDataRoute from './routes/gdpr/editDataRoute';
 
 dotenv.config();
 
@@ -96,7 +97,8 @@ async function main() {
 	await app.register(Check2FARoute)
 	await app.register(Check2FALoginRoute)
 	await app.register(viewDataRoute)
-	
+	await app.register(editDataRoute)
+
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);
 	});
