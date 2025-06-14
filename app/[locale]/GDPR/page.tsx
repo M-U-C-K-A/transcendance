@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Header } from "@/components/dashboard/Header"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -29,6 +29,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { CreatorsCard } from "@/components/gdpr/CreatorsCard"
+import { TypographySection } from "@/components/gdpr/TypographySection"
 
 // Schémas de validation
 const passwordSchema = z.object({
@@ -168,6 +170,9 @@ export default function GdprPage() {
   }
 
   return (
+    <>
+
+    <Header />
     <div className="max-w-3xl mx-auto py-10 space-y-6">
       {/* Modale de vérification du mot de passe */}
       <Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
@@ -358,58 +363,13 @@ export default function GdprPage() {
                 Gérer mes données
               </Button>
             </div>
-
-            <Skeleton className="h-[120px] w-full rounded-lg" />
           </section>
 
           <Separator />
 
-          {/* Section Politique de confidentialité */}
-          <section className="space-y-4">
-            <h2 className="text-lg font-semibold">Politique de confidentialité</h2>
+          {/* Section Créateurs */}
+          <CreatorsCard />
 
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-medium">Responsables de traitement</h3>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>• Hugo Delacour - hugo.delacour@email.com</li>
-                  <li>• Jean Dupont - jean.dupont@email.com</li>
-                  <li>• Marie Martin - marie.martin@email.com</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-medium">Données collectées</h3>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>• Identifiants de connexion</li>
-                  <li>• Adresse email</li>
-                  <li>• Photo de profil</li>
-                  <li>• Statistiques d'utilisation</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-medium">Finalités du traitement</h3>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>• Gestion des comptes utilisateurs</li>
-                  <li>• Personnalisation de l'expérience</li>
-                  <li>• Amélioration de nos services</li>
-                  <li>• Sécurité et prévention des abus</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-medium">Vos droits RGPD</h3>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>• Droit d'accès à vos données</li>
-                  <li>• Droit de rectification</li>
-                  <li>• Droit à l'effacement</li>
-                  <li>• Droit à la portabilité</li>
-                  <li>• Droit d'opposition</li>
-                </ul>
-              </div>
-            </div>
-          </section>
 
           <Separator />
 
@@ -434,19 +394,13 @@ export default function GdprPage() {
               </Button>
             </div>
           </section>
-
           <Separator />
 
-          {/* Section Contact */}
-          <section className="space-y-2">
-            <h2 className="text-lg font-semibold">Contact</h2>
-            <p className="text-sm text-muted-foreground">
-              Pour toute question concernant vos données personnelles ou notre politique de confidentialité,
-              veuillez contacter l'un de nos responsables de traitement.
-            </p>
-          </section>
+          {/* Section Typographie */}
+          <TypographySection />
         </CardContent>
       </Card>
     </div>
+    </>
   )
 }

@@ -4,7 +4,7 @@ import { Login } from "@/components/auth/Login";
 import { Register } from "@/components/auth/Register";
 import { useState } from "react";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/setting/theme-toggle";
 import Image from "next/image";
 
 export function LoginPage() {
