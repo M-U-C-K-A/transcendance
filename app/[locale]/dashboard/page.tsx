@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { DashboardSkeleton } from '@/components/dashboard/Skeleton'
 import DashboardClient from './dashboard-client'
-import { ThemeHandler } from '@/components/theme-handler'
+import { ThemeHandler } from '@/components/setting/theme-handler'
 
 type PageProps = {
   params: Promise<{

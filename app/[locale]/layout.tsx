@@ -1,5 +1,5 @@
-import { ThemeProvider } from '@/components/theme-provider'
-import { ThemePersistence } from '@/components/theme-persistence'
+import { ThemeProvider } from '@/components/setting/theme-provider'
+import { ThemePersistence } from '@/components/setting/theme-persistence'
 import { Provider } from './provider'
 
 type LayoutProps = {
