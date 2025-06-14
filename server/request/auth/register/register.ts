@@ -5,7 +5,7 @@ import sharp from 'sharp'
 
 const Prisma = new PrismaClient()
 
-async function createProfilePicture(username: string, id: number) {
+export async function createProfilePicture(username: string, id: number) {
 try {
 	console.log('🔧 Début création avatar');
 
@@ -45,7 +45,7 @@ try {
 	}
 }
 
-export default async function register(email: string) {
+export async function register(email: string) {
 
 	const data = await Prisma.tmpUser.findFirst({
 		where: {
