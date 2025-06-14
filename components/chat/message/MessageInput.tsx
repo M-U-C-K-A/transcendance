@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Send, Swords } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Send, Swords } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -8,32 +8,20 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
+import { sendMessageData } from "@/server/request/chat/interface";
 
 type MessageInputProps = {
-	value: string
-	onChange: (value: string) => void
-	onSubmit: (e: React.FormEvent) => void
-	placeholder?: string
-}
+	value: string;
+	onChange: (value: string) => void;
+	onSubmit: (e: React.FormEvent) => void;
+	placeholder?: string;
+};
 
-/**
- * Renders a message input form for sending chat messages.
- *
- * @param {Object} props - The component props.
- * @param {string} props.value - The current value of the message input.
- * @param {function} props.onChange - Callback function to handle changes in the input value.
- * @param {function} props.onSubmit - Callback function to handle form submission.
- * @param {string} [props.placeholder="Écrivez un message..."] - Placeholder text for the input field.
- *
- * @returns {JSX.Element} The message input form component.
- */
-export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrivez un message..." }: MessageInputProps)
-{
+export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrivez un message..." }: MessageInputProps) {
 	const [hasGame, setHasGame] = useState(false);
 	const [gameData, setGameData] = useState({ id: '', name: '' });
 
 	useEffect(() => {
-		// Vérifier le localStorage au montage du composant
 		const gameID = localStorage.getItem('currentGameId');
 		const gameNAME = localStorage.getItem('currentGameName');
 
@@ -43,14 +31,62 @@ export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrive
 		}
 	}, []);
 
-	const handleGameClick = (e: React.MouseEvent) => {
+	const handleGameClick = async (e: React.MouseEvent) => {
 		e.preventDefault();
-		if (hasGame) {
-			// Créer un message avec le lien du jeu
-			const gameMessage = `Rejoignez ma partie "${gameData.name}": [lien du jeu](${gameData.id}) <a href="https://c2r8p5.42lehavre.fr:8443/en/game/custom/${gameData.id}">`;
-			onChange(gameMessage);
+		if (!hasGame) return;
+
+		const content = `Rejoignez ma partie "${gameData.name}": [lien du jeu](https://c2r8p5.42lehavre.fr:8443/en/game/custom/${gameData.id})`;
+
+		const payload: sendMessageData = {
+			content,
+			messageType: 'INVITATION',
+		};
+
+		const token = localStorage.getItem('token');
+
+		try {
+			const response = await fetch('/api/chat/send', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': token ? `Bearer ${token}` : '',
+				},
+				body: JSON.stringify(payload),
+			});
+
+			if (!response.ok) {
+				console.error("Erreur lors de l'envoi du message de jeu", response.statusText);
+			} else {
+				onChange('');
+			}
+		} catch (error) {
+			console.error("Erreur réseau lors de l'envoi du message de jeu", error);
 		}
 	};
+
+	useEffect(() => {
+		const handleLinkClick = async (e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+			if (target.tagName === 'A' && target.textContent?.includes("Rejoignez ma partie")) {
+				e.preventDefault();
+				try {
+					await fetch('/api/game/join', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ reason: 'from-invite', content: target.textContent }),
+					});
+					console.log('Requête envoyée à /game/join');
+				} catch (err) {
+					console.error('Erreur lors de la création de la partie', err);
+				}
+			}
+		};
+
+		document.addEventListener('click', handleLinkClick);
+		return () => document.removeEventListener('click', handleLinkClick);
+	}, []);
 
 	return (
 		<form onSubmit={onSubmit} className="flex gap-2 p-2 items-center border-t-1 w-full">
@@ -88,5 +124,5 @@ export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrive
 				<Send className="h-4 w-4" />
 			</Button>
 		</form>
-	)
+	);
 }
