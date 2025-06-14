@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/gdpr/verify",
-        destination: "https://backend/gdr/view"
+        destination: "https://backend/gdr/verify"
       },
     ];
   },
