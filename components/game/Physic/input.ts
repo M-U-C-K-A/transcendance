@@ -21,9 +21,9 @@ export function registerInputListeners(
   const up = (e: KeyboardEvent) => onKeyUp(e);
   const global = (e: KeyboardEvent) => EscapeKeyDown(e, setIsPaused, gameRefs);
 
-  window.addEventListener("keydown", down, { passive: false }); // ajoute un event a la fenetre, de type keydown, déclache la fonction down aui déclanche onKeyDown
+  window.addEventListener("keydown", down, { passive: false }); // ajoute un event a la fenetre, de type keydown, déclache la fonction down aui déclanche onKeyDown. permet de prendre touche pour jeu meme si désactiver le bas
   window.addEventListener("keyup", up);
-  window.addEventListener("keydown", global);
+  window.addEventListener("keydown", global); // prend les touche global escape. 
 
   return () => {
     window.removeEventListener("keydown", down); 
