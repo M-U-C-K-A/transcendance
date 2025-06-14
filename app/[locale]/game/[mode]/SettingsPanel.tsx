@@ -125,7 +125,7 @@ export default function SettingsPanel({
         status: "waiting"
       });
     }
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
 
   // Reset form when gamemode changes
   useEffect(() => {
@@ -136,7 +136,7 @@ export default function SettingsPanel({
         playerCount: 4,
       });
     }
-  }, [gamemode]); // Only run when gamemode changes
+  }, [gamemode]);
 
   const createGame = async (data: GameCreationData) => {
     setIsLoading(true);
@@ -161,26 +161,8 @@ export default function SettingsPanel({
         ...gameData,
         players: []
       });
-      console.log(
-        "%c✔ Partie créée avec succès !",
-        "color: white; background: #22c55e; font-weight: bold; padding: 2px 8px; border-radius: 4px;"
-      );
-      console.log(
-        "%cNom: %c" + gameData.name,
-        "color: #64748b; font-weight: bold;",
-        "color: #0ea5e9; font-weight: bold;"
-      );
-      console.log(
-        "%cCode: %c" + gameData.hashedCode,
-        "color: #64748b; font-weight: bold;",
-        "color: #f59e42; font-weight: bold;"
-      );
     } catch (error) {
-      console.error(
-        "%cErreur création partie:",
-        "color: white; background: #ef4444; font-weight: bold; padding: 2px 8px; border-radius: 4px;",
-        error
-      );
+      console.error("Erreur création partie:", error);
     } finally {
       setIsLoading(false);
     }
@@ -202,7 +184,6 @@ export default function SettingsPanel({
     }
   };
 
-  // Vérifier si on doit afficher le dialogue de création
   const shouldShowCreationDialog = () => {
     if (gamemode !== "custom" && gamemode !== "tournaments") return false;
     if (localStorage.getItem("currentGameId")) return false;
@@ -210,7 +191,7 @@ export default function SettingsPanel({
   };
 
   return (
-    <div className="flex gap-6 w-full px-4 h-full">
+    <div className="container mx-auto px-4 py-8 max-w-10xl">
       {/* Dialogue de création */}
       <Dialog
         open={shouldShowCreationDialog()}
@@ -282,159 +263,163 @@ export default function SettingsPanel({
         </DialogContent>
       </Dialog>
 
-      {/* Colonne gauche - Toujours visible pour les modes custom/tournaments */}
-      {(gamemode === "custom" || gamemode === "tournaments") && (
-        <div className="w-1/4 space-y-6">
-          <Card className="p-4 h-fit">
-            <h2 className="text-xl font-semibold mb-3">Participants</h2>
-            <div className="space-y-3">
-              {gameInfo?.players?.length > 0 ? (
-                gameInfo.players.map((player) => (
-                  <Card key={player.id} className="p-3 flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      player.ready ? 'bg-green-500' : 'bg-yellow-500'
-                    }`} />
-                    <span className="font-medium">{player.name}</span>
-                    {player.id === jwtToken?.id && (
-                      <span className="ml-auto text-xs bg-primary/10 px-2 py-1 rounded">
-                        Vous
-                      </span>
-                    )}
-                  </Card>
-                ))
-              ) : (
-                <Card className="p-3 text-center text-muted-foreground">
-                  {gameInfo ? "En attente de joueurs..." : "Partie non créée"}
-                </Card>
-              )}
-            </div>
-          </Card>
-
-          {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
-            <Card className="p-4 h-fit">
-              <h2 className="text-xl font-semibold mb-3">Arbre du Tournoi</h2>
-              <div className="space-y-4">
-                {gameInfo.upcomingMatches.map((match, idx) => (
-                  <div key={idx} className="border rounded-lg p-3">
-                    <div className="flex justify-between items-center">
-                      <span className={`font-medium ${
-                        match.status === 'completed' ? 'line-through' : ''
-                      }`}>
-                        {match.team1}
-                      </span>
-                      <span className="text-xs bg-muted px-2 py-1 rounded">
-                        vs
-                      </span>
-                      <span className={`font-medium ${
-                        match.status === 'completed' ? 'line-through' : ''
-                      }`}>
-                        {match.team2}
-                      </span>
-                    </div>
-                    <div className="mt-2 text-xs text-muted-foreground flex justify-between">
-                      <span>{match.time}</span>
-                      {match.status === 'ongoing' && (
-                        <span className="text-green-500">• En cours</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Colonne gauche - Toujours visible pour les modes custom/tournaments */}
+        {(gamemode === "custom" || gamemode === "tournaments") && (
+          <div className="lg:col-span-3 space-y-6">
+            <Card className="p-4">
+              <h2 className="text-xl font-semibold mb-4">Participants</h2>
+              <div className="space-y-3">
+                {gameInfo?.players?.length > 0 ? (
+                  gameInfo.players.map((player) => (
+                    <Card key={player.id} className="p-3 flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${
+                        player.ready ? 'bg-green-500' : 'bg-yellow-500'
+                      }`} />
+                      <span className="font-medium">{player.name}</span>
+                      {player.id === jwtToken?.id && (
+                        <span className="ml-auto text-xs bg-primary/10 px-2 py-1 rounded">
+                          Vous
+                        </span>
                       )}
-                    </div>
-                  </div>
-                ))}
+                    </Card>
+                  ))
+                ) : (
+                  <Card className="p-3 text-center text-muted-foreground">
+                    {gameInfo ? "En attente de joueurs..." : "Partie non créée"}
+                  </Card>
+                )}
               </div>
             </Card>
-          )}
-        </div>
-      )}
 
-      {/* Colonne centrale */}
-      <div className={`${
-        gamemode === "custom" || gamemode === "tournaments"
-          ? "w-2/4"
-          : "w-3/4"
-      }`}>
-        <Card className="p-6 rounded-xl h-full flex flex-col gap-6">
-          {/* Configuration Map */}
-          <Card className="p-4">
-            <MapChoice
-              MapStyle={MapStyle}
-              setMapStyle={setMapStyle}
-              enableMaluses={enableMaluses}
-              setEnableMaluses={setEnableMaluses}
-              enableSpecial={enableSpecial}
-              setEnableSpecial={setEnableSpecial}
-            />
-          </Card>
+            {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
+              <Card className="p-4">
+                <h2 className="text-xl font-semibold mb-4">Arbre du Tournoi</h2>
+                <div className="space-y-4">
+                  {gameInfo.upcomingMatches.map((match, idx) => (
+                    <div key={idx} className="border rounded-lg p-3">
+                      <div className="flex justify-between items-center">
+                        <span className={`font-medium ${
+                          match.status === 'completed' ? 'line-through' : ''
+                        }`}>
+                          {match.team1}
+                        </span>
+                        <span className="text-xs bg-muted px-2 py-1 rounded">
+                          vs
+                        </span>
+                        <span className={`font-medium ${
+                          match.status === 'completed' ? 'line-through' : ''
+                        }`}>
+                          {match.team2}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-xs text-muted-foreground flex justify-between">
+                        <span>{match.time}</span>
+                        {match.status === 'ongoing' && (
+                          <span className="text-green-500">• En cours</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
 
-          {/* Choix Couleurs */}
-          <Card className="p-4">
-            <ColorChoice
-              COLORS={COLORS}
-              currentPlayer={currentPlayer}
-              setCurrentPlayer={setCurrentPlayer}
-              colorP1={colorP1}
-              setColorP1={setColorP1}
-              colorP2={colorP2}
-              setColorP2={setColorP2}
-            />
-          </Card>
+        {/* Colonne centrale */}
+        <div className={`${
+          gamemode === "custom" || gamemode === "tournaments"
+            ? "lg:col-span-6"
+            : "lg:col-span-8"
+        }`}>
+          <Card className="p-6 rounded-xl">
+            <div className="space-y-6">
+              {/* Configuration Map */}
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Configuration de la Map</h2>
+                <MapChoice
+                  MapStyle={MapStyle}
+                  setMapStyle={setMapStyle}
+                  enableMaluses={enableMaluses}
+                  setEnableMaluses={setEnableMaluses}
+                  enableSpecial={enableSpecial}
+                  setEnableSpecial={setEnableSpecial}
+                />
+              </div>
 
-          {/* Vitesse Balle */}
-          <Card className="p-4">
-            <Label className="block text-center font-semibold mb-3">
-              Vitesse de la balle
-            </Label>
-            <div className="flex gap-2 justify-center">
-              {[
-                { speed: 16, label: "🐢 Lent", color: "bg-green-500" },
-                { speed: 24, label: "⚡ Moyen", color: "bg-yellow-400" },
-                { speed: 36, label: "🔥 Rapide", color: "bg-red-500" },
-              ].map((item) => (
-                <Toggle
-                  key={item.speed}
-                  pressed={baseSpeed === item.speed}
-                  onPressedChange={() => setBaseSpeed(item.speed)}
-                  className={`px-4 py-2 data-[state=on]:${item.color} data-[state=on]:text-white`}
+              {/* Choix Couleurs */}
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Choix des Couleurs</h2>
+                <ColorChoice
+                  COLORS={COLORS}
+                  currentPlayer={currentPlayer}
+                  setCurrentPlayer={setCurrentPlayer}
+                  colorP1={colorP1}
+                  setColorP1={setColorP1}
+                  colorP2={colorP2}
+                  setColorP2={setColorP2}
+                />
+              </div>
+
+              {/* Vitesse Balle */}
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Vitesse de la balle</h2>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {[
+                    { speed: 16, label: "🐢 Lent", color: "bg-green-500" },
+                    { speed: 24, label: "⚡ Moyen", color: "bg-yellow-400" },
+                    { speed: 36, label: "🔥 Rapide", color: "bg-red-500" },
+                  ].map((item) => (
+                    <Toggle
+                      key={item.speed}
+                      pressed={baseSpeed === item.speed}
+                      onPressedChange={() => setBaseSpeed(item.speed)}
+                      className={`px-4 py-2 data-[state=on]:${item.color} data-[state=on]:text-white`}
+                    >
+                      {item.label}
+                    </Toggle>
+                  ))}
+                </div>
+              </div>
+
+              {/* Boutons Actions */}
+              <div className="space-y-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsControlsConfigOpen(true)}
+                  className="w-full py-6 text-lg"
                 >
-                  {item.label}
-                </Toggle>
-              ))}
+                  🎮 Configurer les contrôles
+                </Button>
+
+                {!canStart && (
+                  <Alert variant="destructive">
+                    <AlertDescription className="text-center">
+                      Sélectionnez une couleur et une map pour chaque joueur
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  onClick={onStart}
+                  disabled={!canStart}
+                  className="w-full py-6 text-lg"
+                  variant={canStart ? "default" : "secondary"}
+                >
+                  {gamemode === "tournaments"
+                    ? "🏆 Démarrer le Tournoi"
+                    : "🚀 Lancer la Partie"}
+                </Button>
+              </div>
             </div>
           </Card>
+        </div>
 
-          {/* Boutons Actions */}
-          <div className="flex flex-col gap-3 mt-auto">
-            <Button
-              variant="outline"
-              onClick={() => setIsControlsConfigOpen(true)}
-              className="w-full py-6 text-lg"
-            >
-              🎮 Configurer les contrôles
-            </Button>
-
-            {!canStart && (
-              <Alert variant="destructive">
-                <AlertDescription className="text-center">
-                  Sélectionnez une couleur et une map pour chaque joueur
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <Button
-              onClick={onStart}
-              disabled={!canStart}
-              className="w-full py-6 text-lg"
-              variant={canStart ? "default" : "secondary"}
-            >
-              {gamemode === "tournaments"
-                ? "🏆 Démarrer le Tournoi"
-                : "🚀 Lancer la Partie"}
-            </Button>
-          </div>
-        </Card>
-      </div>
-
-      {/* Colonne droite - Chat */}
-      <div className="w-1/4">
+        {/* Colonne droite - Chat */}
+        <div className="lg:col-span-3">
           <ChatSection currentUser={jwtToken} />
+        </div>
       </div>
 
       {/* Config Contrôles */}

@@ -141,17 +141,10 @@ export default function Page() {
   const [baseSpeed, setBaseSpeed] = useState(24);
 
   return (
-
+<>
     <ControlsProvider>
       {/* HEADER */}
       <Header locale={locale as string} />
-
-      <main className="flex min-h-screen flex-col items-center justify-center p-24">
-        <div className="fixed inset-0 bg-background flex flex-col items-center justify-center px-4">
-          {/* TITRE */}
-          <h1 className="text-2xl font-bold mb-4 text-foreground">
-            PongMaster – Duel
-          </h1>
 
           {!gameStarted ? (
             <SettingsPanel
@@ -196,8 +189,7 @@ export default function Page() {
               baseSpeed={baseSpeed}
             />
           )}
-        </div>
-      </main>
     </ControlsProvider>
+    </>
   );
 }

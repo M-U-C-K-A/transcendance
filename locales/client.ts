@@ -6,4 +6,5 @@ export const { useI18n, useScopedI18n, useCurrentLocale, useChangeLocale, I18nPr
   en: () => import('./en'),
   fr: () => import('./fr'),
   es: () => import('./es'),
+  us: () => import('./us'),
 })
