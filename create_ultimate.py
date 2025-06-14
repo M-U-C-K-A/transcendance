@@ -9,11 +9,26 @@ from sqlite3 import Error
 import uuid
 import requests  # Ajout pour les requêtes HTTP
 
-fake = Faker()
+# =============================================
+# CONFIGURATION - MODIFIEZ CES VALEURS SI BESOIN
+# =============================================
 
-# Configuration
+# Paramètres de génération
+NB_USERS = 50                # Nombre d'utilisateurs à générer
+NB_TOURNAMENTS = 10          # Nombre de tournois à générer
+NB_MATCHES = 100             # Nombre de matchs à générer
+NB_MESSAGES = 1000           # Nombre de messages à générer
+NB_INVITATIONS = 30          # Nombre d'invitations à générer
+
+# Chemins
 DB_PATH = './prisma/data/test.sqlite'
 PROFILE_PICTURES_DIR = './public/profilepicture'  # Chemin relatif vers le dossier de stockage
+
+# =============================================
+# FIN DE LA CONFIGURATION
+# =============================================
+
+fake = Faker()
 
 def create_connection():
     """Crée une connexion à la base de données SQLite"""
@@ -84,6 +99,7 @@ def generate_users(count=50):
         username = fake.unique.user_name()[:20]  # Limite la longueur
         email = fake.unique.email()[:50]        # Limite la longueur
         password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+        code = ''.join(secrets.choice(string.digits) for _ in range(6))  # Code à 6 chiffres
 
         # Télécharger l'image de profil
         profile_picture = download_profile_picture(username, i+1)
@@ -101,6 +117,7 @@ def generate_users(count=50):
             'tournamentWon': random.randint(0, 5),
             'pointScored': random.randint(0, 1000),
             'pointConcede': random.randint(0, 1000),
+            'code': code  # Ajout du code à 6 chiffres
         })
     return users
 
@@ -307,8 +324,8 @@ def main():
         reset_database(conn)
 
         # Génération des utilisateurs
-        print("\n👥 Génération des utilisateurs...")
-        users = generate_users(200)
+        print(f"\n👥 Génération de {NB_USERS} utilisateurs...")
+        users = generate_users(NB_USERS)
         user_ids = insert_data(conn, "User", users, return_ids=True)
 
         # Génération des achievements
@@ -317,8 +334,8 @@ def main():
         insert_data(conn, "Achievement", achievements)
 
         # Génération des tournois
-        print("\n🏆 Génération des tournois...")
-        tournaments = generate_tournaments(20, user_ids)
+        print(f"\n🏆 Génération de {NB_TOURNAMENTS} tournois...")
+        tournaments = generate_tournaments(NB_TOURNAMENTS, user_ids)
         tournament_ids = insert_data(conn, "Tournament", tournaments, return_ids=True)
 
         # Mise à jour des gagnants de tournoi
@@ -338,8 +355,8 @@ def main():
         insert_data(conn, "TournamentParticipants", tournament_history)
 
         # Génération des matchs
-        print("\n🎮 Génération des matchs...")
-        matches = generate_matches(100, user_ids)
+        print(f"\n🎮 Génération de {NB_MATCHES} matchs...")
+        matches = generate_matches(NB_MATCHES, user_ids)
         match_ids = insert_data(conn, "Match", matches, return_ids=True)
 
         # Historique des matchs
@@ -362,13 +379,13 @@ def main():
         insert_data(conn, "Block", blocks)
 
         # Messages
-        print("\n💬 Génération des messages...")
-        messages = generate_messages(20000, user_ids)
+        print(f"\n💬 Génération de {NB_MESSAGES} messages...")
+        messages = generate_messages(NB_MESSAGES, user_ids)
         insert_data(conn, "Message", messages)
 
         # Invitations
-        print("\n📨 Génération des invitations...")
-        invitations = generate_invitations(30, user_ids)
+        print(f"\n📨 Génération de {NB_INVITATIONS} invitations...")
+        invitations = generate_invitations(NB_INVITATIONS, user_ids)
         insert_data(conn, "Invitation", invitations)
 
         print("\n🎉 Génération de données terminée avec succès!")
