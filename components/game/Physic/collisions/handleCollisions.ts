@@ -26,40 +26,36 @@ export function handleCollisions(
   leftTriOuterLeft: Mesh | null,
   rightTriOuterRight: Mesh | null,
   leftTriOuterRight: Mesh | null,
-  enableAcceleration: boolean,
   volume: number,
   stamina: { player1: number; player2: number },
   setStamina: SetStaminaFunction,
-  superPad?: { player1: boolean; player2: boolean }
+  superPad?: { player1: boolean; player2: boolean },
+  enableSpecial?: boolean
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision avec les paddles
   const paddle1Collision = collidePaddle1(
     ball,
     paddle1,
-    ballV,
     currentSpeed,
     ballMat,
     p1Mat,
-    allHitSounds,
-    volume,
     stamina,
     setStamina,
-    superPad
+    superPad,
+    enableSpecial
   );
   if (paddle1Collision) return paddle1Collision;
 
   const paddle2Collision = collidePaddle2(
     ball,
     paddle2,
-    ballV,
     currentSpeed,
     ballMat,
     p2Mat,
-    allHitSounds,
     stamina,
     setStamina,
     superPad,
-    volume
+    enableSpecial
   );
   if (paddle2Collision) return paddle2Collision;
 
@@ -70,8 +66,6 @@ export function handleCollisions(
       bumperLeft,
       ballV,
       currentSpeed,
-      allHitSounds,
-      volume
     );
     if (bumperLeftCollision) return bumperLeftCollision;
   }
@@ -81,8 +75,6 @@ export function handleCollisions(
       bumperRight,
       ballV,
       currentSpeed,
-      allHitSounds,
-      volume
     );
     if (bumperRightCollision) return bumperRightCollision;
   }
@@ -92,13 +84,8 @@ export function handleCollisions(
     const miniPaddleCollision = collideMiniPaddle(
       ball,
       miniPaddle,
-      ballV,
-      currentSpeed,
-      allHitSounds,
       stamina,
       setStamina,
-      superPad,
-      volume
     );
     if (miniPaddleCollision) return miniPaddleCollision;
   }
@@ -112,8 +99,6 @@ export function handleCollisions(
         tri,
         ballV,
         currentSpeed,
-        allHitSounds,
-        volume
       );
       if (triangleCollision) return triangleCollision;
     }
@@ -124,8 +109,6 @@ export function handleCollisions(
     ball,
     ballV,
     currentSpeed,
-    allHitSounds,
-    volume
   );
   if (wallCollision) return wallCollision;
 
