@@ -7,15 +7,18 @@ import SettingsPanel from "@/app/[locale]/game/[mode]/SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
 
-// Interface pour l'audio du jeu
-interface GameAudio {
-  pause?: () => void;
+
+
+
+
+// j etend le fenetrer navi avec un game audio qui peut etre nul + mis sur pause. : pour tout mon projet
+declare global {
+  interface Window {
+    Game_Audio?: { pause?: () => void };
+  }
 }
 
-// Extension de Window
-interface GameWindow extends Window {
-  __GAME_AUDIO__?: GameAudio;
-}
+
 
 interface Track {
   label: string;
@@ -27,35 +30,50 @@ export default function Page() {
   const gamemode = params?.mode ?? "quickmatch";
   const locale = params?.locale ?? "fr";
 
+
+
+
   // ──────────────────────────────────────────────────────────────────
   // Gestion audio et musique d'ambiance
   // ──────────────────────────────────────────────────────────────────
+
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [volume, setVolume] = useState(0.2);
   const [showTrackMenu, setShowTrackMenu] = useState(false);
+
+
   const TRACKS = useMemo<Track[]>(() => [
     { label: "Force", src: "/sounds/AGST - Force (Royalty Free Music).mp3" },
     { label: "Envy", src: "/sounds/AGST - Envy (Royalty Free Music).mp3" },
     { label: "Arcadewave", src: "/sounds/Lupus Nocte - Arcadewave (Royalty Free Music).mp3" },
   ], []);
+
+
+
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
   const [gameStarted, setGameStarted] = useState(false);
 
+
+  // activer le son dynamique si volume change
   useEffect(() => {
     if (gameStarted && !audioRef.current) {
       audioRef.current = new Audio(TRACKS[currentTrackIndex].src);
       audioRef.current.loop = true;
       audioRef.current.volume = volume;
       audioRef.current.play().catch(console.error);
-      (window as GameWindow).__GAME_AUDIO__ = audioRef.current;
+      window.Game_Audio = audioRef.current;
     }
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [gameStarted, currentTrackIndex, volume, TRACKS]);
 
+
+
+  // changer le track si change l index
   useEffect(() => {
     if (audioRef.current) {
       const currentSrc = audioRef.current.src;
@@ -69,20 +87,7 @@ export default function Page() {
     }
   }, [currentTrackIndex, TRACKS]);
 
-  useEffect(() => {
-    if (!gameStarted || !audioRef.current) return;
-    const playAudio = () => audioRef.current?.play().catch(console.error);
-    if (document.visibilityState === "visible") {
-      playAudio();
-    } else {
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === "visible") playAudio();
-      };
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      return () =>
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-    }
-  }, [gameStarted, TRACKS]);
+
 
 
 
@@ -113,6 +118,11 @@ export default function Page() {
   const [enableSpecial, setEnableSpecial] = useState(false);
   const [baseSpeed, setBaseSpeed] = useState(24);
 
+
+
+
+
+
   useEffect(() => {
     if (MapStyle === "classic") {
       setCurrentTrackIndex(0);
@@ -123,10 +133,18 @@ export default function Page() {
     }
   }, [MapStyle]);
 
+
+
+
+
   const bothChosenAndDistinct =
     colorP1 !== null && colorP2 !== null && colorP1 !== colorP2;
+
   const canStart = bothChosenAndDistinct && MapStyle !== null;
 
+
+
+  // tout reset a chaque partie.
   const restartGame = () => {
     setGameStarted(false);
     setColorP1(null);
@@ -140,6 +158,11 @@ export default function Page() {
       audioRef.current = null;
     }
   };
+
+
+
+
+
 
   // ──────────────────────────────────────────────────────────────────
   // Clé pour déclencher la réinitialisation de la caméra

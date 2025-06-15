@@ -2,6 +2,9 @@ import { Dispatch, SetStateAction } from "react";
 import Pong3D from "@/components/game/Pong3D";
 import { JSX } from "react";
 
+
+// dispatch = recoit une ft et renvoit sont inverse (prev) => !prev
+
 interface GameUIProps {
   showVolumeSlider: boolean;
   setShowVolumeSlider: Dispatch<SetStateAction<boolean>>;
@@ -45,6 +48,14 @@ export default function Buttons({
 }: GameUIProps): JSX.Element {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
+
+
+
+
+
+
+
+      
       {/* Contrôles Volume, Musique, Recommencer */}
       <div
         className="absolute top-4 left-2 z-30 flex space-x-2"
@@ -70,6 +81,10 @@ export default function Buttons({
             />
           </div>
         )}
+
+
+
+
         <button
           onClick={() => setShowTrackMenu((prev) => !prev)}
           className="bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"
@@ -77,6 +92,10 @@ export default function Buttons({
         >
           💿
         </button>
+
+
+
+
         <button
           onClick={restartGame}
           className="ml-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
@@ -84,6 +103,10 @@ export default function Buttons({
         >
           ↺
         </button>
+
+
+
+
         {/* Réinitialiser la caméra */}
         <button
           onClick={() => setCameraKey((prev) => prev + 1)}
@@ -92,6 +115,12 @@ export default function Buttons({
         >
           🎥
         </button>
+
+
+
+
+
+
       </div>
 
       {showTrackMenu && (
@@ -113,6 +142,14 @@ export default function Buttons({
         </div>
       )}
 
+
+
+
+
+
+
+
+
       <Pong3D
         resetCamFlag={cameraKey}
         paddle1Color={paddle1Color}
@@ -123,6 +160,8 @@ export default function Buttons({
         volume={volume}
         baseSpeed={baseSpeed}
       />
+
+
     </div>
   );
 }

@@ -10,9 +10,6 @@ export function collideMiniPaddle(
   miniPaddle: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[],
-  superPad?: { player1: boolean; player2: boolean },
-  volume: number = 0.5
 ): { newVelocity: Vector3; newSpeed: number } | null {
   // Collision mini-paddle
   if (

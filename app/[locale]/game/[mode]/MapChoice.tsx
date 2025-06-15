@@ -13,7 +13,13 @@ interface MapChoiceProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
 }
 
+
+
+// peut valoir ces str , rien d autre 
 type MapKey = "classic" | "red" | "neon";
+
+
+
 
 interface Map {
   key: MapKey;
@@ -21,6 +27,10 @@ interface Map {
   img: string;
   buttonVariant: string;
 }
+
+
+
+// pour les bouttons et l img des maps
 
 const maps: Map[] = [
   {
@@ -43,6 +53,10 @@ const maps: Map[] = [
   },
 ];
 
+
+
+
+
 export default function MapChoice({
   MapStyle,
   setMapStyle,
@@ -51,10 +65,19 @@ export default function MapChoice({
   enableSpecial,
   setEnableSpecial
 }: MapChoiceProps) {
+  
+  
+  
   return (
+    
+    
+    
     <div className="text-foreground">
       {/* Choix du style du sol ("Map") */}
+
+
       <div className="mb-2 text-center font-medium">Choisissez la map :</div>
+
       <div className="flex justify-center items-end space-x-8 mt-4">
         {maps.map((map) => (
           <div key={map.key} className="flex flex-col items-center">
@@ -74,22 +97,36 @@ export default function MapChoice({
                     : 'border-gray-300 dark:border-zinc-700'
                 }`}
             />
+            
+            
             <Button
-              variant={map.buttonVariant as "classic" | "hell" | "neon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined}
+              variant={map.buttonVariant as "classic" | "hell" | "neon" | null | undefined}
               onClick={() => setMapStyle(map.key)}
               className={`mt-1 w-32 text-center ${MapStyle === map.key ? "scale-105 shadow-lg" : "opacity-80"}`}
             >
               {map.label}
             </Button>
+
+
           </div>
+
         ))}
+
       </div>
 
-      {/* Boutons pour activer les Malus et le coup spécial avec Tooltip */}
+
+
+
+
+      {/* duration 0 = instant hover */}
+  
       <div className="mt-8 flex justify-between items-center space-x-4">
         {/* Option Malus */}
         <TooltipProvider delayDuration={0}>
+
+    
           <Tooltip>
+            {/* s affiche  */}
             <TooltipTrigger asChild>
               <div className="w-full border rounded-md">
                 <Toggle
@@ -101,6 +138,8 @@ export default function MapChoice({
                 </Toggle>
               </div>
             </TooltipTrigger>
+
+            {/* &quot  = char speciaux en html*/}
             <TooltipContent side="left" className="max-w-[250px] p-4">
               <div className="space-y-2">
                 <h4 className="font-semibold">Système de Malus</h4>
@@ -113,12 +152,22 @@ export default function MapChoice({
                 </p>
               </div>
             </TooltipContent>
+
           </Tooltip>
+
+
         </TooltipProvider>
 
-        {/* Option Coup spécial */}
+
+
+
+
+        {/*  coup spe */}
         <TooltipProvider delayDuration={0}>
+
+
           <Tooltip>
+
             <TooltipTrigger asChild>
               <div className="w-full border rounded-md">
                 <Toggle
@@ -130,6 +179,7 @@ export default function MapChoice({
                 </Toggle>
               </div>
             </TooltipTrigger>
+
             <TooltipContent side="right" className="max-w-[250px] p-4">
               <div className="space-y-2">
                 <h4 className="font-semibold">Coup Spécial</h4>
@@ -140,8 +190,13 @@ export default function MapChoice({
                 </p>
               </div>
             </TooltipContent>
+            
           </Tooltip>
+
+
         </TooltipProvider>
+
+
       </div>
     </div>
   );

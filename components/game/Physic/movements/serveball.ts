@@ -1,11 +1,16 @@
 // serve.ts
 // ----------------
 
+// les propriete de vitesse de la balle, et l angle de depart. 
+
+
+
+
 
 import { Vector3 } from "@babylonjs/core";
 import { MAX_ANGLE } from "../constants";
 
-export function serve(
+export function serveBall(
   loserSide: "player1" | "player2", // celui qui a pris un point recoit la balle
   baseSpeed: number
 ): { velocity: Vector3; speed: number } {
