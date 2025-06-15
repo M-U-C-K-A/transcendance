@@ -1,7 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -72,6 +72,8 @@ interface GameInfo {
 
 
 
+
+// Dispatch = recoit une ft qui prend tel param et rien autre
 
 interface SettingsPanelProps {
   COLORS: string[];
@@ -242,7 +244,8 @@ export default function SettingsPanel({
 
   const shouldShowCreationDialog = () => {
     if (gamemode !== "custom" && gamemode !== "tournaments") return false;
-    if (localStorage.getItem("currentGameId")) return false;
+    if (typeof window !== "undefined")
+      if (localStorage.getItem("currentGameId")) return false;
     return !gameInfo;
   };
 

@@ -29,7 +29,7 @@ interface ControlsConfigProps {
 // transfo touche en emoji sinon sort de case + reduit sie trop longue 
 // if multi branche
 // default si aucun case 
-function displayKey(key: string) {
+export function displayKey(key: string) {
   switch (key) {
     case 'ArrowUp': return '🡅';
     case 'ArrowDown': return '🡇';
@@ -42,10 +42,11 @@ function displayKey(key: string) {
 
 
 
-export const ControlsConfig: React.FC<ControlsConfigProps> = ({
+export const ControlsConfig = ({
   isOpen,
   onClose,
-}) => {
+}: ControlsConfigProps) => {
+
 
   // Obj. control = le conxte,  et son setter.
   const { controls, updateControls } = useControls();  //  IMPORT LE CONTEXT controls = Control  de ControlContext.tsx  . changement dans toute l appli (car utilise le context react dans  ControlContext.tsx)

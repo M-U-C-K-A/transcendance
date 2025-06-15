@@ -63,7 +63,7 @@ function ControlsProvider({ children }: { children: React.ReactNode }) {
 
   function handleUpdateControls(newControls: Controls) {
     setControls(newControls); // rappel la ft au dessus (new control dans interface du dessus.)
-    localStorage.setItem('gameControls', JSON.stringify(newControls)); // save dans le navigateur a la clef donnee.
+    localStorage.setItem('gameControls', JSON.stringify(newControls)); // save les controle du joeur dans le navigateur 
 
     // envoit les controls dans la logique du jeu ( custom controls)
     updateControls(newControls);

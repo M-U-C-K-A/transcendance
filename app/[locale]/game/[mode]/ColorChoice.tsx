@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 
 
-// Dispatch<SetStateAction<1 | 2>>;
+// Dispatch  recoit une action qui prend en param 1 / 2
 
 interface ColorChoiceProps {
   COLORS: string[];

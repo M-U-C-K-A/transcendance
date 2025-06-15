@@ -12,8 +12,6 @@ export function collideTrianglePrism(
   tri: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[],
-  volume: number
 ): CollisionResult | null {
   // Géométrie du prisme (doit correspondre à setupGameObjects)
   const offX = 10;
