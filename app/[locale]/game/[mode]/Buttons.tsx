@@ -20,6 +20,7 @@ interface GameUIProps {
   MapStyle: "classic" | "red" | "neon";
   enableMaluses: boolean;
   enableSpecial: boolean;
+  enableAI: boolean;
   baseSpeed: number;
 }
 
@@ -41,7 +42,8 @@ export default function Buttons({
   MapStyle,
   enableMaluses,
   enableSpecial,
-  baseSpeed
+  baseSpeed,
+  enableAI,
 }: GameUIProps): JSX.Element {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
@@ -120,6 +122,7 @@ export default function Buttons({
         MapStyle={MapStyle}
         enableMaluses={enableMaluses}
         enableSpecial={enableSpecial}
+        enableAI={enableAI}
         volume={volume}
         baseSpeed={baseSpeed}
       />
