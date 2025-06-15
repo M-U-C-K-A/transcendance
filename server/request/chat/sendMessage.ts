@@ -73,6 +73,7 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 		id: message.id,
 		content: message.content,
 		sendAt: message.sendAt,
+		messageType: data.messageType,
 		sender: {
 			id: senderInfo.id,
 			username: senderInfo.username,

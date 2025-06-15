@@ -37,6 +37,9 @@ import Check2FALoginRoute from './routes/auth/login/2FALoginCheck';
 import viewDataRoute from './routes/gdpr/viewDataRoute';
 import editDataRoute from './routes/gdpr/editDataRoute';
 import deleteDataRoute from './routes/gdpr/deleteDataRoute';
+import tournamentJoinRoute from './routes/tournament/joinTournament';
+import tournamentCreateRoute from './routes/tournament/createTournament';
+import resultTournamentRoute from './routes/tournament/resultTournamentRoute';
 
 dotenv.config();
 
@@ -100,6 +103,9 @@ async function main() {
 	await app.register(viewDataRoute)
 	await app.register(editDataRoute)
 	await app.register(deleteDataRoute)
+	await app.register(tournamentJoinRoute)
+	await app.register(tournamentCreateRoute)
+	await app.register(resultTournamentRoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);

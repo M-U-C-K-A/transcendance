@@ -1,51 +1,64 @@
 import { PrismaClient } from '@prisma/client'
-import { userData }     from '@/server/utils/interface'
 
-const prisma = new PrismaClient()
+const Prisma = new PrismaClient()
 
-export async function joinTournament(username: string, tournamentName: string):
-Promise<void> {
+export default async function joinTournament(username: string, tournamentId: number) {
 
-	const [u] = await prisma.$queryRaw<userData[]>`
-		SELECT id
-		FROM "User"
-		WHERE username = ${username}
-	`
-	if (!u)
-	{
-		console.log('User not found');
-		throw new Error('User not found');
+	const userData = await Prisma.user.findUnique ({
+		where: {
+			username: username,
+		},
+		select: {
+			id: true,
+		}
+	});
+
+	if (!userData) {
+		throw new Error ('User not found')
 	}
 
+	const participantNumber = await Prisma.tournamentParticipants.count({
+		where: {
+			tournamentId: tournamentId,
+		},
+	})
 
+	const tournamentSlot = await Prisma.tournament.findFirst({
+		where: {
+			id: tournamentId,
+		},
+		select: {
+			slot: true,
+		},
+	});
 
-	const [tournament] = await prisma.$queryRaw<{ id: number; slot: number }[]>`
-		SELECT id, slot
-		FROM "Tournament"
-		WHERE "tournamentName" = ${tournamentName}
-	`
-	if (!tournament){
-		console.log('Tournament not found in joinTournament');
-		throw new Error('Tournament not found in joinTournament');
+	if (!tournamentSlot) {
+		throw new Error('Tournament not found')
 	}
 
-
-
-	const [info] = await prisma.$queryRaw<{ count: number }[]>`
-		SELECT COUNT (*) AS count
-		FROM "TournamentParticipants"
-		WHERE "tournamentId" = ${tournament.id}
-	`
-	if (info.count >= tournament.slot)
-	{
-		console.log('Tournament room already full');
-		throw new Error('Tournament room already full');
+	if (participantNumber >= tournamentSlot?.slot) {
+		throw new Error ('Tournament already full')
 	}
 
+	await Prisma.tournamentParticipants.create({
+		data: {
+			userId: userData.id,
+			tournamentId: tournamentId,
+		},
+	});
 
+	const info = await Prisma.user.findFirst({
+		where: {
+			id: userData.id,
+		},
+		select: {
+			id: true,
+			username: true,
+			win: true,
+			lose: true,
+		}
+	});
 
-	await prisma.$executeRaw`
-		INSERT INTO "TournamentParticipants" ("userId", "tournamentId")
-		VALUES (${u.id}, ${tournament.id})
-	`
+	console.log('Tournament joined succesfully')
+	return (info)
 }

@@ -32,6 +32,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					id: wsMessage.id,
 					content: wsMessage.content,
 					sendAt: wsMessage.sendAt,
+					messageType: wsMessage.messageType,
 					user: {
 						id: sender.id,
 						username: sender.username,

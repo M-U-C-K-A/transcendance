@@ -87,6 +87,14 @@ const nextConfig: NextConfig = {
         source: "/api/gdpr/delete",
         destination: "https://backend/gdr/delete"
       },
+      {
+        source: "/api/tournament/create",
+        destination: "https://backend/gdr/delete"
+      },
+      {
+        source: "/api/tournament/join",
+        destination: "https://backend/gdr/delete"
+      },
     ];
   },
   async headers() {
