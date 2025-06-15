@@ -16,7 +16,7 @@ import {
   BUMPER_MID_RIGHT,       // ex. +4
 } from "./constants";
 
-import { serve as serveBall } from "./movements/serve";
+import { serveBall } from "./movements/serveball";
 import { startCountdown } from "./countdown";
 import { handleScoring } from "./collisions/scoring";
 import { registerInputListeners } from "./input";
@@ -62,15 +62,23 @@ export const initgamePhysic = (
     leftTriOuterRight
   } = gameObjects;
 
-  // Référentiel pour bloquer pause et mouvement
+  // block les movements
   const blockPauseRef    = { current: false };
   const blockMovementRef = { current: false };
+
+
+
+
 
   // Directions : +1 = vers le centre, -1 = vers l'extérieur
   const miniDirRef   = { current: 1 };
   const bumperDirRef = { current: 1 };
 
-  // Réinitialise miniPaddle et bumpers à leur position de départ
+
+
+
+
+  // reinit les pos (a chaque points)
   const resetBumpersAndMiniPaddle = () => {
     if (miniPaddle) {
       miniPaddle.position.set(5, 0.25, 0); // exemple, ajustez à votre coordonnée initiale
@@ -83,12 +91,19 @@ export const initgamePhysic = (
     bumperDirRef.current = 1;
   };
 
-  // Version "sûre" pour bloquer pause durant countdown
+
+
+
+
+  // block l option pour mettre en pause ou non pdt le coutdown
   const safeSetIsPaused = (newPauseState: boolean) => {
     if (!blockPauseRef.current) {
       gameRefs.setIsPaused(newPauseState);
     }
   };
+
+
+
 
   // Lance un countdown, bloque la pause/movement, reset des bumpers, puis débloque
   const startCountdownWrapper = (
@@ -108,16 +123,30 @@ export const initgamePhysic = (
     });
   };
 
-  // Ajout de la logique de stamina et coup spécial
-  // const stamina = { player1: 0, player2: 0 };
-  // const superPad = { player1: false, player2: false };
-  const superPadTimeouts: { [key: string]: NodeJS.Timeout | null } = {
+
+
+
+  // acces dynamique 
+
+    // on pourra use superPadTimeouts.P1 = settimetoute = a la fin redeviendra null
+    // fil str p1 ou 2 et prend le return de la ft.
+    // soit tu prend en dynamique le timer 
+    // sinon ca redevient null
+  const superPadTimeouts: { [key: string]: ReturnType<typeof setTimeout> | null } = 
+  {
     player1: null,
     player2: null,
   };
 
+
+
+
+
+
+
   // Gestion du coup spécial
-  const triggerSuperPad = (player: 1 | 2) => {
+  const triggerSuperPad = (player: 1 | 2) => 
+  {
     if (!enableSpecial) return; // Ne rien faire si les coups spéciaux sont désactivés
     
     setStamina((prev) => {
@@ -152,19 +181,37 @@ export const initgamePhysic = (
     });
   };
 
+
+
+
+
+
+
+
+
+
+
   // Mise à jour des références
   gameRefs.triggerSuperPad = triggerSuperPad;
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused);
+
+
+
+
 
   let ballV = Vector3.Zero();
   let currentSpeed = baseSpeed;
   let scoreLocal = { player1: 0, player2: 0 };
 
+
+  // prend la vitesse et l angle (velocity prend les deux )  de la balle depuis serveball. 
   const serve = (loserSide: "player1" | "player2") => {
     const { velocity, speed } = serveBall(loserSide, baseSpeed);
     ballV = velocity;
     currentSpeed = speed;
   };
+
+
 
   const resetBall = (loser: "player1" | "player2") => {
     if (!ball || !paddle1 || !paddle2) return;
@@ -194,7 +241,20 @@ export const initgamePhysic = (
 
 
 // observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
-  scene.onBeforeRenderObservable.add(() => {
+  scene.onBeforeRenderObservable.add(() => 
+  {
+
+
+
+
+
+
+
+
+
+
+
+
     if (
       !gameRefs.isPaused ||
       !gameRefs.countdown ||
@@ -206,8 +266,15 @@ export const initgamePhysic = (
       return; // On sort si une ref est absente
     }
 
+
+
+
     const isPausedNow   = gameRefs.isPaused.current;
     const countdownNow  = gameRefs.countdown.current;
+
+
+
+
 
     // Si partie terminée, en pause, ou mouvement bloqué, on skip le rendu physique
     if (
@@ -219,23 +286,36 @@ export const initgamePhysic = (
       return;
     }
 
+
+
     // Synchronisation du score avec la ref
     if (gameRefs.score.current) {
       scoreLocal = { ...gameRefs.score.current };
     }
 
+
+
+
     const deltaTime = scene.getEngine().getDeltaTime() / 1000; // en secondes
 
-    // ─── Déplacement des paddles ───────────────────────────────────
+
+
+
+
     movePaddles(paddle1, paddle2, deltaTime);
 
-    // ─── Mini-paddle, si présent ──────────────────────────────────
+
+
     if (miniPaddle) {
       updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);
     }
 
-    // ─── Bumpers ───────────────────────────────────────────────────
-    if (bumperLeft && bumperRight) {
+
+
+
+
+    if (bumperLeft && bumperRight)
+    {
       // Calcul du déplacement pour chaque bumper
       const moveAmount = BUMPER_SPEED * deltaTime * bumperDirRef.current;
 
@@ -291,29 +371,55 @@ export const initgamePhysic = (
       }
     }
 
-    // ─── Mouvement de la balle ─────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+    // ── Mouvement de la balle
     ball.position.addInPlace(ballV.scale(deltaTime));
 
-    // Gestion de l'historique des touches
     if (
       Math.abs(ball.position.z - paddle1.position.z) < 0.5 &&
       Math.abs(ball.position.x - paddle1.position.x) < 3 // demi-largeur paddle
-    ) {
-      if (gameRefs.touchHistory) {
+    ) 
+    {
+      if (gameRefs.touchHistory) 
+      {
         gameRefs.touchHistory.push({ player: 1, timestamp: Date.now() });
-        if (gameRefs.touchHistory.length > 10) gameRefs.touchHistory.shift();
+        if (gameRefs.touchHistory.length > 10) 
+          gameRefs.touchHistory.shift();
       }
-    } else if (
+    } 
+    else if (
       Math.abs(ball.position.z - paddle2.position.z) < 0.5 &&
       Math.abs(ball.position.x - paddle2.position.x) < 3
-    ) {
-      if (gameRefs.touchHistory) {
+    ) 
+    {
+      if (gameRefs.touchHistory) 
+      {
         gameRefs.touchHistory.push({ player: 2, timestamp: Date.now() });
-        if (gameRefs.touchHistory.length > 10) gameRefs.touchHistory.shift();
+        if (gameRefs.touchHistory.length > 10)
+           gameRefs.touchHistory.shift();
       }
     }
 
-    // ─── Gestion du score (resetBall appelle startCountdownWrapper) ──
+
+
+
+
+
+
+
+
+
+  
     handleScoring(
       ball,
       scoreLocal,
@@ -324,6 +430,13 @@ export const initgamePhysic = (
       volumeRef?.current ?? 0.5
     );
 
+
+
+
+
+
+
+    
     // ─── Collisions & ajustement de vélocité ───────────────────────
     const collisionResult = handleCollisions(
       ball as Mesh,
@@ -344,7 +457,6 @@ export const initgamePhysic = (
       leftTriOuterLeft,
       rightTriOuterRight,
       leftTriOuterRight,
-      enableAcceleration,
       volumeRef?.current ?? 0.5,
       gameRefs.stamina.current,
       setStamina,
@@ -355,6 +467,19 @@ export const initgamePhysic = (
       ballV = collisionResult.newVelocity;
       currentSpeed = collisionResult.newSpeed;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   });
 
