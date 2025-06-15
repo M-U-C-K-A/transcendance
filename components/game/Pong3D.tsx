@@ -20,8 +20,28 @@ export default function Pong3D({
   baseSpeed = 16,
 }: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
   
+  const { controls } = useControls();
+
+
+
+
+
+  // ───  React : changer valeur dans UI ─────────────────────────────────────────────
+  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
+  const [winner, setWinner] = useState<GameState["winner"]>(null);
+  const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
+  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
+  const [MalusBarKey,   setMalusBarKey] = useState(0);
+  const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
+  const [superPad, setSuperPad] = useState({ player1: false, player2: false });
+  const [showGoal, setShowGoal] = useState(false);
+  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
   
-  // ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
+
+
+
+
+  // ─── Refs = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
   // c est quand on need pas de re render soit car deja fait ou pas besoin quand qq chose change
 
   const canvasRef = useRef<HTMLCanvasElement>(null); // Cree ces boite vide ou dit le type a remplir.
@@ -30,30 +50,18 @@ export default function Pong3D({
   const gameObjectsRef = useRef<GameObjects | null>(null);
   const cameraRef = useRef<ArcRotateCamera | null>(null);
   const MalusSystemRef = useRef<MalusSystem | null>(null);
-  const { controls } = useControls();
   const controlsRef = useRef(controls);
-
-
-
-
-  // ─── États React : changer valeur dans UI ─────────────────────────────────────────────
-  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
-  const [winner, setWinner] = useState<GameState["winner"]>(null);
-  const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
-  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
-  const [MalusBarKey, setMalusBarKey] = useState(0);
-  const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
-  const [superPad, setSuperPad] = useState({ player1: false, player2: false });
   const touchHistory = useRef<TouchHistory[]>([]);
-  const [showGoal, setShowGoal] = useState(false);
-  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
-  const prevScore = useRef(score);
   const allHitSounds = useRef<Sound[]>([]);
+  const prevScore = useRef(score);
 
 
 
 
-  // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
+
+
+
+
   const scoreRef = useRef(score);
   const winnerRef = useRef(winner);
   const countdownRef = useRef(countdown);
@@ -64,12 +72,7 @@ export default function Pong3D({
   const lastHitterRef = useRef<number | null>(null);
 
 
-  
-
-
-
-   // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
-
+  // pas de rerender = juste une maj de la ref 
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { winnerRef.current = winner; }, [winner]);
   useEffect(() => { countdownRef.current = countdown; }, [countdown]);
@@ -120,7 +123,7 @@ export default function Pong3D({
       superPadRef,
       volumeRef
     ); 
-    // 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
+    // 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS
     if (enableMaluses) {
       MalusSystemRef.current = new MalusSystem(
         scene,
@@ -133,7 +136,7 @@ export default function Pong3D({
     }
 
 
-    engine.runRenderLoop(() => scene.render()); // redessine la scene a chaque fois que la scene est modif
+    engine.runRenderLoop(() => scene.render()); // tourne tout seul
     window.addEventListener("resize", () => engine.resize()); // ajuste rendu selon taille fenetre
     // a la fin on clean tout.
     return () => {
@@ -143,7 +146,7 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]); // recree 
 
 
 

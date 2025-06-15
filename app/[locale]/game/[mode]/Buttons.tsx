@@ -2,6 +2,9 @@ import { Dispatch, SetStateAction } from "react";
 import Pong3D from "@/components/game/Pong3D";
 import { JSX } from "react";
 
+
+// dispatch = recoit une ft et renvoit sont inverse (prev) => !prev
+
 interface GameUIProps {
   showVolumeSlider: boolean;
   setShowVolumeSlider: Dispatch<SetStateAction<boolean>>;

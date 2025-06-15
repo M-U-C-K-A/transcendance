@@ -11,8 +11,6 @@ export function collideWalls(
   ball: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[],
-  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50; // ms
   const now = Date.now();
