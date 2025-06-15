@@ -76,6 +76,10 @@ const nextConfig: NextConfig = {
         destination: "https://backend/game/travel"
       },
       {
+        source: "/api/game/result",
+        destination: "https://backend/game/result"
+      },
+      {
         source: "/api/gdpr/verify",
         destination: "https://backend/gdr/verify"
       },
