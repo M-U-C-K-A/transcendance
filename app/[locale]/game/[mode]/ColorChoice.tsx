@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+
 
 
 
@@ -29,8 +28,13 @@ export default function ColorChoice({
   setColorP2,
 }: ColorChoiceProps) {
   return (
+
+
     <div className="space-y-4">
-      {/* Choix des couleurs Joueurs */}
+
+
+
+      {/* couleurs joueurs . met le current player + met en jaune*/}
       <div className="mb-4 flex justify-center space-x-4">
         <button
           onClick={() => setCurrentPlayer(1)}
@@ -42,6 +46,8 @@ export default function ColorChoice({
         >
           🎖️ Joueur 1
         </button>
+
+
         <button
           onClick={() => setCurrentPlayer(2)}
           className={`px-4 py-2 rounded-lg font-semibold ${
@@ -54,6 +60,11 @@ export default function ColorChoice({
         </button>
       </div>
 
+
+
+
+
+
       <div className="text-center mb-4 text-lg font-medium text-foreground">
         Sélectionnez la couleur pour{" "}
         <span className="font-bold">
@@ -61,27 +72,45 @@ export default function ColorChoice({
         </span>
       </div>
 
+
+
+
+
+
+
+
+
       <div className="flex justify-center">
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mx-auto">
-          {COLORS.map((hex) => {
+
+          {/* colors utilise map qui prend les 6 couleur definit dans page.tsx*/}
+          {/* map sa parcorout les 6 et applique la meme chose a toute */}
+  
+          {COLORS.map((hex) => { 
             const takenByP1 = colorP1 === hex;
             const takenByP2 = colorP2 === hex;
             const isDisabled =
               (currentPlayer === 1 && takenByP2) ||
               (currentPlayer === 2 && takenByP1);
-            return (
+            
+
+
+              return (
               <button
                 key={hex}
                 onClick={() => {
-                  if (currentPlayer === 1) {
+
+                  if (currentPlayer === 1) 
                     setColorP1(hex);
-                  } else {
+
+                  else 
                     setColorP2(hex);
-                  }
                 }}
+
                 disabled={isDisabled}
                 aria-label={`Couleur ${hex} ${isDisabled ? "(déjà prise)" : ""}`}
                 className="relative h-12 w-12 rounded-lg focus:outline-none"
+
                 style={{
                   backgroundColor: hex,
                   opacity: isDisabled ? 0.4 : 1,
@@ -90,16 +119,24 @@ export default function ColorChoice({
                     : "2px solid transparent"
                 }}
               >
+
                 {(takenByP1 || takenByP2) && (
                   <span className="absolute -top-1 -left-1 bg-foreground text-background text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     {takenByP1 ? "1" : "2"}
                   </span>
                 )}
+
               </button>
             );
-          })}
+
+          })
+          }
+
         </div>
       </div>
+
+
+
     </div>
   );
 }

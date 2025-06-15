@@ -118,11 +118,21 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
 
   return (
     <>
+
       {/* Score en haut */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center w-full pointer-events-none">
         <div className="text-3xl font-extrabold text-foreground bg-background/80 px-8 py-2 rounded shadow-lg border border-border mb-2 pointer-events-auto">
       {score.player1} - {score.player2}
+  
     </div>
+
+
+
+
+
+
+
+
         {/* Barre de chargement du Malus centrée sous le score */}
         {enableMaluses && (
           <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
@@ -139,6 +149,10 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
           </div>
         )}
       </div>
+
+
+
+
 
       {/* Touches visuelles + Stamina Joueur 1 */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
@@ -225,6 +239,14 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
         )}
     </div>
 
+
+
+
+
+
+
+
+
     {/* Gagnant */}
     {winner && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-card/50">
@@ -276,6 +298,11 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       </div>
     )}
 
+
+
+
+
+
     {/* Décompte */}
     {countdown !== null && (
       <div className="absolute inset-0 bg-gray-400/40 flex items-center justify-center z-10">
@@ -284,6 +311,13 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
         </span>
       </div>
     )}
+
+
+
+
+
+
+
 
       {/* Contrôles et Pause */}
     <div className="absolute top-2 right-2 z-20 flex items-center space-x-2">
@@ -296,6 +330,10 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       <div className="bg-card border border-border rounded px-2 py-1 text-xs text-foreground">
         Échap
       </div>
+
+
+
+
       {isPaused ? (
         <button
           onClick={() => setIsPaused(false)}
@@ -319,11 +357,21 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       )}
     </div>
 
+
+
+
+
+
+
       {/* Modal de configuration des contrôles */}
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={closeControlsConfig}
       />
+
+
+
+
 
       {/* Animation GOAL/MALUS */}
       {showGoal && (
@@ -337,6 +385,9 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
           </div>
         )
       )}
+
+
+
     </>
   );
 };

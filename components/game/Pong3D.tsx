@@ -33,6 +33,9 @@ export default function Pong3D({
   const { controls } = useControls();
   const controlsRef = useRef(controls);
 
+
+
+
   // ─── États React : changer valeur dans UI ─────────────────────────────────────────────
   const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
   const [winner, setWinner] = useState<GameState["winner"]>(null);
@@ -47,6 +50,9 @@ export default function Pong3D({
   const prevScore = useRef(score);
   const allHitSounds = useRef<Sound[]>([]);
 
+
+
+
   // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
   const scoreRef = useRef(score);
   const winnerRef = useRef(winner);
@@ -56,6 +62,9 @@ export default function Pong3D({
   const staminaRef = useRef(stamina);
   const volumeRef = useRef(volume);
   const lastHitterRef = useRef<number | null>(null);
+
+
+  
 
 
 
