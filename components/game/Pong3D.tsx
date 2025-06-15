@@ -10,279 +10,279 @@ import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
 import type { Sound } from "@babylonjs/core/Audio/sound";
 
 export default function Pong3D({
-  paddle1Color,
-  paddle2Color,
-  MapStyle,
-  resetCamFlag,
-  enableSpecial = false,
-  enableMaluses = false,
-  volume = 0.2,
-  baseSpeed = 16,
+	paddle1Color,
+	paddle2Color,
+	MapStyle,
+	resetCamFlag,
+	enableSpecial = false,
+	enableMaluses = false,
+	volume = 0.2,
+	baseSpeed = 16,
 }: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
 
 
-  // ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
-  // c est quand on need pas de re render soit car deja fait ou pas besoin quand qq chose change
+	// ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
+	// c est quand on need pas de re render soit car deja fait ou pas besoin quand qq chose change
 
-  const canvasRef = useRef<HTMLCanvasElement>(null); // Cree ces boite vide ou dit le type a remplir.
-  const engineRef = useRef<Engine | null>(null);
-  const sceneRef = useRef<Scene | null>(null);
-  const gameObjectsRef = useRef<GameObjects | null>(null);
-  const cameraRef = useRef<ArcRotateCamera | null>(null);
-  const MalusSystemRef = useRef<MalusSystem | null>(null);
-  const { controls } = useControls();
-  const controlsRef = useRef(controls);
+	const canvasRef = useRef<HTMLCanvasElement>(null); // Cree ces boite vide ou dit le type a remplir.
+	const engineRef = useRef<Engine | null>(null);
+	const sceneRef = useRef<Scene | null>(null);
+	const gameObjectsRef = useRef<GameObjects | null>(null);
+	const cameraRef = useRef<ArcRotateCamera | null>(null);
+	const MalusSystemRef = useRef<MalusSystem | null>(null);
+	const { controls } = useControls();
+	const controlsRef = useRef(controls);
 
-  // ─── États React : changer valeur dans UI ─────────────────────────────────────────────
-  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
-  const [winner, setWinner] = useState<GameState["winner"]>(null);
-  const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
-  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
-  const [MalusBarKey, setMalusBarKey] = useState(0);
-  const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
-  const [superPad, setSuperPad] = useState({ player1: false, player2: false });
-  const touchHistory = useRef<TouchHistory[]>([]);
-  const [showGoal, setShowGoal] = useState(false);
-  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
-  const prevScore = useRef(score);
-  const allHitSounds = useRef<Sound[]>([]);
+	// ─── États React : changer valeur dans UI ─────────────────────────────────────────────
+	const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
+	const [winner, setWinner] = useState<GameState["winner"]>(null);
+	const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
+	const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
+	const [MalusBarKey, setMalusBarKey] = useState(0);
+	const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
+	const [superPad, setSuperPad] = useState({ player1: false, player2: false });
+	const touchHistory = useRef<TouchHistory[]>([]);
+	const [showGoal, setShowGoal] = useState(false);
+	const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
+	const prevScore = useRef(score);
+	const allHitSounds = useRef<Sound[]>([]);
 
-  // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
-  const scoreRef = useRef(score);
-  const winnerRef = useRef(winner);
-  const countdownRef = useRef(countdown);
-  const isPausedRef = useRef(isPaused);
-  const superPadRef = useRef(superPad);
-  const staminaRef = useRef(stamina);
-  const volumeRef = useRef(volume);
-  const lastHitterRef = useRef<number | null>(null);
-
-
-
-   // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
-
-  useEffect(() => { scoreRef.current = score; }, [score]);
-  useEffect(() => { winnerRef.current = winner; }, [winner]);
-  useEffect(() => { countdownRef.current = countdown; }, [countdown]);
-  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
-  useEffect(() => { superPadRef.current = superPad; }, [superPad]);
-  useEffect(() => { staminaRef.current = stamina; }, [stamina]);
-  useEffect(() => { volumeRef.current = volume; }, [volume]);
+	// ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
+	const scoreRef = useRef(score);
+	const winnerRef = useRef(winner);
+	const countdownRef = useRef(countdown);
+	const isPausedRef = useRef(isPaused);
+	const superPadRef = useRef(superPad);
+	const staminaRef = useRef(stamina);
+	const volumeRef = useRef(volume);
+	const lastHitterRef = useRef<number | null>(null);
 
 
 
+	 // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
 
-  useEffect(() => {
-    if (!canvasRef.current) return; // si plus de convas on sort.
-    const engine = new Engine(canvasRef.current, true);  // declare l engine, true pour activer le rendu WebGL
-    engineRef.current = engine;
-    const scene = new Scene(engine);
-    scene.clearColor = new Color4(0, 0, 0, 0);
-    sceneRef.current = scene;
-    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
-    cameraRef.current = objs.camera;
-    gameObjectsRef.current = objs;
-    // objet qui stock les ref et fera le lien avec les donnes
-    const gameRefs: GameRefs = {
-      score: scoreRef,
-      winner: winnerRef,
-      countdown: countdownRef,
-      isPaused: isPausedRef,
-      setScore,
-      setWinner,
-      setCountdown,
-      setIsPaused,
-      controls: controlsRef,
-      touchHistory: touchHistory.current,
-      superPad: superPadRef,
-      stamina: staminaRef,
-      malusSound: null,
-      lastHitter: lastHitterRef,
-      triggerSuperPad: () => {},
-    }; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
-    const cleanupPhysic = initgamePhysic(
-      scene,
-      objs,
-      gameRefs,
-      setStamina,
-      setSuperPad,
-      baseSpeed,
-      enableSpecial,
-      superPadRef,
-      volumeRef
-    );
-    // 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
-    if (enableMaluses) {
-      MalusSystemRef.current = new MalusSystem(
-        scene,
-        gameRefs,
-        () => setMalusBarKey((k) => k + 1),
-        setScore,
-        setWinner
-      );
-      MalusSystemRef.current.startMalusSystem();
-    }
-
-
-    engine.runRenderLoop(() => scene.render()); // redessine la scene a chaque fois que la scene est modif
-    window.addEventListener("resize", () => engine.resize()); // ajuste rendu selon taille fenetre
-    // a la fin on clean tout.
-    return () => {
-      cleanupPhysic();
-      if (MalusSystemRef.current) {
-        MalusSystemRef.current.stopMalusSystem();
-      }
-      engine.dispose();
-    };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
+	useEffect(() => { scoreRef.current = score; }, [score]);
+	useEffect(() => { winnerRef.current = winner; }, [winner]);
+	useEffect(() => { countdownRef.current = countdown; }, [countdown]);
+	useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+	useEffect(() => { superPadRef.current = superPad; }, [superPad]);
+	useEffect(() => { staminaRef.current = stamina; }, [stamina]);
+	useEffect(() => { volumeRef.current = volume; }, [volume]);
 
 
 
 
-
-  // Detecte changement du score
-  useEffect(() => {
-    if (
-      score.player1 !== prevScore.current.player1 ||
-      score.player2 !== prevScore.current.player2
-    ) {
-      // Détection du type de score
-      const diff1 = score.player1 - prevScore.current.player1;
-      const diff2 = score.player2 - prevScore.current.player2;
-      if ((diff1 > 0 && diff2 === 0) || (diff2 > 0 && diff1 === 0)) {
-        setLastScoreType('goal');
-      } else if ((diff1 < 0 && diff2 === 0) || (diff2 < 0 && diff1 === 0)) {
-        setLastScoreType('malus');
-      }
-      setShowGoal(true);
-      setTimeout(() => setShowGoal(false), 700);
-      prevScore.current = { ...score };
-    }
-  }, [score]);
-
-
-
-
-  // met a jour ref clavier
-  useEffect(() => {
-    controlsRef.current = controls;
-  }, [controls]);
-
-
-
-  // servira pour pause apres dans L UI
-  const handleSetIsPaused = (paused: boolean) => {
-    setIsPaused(paused);
-  };
-
-
-
-
-  // remet cam orrigne on clique
-  useEffect(() => {
-    if (cameraRef.current) {
-      cameraRef.current.setPosition(new Vector3(35, 35, 0));
-      cameraRef.current.setTarget(Vector3.Zero());
-    }
-  }, [resetCamFlag]);
-
-
-  // couleur paddle in game maj
-  useEffect(() => {
-    if (gameObjectsRef.current) {
-      const { p1Mat, p2Mat } = gameObjectsRef.current;
-      p1Mat.diffuseColor = Color3.FromHexString(paddle1Color);
-      p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
-    }
-  }, [paddle1Color, paddle2Color]);
+	useEffect(() => {
+		if (!canvasRef.current) return; // si plus de convas on sort.
+		const engine = new Engine(canvasRef.current, true);  // declare l engine, true pour activer le rendu WebGL
+		engineRef.current = engine;
+		const scene = new Scene(engine);
+		scene.clearColor = new Color4(0, 0, 0, 0);
+		sceneRef.current = scene;
+		const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
+		cameraRef.current = objs.camera;
+		gameObjectsRef.current = objs;
+		// objet qui stock les ref et fera le lien avec les donnes
+		const gameRefs: GameRefs = {
+			score: scoreRef,
+			winner: winnerRef,
+			countdown: countdownRef,
+			isPaused: isPausedRef,
+			setScore,
+			setWinner,
+			setCountdown,
+			setIsPaused,
+			controls: controlsRef,
+			touchHistory: touchHistory.current,
+			superPad: superPadRef,
+			stamina: staminaRef,
+			malusSound: null,
+			lastHitter: lastHitterRef,
+			triggerSuperPad: () => {},
+		}; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
+		const cleanupPhysic = initgamePhysic(
+			scene,
+			objs,
+			gameRefs,
+			setStamina,
+			setSuperPad,
+			baseSpeed,
+			enableSpecial,
+			superPadRef,
+			volumeRef
+		);
+		// 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
+		if (enableMaluses) {
+			MalusSystemRef.current = new MalusSystem(
+				scene,
+				gameRefs,
+				() => setMalusBarKey((k) => k + 1),
+				setScore,
+				setWinner
+			);
+			MalusSystemRef.current.startMalusSystem();
+		}
 
 
-  // lancera le son victoire (avec bon volume)
-  useEffect(() => {
-    if (winner && (volumeRef.current ?? volume) > 0) {
-      const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
-      applause.volume = volumeRef.current ?? volume;
-      applause.play();
-    }
-  }, [winner, volume]);
-
-
-
-  // son des hit  synchro au volume
-  useEffect(() => {
-    if (allHitSounds.current.length > 0) {
-      allHitSounds.current.forEach((sound: Sound) => {
-        sound.volume = volume;
-      });
-    }
-  }, [volume]);
+		engine.runRenderLoop(() => scene.render()); // redessine la scene a chaque fois que la scene est modif
+		window.addEventListener("resize", () => engine.resize()); // ajuste rendu selon taille fenetre
+		// a la fin on clean tout.
+		return () => {
+			cleanupPhysic();
+			if (MalusSystemRef.current) {
+				MalusSystemRef.current.stopMalusSystem();
+			}
+			engine.dispose();
+		};
+	}, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
 
 
 
 
-  useEffect(() =>
-  {
-    if (winner)
-    {
-      const sendScore = async () =>
-      {
 
-        try
-        {
-          const response = await fetch('/api/game/result', {
-            method: 'POST',
-            headers:
-            {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem("token")}`
-            },
-            body: JSON.stringify({
-              player1Score: score.player1,
-              player2Score: score.player2,
-              gameId: localStorage.getItem("currentGameId") || -1,
-            })
-          });
-
-          if (response.ok)
-          {
-            console.log('Score envoyé avec succès !');
-          }
-        }
-
-        catch (error)
-        {
-          console.error('Erreur, winneur non envoyé :', error);
-        }
-
-
-      };
-
-      sendScore();
-    }
-  }, [winner, score]);
+	// Detecte changement du score
+	useEffect(() => {
+		if (
+			score.player1 !== prevScore.current.player1 ||
+			score.player2 !== prevScore.current.player2
+		) {
+			// Détection du type de score
+			const diff1 = score.player1 - prevScore.current.player1;
+			const diff2 = score.player2 - prevScore.current.player2;
+			if ((diff1 > 0 && diff2 === 0) || (diff2 > 0 && diff1 === 0)) {
+				setLastScoreType('goal');
+			} else if ((diff1 < 0 && diff2 === 0) || (diff2 < 0 && diff1 === 0)) {
+				setLastScoreType('malus');
+			}
+			setShowGoal(true);
+			setTimeout(() => setShowGoal(false), 700);
+			prevScore.current = { ...score };
+		}
+	}, [score]);
 
 
 
 
-  // RENDU UI CASE SUR LA PARTIE DU JEU (case des touche et barre stamina / chargement malus)
-  return (
-    <div className="relative w-full h-full">
-      {/* Canvas = conteneur graphique : la ou j affiche tout, un peu espace car padding dans main de page + le bandeau. */}
-      <canvas ref={canvasRef} className="w-full h-full" />
-      <GameUI
-        score={score}
-        winner={winner}
-        countdown={countdown}
-        isPaused={isPaused}
-        setIsPaused={handleSetIsPaused}
-        enableMaluses={enableMaluses}
-        MalusBarKey={MalusBarKey}
-        stamina={stamina}
-        superPad={superPad}
-        enableSpecial={enableSpecial}
-        showGoal={showGoal}
-        lastScoreType={lastScoreType}
-      />
-    </div>
-  );
+	// met a jour ref clavier
+	useEffect(() => {
+		controlsRef.current = controls;
+	}, [controls]);
+
+
+
+	// servira pour pause apres dans L UI
+	const handleSetIsPaused = (paused: boolean) => {
+		setIsPaused(paused);
+	};
+
+
+
+
+	// remet cam orrigne on clique
+	useEffect(() => {
+		if (cameraRef.current) {
+			cameraRef.current.setPosition(new Vector3(35, 35, 0));
+			cameraRef.current.setTarget(Vector3.Zero());
+		}
+	}, [resetCamFlag]);
+
+
+	// couleur paddle in game maj
+	useEffect(() => {
+		if (gameObjectsRef.current) {
+			const { p1Mat, p2Mat } = gameObjectsRef.current;
+			p1Mat.diffuseColor = Color3.FromHexString(paddle1Color);
+			p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
+		}
+	}, [paddle1Color, paddle2Color]);
+
+
+	// lancera le son victoire (avec bon volume)
+	useEffect(() => {
+		if (winner && (volumeRef.current ?? volume) > 0) {
+			const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
+			applause.volume = volumeRef.current ?? volume;
+			applause.play();
+		}
+	}, [winner, volume]);
+
+
+
+	// son des hit  synchro au volume
+	useEffect(() => {
+		if (allHitSounds.current.length > 0) {
+			allHitSounds.current.forEach((sound: Sound) => {
+				sound.volume = volume;
+			});
+		}
+	}, [volume]);
+
+
+
+
+	useEffect(() =>
+	{
+		if (winner)
+		{
+			const sendScore = async () =>
+			{
+
+				try
+				{
+					const response = await fetch('/api/game/result', {
+						method: 'POST',
+						headers:
+						{
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${localStorage.getItem("token")}`
+						},
+						body: JSON.stringify({
+							player1Score: score.player1,
+							player2Score: score.player2,
+							gameId: localStorage.getItem("currentGameId") || -1,
+						})
+					});
+
+					if (response.ok)
+					{
+						console.log('Score envoyé avec succès !');
+					}
+				}
+
+				catch (error)
+				{
+					console.error('Erreur, winneur non envoyé :', error);
+				}
+
+
+			};
+
+			sendScore();
+		}
+	}, [winner, score]);
+
+
+
+
+	// RENDU UI CASE SUR LA PARTIE DU JEU (case des touche et barre stamina / chargement malus)
+	return (
+		<div className="relative w-full h-full">
+			{/* Canvas = conteneur graphique : la ou j affiche tout, un peu espace car padding dans main de page + le bandeau. */}
+			<canvas ref={canvasRef} className="w-full h-full" />
+			<GameUI
+				score={score}
+				winner={winner}
+				countdown={countdown}
+				isPaused={isPaused}
+				setIsPaused={handleSetIsPaused}
+				enableMaluses={enableMaluses}
+				MalusBarKey={MalusBarKey}
+				stamina={stamina}
+				superPad={superPad}
+				enableSpecial={enableSpecial}
+				showGoal={showGoal}
+				lastScoreType={lastScoreType}
+			/>
+		</div>
+	);
 }
