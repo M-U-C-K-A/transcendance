@@ -108,14 +108,10 @@ export default function Page() {
   const [colorP1, setColorP1] = useState<string | null>(null);
   const [colorP2, setColorP2] = useState<string | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [MapStyle, setMapStyle] = useState<"classic" | "red" | "neon" | null>(null);
   const [enableMaluses, setEnableMaluses] = useState(false);
   const [enableSpecial, setEnableSpecial] = useState(false);
-  const [enableAI, setEnableAI] = useState(false);
-
-
-
-  type MapStyle = "classic" | "red" | "neon";
-  const [MapStyle, setMapStyle] = useState<MapStyle | null>(null);
+  const [baseSpeed, setBaseSpeed] = useState(24);
 
   useEffect(() => {
     if (MapStyle === "classic") {
@@ -138,7 +134,6 @@ export default function Page() {
     setMapStyle(null);
     setEnableMaluses(false);
     setEnableSpecial(false);
-    setEnableAI(false);
     setCurrentTrackIndex(0);
     if (audioRef.current) {
       audioRef.current.pause();
@@ -150,8 +145,6 @@ export default function Page() {
   // Clé pour déclencher la réinitialisation de la caméra
   // ──────────────────────────────────────────────────────────────────
   const [cameraKey, setCameraKey] = useState(0);
-
-  const [baseSpeed, setBaseSpeed] = useState(24);
 
 
 
@@ -183,8 +176,6 @@ export default function Page() {
               setEnableMaluses={setEnableMaluses}
               enableSpecial={enableSpecial}
               setEnableSpecial={setEnableSpecial}
-              enableAI={enableAI}
-              setEnableAI={setEnableAI}
               baseSpeed={baseSpeed}
               setBaseSpeed={setBaseSpeed}
             />
@@ -202,12 +193,11 @@ export default function Page() {
               restartGame={restartGame}
               cameraKey={cameraKey}
               setCameraKey={setCameraKey}
-              paddle1Color={colorP1 || "#000000"}
-              paddle2Color={colorP2 || "#000000"}
+              paddle1Color={colorP1 || "#FF0000"}
+              paddle2Color={colorP2 || "#0000FF"}
               MapStyle={MapStyle || "classic"}
               enableMaluses={enableMaluses}
               enableSpecial={enableSpecial}
-              enableAI={enableAI}
               baseSpeed={baseSpeed}
             />
           )}
