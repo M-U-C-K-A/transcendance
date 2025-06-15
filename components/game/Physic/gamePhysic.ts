@@ -241,6 +241,7 @@ export const initgamePhysic = (
 
 
 // observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
+// la fonction se trigger juste avant le rendering de chaque image. 
   scene.onBeforeRenderObservable.add(() => 
   {
 
@@ -252,9 +253,7 @@ export const initgamePhysic = (
 
 
 
-
-
-
+    // return = pause  à l image
     if (
       !gameRefs.isPaused ||
       !gameRefs.countdown ||
@@ -273,10 +272,6 @@ export const initgamePhysic = (
     const countdownNow  = gameRefs.countdown.current;
 
 
-
-
-
-    // Si partie terminée, en pause, ou mouvement bloqué, on skip le rendu physique
     if (
       gameRefs.winner.current ||
       isPausedNow      ||
@@ -289,6 +284,7 @@ export const initgamePhysic = (
 
 
     // Synchronisation du score avec la ref
+    // 
     if (gameRefs.score.current) {
       scoreLocal = { ...gameRefs.score.current };
     }
@@ -313,53 +309,66 @@ export const initgamePhysic = (
 
 
 
-
+    // mvt des bumpers
     if (bumperLeft && bumperRight)
     {
-      // Calcul du déplacement pour chaque bumper
+      // la distance en vecteur = vitesse + delta + direction
       const moveAmount = BUMPER_SPEED * deltaTime * bumperDirRef.current;
 
-      // On calcule la nouvelle position brute
+
+
+      // chaque frame = un deplacement de moveAmount 
+      // new = calcul du mouv avant attribution réeelle en dessous.
       let newLeftX  = bumperLeft.position.x  + moveAmount;
       let newRightX = bumperRight.position.x - moveAmount;
 
-      // 1) Clampuer à l'intérieur des bornes (pour éviter hors-map)
-      //    BUMPER_BOUND_LEFT ≤ leftX ≤ BUMPER_BOUND_RIGHT
-      //    BUMPER_BOUND_LEFT ≤ rightX ≤ BUMPER_BOUND_RIGHT
+
+
+
+
+      //  les limites des bumpers. calcul par rapport au déplacement
+      // -8  8 . si on est a  10 il renvoit 8
       newLeftX  = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newLeftX));
       newRightX = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newRightX));
 
-      // 2) Définir exactement la "mi-distance" si on dépasse
-      //    Si on avance vers l'intérieur (dir = +1) :
-      if (bumperDirRef.current > 0) {
-        // Si left dépasse la mi-distance, on le clamp précisément à BUMPER_MID_LEFT
-        if (newLeftX >= BUMPER_MID_LEFT) {
+
+
+      // 1 = vers le centre 
+      // stop net. 
+      if (bumperDirRef.current > 0) 
+      {
+
+        // si on arrive au middle = on se stop net ici.
+        if (newLeftX >= BUMPER_MID_LEFT)
+        {
           newLeftX = BUMPER_MID_LEFT;
         }
-        // Si right descend sous la mi-distance, clamp au BUMPER_MID_RIGHT
-        if (newRightX <= BUMPER_MID_RIGHT) {
+
+
+        if (newRightX <= BUMPER_MID_RIGHT)
           newRightX = BUMPER_MID_RIGHT;
-        }
+
+
       }
-      //    Si on repart vers l'extérieur (dir = -1) :
-      else {
-        // Si left revient sous la borne extérieure
-        if (newLeftX <= BUMPER_BOUND_LEFT) {
+      else 
+      {
+        if (newLeftX <= BUMPER_BOUND_LEFT)
           newLeftX = BUMPER_BOUND_LEFT;
-        }
-        // Si right revient au-delà de sa borne extérieure
-        if (newRightX >= BUMPER_BOUND_RIGHT) {
+
+        if (newRightX >= BUMPER_BOUND_RIGHT)
           newRightX = BUMPER_BOUND_RIGHT;
-        }
       }
 
-      // 3) Mettre à jour les positions
+
+      // vrai position du bumper à la fin 
       bumperLeft.position.x  = newLeftX;
       bumperRight.position.x = newRightX;
 
-      // 4) Inversion de direction lorsqu'on atteint la cible
-      if (bumperDirRef.current > 0) {
-        // On inverse si l'un des deux a atteint sa mi-distance
+
+
+      // Pour inverser la direction.
+      if (bumperDirRef.current > 0) 
+      {
         if (newLeftX  === BUMPER_MID_LEFT || newRightX === BUMPER_MID_RIGHT) {
           bumperDirRef.current = -1;
         }
@@ -382,7 +391,6 @@ export const initgamePhysic = (
 
 
 
-    // ── Mouvement de la balle
     ball.position.addInPlace(ballV.scale(deltaTime));
 
     if (
@@ -419,7 +427,7 @@ export const initgamePhysic = (
 
 
 
-  
+    // reçoit la ref du volum donc aura le bon volume pour les sons
     handleScoring(
       ball,
       scoreLocal,

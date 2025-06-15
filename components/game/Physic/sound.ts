@@ -16,7 +16,8 @@ export const updateAllSoundsVolume = (sounds: Sound[], volume: number) => {
   });
 };
 
-// Ajout du son de but (sifflet aléatoire)
+
+// de base a 0.2 mais réassigné dans score
 export const playGoalSound = (volume = 0.2) => {
   const whistles = [
     "/sounds/sifflet-1.mp3",
@@ -29,7 +30,8 @@ export const playGoalSound = (volume = 0.2) => {
   audio.play();
 };
 
-// Fonction pour jouer le son d'applaudissements à la victoire
+
+
 export const playApplause = (volume = 0.2) => {
   const audio = new window.Audio("/sounds/Applause  Sound Effect.mp3");
   audio.volume = volume;
