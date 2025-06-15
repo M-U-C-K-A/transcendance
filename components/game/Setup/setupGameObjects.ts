@@ -11,12 +11,12 @@ import {
 } from "@babylonjs/core";
 import { initEnvironment } from "./setupEnvironment";
 
-export function setupGameObjects(
+export const setupGameObjects = (
   scene: Scene,
   MapStyle: "classic" | "red" | "neon",
   paddle1Color: string,
   paddle2Color: string,
-) {
+) => {
 
 
   //  cam, sol, balle. 
