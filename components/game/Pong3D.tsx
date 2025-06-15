@@ -16,10 +16,9 @@ export default function Pong3D({
   resetCamFlag,
   enableSpecial = false,
   enableMaluses = false,
-  enableAI = false,
   volume = 0.2,
   baseSpeed = 16,
-}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number, enableAI?: boolean }) {
+}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
   
   
   // ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
@@ -80,7 +79,7 @@ export default function Pong3D({
     const scene = new Scene(engine);
     scene.clearColor = new Color4(0, 0, 0, 0);
     sceneRef.current = scene;
-    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, enableAI);
+    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
     cameraRef.current = objs.camera;
     gameObjectsRef.current = objs;
     // objet qui stock les ref et fera le lien avec les donnes 
@@ -135,7 +134,7 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, enableAI, baseSpeed]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
 
 
 
@@ -283,7 +282,6 @@ export default function Pong3D({
         enableSpecial={enableSpecial}
         showGoal={showGoal}
         lastScoreType={lastScoreType}
-        enableAI={enableAI}
       />
     </div>
   );

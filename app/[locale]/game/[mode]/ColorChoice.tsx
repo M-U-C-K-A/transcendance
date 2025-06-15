@@ -14,8 +14,6 @@ interface ColorChoiceProps {
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
-  enableAI: boolean;
-  setEnableAI: Dispatch<SetStateAction<boolean>>;
 }
 
 
@@ -29,34 +27,9 @@ export default function ColorChoice({
   setColorP1,
   colorP2,
   setColorP2,
-  enableAI,
-  setEnableAI,
 }: ColorChoiceProps) {
   return (
-    <>
-      {/* Bouton VS A.I. */}
-      <div className="mb-4 flex flex-col items-center gap-2">
-        <button
-          className="px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700"
-        >
-          🤖 VS A.I.
-        </button>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="ai-mode"
-            checked={enableAI}
-            onCheckedChange={(checked) => {
-              setEnableAI(checked);
-              if (checked) {
-                setColorP2(null);
-                setCurrentPlayer(1);
-              }
-            }}
-          />
-          <Label htmlFor="ai-mode">Activer l'IA</Label>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       {/* Choix des couleurs Joueurs */}
       <div className="mb-4 flex justify-center space-x-4">
         <button
@@ -70,13 +43,12 @@ export default function ColorChoice({
           🎖️ Joueur 1
         </button>
         <button
-          onClick={() => !enableAI && setCurrentPlayer(2)}
+          onClick={() => setCurrentPlayer(2)}
           className={`px-4 py-2 rounded-lg font-semibold ${
-            currentPlayer === 2 && !enableAI
+            currentPlayer === 2
               ? "bg-yellow-500 text-white"
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          } ${enableAI ? "opacity-50 cursor-not-allowed" : ""}`}
-          disabled={enableAI}
+          }`}
         >
           🎖️ Joueur 2
         </button>
@@ -96,30 +68,26 @@ export default function ColorChoice({
             const takenByP2 = colorP2 === hex;
             const isDisabled =
               (currentPlayer === 1 && takenByP2) ||
-              (currentPlayer === 2 && takenByP1) ||
-              (enableAI && currentPlayer === 2);
-
-            let borderStyle = "2px solid transparent";
-            if (takenByP1) borderStyle = "3px solid white";
-            if (takenByP2) borderStyle = "3px solid black";
-
+              (currentPlayer === 2 && takenByP1);
             return (
               <button
                 key={hex}
                 onClick={() => {
-                  if (isDisabled) return;
-                  if (currentPlayer === 1) setColorP1(hex);
-                  else setColorP2(hex);
+                  if (currentPlayer === 1) {
+                    setColorP1(hex);
+                  } else {
+                    setColorP2(hex);
+                  }
                 }}
                 disabled={isDisabled}
-                aria-label={`Couleur ${hex} ${
-                  isDisabled ? "(déjà prise)" : ""
-                }`}
+                aria-label={`Couleur ${hex} ${isDisabled ? "(déjà prise)" : ""}`}
                 className="relative h-12 w-12 rounded-lg focus:outline-none"
                 style={{
                   backgroundColor: hex,
                   opacity: isDisabled ? 0.4 : 1,
-                  border: borderStyle,
+                  border: (currentPlayer === 1 && colorP1 === hex) || (currentPlayer === 2 && colorP2 === hex)
+                    ? "3px solid yellow"
+                    : "2px solid transparent"
                 }}
               >
                 {(takenByP1 || takenByP2) && (
@@ -132,6 +100,6 @@ export default function ColorChoice({
           })}
         </div>
       </div>
-    </>
+    </div>
   );
 }

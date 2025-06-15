@@ -73,8 +73,7 @@ interface GameInfo {
 
 
 
-interface SettingsPanelProps 
-{
+interface SettingsPanelProps {
   COLORS: string[];
   currentPlayer: 1 | 2;
   setCurrentPlayer: Dispatch<SetStateAction<1 | 2>>;
@@ -90,8 +89,6 @@ interface SettingsPanelProps
   setEnableMaluses: Dispatch<SetStateAction<boolean>>;
   enableSpecial: boolean;
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
-  enableAI: boolean;
-  setEnableAI: Dispatch<SetStateAction<boolean>>;
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
 }
@@ -118,8 +115,6 @@ export default function SettingsPanel({
   setEnableMaluses,
   enableSpecial,
   setEnableSpecial,
-  enableAI,
-  setEnableAI,
   baseSpeed,
   setBaseSpeed,
 }: SettingsPanelProps) 
@@ -242,21 +237,25 @@ export default function SettingsPanel({
     }
   };
 
+
+
+
   const shouldShowCreationDialog = () => {
     if (gamemode !== "custom" && gamemode !== "tournaments") return false;
     if (localStorage.getItem("currentGameId")) return false;
     return !gameInfo;
   };
 
+
+
+
   const canStart = useMemo(() => {
-    if (gamemode === "custom" || gamemode === "tournaments") {
-      return gameInfo?.players?.length >= 2;
-    }
-    if (enableAI) {
-      return colorP1 !== null && MapStyle !== null;
-    }
     return colorP1 !== null && colorP2 !== null && MapStyle !== null;
-  }, [gamemode, gameInfo?.players?.length, colorP1, colorP2, MapStyle, enableAI]);
+  }, [gamemode, gameInfo?.players?.length, colorP1, colorP2, MapStyle]);
+
+
+
+
 
 
 
@@ -287,6 +286,8 @@ export default function SettingsPanel({
 
 
   return (
+
+
     <div className="container mx-auto px-4 py-8 max-w-10xl">
       {/* Dialogue de création */}
       <Dialog
@@ -303,6 +304,12 @@ export default function SettingsPanel({
             </DialogDescription>
           </DialogHeader>
 
+
+
+
+
+
+
           <form onSubmit={form.handleSubmit(createGame)} className="space-y-6">
             <div className="space-y-3">
               <Label htmlFor="gameName">Nom</Label>
@@ -318,6 +325,11 @@ export default function SettingsPanel({
                 </p>
               )}
             </div>
+
+
+
+
+
 
             {gamemode === "tournaments" && (
               <div className="space-y-4">
@@ -359,6 +371,11 @@ export default function SettingsPanel({
         </DialogContent>
       </Dialog>
 
+
+
+
+
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Colonne gauche - Toujours visible pour les modes custom/tournaments */}
         {(gamemode === "custom" || gamemode === "tournaments") && (
@@ -387,6 +404,11 @@ export default function SettingsPanel({
                 )}
               </div>
             </Card>
+
+
+
+
+
 
             {gamemode === "tournaments" && gameInfo?.upcomingMatches && (
               <Card className="p-4">
@@ -423,12 +445,26 @@ export default function SettingsPanel({
           </div>
         )}
 
+
+
+
+
+
+
+
         {/* Colonne centrale */}
         <div className={`${
           gamemode === "custom" || gamemode === "tournaments"
             ? "lg:col-span-6"
             : "lg:col-span-8"
         }`}>
+
+
+
+
+
+
+          
           <Card className="p-6 rounded-xl">
             <div className="space-y-6">
               {/* Configuration Map */}
@@ -444,13 +480,14 @@ export default function SettingsPanel({
                 />
               </div>
 
-              {/* Choix Couleurs */}
+
+
+
+              {/*  couleurs */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Choix des Couleurs</h2>
                 <ColorChoice
                   COLORS={COLORS}
-                  enableAI={enableAI}
-                  setEnableAI={setEnableAI}
                   currentPlayer={currentPlayer}
                   setCurrentPlayer={setCurrentPlayer}
                   colorP1={colorP1}
@@ -460,7 +497,10 @@ export default function SettingsPanel({
                 />
               </div>
 
-              {/* Vitesse Balle */}
+
+
+
+              {/* vitesse balle */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Vitesse de la balle</h2>
                 <div className="flex flex-wrap gap-2 justify-center">
@@ -481,6 +521,11 @@ export default function SettingsPanel({
                 </div>
               </div>
 
+
+
+
+
+
               {/* Boutons Actions */}
               <div className="space-y-4">
                 <Button
@@ -491,15 +536,19 @@ export default function SettingsPanel({
                   🎮 Configurer les contrôles
                 </Button>
 
+
+
+
                 {!canStart && (
                   <Alert variant="destructive">
-                    <AlertDescription className="text-center">
-                      {enableAI 
-                        ? "Sélectionnez une couleur et une map pour commencer"
-                        : "Sélectionnez une couleur et une map pour chaque joueur"}
+                    <AlertDescription className="w-full text-center">
+                      Sélectionnez une couleur et une map pour commencer
                     </AlertDescription>
                   </Alert>
                 )}
+
+
+
 
                 <Button
                   onClick={onStart}
@@ -511,10 +560,17 @@ export default function SettingsPanel({
                     ? "🏆 Démarrer le Tournoi"
                     : "🚀 Lancer la Partie"}
                 </Button>
+
+
+
               </div>
             </div>
           </Card>
         </div>
+
+
+
+
 
         {/* Colonne droite - Chat */}
         <div className="lg:col-span-3">
@@ -522,11 +578,13 @@ export default function SettingsPanel({
         </div>
       </div>
 
+
+
+
       {/* Config Contrôles */}
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
-        enableAI={enableAI}
       />
     </div>
   );
