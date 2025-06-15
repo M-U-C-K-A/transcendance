@@ -31,6 +31,11 @@ export default async function joinMatchFromInvite(userId: number, inviteUrl: str
 		throw new Error('Not valid invitation');
 	}
 
+	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
+	console.log("URL DE LINVIT APRES LE HASH", hashedId)
+	console.log(userId);
+	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
+
 	const matchId = decodeMatchId(hashedId);
 
 	const userInfo = await Prisma.user.findUnique({
@@ -47,6 +52,18 @@ export default async function joinMatchFromInvite(userId: number, inviteUrl: str
 		throw new Error('User does not exist');
 	}
 
+	const findMatch = await Prisma.match.findMany({
+		where: {
+			OR: [
+			{ p1Id: userId },
+			{ p2Id: userId }
+			],
+			winnerId: {
+				not: null
+			}
+		}
+	})
+
 	const updatedMatch = await Prisma.match.update({
 		where: {
 			id: matchId
@@ -58,5 +75,5 @@ export default async function joinMatchFromInvite(userId: number, inviteUrl: str
 	});
 
 	console.log("Match rejoint avec succès :", updatedMatch.id);
-	return updatedMatch;
+	return (updatedMatch);
 }
