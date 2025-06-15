@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
+
+// Pour customi
 const gameCreationSchema = z.object({
   name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
   type: z.enum(["custom", "tournament"]),
@@ -33,7 +35,13 @@ const gameCreationSchema = z.object({
   }),
 });
 
+
+
+
 type GameCreationData = z.infer<typeof gameCreationSchema>;
+
+
+
 
 interface Player {
   id: string;
@@ -41,12 +49,17 @@ interface Player {
   ready?: boolean;
 }
 
+
+
 interface Match {
   team1: string;
   team2: string;
   time: string;
   status?: "pending" | "ongoing" | "completed";
 }
+
+
+
 
 interface GameInfo {
   id: string;
@@ -56,7 +69,12 @@ interface GameInfo {
   status?: "waiting" | "starting" | "ongoing";
 }
 
-interface SettingsPanelProps {
+
+
+
+
+interface SettingsPanelProps 
+{
   COLORS: string[];
   currentPlayer: 1 | 2;
   setCurrentPlayer: Dispatch<SetStateAction<1 | 2>>;
@@ -67,15 +85,22 @@ interface SettingsPanelProps {
   setColorP2: Dispatch<SetStateAction<string | null>>;
   MapStyle: "classic" | "red" | "neon" | null;
   setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon" | null>>;
-  canStart: boolean;
   onStart: () => void;
   enableMaluses: boolean;
   setEnableMaluses: Dispatch<SetStateAction<boolean>>;
   enableSpecial: boolean;
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
+  enableAI: boolean;
+  setEnableAI: Dispatch<SetStateAction<boolean>>;
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
 }
+
+
+
+
+
+
 
 export default function SettingsPanel({
   COLORS,
@@ -88,20 +113,29 @@ export default function SettingsPanel({
   gamemode,
   MapStyle,
   setMapStyle,
-  canStart,
   onStart,
   enableMaluses,
   setEnableMaluses,
   enableSpecial,
   setEnableSpecial,
+  enableAI,
+  setEnableAI,
   baseSpeed,
   setBaseSpeed,
-}: SettingsPanelProps) {
+}: SettingsPanelProps) 
+{
+
+
+
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const jwtToken = useJWT();
   const router = useRouter();
+
+
+
+
 
   const form = useForm<GameCreationData>({
     resolver: zodResolver(gameCreationSchema),
@@ -111,6 +145,10 @@ export default function SettingsPanel({
       playerCount: 4,
     },
   });
+
+
+
+
 
   // Initialize game info from localStorage
   useEffect(() => {
@@ -127,6 +165,11 @@ export default function SettingsPanel({
     }
   }, []);
 
+
+
+
+
+
   // Reset form when gamemode changes
   useEffect(() => {
     if (gamemode === "custom" || gamemode === "tournaments") {
@@ -137,6 +180,15 @@ export default function SettingsPanel({
       });
     }
   }, [gamemode]);
+
+
+
+
+
+
+
+
+
 
   const createGame = async (data: GameCreationData) => {
     setIsLoading(true);
@@ -168,6 +220,12 @@ export default function SettingsPanel({
     }
   };
 
+
+
+
+
+
+
   const fetchGameInfo = async () => {
     if (gamemode !== "custom" && gamemode !== "tournaments") return;
 
@@ -189,6 +247,44 @@ export default function SettingsPanel({
     if (localStorage.getItem("currentGameId")) return false;
     return !gameInfo;
   };
+
+  const canStart = useMemo(() => {
+    if (gamemode === "custom" || gamemode === "tournaments") {
+      return gameInfo?.players?.length >= 2;
+    }
+    if (enableAI) {
+      return colorP1 !== null && MapStyle !== null;
+    }
+    return colorP1 !== null && colorP2 !== null && MapStyle !== null;
+  }, [gamemode, gameInfo?.players?.length, colorP1, colorP2, MapStyle, enableAI]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-10xl">
@@ -353,6 +449,8 @@ export default function SettingsPanel({
                 <h2 className="text-xl font-semibold mb-4">Choix des Couleurs</h2>
                 <ColorChoice
                   COLORS={COLORS}
+                  enableAI={enableAI}
+                  setEnableAI={setEnableAI}
                   currentPlayer={currentPlayer}
                   setCurrentPlayer={setCurrentPlayer}
                   colorP1={colorP1}
@@ -375,7 +473,7 @@ export default function SettingsPanel({
                       key={item.speed}
                       pressed={baseSpeed === item.speed}
                       onPressedChange={() => setBaseSpeed(item.speed)}
-                      className={`px-4 py-2 data-[state=on]:${item.color} data-[state=on]:text-white`}
+                      className={`px-4 py-2 ${baseSpeed === item.speed ? item.color : ''}`}
                     >
                       {item.label}
                     </Toggle>
@@ -396,7 +494,9 @@ export default function SettingsPanel({
                 {!canStart && (
                   <Alert variant="destructive">
                     <AlertDescription className="text-center">
-                      Sélectionnez une couleur et une map pour chaque joueur
+                      {enableAI 
+                        ? "Sélectionnez une couleur et une map pour commencer"
+                        : "Sélectionnez une couleur et une map pour chaque joueur"}
                     </AlertDescription>
                   </Alert>
                 )}
