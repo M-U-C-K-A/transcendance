@@ -43,9 +43,6 @@ import resultTournamentRoute from './routes/tournament/resultTournamentRoute';
 
 dotenv.config();
 
-const ws = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || ""
-console.log(ws)
-
 const app = Fastify({
 	logger: loggerConfig,
 	bodyLimit: 20 * 1024 * 1024,
@@ -82,7 +79,6 @@ async function main() {
 	await app.register(privateChatRoute);
 	await app.register(editProfileRoute);
 	await app.register(sendMessageRoute);
-	await app.register(tournamentRoutes);
 	await app.register(friendListRoute);
 	await app.register(leaderboardRoute);
 	await app.register(friendRequestRoute);
