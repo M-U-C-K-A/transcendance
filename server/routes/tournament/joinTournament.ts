@@ -17,8 +17,11 @@ export default async function tournamentJoinRoute(server: FastifyInstance) {
 				return reply.code(404).send({ error: 'Tournament not found' });
 			} else if (err.message == 'Tournament already full') {
 				return reply.code(520).send({ error: 'Tournament already full' });
-			}
-			return reply.code(500).send({ error: 'Internal server error' });
+			} else if (err.message == 'User already in the tournament') {
+				return reply.code(403).send({ error: 'User already in the tournament' });
+			} else if (err.message == 'User already in a tournament') {
+				return reply.code(403).send({ error: 'User already in a tournament' });
+			} return reply.code(500).send({ error: 'Internal server error' });
 		}
 	});
 }

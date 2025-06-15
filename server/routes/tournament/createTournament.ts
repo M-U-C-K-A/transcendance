@@ -8,6 +8,7 @@ export default async function tournamentCreateRoute(server: FastifyInstance) {
 	const tournament = request.body as { name: string, slot: number}
 
 		try {
+			console.log(tournament)
 			const result = await tournamentCreate(user.id, tournament.name, tournament.slot);
 			return reply.code(200).send(result);
 		} catch (err: any) {

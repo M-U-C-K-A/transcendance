@@ -12,7 +12,7 @@ export default async function check2FA(email: string, code: string) {
 		},
 	});
 
-	if (isValid) {
+	if (isValid?.code == code) {
 		return (true)
 	}
 	else {
