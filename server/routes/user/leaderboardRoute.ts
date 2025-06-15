@@ -1,8 +1,9 @@
 import { FastifyInstance } from "fastify";
 import leaderboard from "@/server/request/profile/leaderboard";
+import authMiddleware from "@/server/authMiddleware";
 
 export default async function leaderboardRoute(server: FastifyInstance) {
-	server.get('/leaderboard', async function (request, reply) {
+	server.get('/leaderboard', {preHandler: authMiddleware}, async function (request, reply) {
 	try {
 		const ranking = await leaderboard();
 		return reply.code(200).send(ranking);

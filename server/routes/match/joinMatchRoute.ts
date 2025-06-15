@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import authMiddleware from '../../authMiddleware';
-import joinMatch from "@/server/request/match/joinMatch";
+import { joinMatchFromInvite } from "@/server/request/match/joinMatch";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/travel', { preHandler: authMiddleware }, async function (request, reply) {
@@ -13,9 +13,9 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 		}
 
 		try {
-			console.log("🌅🌅🌅🌅MATCH REJOIND🌅🌅🌅🌅")
-			const result = await joinMatch(user.id, code)
-			return (reply.code(200).send(result))
+			const result = await joinMatchFromInvite(user.id, code)
+			console.log(result)
+			return (reply.code(200).send({ result }))
 		} catch (err: any) {
 			console.error('Error in joinMatch:', err);
 			if (err.message === 'User not found') {

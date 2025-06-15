@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { decodeMatchId } from './joinMatch';
 
 const Prisma = new PrismaClient()
 
@@ -64,8 +65,26 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 				}
 			});
 		}
+	}
+	else {
 
-		console.log("👺👺👺👺👺👺👺APRES LA CREATION👺👺👺👺👺")
+		let winnerId: number;
+		if (p1Score > p2Score) {
+			winnerId = userId;
+		} else {
+			winnerId = 1;
+		}
+
+		await Prisma.match.update({
+			where: {
+				id: gameId,
+			},
+			data: {
+				winnerId: winnerId,
+				p1Score: p1Score,
+				p2Score: p2Score,
+			},
+		});
 	}
 
 	return (true);

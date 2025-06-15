@@ -1,49 +1,27 @@
-import { PrismaClient }           from '@prisma/client'
-import { userData }               from '@/server/utils/interface'
-import { TournamentData }         from '@/server/utils/interface'
-import { getAvatar }              from '@/server/utils/getAvatar'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const Prisma = new PrismaClient()
 
-export async function createTournament(hostUsername: string, tournamentName: string, slotCount = 4):
-Promise<{ tournament: TournamentData}> {
+export default async function tournamentCreate(hostId: number, tournamentName: string, slot: number) {
+	const tournament = await Prisma.tournament.create({
+		data: {
+			hostId: hostId,
+			tournamentName: tournamentName,
+			slot: slot,
+		},
+		select: {
+			id: true
+		}
+	});
 
-	const [y] = await prisma.$queryRaw<TournamentData[]>`
-		SELECT tournamentName
-		FROM tournament
-		WHERE tournamentName = ${tournamentName}
-		`
-	if (y)
-	{
-		console.log('Tournament name already taken');
-		throw new Error ('Tournament name already taken')
-	}
+	await Prisma.tournamentParticipants.create({
+		data: {
+			userId: hostId,
+			tournamentId: tournament.id
+		}
+	})
 
-	const [h] = await prisma.$queryRaw<userData[]>`
-		SELECT id, avatar
-		FROM "User"
-		WHERE username = ${hostUsername}
-	`
-	if (!h)
-	{
-		console.log('User not found');
-		throw new Error('User not found');
-	}
+	console.log(`Tournament created with the name ${tournamentName} and slot ${slot}`)
 
-
-
-	const [t] = await prisma.$queryRaw<TournamentData[]>`
-		INSERT INTO "Tournament" ("hostId","tournamentName","slot")
-		VALUES (${h.id}, ${tournamentName}, ${slotCount})
-		RETURNING id, "hostId", "tournamentName", "slot", "TDate"
-	`
-	if (!t)
-	{
-		console.log('Tournament creation failed');
-		throw new Error('Tournament creation failed');
-	}
-
-
-
-	return { tournament: t }
+	return {tournamentId: tournament.id, tournamentSlot: slot}
 }
