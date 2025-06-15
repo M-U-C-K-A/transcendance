@@ -35,7 +35,7 @@ export function MessageInput({ value, onChange, onSubmit, placeholder = "Écrive
 		e.preventDefault();
 		if (!hasGame) return;
 
-		const content = `Rejoignez ma partie "${gameData.name}": [lien du jeu](https://c2r8p5.42lehavre.fr:8443/en/game/custom/${gameData.id})`;
+		const content = `${gameData.id}`;
 
 		const payload: sendMessageData = {
 			content,
