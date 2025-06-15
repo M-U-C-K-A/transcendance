@@ -22,9 +22,10 @@ interface GameUIProps {
   enableSpecial: boolean;
   showGoal: boolean;
   lastScoreType: 'goal' | 'malus';
+  enableAI: boolean;
 }
 
-export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial, showGoal, lastScoreType }) => {
+export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaused, setIsPaused, enableMaluses, MalusBarKey, stamina, superPad, enableSpecial, showGoal, lastScoreType, enableAI }) => {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const { controls } = useControls();
   
@@ -323,6 +324,7 @@ export const GameUI: React.FC<GameUIProps> = ({ score, winner, countdown, isPaus
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={closeControlsConfig}
+        enableAI={enableAI}
       />
 
       {/* Animation GOAL/MALUS */}

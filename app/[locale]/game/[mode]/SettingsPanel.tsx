@@ -526,6 +526,7 @@ export default function SettingsPanel({
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
+        enableAI={enableAI}
       />
     </div>
   );
