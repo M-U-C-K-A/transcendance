@@ -11,6 +11,9 @@
 !.yarn/releases
 !.yarn/versions
 
+
+prisma/data/test.sqlite
+
 # testing
 /coverage
 
