@@ -43,6 +43,7 @@ export default function InvitationPage({ params }: { params: { slug: string } })
 
         if (!response.ok) {
           throw new Error('Échec de la requête')
+		  toast.error("Error, Échec de la requête")
         }
 
         const data = await response.json()
