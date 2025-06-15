@@ -5,9 +5,7 @@ import joinMatch from "@/server/request/match/joinMatch";
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/travel', { preHandler: authMiddleware }, async function (request, reply) {
 		const user = request.user as { id: number }
-		const { matchId } = request.body as { matchId: string}
-
-		console.log('POST /game/join called by user:', user?.id, 'with matchId:', matchId);
+		const { code } = request.body as { code: string }
 
 		if (!user) {
 			console.log('User not found in request');
@@ -15,8 +13,8 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 		}
 
 		try {
-			const result = await joinMatch(user.id, matchId)
-			console.log('joinMatch result:', result);
+			console.log("🌅🌅🌅🌅MATCH REJOIND🌅🌅🌅🌅")
+			const result = await joinMatch(user.id, code)
 			return (reply.code(200).send(result))
 		} catch (err: any) {
 			console.error('Error in joinMatch:', err);

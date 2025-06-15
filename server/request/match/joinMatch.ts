@@ -4,12 +4,6 @@ import Hashids from 'hashids';
 const Prisma = new PrismaClient();
 const hashids = new Hashids("CACA BOUDIN", 8);
 
-function extractHashedId(inviteUrl: string): string | null {
-	const regex = /\(https?:\/\/[^\/\)]+\/en\/game\/custom\/(\w+)\)/;
-	const match = inviteUrl.match(regex);
-	return match ? match[1] : null;
-}
-
 function decodeMatchId(hashedId: string): number {
 	const decoded = hashids.decode(hashedId);
 	if (!decoded.length) {
@@ -19,33 +13,16 @@ function decodeMatchId(hashedId: string): number {
 }
 
 export default async function joinMatchFromInvite(userId: number, inviteUrl: string) {
-
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
-	console.log("URL DE LINVIT", inviteUrl)
+	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
+	console.log("URL DE LINVIT", inviteUrl);
 	console.log(userId);
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
+	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
 
-	const hashedId = extractHashedId(inviteUrl);
-
-	if (!hashedId) {
-		throw new Error('Not valid invitation');
-	}
-
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
-	console.log("URL DE LINVIT APRES LE HASH", hashedId)
-	console.log(userId);
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅")
-
-	const matchId = decodeMatchId(hashedId);
+	const matchId = decodeMatchId(inviteUrl);
 
 	const userInfo = await Prisma.user.findUnique({
-		where: {
-			id: userId
-		},
-		select: {
-			username: true,
-			elo: true
-		}
+		where: { id: userId },
+		select: { username: true, elo: true }
 	});
 
 	if (!userInfo) {
@@ -55,19 +32,15 @@ export default async function joinMatchFromInvite(userId: number, inviteUrl: str
 	const findMatch = await Prisma.match.findMany({
 		where: {
 			OR: [
-			{ p1Id: userId },
-			{ p2Id: userId }
+				{ p1Id: userId },
+				{ p2Id: userId }
 			],
-			winnerId: {
-				not: null
-			}
+			winnerId: { not: null }
 		}
-	})
+	});
 
 	const updatedMatch = await Prisma.match.update({
-		where: {
-			id: matchId
-		},
+		where: { id: matchId },
 		data: {
 			p2Id: userId,
 			p2Elo: userInfo.elo,
@@ -75,5 +48,5 @@ export default async function joinMatchFromInvite(userId: number, inviteUrl: str
 	});
 
 	console.log("Match rejoint avec succès :", updatedMatch.id);
-	return (updatedMatch);
+	return updatedMatch;
 }
