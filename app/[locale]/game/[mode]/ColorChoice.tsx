@@ -1,4 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
+
+
+// Dispatch<SetStateAction<1 | 2>>;
 
 interface ColorChoiceProps {
   COLORS: string[];
@@ -8,7 +14,12 @@ interface ColorChoiceProps {
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
+  enableAI: boolean;
+  setEnableAI: Dispatch<SetStateAction<boolean>>;
 }
+
+
+
 
 export default function ColorChoice({
   COLORS,
@@ -18,9 +29,34 @@ export default function ColorChoice({
   setColorP1,
   colorP2,
   setColorP2,
+  enableAI,
+  setEnableAI,
 }: ColorChoiceProps) {
   return (
     <>
+      {/* Bouton VS A.I. */}
+      <div className="mb-4 flex flex-col items-center gap-2">
+        <button
+          className="px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700"
+        >
+          🤖 VS A.I.
+        </button>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="ai-mode"
+            checked={enableAI}
+            onCheckedChange={(checked) => {
+              setEnableAI(checked);
+              if (checked) {
+                setColorP2(null);
+                setCurrentPlayer(1);
+              }
+            }}
+          />
+          <Label htmlFor="ai-mode">Activer l'IA</Label>
+        </div>
+      </div>
+
       {/* Choix des couleurs Joueurs */}
       <div className="mb-4 flex justify-center space-x-4">
         <button
@@ -34,12 +70,13 @@ export default function ColorChoice({
           🎖️ Joueur 1
         </button>
         <button
-          onClick={() => setCurrentPlayer(2)}
+          onClick={() => !enableAI && setCurrentPlayer(2)}
           className={`px-4 py-2 rounded-lg font-semibold ${
-            currentPlayer === 2
+            currentPlayer === 2 && !enableAI
               ? "bg-yellow-500 text-white"
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
+          } ${enableAI ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={enableAI}
         >
           🎖️ Joueur 2
         </button>
@@ -59,7 +96,8 @@ export default function ColorChoice({
             const takenByP2 = colorP2 === hex;
             const isDisabled =
               (currentPlayer === 1 && takenByP2) ||
-              (currentPlayer === 2 && takenByP1);
+              (currentPlayer === 2 && takenByP1) ||
+              (enableAI && currentPlayer === 2);
 
             let borderStyle = "2px solid transparent";
             if (takenByP1) borderStyle = "3px solid white";
