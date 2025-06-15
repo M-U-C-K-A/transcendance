@@ -78,7 +78,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) onClose(); // S'assurer que onClose est appelé quand le modal est fermé
+      if (!open) onClose();
     }}>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1000px]">
         <DialogHeader>

@@ -10,8 +10,8 @@ export const setupGame = (
   MapStyle: "classic" | "red" | "neon",
   paddle1Color: string,
   paddle2Color: string,
-  enableAI: boolean = false
 ) => {
+  
   // 1) Création des objets 3D (paddles, mini-paddle, balle, bumpers, etc.)
   const {
     scene: scn,
@@ -32,12 +32,19 @@ export const setupGame = (
     leftTriOuterLeft,
     rightTriOuterRight,
     leftTriOuterRight
-  } = setupGameObjects(scene, MapStyle, paddle1Color, enableAI ? "#FFFFFF" : paddle2Color);
+  } = setupGameObjects(scene, MapStyle, paddle1Color, paddle2Color);
 
-  // 2) Ajout du bouton "Réinitialiser la caméra"
+
+
+
+
   addCameraResetButton(camera);
 
-  // 3) Retourne tous les objets créés pour manipulation ultérieure
+
+
+
+
+  
   return {
     scene: scn,
     camera,

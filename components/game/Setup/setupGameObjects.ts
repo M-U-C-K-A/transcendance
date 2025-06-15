@@ -11,19 +11,37 @@ import {
 } from "@babylonjs/core";
 import { initEnvironment } from "./setupEnvironment";
 
-export function setupGameObjects(
+export const setupGameObjects = (
   scene: Scene,
   MapStyle: "classic" | "red" | "neon",
   paddle1Color: string,
-  paddle2Color: string
-) {
-  // 1) Initialisation de l'environnement (caméra, lumières, sol, etc.)
+  paddle2Color: string,
+) => {
+
+
+  //  cam, sol, balle. 
   const { camera, allHitSounds, p1Mat, p2Mat, ballMat } = initEnvironment(
     scene,
     MapStyle,
-    paddle1Color,
-    paddle2Color
   );
+
+
+
+
+  // === couleur joueur
+  p1Mat.diffuseColor = Color3.FromHexString(paddle1Color);
+  p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
+  ballMat.diffuseColor = Color3.White();
+
+
+  // couleur joueur pour neon
+  if (MapStyle === "neon") {
+    p1Mat.emissiveColor = p1Mat.diffuseColor;
+    p2Mat.emissiveColor = p2Mat.diffuseColor;
+    ballMat.emissiveColor = Color3.White();
+  }
+
+
 
   // === Paddles ===
   const paddleOpts = { width: 6, height: 0.5, depth: 0.5 };
@@ -34,24 +52,7 @@ export function setupGameObjects(
   paddle2.position.set(0, 0.25, 19);
   paddle2.material = p2Mat;
 
-  // === Couleurs spéciales pour map "neon" ===
-  if (MapStyle === "neon") {
-    const adjustNeonColor = (color: string) => {
-      const hex = color.toUpperCase();
-      if (hex === "#0000FF") return "#000000";
-      if (hex === "#FF00FF") return "#FFFFFF";
-      return color;
-    };
-    const p1Color = adjustNeonColor(paddle1Color);
-    const p2Color = adjustNeonColor(paddle2Color);
-    [p1Mat, p2Mat].forEach(mat => {
-      const c = mat === p1Mat ? p1Color : p2Color;
-      mat.diffuseColor = Color3.FromHexString(c);
-      mat.emissiveColor = Color3.FromHexString(c);
-    });
-    ballMat.diffuseColor = Color3.White();
-    ballMat.emissiveColor = Color3.White();
-  }
+  
 
   // === Mini-paddle (pour "red") ===
   let miniPaddle: Mesh | null = null;

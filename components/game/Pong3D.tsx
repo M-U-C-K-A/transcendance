@@ -6,7 +6,6 @@ import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
 import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/MalusSystem";
-import { AISystem } from "./Physic/AISystem";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
 import type { Sound } from "@babylonjs/core/Audio/sound";
 
@@ -17,10 +16,9 @@ export default function Pong3D({
   resetCamFlag,
   enableSpecial = false,
   enableMaluses = false,
-  enableAI = false,
   volume = 0.2,
   baseSpeed = 16,
-}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number, enableAI?: boolean }) {
+}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
   
   
   // ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
@@ -32,7 +30,6 @@ export default function Pong3D({
   const gameObjectsRef = useRef<GameObjects | null>(null);
   const cameraRef = useRef<ArcRotateCamera | null>(null);
   const MalusSystemRef = useRef<MalusSystem | null>(null);
-  const AISystemRef = useRef<AISystem | null>(null);
   const { controls } = useControls();
   const controlsRef = useRef(controls);
 
@@ -82,7 +79,7 @@ export default function Pong3D({
     const scene = new Scene(engine);
     scene.clearColor = new Color4(0, 0, 0, 0);
     sceneRef.current = scene;
-    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, enableAI);
+    const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
     cameraRef.current = objs.camera;
     gameObjectsRef.current = objs;
     // objet qui stock les ref et fera le lien avec les donnes 
@@ -126,10 +123,6 @@ export default function Pong3D({
       MalusSystemRef.current.startMalusSystem();
     }
 
-    if (enableAI) {
-      AISystemRef.current = new AISystem(scene, gameRefs);
-      AISystemRef.current.startAISystem();
-    }
 
     engine.runRenderLoop(() => scene.render()); // redessine la scene a chaque fois que la scene est modif
     window.addEventListener("resize", () => engine.resize()); // ajuste rendu selon taille fenetre
@@ -139,12 +132,9 @@ export default function Pong3D({
       if (MalusSystemRef.current) {
         MalusSystemRef.current.stopMalusSystem();
       }
-      if (AISystemRef.current) {
-        AISystemRef.current.stopAISystem();
-      }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, enableAI, baseSpeed]);
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
 
 
 
@@ -287,8 +277,8 @@ export default function Pong3D({
         setIsPaused={handleSetIsPaused}
         enableMaluses={enableMaluses}
         MalusBarKey={MalusBarKey}
-        stamina={enableSpecial ? stamina : { player1: 0, player2: 0 }}
-        superPad={enableSpecial ? superPad : { player1: false, player2: false }}
+        stamina={stamina}
+        superPad={superPad}
         enableSpecial={enableSpecial}
         showGoal={showGoal}
         lastScoreType={lastScoreType}
