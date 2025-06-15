@@ -4,23 +4,28 @@ import joinMatch from "@/server/request/match/joinMatch";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/join', { preHandler: authMiddleware }, async function (request, reply) {
-	const user = request.user as { id: number }
-	const { matchId } = request.body as { matchId: string}
+		const user = request.user as { id: number }
+		const { matchId } = request.body as { matchId: string}
 
-	if (!user) {
-		return reply.code(400).send({ error: 'parameter is required' })
-	}
+		console.log('POST /game/join called by user:', user?.id, 'with matchId:', matchId);
 
-	try {
-		const result = await joinMatch(user.id, matchId)
-		return (reply.code(200).send(result))
-	} catch (err: any) {
-		if (err.message === 'User not found') {
-			return reply.code(404).send({ error: 'User not found' })
-		} else if (err.message === 'Not valid invitation') {
-			return reply.code(404).send({ error: 'Not valid invitation' })
+		if (!user) {
+			console.log('User not found in request');
+			return reply.code(400).send({ error: 'parameter is required' })
 		}
-		return reply.code(500).send({ error: 'Internal server error' })
-	}
-})
+
+		try {
+			const result = await joinMatch(user.id, matchId)
+			console.log('joinMatch result:', result);
+			return (reply.code(200).send(result))
+		} catch (err: any) {
+			console.error('Error in joinMatch:', err);
+			if (err.message === 'User not found') {
+				return reply.code(404).send({ error: 'User not found' })
+			} else if (err.message === 'Not valid invitation') {
+				return reply.code(404).send({ error: 'Not valid invitation' })
+			}
+			return reply.code(500).send({ error: 'Internal server error' })
+		}
+	})
 }
