@@ -4,6 +4,9 @@ import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
 
+
+
+
 import {
   // On réduit BUMPER_SPEED ici pour ralentir les bumpers
   BUMPER_SPEED,           // ex. passe de 8 → 4
@@ -22,6 +25,13 @@ import { updateMiniPaddle } from "./movements/miniPaddleLogic";
 import { handleCollisions } from "./collisions/handleCollisions";
 import type { GameRefs, GameObjects } from "../gameTypes";
 
+
+
+
+
+
+
+
 export const initgamePhysic = (
   scene: Scene,
   gameObjects: GameObjects,
@@ -32,7 +42,6 @@ export const initgamePhysic = (
   enableSpecial?: boolean,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
   volumeRef?: React.RefObject<number>,
-  enableAcceleration: boolean = false,
 ): (() => void) => {
   const {
     ball,
@@ -109,6 +118,8 @@ export const initgamePhysic = (
 
   // Gestion du coup spécial
   const triggerSuperPad = (player: 1 | 2) => {
+    if (!enableSpecial) return; // Ne rien faire si les coups spéciaux sont désactivés
+    
     setStamina((prev) => {
       // On ne peut activer que si la stamina est exactement à 10 et le superPad n'est pas déjà actif
       if (prev[`player${player}`] !== 10 || (superPadRef?.current && superPadRef.current[`player${player}`])) {
@@ -337,7 +348,8 @@ export const initgamePhysic = (
       volumeRef?.current ?? 0.5,
       gameRefs.stamina.current,
       setStamina,
-      gameRefs.superPad.current
+      gameRefs.superPad.current,
+      enableSpecial
     );
     if (collisionResult) {
       ballV = collisionResult.newVelocity;

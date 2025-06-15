@@ -9,8 +9,6 @@ export function collideBumper(
   bumper: Mesh,
   ballV: Vector3,
   currentSpeed: number,
-  allHitSounds: Sound[],
-  volume: number
 ): { newVelocity: Vector3; newSpeed: number } | null {
   if (!ball || !bumper) return null;
 
