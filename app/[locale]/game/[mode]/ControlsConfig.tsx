@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface ControlsConfigProps {
   isOpen: boolean;
   onClose: () => void;
+  enableAI: boolean;
 }
 
 // Fonction utilitaire pour afficher les touches avec emoji flèche
@@ -30,6 +31,7 @@ function displayKey(key: string) {
 export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   isOpen,
   onClose,
+  enableAI,
 }) => {
   const { controls, updateControls } = useControls();  // importe context controls = Control  de ControlContext.tsx  . changement dans toute l appli (car utilise le context react dans  ControlContext.tsx)
   const [localControls, setLocalControls] = useState(controls); // local control = same mais copie temporaire pdt la modif dans l interface.  va voir les changement dans l interface.
@@ -140,9 +142,9 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
           </Card>
 
           {/* Joueur 2 */}
-          <Card>
+          <Card className={enableAI ? "opacity-50 pointer-events-none" : ""}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Joueur 2</CardTitle>
+              <CardTitle className="text-lg">Joueur 2 {enableAI ? "(IA)" : ""}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -153,6 +155,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onClick={() => setEditingKey('player2Up')}
                   onKeyDown={(e) => editingKey === 'player2Up' && handleKeyPress(e, 'player2Up')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Up)}
                 </Button>
@@ -166,6 +169,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onClick={() => setEditingKey('player2Down')}
                   onKeyDown={(e) => editingKey === 'player2Down' && handleKeyPress(e, 'player2Down')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Down)}
                 </Button>
@@ -179,6 +183,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
                   onClick={() => setEditingKey('player2Special')}
                   onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Special)}
                 </Button>
