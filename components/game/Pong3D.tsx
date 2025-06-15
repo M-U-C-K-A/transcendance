@@ -19,29 +19,9 @@ export default function Pong3D({
   volume = 0.2,
   baseSpeed = 16,
 }: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
-  
-  const { controls } = useControls();
 
 
-
-
-
-  // ───  React : changer valeur dans UI ─────────────────────────────────────────────
-  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
-  const [winner, setWinner] = useState<GameState["winner"]>(null);
-  const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
-  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
-  const [MalusBarKey,   setMalusBarKey] = useState(0);
-  const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
-  const [superPad, setSuperPad] = useState({ player1: false, player2: false });
-  const [showGoal, setShowGoal] = useState(false);
-  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
-  
-
-
-
-
-  // ─── Refs = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
+  // ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
   // c est quand on need pas de re render soit car deja fait ou pas besoin quand qq chose change
 
   const canvasRef = useRef<HTMLCanvasElement>(null); // Cree ces boite vide ou dit le type a remplir.
@@ -50,29 +30,37 @@ export default function Pong3D({
   const gameObjectsRef = useRef<GameObjects | null>(null);
   const cameraRef = useRef<ArcRotateCamera | null>(null);
   const MalusSystemRef = useRef<MalusSystem | null>(null);
+  const { controls } = useControls();
   const controlsRef = useRef(controls);
+
+  // ─── États React : changer valeur dans UI ─────────────────────────────────────────────
+  const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
+  const [winner, setWinner] = useState<GameState["winner"]>(null);
+  const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
+  const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
+  const [MalusBarKey, setMalusBarKey] = useState(0);
+  const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
+  const [superPad, setSuperPad] = useState({ player1: false, player2: false });
   const touchHistory = useRef<TouchHistory[]>([]);
-  const allHitSounds = useRef<Sound[]>([]);
+  const [showGoal, setShowGoal] = useState(false);
+  const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
   const prevScore = useRef(score);
+  const allHitSounds = useRef<Sound[]>([]);
 
-
-
-
-
-
-
-
+  // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
   const scoreRef = useRef(score);
   const winnerRef = useRef(winner);
   const countdownRef = useRef(countdown);
-  const isPausedRef = useRef(isPaused); 
+  const isPausedRef = useRef(isPaused);
   const superPadRef = useRef(superPad);
   const staminaRef = useRef(stamina);
   const volumeRef = useRef(volume);
   const lastHitterRef = useRef<number | null>(null);
 
 
-  // pas de rerender = juste une maj de la ref 
+
+   // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
+
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { winnerRef.current = winner; }, [winner]);
   useEffect(() => { countdownRef.current = countdown; }, [countdown]);
@@ -94,7 +82,7 @@ export default function Pong3D({
     const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
     cameraRef.current = objs.camera;
     gameObjectsRef.current = objs;
-    // objet qui stock les ref et fera le lien avec les donnes 
+    // objet qui stock les ref et fera le lien avec les donnes
     const gameRefs: GameRefs = {
       score: scoreRef,
       winner: winnerRef,
@@ -111,7 +99,7 @@ export default function Pong3D({
       malusSound: null,
       lastHitter: lastHitterRef,
       triggerSuperPad: () => {},
-    }; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU 
+    }; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
     const cleanupPhysic = initgamePhysic(
       scene,
       objs,
@@ -122,8 +110,8 @@ export default function Pong3D({
       enableSpecial,
       superPadRef,
       volumeRef
-    ); 
-    // 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS
+    );
+    // 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
     if (enableMaluses) {
       MalusSystemRef.current = new MalusSystem(
         scene,
@@ -136,7 +124,7 @@ export default function Pong3D({
     }
 
 
-    engine.runRenderLoop(() => scene.render()); // tourne tout seul
+    engine.runRenderLoop(() => scene.render()); // redessine la scene a chaque fois que la scene est modif
     window.addEventListener("resize", () => engine.resize()); // ajuste rendu selon taille fenetre
     // a la fin on clean tout.
     return () => {
@@ -146,7 +134,7 @@ export default function Pong3D({
       }
       engine.dispose();
     };
-  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]); // recree 
+  }, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
 
 
 
@@ -175,7 +163,7 @@ export default function Pong3D({
 
 
 
-  // met a jour ref clavier 
+  // met a jour ref clavier
   useEffect(() => {
     controlsRef.current = controls;
   }, [controls]);
@@ -189,8 +177,8 @@ export default function Pong3D({
 
 
 
-   
-  // remet cam orrigne on clique 
+
+  // remet cam orrigne on clique
   useEffect(() => {
     if (cameraRef.current) {
       cameraRef.current.setPosition(new Vector3(35, 35, 0));
@@ -199,7 +187,7 @@ export default function Pong3D({
   }, [resetCamFlag]);
 
 
-  // couleur paddle in game maj 
+  // couleur paddle in game maj
   useEffect(() => {
     if (gameObjectsRef.current) {
       const { p1Mat, p2Mat } = gameObjectsRef.current;
@@ -220,7 +208,7 @@ export default function Pong3D({
 
 
 
-  // son des hit  synchro au volume 
+  // son des hit  synchro au volume
   useEffect(() => {
     if (allHitSounds.current.length > 0) {
       allHitSounds.current.forEach((sound: Sound) => {
@@ -232,18 +220,18 @@ export default function Pong3D({
 
 
 
-  useEffect(() => 
+  useEffect(() =>
   {
-    if (winner) 
+    if (winner)
     {
-      const sendScore = async () => 
+      const sendScore = async () =>
       {
 
-        try 
+        try
         {
           const response = await fetch('/api/game/result', {
             method: 'POST',
-            headers: 
+            headers:
             {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -251,24 +239,24 @@ export default function Pong3D({
             body: JSON.stringify({
               player1Score: score.player1,
               player2Score: score.player2,
-              gameId: -1,
+              gameId: localStorage.getItem("currentGameId") || -1,
             })
           });
-          
-          if (response.ok) 
+
+          if (response.ok)
           {
             console.log('Score envoyé avec succès !');
-          } 
-        } 
-        
-        catch (error) 
+          }
+        }
+
+        catch (error)
         {
           console.error('Erreur, winneur non envoyé :', error);
         }
 
 
       };
-  
+
       sendScore();
     }
   }, [winner, score]);
@@ -280,7 +268,7 @@ export default function Pong3D({
   return (
     <div className="relative w-full h-full">
       {/* Canvas = conteneur graphique : la ou j affiche tout, un peu espace car padding dans main de page + le bandeau. */}
-      <canvas ref={canvasRef} className="w-full h-full" /> 
+      <canvas ref={canvasRef} className="w-full h-full" />
       <GameUI
         score={score}
         winner={winner}
@@ -294,7 +282,6 @@ export default function Pong3D({
         enableSpecial={enableSpecial}
         showGoal={showGoal}
         lastScoreType={lastScoreType}
-        malusSystem={MalusSystemRef.current}
       />
     </div>
   );
