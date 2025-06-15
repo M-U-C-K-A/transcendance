@@ -3,6 +3,7 @@ import { useControls } from "./ControlsContext"
 import { motion } from "framer-motion"
 import { ControlsConfig } from "./ControlsConfig"
 import { displayKey } from "./ControlsConfig"
+import { MalusSystem } from "./MalusSystem"
 
 
 
@@ -30,6 +31,7 @@ interface GameUIProps {
   enableSpecial: boolean;
   showGoal: boolean;
   lastScoreType: 'goal' | 'malus';
+  malusSystem?: MalusSystem;
 }
 
 
@@ -50,6 +52,7 @@ export const GameUI = ({
   enableSpecial,
   showGoal,
   lastScoreType,
+  malusSystem,
 }: GameUIProps) =>
 {
 
@@ -95,18 +98,16 @@ export const GameUI = ({
   const [MalusTimer, setMalusTimer] = useState(Malus_INTERVAL);
   
   useEffect(() => {
-    setMalusTimer(Malus_INTERVAL);
+    if (!malusSystem) return;
+    
     const interval = setInterval(() => {
-      // On ne décrémente que si le jeu n'est pas en pause
       if (!isPaused) {
-        setMalusTimer((prev) => {
-          if (prev <= 1) return Malus_INTERVAL;
-          return prev - 1;
-        });
+        setMalusTimer(malusSystem.getRemainingTime());
       }
-    }, 1000);
+    }, 100);
+
     return () => clearInterval(interval);
-  }, [MalusBarKey, isPaused]); // Ajout de isPaused dans les dépendances
+  }, [MalusBarKey, isPaused, malusSystem]);
 
 
 
