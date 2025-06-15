@@ -294,6 +294,7 @@ export default function Pong3D({
         enableSpecial={enableSpecial}
         showGoal={showGoal}
         lastScoreType={lastScoreType}
+        malusSystem={MalusSystemRef.current}
       />
     </div>
   );

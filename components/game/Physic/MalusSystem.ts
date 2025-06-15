@@ -5,13 +5,16 @@ export class MalusSystem {
   private scene: Scene;
   private MalusMesh: Mesh | null = null;
   private MalusMaterial: StandardMaterial;
-  private spawnInterval: number = 15000; // 15 secondes
+  private spawnInterval: number | null = null;
   private spawnTimer: number | null = null;
   private gameRefs: GameRefs;
   private MalusTextMesh: Mesh | null = null;
   private onMalusSpawn?: () => void;
   private setScore?: (score: { player1: number; player2: number }) => void;
   private setWinner?: (winner: string | null) => void;
+  private remainingTime: number = 15000; // 15 secondes en millisecondes
+  private lastUpdateTime: number = Date.now();
+  private isPaused: boolean = false;
 
   constructor(
     scene: Scene, 
@@ -30,18 +33,41 @@ export class MalusSystem {
     this.MalusMaterial = new StandardMaterial("MalusMaterial", scene);
     this.MalusMaterial.diffuseColor = new Color3(1, 0, 0); // Rouge
     this.MalusMaterial.emissiveColor = new Color3(0.5, 0, 0); // Légère lueur rouge
+    this.MalusMaterial.alpha = 0.8;
   }
 
   public startMalusSystem() {
-    // Arrêter le timer existant s'il y en a un
-    if (this.spawnTimer !== null) {
-      clearInterval(this.spawnTimer);
+    if (this.spawnInterval) {
+      clearInterval(this.spawnInterval);
     }
 
-    // Démarrer le spawn des Malus
-    this.spawnTimer = window.setInterval(() => {
-      this.spawnMalus();
-    }, this.spawnInterval);
+    this.lastUpdateTime = Date.now();
+    this.isPaused = false;
+
+    this.spawnInterval = setInterval(() => {
+      if (this.gameRefs.isPaused?.current) {
+        if (!this.isPaused) {
+          this.isPaused = true;
+        }
+        return;
+      }
+
+      if (this.isPaused) {
+        this.isPaused = false;
+        this.lastUpdateTime = Date.now();
+      }
+
+      const currentTime = Date.now();
+      const deltaTime = currentTime - this.lastUpdateTime;
+      this.lastUpdateTime = currentTime;
+
+      this.remainingTime -= deltaTime;
+
+      if (this.remainingTime <= 0) {
+        this.spawnMalus();
+        this.remainingTime = 15000;
+      }
+    }, 100);
   }
 
   public stopMalusSystem() {
@@ -58,6 +84,17 @@ export class MalusSystem {
       this.MalusTextMesh.dispose();
       this.MalusTextMesh = null;
     }
+    if (this.spawnInterval) {
+      clearInterval(this.spawnInterval);
+      this.spawnInterval = null;
+    }
+  }
+
+  public getRemainingTime(): number {
+    if (this.gameRefs.isPaused?.current) {
+      return Math.max(0, this.remainingTime / 1000);
+    }
+    return Math.max(0, this.remainingTime / 1000);
   }
 
   private spawnMalus() {
