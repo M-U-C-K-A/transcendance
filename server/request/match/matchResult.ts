@@ -1,21 +1,72 @@
 import { PrismaClient } from '@prisma/client'
-import { resultData } from './interface'
 
 const Prisma = new PrismaClient()
 
-export default async function matchResult(matchData: resultData) {
-	const matchResult = await Prisma.match.update ({
-		where: {
-			id: matchData.matchId,
-		},
-		data: {
-			winnerId: matchData.winnerId,
-			p1Score: matchData.p1Score,
-			p2Score: matchData.p2Score,
-			p1EloGain: matchData.p1EloGain,
-			p2EloGain: matchData.p2EloGain,
-		}
-	});
+export default async function matchResult(p1Score: number, p2Score: number, gameId: number, userId: number) {
+	if (gameId == -1) {
+		const userInfo = await Prisma.user.findFirst({
+			where: {
+				id: userId,
+			},
+			select: {
+				elo: true,
+			},
+		});
 
-	return (matchResult)
+		if (!userInfo) {
+			throw new Error("User not found");
+		}
+
+		let winnerId: number;
+		if (p1Score > p2Score) {
+			winnerId = userId;
+		} else {
+			winnerId = 1;
+		}
+
+		console.log("🎅🎅🎅🎅🎅🎅🎅🎅CREATION DE LA PARTIE🎅🎅🎅🎅🎅🎅");
+
+		await Prisma.match.create({
+			data: {
+				name: "Partie Privee",
+				p1Id: userId,
+				p2Id: 1,
+				p1Elo: userInfo.elo,
+				p2Elo: 2500,
+				p1Score: p1Score,
+				p2Score: p2Score,
+				p1EloGain: 0,
+				p2EloGain: 0,
+				winnerId: winnerId,
+			},
+		});
+
+		if (winnerId == userId) {
+			await Prisma.user.update({
+				where: {
+					id: userId,
+				},
+				data: {
+					pointScored: +p1Score,
+					pointConcede: +p2Score,
+					win: +1,
+				}
+			});
+		} else {
+			await Prisma.user.update({
+				where: {
+					id: userId,
+				},
+				data: {
+					pointScored: +p1Score,
+					pointConcede: +p2Score,
+					lose: +1,
+				}
+			});
+		}
+
+		console.log("👺👺👺👺👺👺👺APRES LA CREATION👺👺👺👺👺")
+	}
+
+	return (true);
 }

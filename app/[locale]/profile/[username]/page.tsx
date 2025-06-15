@@ -154,7 +154,7 @@ export default function ProfilePage() {
   const loseCount = userInfo.lose || 0
   const winRate = winCount + loseCount > 0 ? Math.round((winCount / (winCount + loseCount)) * 100) : 0
 
-  const formattedMatches = matchHistory.map(match => {
+  const formattedMatches = matchHistory.map((match) => {
     const isPlayer1 = match.p1Id === userInfo.id
     const opponentId = isPlayer1 ? match.p2Id : match.p1Id
     const playerScore = isPlayer1 ? match.p1Score : match.p2Score
@@ -164,10 +164,12 @@ export default function ProfilePage() {
     return {
       id: match.id,
       date: new Date(match.MDate).toLocaleDateString(),
+      opponentId,
       opponent: `User ${opponentId}`,
       result: match.winnerId === userInfo.id ? "Victoire" : "Défaite",
       score: `${playerScore}-${opponentScore}`,
-      eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`
+      eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`,
+      opponentAvatar: `/profilepicture/${opponentId}.webp`,
     }
   })
 
@@ -312,7 +314,7 @@ export default function ProfilePage() {
                               <td className="py-3 px-4">
                                 <div className="flex items-center">
                                   <Avatar className="h-6 w-6 mr-2">
-                                    <AvatarImage src={`/profilepicture/${match.id}.webp`} />
+                                    <AvatarImage src={`${match.opponentAvatar}`} />
                                     <AvatarFallback>{match.opponent.charAt(0)}</AvatarFallback>
                                   </Avatar>
                                   <span className="hover:underline">
