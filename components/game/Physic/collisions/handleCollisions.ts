@@ -84,8 +84,8 @@ export function handleCollisions(
     const miniPaddleCollision = collideMiniPaddle(
       ball,
       miniPaddle,
-      stamina,
-      setStamina,
+      ballV,
+      currentSpeed,
     );
     if (miniPaddleCollision) return miniPaddleCollision;
   }
