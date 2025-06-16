@@ -58,6 +58,7 @@ export function broadcastMessage(userId: number, message: any) {
 }
 
 export function broadcastToAll(message: any) {
+	console.log("🔴 Message reçu via WS général :", message);
 	const messageString = JSON.stringify(message);
 	connections.forEach((ws, userId) => {
 		if (ws.readyState === WebSocket.OPEN) {

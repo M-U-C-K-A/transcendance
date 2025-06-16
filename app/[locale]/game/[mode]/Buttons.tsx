@@ -24,6 +24,7 @@ interface GameUIProps {
   enableMaluses: boolean;
   enableSpecial: boolean;
   baseSpeed: number;
+  gamemode?: string;
 }
 
 export default function Buttons({
@@ -45,6 +46,7 @@ export default function Buttons({
   enableMaluses,
   enableSpecial,
   baseSpeed,
+  gamemode,
 }: GameUIProps): JSX.Element {
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border border-border">
@@ -55,7 +57,7 @@ export default function Buttons({
 
 
 
-      
+
       {/* Contrôles Volume, Musique, Recommencer */}
       <div
         className="absolute top-4 left-2 z-30 flex space-x-2"
@@ -159,6 +161,7 @@ export default function Buttons({
         enableSpecial={enableSpecial}
         volume={volume}
         baseSpeed={baseSpeed}
+        gamemode={gamemode}
       />
 
 
