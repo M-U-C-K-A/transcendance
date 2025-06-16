@@ -7,7 +7,6 @@ import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
 import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/MalusSystem";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
-import type { Sound } from "@babylonjs/core/Audio/sound";
 
 export default function Pong3D({
 	paddle1Color,
@@ -52,7 +51,6 @@ export default function Pong3D({
 	const [showGoal, setShowGoal] = useState(false);
 	const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
 	const prevScore = useRef(score);
-	const allHitSounds = useRef<Sound[]>([]);
 
 	// ─── References pour synchroniser l'etat : accedes au valeurs dans la logique  ────────────────────
 	const scoreRef = useRef(score);
@@ -61,8 +59,8 @@ export default function Pong3D({
 	const isPausedRef = useRef(isPaused);
 	const superPadRef = useRef(superPad);
 	const staminaRef = useRef(stamina);
-	const volumeRef = useRef(volume);
 	const lastHitterRef = useRef<number | null>(null);
+	const volumeRef = useRef(volume);
 
 
 
@@ -75,7 +73,6 @@ export default function Pong3D({
 	useEffect(() => { superPadRef.current = superPad; }, [superPad]);
 	useEffect(() => { staminaRef.current = stamina; }, [stamina]);
 	useEffect(() => { volumeRef.current = volume; }, [volume]);
-
 
 
 
@@ -103,7 +100,6 @@ export default function Pong3D({
 			touchHistory: touchHistory.current,
 			superPad: superPadRef,
 			stamina: staminaRef,
-			malusSound: null,
 			lastHitter: lastHitterRef,
 			triggerSuperPad: () => {},
 		}; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
@@ -114,9 +110,9 @@ export default function Pong3D({
 			setStamina,
 			setSuperPad,
 			baseSpeed,
+			volumeRef,
 			enableSpecial,
 			superPadRef,
-			volumeRef
 		);
 		// 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
 		if (enableMaluses) {
@@ -194,6 +190,7 @@ export default function Pong3D({
 	}, [resetCamFlag]);
 
 
+
 	// couleur paddle in game maj
 	useEffect(() => {
 		if (gameObjectsRef.current) {
@@ -204,25 +201,13 @@ export default function Pong3D({
 	}, [paddle1Color, paddle2Color]);
 
 
-	// lancera le son victoire (avec bon volume)
-	useEffect(() => {
-		if (winner && (volumeRef.current ?? volume) > 0) {
-			const applause = new window.Audio("/sounds/Applause  Sound Effect.mp3");
-			applause.volume = volumeRef.current ?? volume;
-			applause.play();
-		}
-	}, [winner, volume]);
 
 
 
-	// son des hit  synchro au volume
-	useEffect(() => {
-		if (allHitSounds.current.length > 0) {
-			allHitSounds.current.forEach((sound: Sound) => {
-				sound.volume = volume;
-			});
-		}
-	}, [volume]);
+
+
+
+
 
 
 

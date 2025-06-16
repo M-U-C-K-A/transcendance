@@ -3,7 +3,6 @@ import type { MutableRefObject } from "react";
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import type { Sound } from "@babylonjs/core/Audio/sound";
 import type { Scene } from "@babylonjs/core/scene";
 import React from "react";
 import type { Vector3 } from "@babylonjs/core/Maths/math.vector";
@@ -53,7 +52,6 @@ export interface GameRefs {
   touchHistory: TouchHistory[];
   superPad: MutableRefObject<{ player1: boolean; player2: boolean }>;
   stamina: MutableRefObject<{ player1: number; player2: number }>;
-  malusSound: HTMLAudioElement | null;
   lastHitter: MutableRefObject<number | null>;
   triggerSuperPad: (player: 1 | 2) => void;
 }
@@ -64,7 +62,6 @@ export interface GameRefs {
 export interface GameObjects {
   scene: Scene;
   camera: ArcRotateCamera;
-  allHitSounds: Sound[];
   paddle1: Mesh;
   paddle2: Mesh;
   miniPaddle: Mesh | null;

@@ -33,16 +33,6 @@ export const initEnvironment = (
 
 
 
-  // === Sons de collision (hit) ===
-  const allHitSounds: Sound[] = [
-    new Sound(
-      "hit1",
-      "/sounds/pong-1.mp3",
-      scene,
-      null,
-      { volume: 0.5, autoplay: false }
-    ),
-  ];
 
 
 
@@ -112,7 +102,6 @@ export const initEnvironment = (
 
   return {
     camera,
-    allHitSounds,
     p1Mat,
     p2Mat,
     ballMat,

@@ -50,10 +50,10 @@ export function PrivateChat({
   const filteredMessages = useMemo(() => {
     return messages.filter(
       (msg) =>
-        msg.user.name === selectedUser ||
-        (msg.recipient && msg.recipient.name === selectedUser)
+        (msg.user.name === selectedUser && msg.recipient?.name === currentUser) ||
+        (msg.user.name === currentUser && msg.recipient?.name === selectedUser)
     );
-  }, [messages, selectedUser]);
+  }, [messages, selectedUser, currentUser]);
 
   return (
     <div className="flex flex-col h-full justify-between">
@@ -87,7 +87,20 @@ export function PrivateChat({
             <span className="font-medium">{selectedUser}</span>
           </div>
 
-          <MessageList messages={filteredMessages} currentUser={currentUser} className="max-h-[450px]"/>
+          <MessageList
+            messages={filteredMessages}
+            currentUser={currentUser}
+            className="max-h-[450px]"
+            onInvitationClick={(content) => {
+              if (content.includes("Rejoignez ma partie")) {
+                fetch('/api/game/join', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ reason: 'from-invite', content }),
+                }).catch(console.error);
+              }
+            }}
+          />
 
           {sendError && (
             <div className="text-red-500 text-sm text-center px-4 py-2">
@@ -100,6 +113,8 @@ export function PrivateChat({
             onChange={onNewMessageChange}
             onSubmit={onSendMessage}
             placeholder={`Message à ${selectedUser}`}
+            isPrivate={true}
+            recipientId={selectedConversation?.id}
           />
         </>
       )}

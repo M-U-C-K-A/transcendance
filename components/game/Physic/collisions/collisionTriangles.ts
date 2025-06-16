@@ -1,6 +1,7 @@
 // src/Physic/collisions/collisionTriangles.ts
 import { Mesh, Vector3 } from "@babylonjs/core";
-import type { Sound }             from "@babylonjs/core/Audio/sound";
+import { PlayRandomHitSound } from "../sound";
+
 
 interface CollisionResult {
   newVelocity: Vector3;
@@ -12,6 +13,7 @@ export function collideTrianglePrism(
   tri: Mesh,
   ballV: Vector3,
   currentSpeed: number,
+  volume?: number
 ): CollisionResult | null 
 {
   // Geometrie du prisme (doit correspondre à setupGameObjects)
@@ -84,6 +86,10 @@ export function collideTrianglePrism(
 
 
     const dir = new Vector3(dirX, ballV.y / currentSpeed, dirZ).normalize().scale(currentSpeed);
+
+
+
+    PlayRandomHitSound(volume);
 
 
     return { newVelocity: dir, newSpeed: currentSpeed };

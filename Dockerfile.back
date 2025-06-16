@@ -1,6 +1,7 @@
 FROM node:18-alpine3.18
 
 WORKDIR /app
+
 RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
@@ -11,6 +12,10 @@ COPY server/ ./server
 COPY prisma/ ./prisma
 
 RUN pnpm run generate-prisma
+
+COPY buildEnv.sh ./
+RUN ./buildEnv.sh
+
 
 COPY . .
 
