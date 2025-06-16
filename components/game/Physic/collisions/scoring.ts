@@ -3,7 +3,7 @@
 
 import type { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { GameRefs } from "../../gameTypes";
-import { playGoalSound, playApplause } from "../sound";
+import { playGoalSound } from "../sound";
 
 
 
@@ -30,26 +30,14 @@ export function handleScoring(
 
   if (ball.position.z < -20) 
   {
-
       score.player2 += 1;
       setScore({ ...score });
       playGoalSound(volume);
 
       if (gameRefs.score.current) 
-        gameRefs.score.current = { ...score };
+        gameRefs.score.current = score;
 
-
-      if (score.player2 >= 5) 
-      {
-        playApplause(volume);
-        setWinner("Joueur 2");
-        return;
-      }
-
-
-    resetBall("player1");
-
-
+      resetBall("player1");
   }
 
 
@@ -57,33 +45,13 @@ export function handleScoring(
 
   if (ball.position.z > 20) 
   {
-
-
     score.player1 += 1;
     setScore({ ...score });
     playGoalSound(volume);
 
-
-
     if (gameRefs.score.current) 
-    {
-      gameRefs.score.current = { ...score };
-    }
-
-
-
-    if (score.player1 >= 5) 
-    {
-      playApplause(volume);
-      setWinner("Joueur 1");
-      return;
-    }
-
+      gameRefs.score.current = score;
 
     resetBall("player2");
-    
   }
-
-
-
 }

@@ -8,7 +8,7 @@ import type { SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
 
 
 import {
-  // On réduit BUMPER_SPEED ici pour ralentir les bumpers
+  // On reduit BUMPER_SPEED ici pour ralentir les bumpers
   BUMPER_SPEED,           // ex. passe de 8 → 4
   BUMPER_BOUND_LEFT,      // ex. -8
   BUMPER_BOUND_RIGHT,     // ex. +8
@@ -72,7 +72,7 @@ export const initgamePhysic = (
 
 
 
-  // Directions : +1 = vers le centre, -1 = vers l'extérieur
+  // Directions : +1 = vers le centre, -1 = vers l'exterieur
   const miniDirRef   = { current: 1 };
   const bumperDirRef = { current: 1 };
 
@@ -116,7 +116,7 @@ export const initgamePhysic = (
 
 
 
-  // Lance un countdown, bloque la pause/movement, reset des bumpers, puis débloque
+  // Lance un countdown, bloque la pause/movement, reset des bumpers, puis debloque
   // Maj le ref en puis de relance a la fin de startcountdown pour garder actu partout
   const startCountdownWrapper = (
     duration: number,
@@ -162,18 +162,18 @@ export const initgamePhysic = (
 
 
 
-  // Gestion du coup spécial
+  // Gestion du coup special
   const triggerSuperPad = (player: 1 | 2) => 
   {
 
-    if (!enableSpecial)   // Ne rien faire si les coups spéciaux sont désactivés
+    if (!enableSpecial)   // Ne rien faire si les coups speciaux sont desactives
       return;
     
 
     
     setStamina((prev) => 
     {
-      // On ne peut activer que si la stamina est exactement à 10 et le superPad n'est pas déjà actif
+      // On ne peut activer que si la stamina est exactement à 10 et le superPad n'est pas dejà actif
       if (prev[`player${player}`] !== 10 || (superPadRef?.current && superPadRef.current[`player${player}`])) {
         return prev;
       }
@@ -317,17 +317,17 @@ export const initgamePhysic = (
 
 
 
-
-    if (
-      !gameRefs.isPaused ||
-      !gameRefs.countdown ||
-      !gameRefs.winner ||
-      !ball ||
-      !paddle1 ||
-      !paddle2
-    ) {
-      return; // On sort si une ref est absente
-    }
+    // // Empeche le rendu Donc met en Pause 
+    // if (
+    //   !gameRefs.isPaused ||
+    //   !gameRefs.countdown ||
+    //   !gameRefs.winner ||
+    //   // !ball ||
+    //   // !paddle1 ||
+    //   // !paddle2
+    // ) {
+    //   return;
+    // }
 
 
 
@@ -339,7 +339,7 @@ export const initgamePhysic = (
 
 
 
-    // Si partie terminée, en pause, ou mouvement bloqué, on skip le rendu physique
+    // Met en pause en skippant le rendu. 
     if (
       gameRefs.winner.current ||
       isPausedNow      ||
@@ -394,7 +394,7 @@ export const initgamePhysic = (
 
 
       // chaque frame = un deplacement de moveAmount 
-      // new = calcul du mouv avant attribution réeelle en dessous.
+      // new = calcul du mouv avant attribution reeelle en dessous.
       let newLeftX  = bumperLeft.position.x  + moveAmount;
       let newRightX = bumperRight.position.x - moveAmount;
 
@@ -402,7 +402,7 @@ export const initgamePhysic = (
 
 
 
-      //  les limites des bumpers. calcul par rapport au déplacement
+      //  les limites des bumpers. calcul par rapport au deplacement
       // -8  8 . si on est a  10 il renvoit 8
       newLeftX  = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newLeftX));
       newRightX = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newRightX));
@@ -449,7 +449,7 @@ export const initgamePhysic = (
           bumperDirRef.current = -1;
         }
       } else {
-        // On inverse si l'un revient à sa borne extérieure
+        // On inverse si l'un revient à sa borne exterieure
         if (newLeftX  === BUMPER_BOUND_LEFT || newRightX === BUMPER_BOUND_RIGHT) {
           bumperDirRef.current = 1;
         }

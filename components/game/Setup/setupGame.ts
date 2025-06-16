@@ -2,7 +2,6 @@
 // ----------------
 
 import { setupGameObjects } from "./setupGameObjects";
-import { addCameraResetButton } from "./setupCameraReset";
 import { Scene, Vector3 } from "@babylonjs/core";
 
 export const setupGame = (
@@ -12,7 +11,9 @@ export const setupGame = (
   paddle2Color: string,
 ) => {
   
-  // 1) Création des objets 3D (paddles, mini-paddle, balle, bumpers, etc.)
+  // obs destructures
+  // je return tous les props dans obj dans Pong3D
+  // rename scene pour typer sans redondance
   const {
     scene: scn,
     camera,
@@ -38,7 +39,6 @@ export const setupGame = (
 
 
 
-  addCameraResetButton(camera);
 
 
 
