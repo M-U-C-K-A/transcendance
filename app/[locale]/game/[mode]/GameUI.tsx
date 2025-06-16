@@ -5,6 +5,7 @@ import { ControlsConfig } from "./ControlsConfig"
 import { displayKey } from "./ControlsConfig"
 import { MalusSystem } from "./MalusSystem"
 import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 
 
@@ -34,6 +35,7 @@ interface GameUIProps {
   lastScoreType: 'goal' | 'malus';
   malusSystem?: MalusSystem;
   gamemode?: string;
+  onMatchEnd?: (winner: string) => void;
 }
 
 
@@ -56,6 +58,7 @@ export const GameUI = ({
   lastScoreType,
   malusSystem,
   gamemode,
+  onMatchEnd,
 }: GameUIProps) =>
 {
 
@@ -184,6 +187,21 @@ export const GameUI = ({
 
 
 
+
+
+
+
+
+
+  // Effet pour gérer la fin du match
+  useEffect(() => {
+    if (winner !== null && onMatchEnd) {
+      // Attendre un peu pour que l'utilisateur voie le résultat
+      setTimeout(() => {
+        onMatchEnd(winner === "player1" ? "player1" : "player2");
+      }, 2000);
+    }
+  }, [winner, onMatchEnd]);
 
 
 
@@ -390,19 +408,30 @@ export const GameUI = ({
 
 
 
-            <button
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  const audio = window.Game_Audio as { pause?: () => void };
-                  if (audio?.pause)
-                    audio.pause();
-                }
-                window.history.back();
-              }}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
-            >
-              Quitter
-            </button>
+            {gamemode === "tournament" ? (
+              <Button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    // Pour les tournois, on retourne à l'écran de sélection des options
+                    window.location.href = "/game/tournament";
+                  }
+                }}
+                className="w-full py-6 text-lg"
+              >
+                Retour aux Options
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.history.back();
+                  }
+                }}
+                className="w-full py-6 text-lg"
+              >
+                Quitter
+              </Button>
+            )}
 
           </motion.div>
 

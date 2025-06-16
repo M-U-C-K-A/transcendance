@@ -12,6 +12,9 @@ export default async function tournamentCreateRoute(server: FastifyInstance) {
 			const result = await tournamentCreate(user.id, tournament.name, tournament.slot);
 			return reply.code(200).send(result);
 		} catch (err: any) {
+			if (err.message === 'User not found') {
+				return reply.code(404).send({ error: 'User not found' });
+			}
 			return reply.code(500).send({ error: 'Internal server error' });
 		}
 	});
