@@ -27,7 +27,6 @@ export function handleScoring(
 ): void 
 {
 
-  // lastHitter ne prend pas le paddle mais juste le camps ou a ete marquer le pt
 
   if (ball.position.z < -20) 
   {
