@@ -183,7 +183,7 @@ export default function GdprPage() {
 		<>
 
 		<Header />
-		<div className="max-w-3xl mx-auto py-10 space-y-6">
+		<div className="max-w-5xl mx-auto py-10 space-y-6">
 			{/* Modale de vérification du mot de passe */}
 			<Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
 				<DialogContent>

@@ -26,12 +26,13 @@ const buttonVariants = cva(
         matrix: "bg-black text-emerald-400 border border-emerald-400 shadow-lg shadow-emerald-400/20 hover:bg-emerald-400/10 font-mono tracking-wider transition-all duration-200",
         classic: "bg-gradient-to-br from-zinc-700 via-zinc-900 to-zinc-800 text-white shadow-xl shadow-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 hover:shadow-zinc-500/40 ring-2 ring-zinc-900/30 focus-visible:ring-zinc-200/40 animate-pulse-slow transition-all duration-300",
         arcade: "bg-yellow-400 text-black border-2 border-red-500 shadow-md hover:bg-yellow-300 font-bold tracking-wide transition-colors duration-200"
-      
+
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        full: "h-10 rounded-md px-6 w-full",
         icon: "size-9",
       },
     },
