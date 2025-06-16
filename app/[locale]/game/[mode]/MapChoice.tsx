@@ -5,8 +5,8 @@ import { Toggle } from "@/components/ui/toggle";
 import Image from "next/image";
 
 interface MapChoiceProps {
-  MapStyle: "classic" | "red" | "neon" | null;
-  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon" | null>>;
+  MapStyle: "classic" | "red" | "neon";
+  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
   enableMaluses: boolean;
   setEnableMaluses: Dispatch<SetStateAction<boolean>>;
   enableSpecial: boolean;
