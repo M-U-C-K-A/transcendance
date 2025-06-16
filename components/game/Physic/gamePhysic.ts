@@ -62,6 +62,8 @@ export const initgamePhysic = (
     leftTriOuterRight
   } = gameObjects;
 
+
+
   // block les movements
   const blockPauseRef    = { current: false };
   const blockMovementRef = { current: false };
@@ -79,14 +81,22 @@ export const initgamePhysic = (
 
 
   // reinit les pos (a chaque points)
-  const resetBumpersAndMiniPaddle = () => {
-    if (miniPaddle) {
-      miniPaddle.position.set(5, 0.25, 0); // exemple, ajustez à votre coordonnée initiale
+  const resetBumpersAndMiniPaddle = () => 
+  {
+    // en right . un peut haut
+    if (miniPaddle) 
+    {
+      miniPaddle.position.set(5, 0.25, 0);
     }
-    if (bumperLeft && bumperRight) {
+
+
+    if (bumperLeft && bumperRight) 
+    {
       bumperLeft.position.set(BUMPER_BOUND_LEFT,  0.25, 0);
       bumperRight.position.set(BUMPER_BOUND_RIGHT, 0.25, 0);
     }
+
+    // vers le centre 
     miniDirRef.current   = 1;
     bumperDirRef.current = 1;
   };
@@ -96,7 +106,8 @@ export const initgamePhysic = (
 
 
   // block l option pour mettre en pause ou non pdt le coutdown
-  const safeSetIsPaused = (newPauseState: boolean) => {
+  const safeSetIsPaused = (newPauseState: boolean) => 
+  {
     if (!blockPauseRef.current) {
       gameRefs.setIsPaused(newPauseState);
     }
@@ -106,17 +117,24 @@ export const initgamePhysic = (
 
 
   // Lance un countdown, bloque la pause/movement, reset des bumpers, puis débloque
+  // Maj le ref en puis de relance a la fin de startcountdown pour garder actu partout
   const startCountdownWrapper = (
     duration: number,
     setIsPausedFn: (paused: boolean) => void,
     setCountdownFn: (countdown: number | null) => void,
     callback: () => void
-  ) => {
+  ) => 
+  {
+
     blockPauseRef.current    = true;
     blockMovementRef.current = true;
+
+  
     resetBumpersAndMiniPaddle();
 
-    startCountdown(duration, setIsPausedFn, setCountdownFn, () => {
+
+    startCountdown(duration, setIsPausedFn, setCountdownFn, () => 
+    {
       blockPauseRef.current    = false;
       blockMovementRef.current = false;
       callback();
@@ -147,34 +165,71 @@ export const initgamePhysic = (
   // Gestion du coup spécial
   const triggerSuperPad = (player: 1 | 2) => 
   {
-    if (!enableSpecial) return; // Ne rien faire si les coups spéciaux sont désactivés
+
+    if (!enableSpecial)   // Ne rien faire si les coups spéciaux sont désactivés
+      return;
     
-    setStamina((prev) => {
+
+    
+    setStamina((prev) => 
+    {
       // On ne peut activer que si la stamina est exactement à 10 et le superPad n'est pas déjà actif
       if (prev[`player${player}`] !== 10 || (superPadRef?.current && superPadRef.current[`player${player}`])) {
         return prev;
       }
 
-      // Activation immédiate du superPad
-      setSuperPad((prevPad) => {
-        if (prevPad[`player${player}`]) return prevPad;
-        if (player === 1 && paddle1) paddle1.scaling.x = 2;
-        if (player === 2 && paddle2) paddle2.scaling.x = 2;
+
+      // Active 
+      setSuperPad((prevPad) => 
+      {
+
+        // si on rappuye et que deja en cours, on ne fait rien
+        if (prevPad[`player${player}`]) 
+          return prevPad;
+
+        // double les taille en x
+        if (player === 1 && paddle1) 
+          paddle1.scaling.x = 2;
+
+
+        if (player === 2 && paddle2) 
+          paddle2.scaling.x = 2;
+
+        // retourne le pad actif 
         return { ...prevPad, [`player${player}`]: true };
       });
 
-      // Désactivation après 5 secondes
-      if (superPadTimeouts[`player${player}`]) {
+
+
+      // clear  avant pour relancer le timout si deja re dispo 
+      if (superPadTimeouts[`player${player}`])
+      {
+        // ft ts donnee 
         clearTimeout(superPadTimeouts[`player${player}`]!);
       }
-      superPadTimeouts[`player${player}`] = setTimeout(() => {
-        setSuperPad((prevPad) => {
-          if (player === 1 && paddle1) paddle1.scaling.x = 1;
-          if (player === 2 && paddle2) paddle2.scaling.x = 1;
+
+
+      // timeout  5 sec active une fois pdt 5 sec la fonction interne
+      superPadTimeouts[`player${player}`] = setTimeout(() => 
+      {
+        // met sur pad a activer
+        setSuperPad((prevPad) => 
+        {
+          if (player === 1 && paddle1) 
+            paddle1.scaling.x = 1;
+          if (player === 2 && paddle2) 
+            paddle2.scaling.x = 1;
           return { ...prevPad, [`player${player}`]: false };
         });
+
+        // met fin 
         superPadTimeouts[`player${player}`] = null;
+
+
       }, 5000);
+
+
+
 
       // Reset la stamina du joueur à 0
       return { ...prev, [`player${player}`]: 0 };
@@ -189,13 +244,11 @@ export const initgamePhysic = (
 
 
 
-
-
-  // Mise à jour des références
+  // verifie si pad a ete trigger ( dans registerInputListeners )
   gameRefs.triggerSuperPad = triggerSuperPad;
+
+  // ecoute les touche par input en permanence 
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused);
-
-
 
 
 
@@ -204,8 +257,14 @@ export const initgamePhysic = (
   let scoreLocal = { player1: 0, player2: 0 };
 
 
-  // prend la vitesse et l angle (velocity prend les deux )  de la balle depuis serveball. 
-  const serve = (loserSide: "player1" | "player2") => {
+
+
+
+
+  // prend la vitesse et l angle (velocity prend les deux )  de la balle depuis serveball.
+  // partage le vecteur ici dans le physique 
+  const serve = (loserSide: "player1" | "player2") => 
+  {
     const { velocity, speed } = serveBall(loserSide, baseSpeed);
     ballV = velocity;
     currentSpeed = speed;
@@ -213,6 +272,8 @@ export const initgamePhysic = (
 
 
 
+
+  // met la balle du cote de celui qui a pris le point (use dans handleScoring)
   const resetBall = (loser: "player1" | "player2") => {
     if (!ball || !paddle1 || !paddle2) return;
     
@@ -235,13 +296,14 @@ export const initgamePhysic = (
 
 
 
-
+  // ==================================================================================
+  // ==================================================================================
+  // =========================================  observables 
 
 
 
 
 // observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
-// la fonction se trigger juste avant le rendering de chaque image. 
   scene.onBeforeRenderObservable.add(() => 
   {
 
@@ -253,7 +315,9 @@ export const initgamePhysic = (
 
 
 
-    // return = pause  à l image
+
+
+
     if (
       !gameRefs.isPaused ||
       !gameRefs.countdown ||
@@ -272,6 +336,10 @@ export const initgamePhysic = (
     const countdownNow  = gameRefs.countdown.current;
 
 
+
+
+
+    // Si partie terminée, en pause, ou mouvement bloqué, on skip le rendu physique
     if (
       gameRefs.winner.current ||
       isPausedNow      ||
@@ -284,7 +352,6 @@ export const initgamePhysic = (
 
 
     // Synchronisation du score avec la ref
-    // 
     if (gameRefs.score.current) {
       scoreLocal = { ...gameRefs.score.current };
     }
@@ -292,6 +359,14 @@ export const initgamePhysic = (
 
 
 
+
+    //  MVT base sur deltatime pour uniformiser
+
+
+
+    // recup l engine de la scen,  puis le deltatime (temps entre 2 frame)  permet de se baser sur le temps et pas les FPS de  l ecran.
+    // si on fait mvt sur frame = 30px par par sec si 30fps etc.
+    // ici sera pareil partout.  
     const deltaTime = scene.getEngine().getDeltaTime() / 1000; // en secondes
 
 
@@ -305,6 +380,7 @@ export const initgamePhysic = (
     if (miniPaddle) {
       updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);
     }
+
 
 
 
@@ -383,23 +459,25 @@ export const initgamePhysic = (
 
 
 
-
-
-
-
-
-
-
-
+    // BalleV = vecteur 3d de la balle , ajuste selon le deltaTime
+    // si au service ou si a subit collision  (collision result)
     ball.position.addInPlace(ballV.scale(deltaTime));
 
+
+
+
+// historique de touche de balle  = pour les malus (dif de last hitter pour les points)
+
+    // detecte distance qui separe balle et paddle (avec limite, si trop proche = true)
     if (
       Math.abs(ball.position.z - paddle1.position.z) < 0.5 &&
-      Math.abs(ball.position.x - paddle1.position.x) < 3 // demi-largeur paddle
+      Math.abs(ball.position.x - paddle1.position.x) < 3 
     ) 
     {
+      // met a jour le dernier hitter de la balle 
       if (gameRefs.touchHistory) 
       {
+        // met en dernier elem du tableau
         gameRefs.touchHistory.push({ player: 1, timestamp: Date.now() });
         if (gameRefs.touchHistory.length > 10) 
           gameRefs.touchHistory.shift();
@@ -427,7 +505,7 @@ export const initgamePhysic = (
 
 
 
-    // reçoit la ref du volum donc aura le bon volume pour les sons
+  
     handleScoring(
       ball,
       scoreLocal,
@@ -435,7 +513,7 @@ export const initgamePhysic = (
       (winner: string | null) => gameRefs.setWinner(winner),
       resetBall,
       gameRefs,
-      volumeRef?.current ?? 0.5
+      volumeRef?.current ?? 0.2
     );
 
 
@@ -445,7 +523,7 @@ export const initgamePhysic = (
 
 
     
-    // ─── Collisions & ajustement de vélocité ───────────────────────
+    // recupere le vecteur de la balle selon colision avec quoi
     const collisionResult = handleCollisions(
       ball as Mesh,
       paddle1 as Mesh,
@@ -471,19 +549,13 @@ export const initgamePhysic = (
       gameRefs.superPad.current,
       enableSpecial
     );
-    if (collisionResult) {
+
+    // change le vecteur de balle selon la collision
+    if (collisionResult) 
+    {
       ballV = collisionResult.newVelocity;
       currentSpeed = collisionResult.newSpeed;
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -494,12 +566,21 @@ export const initgamePhysic = (
 
 
 
+  // ==================================================================================
+  // ==================================================================================
 
 
 
 
 
 
+
+
+
+
+
+
+  // 5 sec et serve  a la fin en random
   startCountdownWrapper(5, safeSetIsPaused, gameRefs.setCountdown, () =>
     serve(Math.random() > 0.5 ? "player1" : "player2")
   );
@@ -509,7 +590,7 @@ export const initgamePhysic = (
 
 
 
-
+  // clean l ecoute a la fin  (sans mettre de param == clean)
   return () => {
     unregisterInputs();
   };
