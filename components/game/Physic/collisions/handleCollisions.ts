@@ -1,10 +1,11 @@
-import { Vector3, Mesh, StandardMaterial } from "@babylonjs/core";
-import type { Sound } from "@babylonjs/core/Audio/sound";
-import { collidePaddle1, collidePaddle2 } from "./collisionPaddles";
+import { Vector3, Mesh } from "@babylonjs/core";
+import React from "react";
 import { collideBumper } from "./collisionBumpers";
 import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideTrianglePrism } from "./collisionTriangles";
 import { collideWalls } from "./collisionWalls";
+import { collidePaddle1 } from "./collisionPaddles";
+import { collidePaddle2 } from "./collisionPaddles";
 import type { SetStaminaFunction } from "../../gameTypes";
 
 
@@ -20,21 +21,17 @@ export function handleCollisions(
   bumperRight: Mesh | null,
   ballV: Vector3,
   currentSpeed: number,
-  ballMat: StandardMaterial,
-  p1Mat: StandardMaterial,
-  p2Mat: StandardMaterial,
-  allHitSounds: Sound[],
   rightTri: Mesh | null,
   leftTri: Mesh | null,
   rightTriOuterLeft: Mesh | null,
   leftTriOuterLeft: Mesh | null,
   rightTriOuterRight: Mesh | null,
   leftTriOuterRight: Mesh | null,
-  volume: number,
   stamina: { player1: number; player2: number },
   setStamina: SetStaminaFunction,
+  volumeRef?: number,
   superPad?: { player1: boolean; player2: boolean },
-  enableSpecial?: boolean
+  enableSpecial?: boolean,
 ): { newVelocity: Vector3; newSpeed: number } | null
 {
 
@@ -46,12 +43,11 @@ export function handleCollisions(
     ball,
     paddle1,
     currentSpeed,
-    ballMat,
-    p1Mat,
     stamina,
     setStamina,
     superPad,
-    enableSpecial
+    enableSpecial,
+    volumeRef
   );
   if (paddle1Collision) return paddle1Collision;
 
@@ -63,12 +59,11 @@ export function handleCollisions(
     ball,
     paddle2,
     currentSpeed,
-    ballMat,
-    p2Mat,
     stamina,
     setStamina,
     superPad,
-    enableSpecial
+    enableSpecial,
+    volumeRef
   );
   if (paddle2Collision) return paddle2Collision;
 
@@ -86,6 +81,7 @@ export function handleCollisions(
       bumperLeft,
       ballV,
       currentSpeed,
+      volumeRef
     );
     if (bumperLeftCollision) 
       return bumperLeftCollision;
@@ -99,6 +95,7 @@ export function handleCollisions(
       bumperRight,
       ballV,
       currentSpeed,
+      volumeRef
     );
     if (bumperRightCollision) 
       return bumperRightCollision;
@@ -117,6 +114,7 @@ export function handleCollisions(
       miniPaddle,
       ballV,
       currentSpeed,
+      volumeRef
     );
     if (miniPaddleCollision) 
       return miniPaddleCollision;
@@ -139,6 +137,7 @@ export function handleCollisions(
         tri,
         ballV,
         currentSpeed,
+        volumeRef
       );
       if (triangleCollision) 
         return triangleCollision;
@@ -155,6 +154,7 @@ export function handleCollisions(
     ball,
     ballV,
     currentSpeed,
+    volumeRef
   );
   if (wallCollision)
     return wallCollision;

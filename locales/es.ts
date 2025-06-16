@@ -131,7 +131,7 @@ export default {
       "createTitle": "Nuevo torneo",
       "createDescription": "Configura un torneo con tus reglas y preferencias",
       "participants": "Participantes",
-      "participantsDesc": "Invita hasta 128 jugadores",
+      "participantsDesc": "Invita hasta 16 jugadores",
       "schedule": "Calendario",
       "scheduleDesc": "Planifica partidos durante varios días",
       "proTipContent": "Prepara tus reglas con antelación para una configuración rápida",

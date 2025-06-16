@@ -3,7 +3,7 @@ import { Vector3 } from "@babylonjs/core";
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
-
+import React from "react";
 
 
 
@@ -39,9 +39,9 @@ export const initgamePhysic = (
   setStamina: SetStaminaFunction,
   setSuperPad: SetSuperPadFunction,
   baseSpeed: number,
+  volumeRef?: React.MutableRefObject<number>,
   enableSpecial?: boolean,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
-  volumeRef?: React.RefObject<number>,
 ): (() => void) => {
   const {
     ball,
@@ -50,10 +50,6 @@ export const initgamePhysic = (
     miniPaddle,
     bumperLeft,
     bumperRight,
-    allHitSounds,
-    ballMat,
-    p1Mat,
-    p2Mat,
     leftTri,
     rightTri,
     rightTriOuterLeft,
@@ -104,7 +100,6 @@ export const initgamePhysic = (
 
 
 
-
   // block l option pour mettre en pause ou non pdt le coutdown
   const safeSetIsPaused = (newPauseState: boolean) => 
   {
@@ -126,11 +121,17 @@ export const initgamePhysic = (
   ) => 
   {
 
+    
+
     blockPauseRef.current    = true;
     blockMovementRef.current = true;
 
   
+
+
     resetBumpersAndMiniPaddle();
+
+
 
 
     startCountdown(duration, setIsPausedFn, setCountdownFn, () => 
@@ -140,6 +141,9 @@ export const initgamePhysic = (
       callback();
     });
   };
+
+
+
 
 
 
@@ -155,6 +159,7 @@ export const initgamePhysic = (
     player1: null,
     player2: null,
   };
+
 
 
 
@@ -513,7 +518,7 @@ export const initgamePhysic = (
       (winner: string | null) => gameRefs.setWinner(winner),
       resetBall,
       gameRefs,
-      volumeRef?.current ?? 0.2
+      volumeRef.current
     );
 
 
@@ -533,21 +538,17 @@ export const initgamePhysic = (
       bumperRight,
       ballV,
       currentSpeed,
-      ballMat,
-      p1Mat,
-      p2Mat,
-      allHitSounds,
       rightTri,
       leftTri,
       rightTriOuterLeft,
       leftTriOuterLeft,
       rightTriOuterRight,
       leftTriOuterRight,
-      volumeRef?.current ?? 0.5,
       gameRefs.stamina.current,
       setStamina,
+      volumeRef.current,
       gameRefs.superPad.current,
-      enableSpecial
+      enableSpecial,
     );
 
     // change le vecteur de balle selon la collision

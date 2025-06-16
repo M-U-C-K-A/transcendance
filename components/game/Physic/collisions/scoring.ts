@@ -23,7 +23,7 @@ export function handleScoring(
   setWinner: (winner: string | null) => void,
   resetBall: (loser: "player1" | "player2") => void,
   gameRefs: GameRefs,
-  volume: number
+  volume?: number
 ): void 
 {
 
