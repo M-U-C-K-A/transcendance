@@ -17,7 +17,6 @@ export const setupGame = (
   const {
     scene: scn,
     camera,
-    allHitSounds,
     paddle1,
     paddle2,
     miniPaddle,
@@ -48,7 +47,6 @@ export const setupGame = (
   return {
     scene: scn,
     camera,
-    allHitSounds,
     paddle1,
     paddle2,
     miniPaddle,

@@ -24,7 +24,7 @@ export const setupGameObjects = (
 
 
   //  cam, sol, balle. 
-  const { camera, allHitSounds, p1Mat, p2Mat, ballMat } = initEnvironment(
+  const { camera, p1Mat, p2Mat, ballMat } = initEnvironment(
     scene,
     MapStyle,
   );
@@ -361,7 +361,6 @@ export const setupGameObjects = (
   return {
     scene,
     camera,
-    allHitSounds,
     paddle1,
     paddle2,
     miniPaddle,
