@@ -39,7 +39,7 @@ export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs)
 
 
 
-    // Coup spécial joueur 2 (touche personnalisée)
+    // Coup special joueur 2 (touche personnalisee)
     if (
       gameRefs.controls &&
       e.key.toLowerCase() === gameRefs.controls.current.player2Special?.toLowerCase() &&
