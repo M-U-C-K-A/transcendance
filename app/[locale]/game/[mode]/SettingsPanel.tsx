@@ -163,13 +163,13 @@ export default function SettingsPanel({
       const tournamentName = localStorage.getItem("currentGameName");
 
       if (tournamentId && tournamentName && !gameInfo) {
-        setGameInfo({
+      setGameInfo({
           id: tournamentId,
           name: tournamentName,
-          players: [],
-          status: "waiting"
-        });
-      }
+        players: [],
+        status: "waiting"
+      });
+    }
     }
   }, [gamemode]);
 
@@ -576,8 +576,8 @@ export default function SettingsPanel({
     <div className="container mx-auto px-4 py-8 max-w-10xl">
       {/* Popup de création de tournoi - Vérification plus stricte */}
       {gamemode === "tournament" && (
-        <Dialog
-          open={shouldShowCreationDialog()}
+      <Dialog
+        open={shouldShowCreationDialog()}
           onOpenChange={(open) => {
             if (!open && typeof window !== 'undefined' && !localStorage.getItem("tournamentId")) {
               router.push("/");
@@ -585,12 +585,12 @@ export default function SettingsPanel({
           }}
         >
           <DialogContent>
-            <DialogHeader>
+          <DialogHeader>
               <DialogTitle>Créer un Tournoi</DialogTitle>
-              <DialogDescription>
+            <DialogDescription>
                 Configurez les paramètres de votre tournoi
-              </DialogDescription>
-            </DialogHeader>
+            </DialogDescription>
+          </DialogHeader>
 
             <form
               onSubmit={form.handleSubmit((data) => {
@@ -599,20 +599,20 @@ export default function SettingsPanel({
               })}
               className="space-y-6"
             >
-              <div className="space-y-3">
+            <div className="space-y-3">
                 <Label htmlFor="gameName">Nom du tournoi</Label>
-                <Input
-                  id="gameName"
+              <Input
+                id="gameName"
                   placeholder="Mon Tournoi"
-                  {...form.register("name")}
-                  disabled={isLoading}
-                />
-                {form.formState.errors.name && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.name.message}
-                  </p>
-                )}
-              </div>
+                {...form.register("name")}
+                disabled={isLoading}
+              />
+              {form.formState.errors.name && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.name.message}
+                </p>
+              )}
+            </div>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -637,20 +637,20 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full py-6 text-lg"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="animate-pulse">Création en cours...</span>
-                ) : (
+            <Button
+              type="submit"
+              className="w-full py-6 text-lg"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="animate-pulse">Création en cours...</span>
+              ) : (
                   "Créer le Tournoi"
-                )}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+              )}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
       )}
 
       {/* Popup de join */}
@@ -871,14 +871,14 @@ export default function SettingsPanel({
                     🏆 Lancer le Match
                   </Button>
                 ) : (
-                  <Button
-                    onClick={onStart}
-                    disabled={!canStart}
-                    className="w-full py-6 text-lg"
-                    variant={canStart ? "default" : "secondary"}
-                  >
+                <Button
+                  onClick={onStart}
+                  disabled={!canStart}
+                  className="w-full py-6 text-lg"
+                  variant={canStart ? "default" : "secondary"}
+                >
                     🚀 Lancer la Partie
-                  </Button>
+                </Button>
                 )}
               </div>
             </div>
