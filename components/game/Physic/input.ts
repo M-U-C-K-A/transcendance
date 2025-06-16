@@ -3,20 +3,42 @@
 
 import { GameRefs } from "../gameTypes";
 
+
+// set string =  tableau sans doublon + integre des methode comme has, add, delete
 export const keys = new Set<string>();
 
-export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs) {
-  if (!gameRefs?.winner?.current && !gameRefs?.isPaused?.current) {
+
+
+
+
+// Keyboardevent  =  de typscritp pour detect touche.
+// recoit ici les input in game
+// 
+// comportement special in game (plus que detecter les touches on met des conditions)
+export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs)
+{
+
+
+  if (!gameRefs?.winner?.current && !gameRefs?.isPaused?.current) 
+  {
     // On accepte toutes les touches pour permettre la personnalisation
+    // meme si on est en CAPSLOCK on aura les meme comportement 
     keys.add(e.key.toLowerCase());
-    // Coup spécial joueur 1 (touche personnalisée)
+
+  
+
+    // tente d activer le super pad.
     if (
       gameRefs.controls &&
       e.key.toLowerCase() === gameRefs.controls.current.player1Special?.toLowerCase() &&
       gameRefs.triggerSuperPad
-    ) {
+    ) 
+    {
       gameRefs.triggerSuperPad(1);
     }
+
+
+
     // Coup spécial joueur 2 (touche personnalisée)
     if (
       gameRefs.controls &&
@@ -27,17 +49,30 @@ export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs) {
     }
     e.preventDefault();
   }
+
+
 }
 
-export function onKeyUp(e: KeyboardEvent) {
+
+
+
+// met fin a la touche appuye 
+export function onKeyUp(e: KeyboardEvent) 
+{
   keys.delete(e.key.toLowerCase());
 }
 
+
+
+
+
+// Pour la touche echape (considerer un touche global)
 export function onGlobalKeyDown(
   e: KeyboardEvent,
   setIsPaused: (isPaused: boolean) => void,
   gameRefs: GameRefs
-) {
+) 
+{
   if (e.key === "Escape") {
     if (gameRefs.isPaused && gameRefs.isPaused.current) {
       setIsPaused(false);
@@ -47,18 +82,33 @@ export function onGlobalKeyDown(
   }
 }
 
-// Installe tous les écouteurs clavier. Retourne une fonction de cleanup.
+
+
+
+
+
+// listener du DOM (navigateur)
+// connecte aux touche in game
 export function registerInputListeners(
   gameRefs: GameRefs,
   setIsPaused: (isPaused: boolean) => void
 ) {
+
+  // ft qui redirige les touches
   const down = (e: KeyboardEvent) => onKeyDown(e, gameRefs);
   const up = (e: KeyboardEvent) => onKeyUp(e);
+
+  // touche pour pause 
   const global = (e: KeyboardEvent) => onGlobalKeyDown(e, setIsPaused, gameRefs);
 
-  window.addEventListener("keydown", down, { passive: false });
-  window.addEventListener("keyup", up);
-  window.addEventListener("keydown", global);
+
+  // deteecte touche partout dans le fenetre 
+  // et envoyer ces touches aux ft 
+  window.addEventListener("keydown", down, { passive: false }); // desactive les touches appuyes dans le nav
+  window.addEventListener("keyup", up); 
+  window.addEventListener("keydown", global); // 
+
+
 
   return () => {
     window.removeEventListener("keydown", down);
