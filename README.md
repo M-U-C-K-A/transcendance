@@ -68,7 +68,10 @@ nano ~/.docker/config.json
 
 
 docker run -d --name nom_du_conteneur image_docker  : run en detached
-docker exec -it nom_du_conteneur /bin/bash : rentrer dedans en mode shell
+
+
+docker exec -it transcendance-back sh
+
 
 DOCKER_BUILDKIT=0 docker compose up --build
 
