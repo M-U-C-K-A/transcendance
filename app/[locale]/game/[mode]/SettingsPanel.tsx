@@ -24,10 +24,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { BracketMatch } from "@/types/BracketMatch";
 
-
-
-// Pour customi
 const gameCreationSchema = z.object({
   name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
   type: z.enum(["custom", "tournament"]),
@@ -36,13 +34,7 @@ const gameCreationSchema = z.object({
   }),
 });
 
-
-
-
 type GameCreationData = z.infer<typeof gameCreationSchema>;
-
-
-
 
 interface Player {
   id: string;
@@ -50,17 +42,12 @@ interface Player {
   ready?: boolean;
 }
 
-
-
 interface Match {
   team1: string;
   team2: string;
   time: string;
   status?: "pending" | "ongoing" | "completed";
 }
-
-
-
 
 interface GameInfo {
   id: string;
@@ -70,12 +57,6 @@ interface GameInfo {
   status?: "waiting" | "starting" | "ongoing";
 }
 
-
-
-
-
-// Dispatch = recoit une ft qui prend tel param et rien autre
-
 interface SettingsPanelProps {
   COLORS: string[];
   currentPlayer: 1 | 2;
@@ -83,10 +64,10 @@ interface SettingsPanelProps {
   colorP1: string | null;
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
-  gamemode: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
-  MapStyle: "classic" | "red" | "neon" | null;
-  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon" | null>>;
+  gamemode: string;
+  MapStyle: "classic" | "red" | "neon";
+  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
   onStart: () => void;
   enableMaluses: boolean;
   setEnableMaluses: Dispatch<SetStateAction<boolean>>;
@@ -95,13 +76,16 @@ interface SettingsPanelProps {
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
   canStart: boolean;
+  bracket: BracketMatch[];
+  setBracket: Dispatch<SetStateAction<BracketMatch[]>>;
+  currentMatch: BracketMatch | null;
+  setCurrentMatch: Dispatch<SetStateAction<BracketMatch | null>>;
+  currentMatchIndex: number;
+  setCurrentMatchIndex: Dispatch<SetStateAction<number>>;
+  tournamentStarted: boolean;
+  setTournamentStarted: Dispatch<SetStateAction<boolean>>;
+  updateBracketAfterMatch: (matchId: string, winner: string) => void;
 }
-
-
-
-
-
-
 
 export default function SettingsPanel({
   COLORS,
@@ -122,19 +106,22 @@ export default function SettingsPanel({
   baseSpeed,
   setBaseSpeed,
   canStart,
-}: SettingsPanelProps)
-{
-  // Ajoutons des logs pour déboguer
-  console.log("Mode actuel:", gamemode);
-  console.log("Devrait afficher le popup:", gamemode === "tournament");
-
+  bracket,
+  setBracket,
+  currentMatch,
+  setCurrentMatch,
+  currentMatchIndex,
+  setCurrentMatchIndex,
+  tournamentStarted,
+  setTournamentStarted,
+  updateBracketAfterMatch,
+}: SettingsPanelProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const jwtToken = useJWT();
   const router = useRouter();
 
-  // Ajoutons un nouvel état pour gérer la popup de join
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [participants, setParticipants] = useState<Array<{
     id: string;
@@ -153,8 +140,34 @@ export default function SettingsPanel({
     },
   });
 
-  // Ajout d'un état pour savoir si le tournoi a commencé
-  const [tournamentStarted, setTournamentStarted] = useState(false);
+  // Synchronisation du bracket avec le localStorage - uniquement pour le mode tournoi
+  useEffect(() => {
+    if (gamemode === "tournament") {
+      const storedBracket = localStorage.getItem("tournamentBracket");
+      console.log("Chargement du bracket depuis localStorage:", storedBracket);
+
+      if (storedBracket) {
+        const parsedBracket = JSON.parse(storedBracket);
+        console.log("Bracket parsé:", parsedBracket);
+
+        // Réinitialiser les matchs en cours qui n'ont pas de gagnant
+        parsedBracket.forEach((match: BracketMatch) => {
+          if (match.status === "ongoing" && !match.winner) {
+            match.status = "pending";
+          }
+        });
+
+        setBracket(parsedBracket);
+      }
+    }
+  }, [gamemode, setBracket]);
+
+  // Mise à jour du localStorage quand le bracket change - uniquement pour le mode tournoi
+  useEffect(() => {
+    if (gamemode === "tournament" && bracket.length > 0) {
+      localStorage.setItem("tournamentBracket", JSON.stringify(bracket));
+    }
+  }, [bracket, gamemode]);
 
   // Initialize game info from localStorage
   useEffect(() => {
@@ -173,11 +186,6 @@ export default function SettingsPanel({
     }
   }, [gamemode]);
 
-
-
-
-
-
   // Reset form when gamemode changes
   useEffect(() => {
     if (gamemode === "custom" || gamemode === "tournament") {
@@ -188,15 +196,6 @@ export default function SettingsPanel({
       });
     }
   }, [gamemode]);
-
-
-
-
-
-
-
-
-
 
   const createGame = async (data: GameCreationData) => {
     console.log("Création du tournoi avec les données:", data);
@@ -246,12 +245,6 @@ export default function SettingsPanel({
     }
   };
 
-
-
-
-
-
-
   const fetchGameInfo = async () => {
     if (gamemode !== "custom" && gamemode !== "tournament") return;
 
@@ -268,18 +261,12 @@ export default function SettingsPanel({
     }
   };
 
-
-
-
   const shouldShowCreationDialog = () => {
     if (gamemode !== "tournament") return false;
     if (typeof window === 'undefined') return false;
     const tournamentId = localStorage.getItem("tournamentId");
     return !tournamentId;
   };
-
-
-
 
   // Ajoutons la fonction pour rejoindre le tournoi
   const joinTournament = async (username: string) => {
@@ -326,53 +313,6 @@ export default function SettingsPanel({
       console.error("Erreur jointure tournoi:", error);
     }
   };
-
-  // Ajoutons un type pour le bracket
-  interface BracketMatch {
-    id: string;
-    round: number;
-    matchNumber: number;
-    player1: {
-      id: string;
-      username: string;
-      elo: number;
-      win: number;
-      lose: number;
-    } | null;
-    player2: {
-      id: string;
-      username: string;
-      elo: number;
-      win: number;
-      lose: number;
-    } | null;
-    winner?: string;
-    status: "pending" | "ongoing" | "completed";
-  }
-
-  // Ajoutons un état pour le bracket
-  const [bracket, setBracket] = useState<BracketMatch[]>([]);
-  const [currentRound, setCurrentRound] = useState(1);
-
-  // Ajoutons un état pour suivre le match en cours
-  const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
-
-  // Synchronisation des participants avec le localStorage au chargement
-  useEffect(() => {
-    if (gamemode === "tournament") {
-      const stored = localStorage.getItem("tournamentParticipants");
-      if (stored) {
-        setParticipants(JSON.parse(stored));
-      }
-    }
-  }, [gamemode]);
-
-  // Synchronisation des participants avec le localStorage à chaque modification
-  useEffect(() => {
-    if (gamemode === "tournament") {
-      localStorage.setItem("tournamentParticipants", JSON.stringify(participants));
-    }
-  }, [participants, gamemode]);
 
   // Fonction pour créer le bracket
   const createBracket = (playersParam?: typeof participants) => {
@@ -426,94 +366,17 @@ export default function SettingsPanel({
     return matches;
   };
 
-  // Ajoutons une fonction pour mettre à jour le bracket après un match
-  const updateBracketAfterMatch = (matchId: string, winner: string) => {
-    setBracket(prevBracket => {
-      const newBracket = [...prevBracket];
-      const currentMatch = newBracket.find(m => m.id === matchId);
-
-      if (!currentMatch) return prevBracket;
-
-      // Mettre à jour le statut du match actuel
-      currentMatch.status = "completed";
-      currentMatch.winner = winner;
-
-      // Trouver le match suivant dans le bracket
-      const nextRound = currentMatch.round + 1;
-      const nextMatchNumber = Math.ceil(currentMatch.matchNumber / 2);
-      const nextMatch = newBracket.find(m => m.round === nextRound && m.matchNumber === nextMatchNumber);
-
-      if (nextMatch) {
-        // Déterminer si le gagnant doit être player1 ou player2 dans le match suivant
-        const isFirstPlayer = currentMatch.matchNumber % 2 === 1;
-
-        // Mettre à jour le match suivant avec le gagnant
-        if (isFirstPlayer) {
-          nextMatch.player1 = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
-        } else {
-          nextMatch.player2 = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
-        }
-
-        // Mettre à jour le match en cours
-        setCurrentMatch(nextMatch);
-        setCurrentMatchIndex(newBracket.indexOf(nextMatch));
-      }
-
-      return newBracket;
-    });
-  };
-
-  // Ajoutons un état pour les matchs
-  const [matches, setMatches] = useState<TournamentMatch[]>([]);
-  const [currentMatch, setCurrentMatch] = useState<TournamentMatch | null>(null);
-
-  // Ajoutons une fonction pour passer au match suivant
-  const goToNextMatch = () => {
-    if (currentMatchIndex < bracket.length - 1) {
-      const nextIndex = currentMatchIndex + 1;
-      setCurrentMatchIndex(nextIndex);
-      setCurrentMatch(bracket[nextIndex]);
-
-      // Mettre à jour le statut du match précédent
-      setBracket(prevBracket => {
-        const newBracket = [...prevBracket];
-        newBracket[currentMatchIndex].status = "completed";
-        return newBracket;
-      });
-    }
-  };
-
-  // Ajoutons une interface pour le type TournamentMatch
-  interface TournamentMatch {
-    id: string;
-    round: number;
-    matchNumber: number;
-    player1: {
-      id: string;
-      username: string;
-      elo: number;
-      win: number;
-      lose: number;
-    } | null;
-    player2: {
-      id: string;
-      username: string;
-      elo: number;
-      win: number;
-      lose: number;
-    } | null;
-    winner?: string;
-    status: "pending" | "ongoing" | "completed";
-  }
-
-  // Modifions la fonction startTournament pour mieux gérer les brackets
+  // Fonction pour démarrer le tournoi - uniquement pour le mode tournoi
   const startTournament = async () => {
+    if (gamemode !== "tournament") return;
+
     try {
       const token = localStorage.getItem("token");
       const tournamentId = localStorage.getItem("tournamentId");
 
       // Créer le bracket avec tous les participants
       const matches = createBracket(participants);
+      console.log("Bracket créé:", matches);
 
       if (matches.length === 0) {
         console.error("Erreur lors de la création du bracket");
@@ -537,38 +400,15 @@ export default function SettingsPanel({
         throw new Error("Erreur lors du démarrage du tournoi");
       }
 
-      // Mettre à jour l'état avec les matchs
+      // Initialiser le bracket et le premier match
       setBracket(matches);
       setCurrentMatch(matches[0]);
       setCurrentMatchIndex(0);
+      setTournamentStarted(true);
+      localStorage.setItem("tournamentBracket", JSON.stringify(matches));
 
     } catch (error) {
       console.error("Erreur lors du démarrage du tournoi:", error);
-    }
-  };
-
-  // Ajout d'un effet pour démarrer automatiquement le tournoi si le bracket est prêt
-  useEffect(() => {
-    if (gamemode === "tournament" && bracket.length > 0 && !tournamentStarted) {
-      setTournamentStarted(true);
-      setCurrentMatch(bracket[0]);
-      setCurrentMatchIndex(0);
-    }
-  }, [bracket, gamemode, tournamentStarted]);
-
-  // Callback pour la fin d'un match
-  const handleMatchEnd = (winner: string) => {
-    updateBracketAfterMatch(currentMatch?.id || '', winner);
-    // Si ce n'est pas le dernier match, passer au suivant
-    if (currentMatchIndex < bracket.length - 1) {
-      setTimeout(() => {
-        setCurrentMatchIndex((idx) => idx + 1);
-        setCurrentMatch(bracket[currentMatchIndex + 1]);
-      }, 1500); // Petite pause pour voir le résultat
-    } else {
-      // Fin du tournoi
-      setTournamentStarted(false);
-      // Optionnel: afficher le gagnant du tournoi
     }
   };
 
@@ -845,25 +685,31 @@ export default function SettingsPanel({
                 </Button>
 
                 {!canStart && (
-                  <Alert variant="destructive">
-                    <AlertDescription className="w-full text-center">
+                    <Alert variant="destructive">
+                    <AlertDescription className="w-full flex justify-center items-center text-center">
                       Sélectionnez une couleur et une map pour commencer
                     </AlertDescription>
-                  </Alert>
+                    </Alert>
                 )}
 
                 {gamemode === "tournament" ? (
                   <Button
                     onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        onStart();
-                        if (currentMatch) {
-                          setTimeout(() => {
-                            updateBracketAfterMatch(currentMatch.id, "winner_id");
-                          }, 1000);
+                      if (currentMatch) {
+                        console.log("Lancement du match:", currentMatch);
+                        // Marquer le match comme en cours seulement s'il n'a pas déjà un gagnant
+                        setBracket(prevBracket => {
+                          const newBracket = [...prevBracket];
+                          const match = newBracket.find(m => m.id === currentMatch.id);
+                          if (match && !match.winner) {
+                            match.status = "ongoing";
+                            localStorage.setItem("tournamentBracket", JSON.stringify(newBracket));
                           }
-                        }
-                      }}
+                          return newBracket;
+                        });
+                        onStart();
+                      }
+                    }}
                     disabled={!canStart}
                     className="w-full py-6 text-lg"
                     variant={canStart ? "default" : "secondary"}
@@ -896,7 +742,7 @@ export default function SettingsPanel({
       />
 
       {/* Affichage du match en cours - uniquement pour les tournois */}
-      {gamemode === "tournament" && tournamentStarted && currentMatch && (
+      {gamemode === "tournament" && currentMatch && (
         <Card className="p-6 mb-6">
           <h3 className="text-xl font-semibold mb-4">
             Match {currentMatch.round}.{currentMatch.matchNumber}

@@ -21,7 +21,23 @@ export default async function tournamentCreate(hostId: number, tournamentName: s
 		}
 	})
 
+	const host = await Prisma.user.findUnique({
+		where: {
+			id: hostId,
+		},
+		select: {
+			username: true,
+			elo: true,
+			win: true,
+			lose: true,
+		}
+	});
+
+	if (!host) {
+		throw new Error('User not found')
+	}
+
 	console.log(`Tournament created with the name ${tournamentName} and slot ${slot}`)
 
-	return {tournamentId: tournament.id, tournamentSlot: slot}
+	return {hostId: hostId, username: host.username, elo: host.elo, win: host.win, lose: host.lose, tournamentId: tournament.id, tournamentSlot: slot}
 }
