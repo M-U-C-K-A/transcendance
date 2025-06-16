@@ -50,11 +50,14 @@ export const initEnvironment = (
 
 
 
-  // === Caméra – ajustée pour les deux joueurs ===
+  // les chiffre = rotation autour du point cible au centre (vector 0)
+  // prend le render dans le canvas, true pour la lock (pour tourner)
+  // add la souris pour zoom 
+  // pas de module clavier car deja touches IG
   const camera = new ArcRotateCamera(
     "cam",
     0,
-    Math.PI / 3.1,
+    1,
     35,
     Vector3.Zero(),
     scene
@@ -73,12 +76,18 @@ export const initEnvironment = (
 
 
   // Spot de lumiere sur la carte
+  // droite descend du haut, pas profondeur
+  // soleil
   const dir = new DirectionalLight(
     "dir",
     new Vector3(1, -1, 0),
     scene
   );
   dir.intensity = 0.5;
+
+
+
+  // lumiere un peu partout diffuse dans la scene.  : ciel
   const hemi = new HemisphericLight("hemi", Vector3.Up(), scene);
   hemi.intensity = 0.3;
 
@@ -87,7 +96,7 @@ export const initEnvironment = (
 
 
 
-  // === Matériaux pour les paddles et la balle ===
+  // l apperance (couleur brillance etc  = diffuse etc.  mais pas la form 3d)
   const p1Mat = new StandardMaterial("p1Mat", scene);
   const p2Mat = new StandardMaterial("p2Mat", scene);
   const ballMat = new StandardMaterial("ballMat", scene);
@@ -98,7 +107,7 @@ export const initEnvironment = (
 
 
 
-  // === Création du sol selon MapStyle ===
+  // === Creation du sol selon MapStyle ===
   createGround(scene, MapStyle);
 
   return {

@@ -21,7 +21,7 @@ export default function Pong3D({
 }: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
 
 
-	// ─── Références = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
+	// ─── References = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
 	// c est quand on need pas de re render soit car deja fait ou pas besoin quand qq chose change
 
 	const canvasRef = useRef<HTMLCanvasElement>(null); // Cree ces boite vide ou dit le type a remplir.
@@ -33,7 +33,7 @@ export default function Pong3D({
 	const { controls } = useControls();
 	const controlsRef = useRef(controls);
 
-	// ─── États React : changer valeur dans UI ─────────────────────────────────────────────
+	// ─── etats React : changer valeur dans UI ─────────────────────────────────────────────
 	const [score, setScore] = useState<GameState["score"]>({ player1: 0, player2: 0 });
 	const [winner, setWinner] = useState<GameState["winner"]>(null);
 	const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
@@ -47,7 +47,7 @@ export default function Pong3D({
 	const prevScore = useRef(score);
 	const allHitSounds = useRef<Sound[]>([]);
 
-	// ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
+	// ─── References pour synchroniser l'etat : accedes au valeurs dans la logique  ────────────────────
 	const scoreRef = useRef(score);
 	const winnerRef = useRef(winner);
 	const countdownRef = useRef(countdown);
@@ -59,7 +59,7 @@ export default function Pong3D({
 
 
 
-	 // ─── Références pour synchroniser l'état : accedes au valeurs dans la logique  ────────────────────
+	 // ─── References pour synchroniser l'etat : accedes au valeurs dans la logique  ────────────────────
 
 	useEffect(() => { scoreRef.current = score; }, [score]);
 	useEffect(() => { winnerRef.current = winner; }, [winner]);
@@ -79,7 +79,7 @@ export default function Pong3D({
 		const scene = new Scene(engine);
 		scene.clearColor = new Color4(0, 0, 0, 0);
 		sceneRef.current = scene;
-		const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, false);
+		const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
 		cameraRef.current = objs.camera;
 		gameObjectsRef.current = objs;
 		// objet qui stock les ref et fera le lien avec les donnes
@@ -146,7 +146,7 @@ export default function Pong3D({
 			score.player1 !== prevScore.current.player1 ||
 			score.player2 !== prevScore.current.player2
 		) {
-			// Détection du type de score
+			// Detection du type de score
 			const diff1 = score.player1 - prevScore.current.player1;
 			const diff2 = score.player2 - prevScore.current.player2;
 			if ((diff1 > 0 && diff2 === 0) || (diff2 > 0 && diff1 === 0)) {
@@ -245,13 +245,13 @@ export default function Pong3D({
 
 					if (response.ok)
 					{
-						console.log('Score envoyé avec succès !');
+						console.log('Score envoye avec succès !');
 					}
 				}
 
 				catch (error)
 				{
-					console.error('Erreur, winneur non envoyé :', error);
+					console.error('Erreur, winneur non envoye :', error);
 				}
 
 

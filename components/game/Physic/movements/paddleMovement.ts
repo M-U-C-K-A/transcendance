@@ -1,6 +1,6 @@
 // paddleMovement.ts
 // ----------------
-// Déplacement des paddles (player1 & player2) à chaque frame, en fonction des contrôles personnalisés.
+// Deplacement des paddles (player1 & player2) à chaque frame, en fonction des contrôles personnalises.
 
 import { PADDLE_SPEED, PADDLE_BOUND_LEFT, PADDLE_BOUND_RIGHT } from "../constants";
 import { isPlayer1UpPressed, isPlayer1DownPressed, isPlayer2UpPressed, isPlayer2DownPressed } from "../customControls";
