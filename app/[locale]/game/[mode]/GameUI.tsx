@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { ControlsConfig } from "./ControlsConfig"
 import { displayKey } from "./ControlsConfig"
 import { MalusSystem } from "./MalusSystem"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 
 
@@ -33,6 +33,7 @@ interface GameUIProps {
   showGoal: boolean;
   lastScoreType: 'goal' | 'malus';
   malusSystem?: MalusSystem;
+  gamemode?: string;
 }
 
 
@@ -54,18 +55,20 @@ export const GameUI = ({
   showGoal,
   lastScoreType,
   malusSystem,
+  gamemode,
 }: GameUIProps) =>
 {
 
 
 
 
-  
+
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const { controls } = useControls();
     const [wasPausedBeforeControls, setWasPausedBeforeControls] = useState(false);
-  
-  const router = useRouter();
+
+  // N'utiliser le router que pour les tournois
+  const router = gamemode === "tournament" ? useRouter() : null;
 
 
 
@@ -81,11 +84,11 @@ export const GameUI = ({
 
 
 
-  
+
   const closeControlsConfig = () => {
     setIsControlsConfigOpen(false);
     if (!wasPausedBeforeControls && countdown === null) {
-      setIsPaused(false);   
+      setIsPaused(false);
     }
   };
 
@@ -98,10 +101,10 @@ export const GameUI = ({
   // Gestion du timer pour le prochain Malus
   const Malus_INTERVAL = 15; // secondes
   const [MalusTimer, setMalusTimer] = useState(Malus_INTERVAL);
-  
+
   useEffect(() => {
     if (!malusSystem) return;
-    
+
     const interval = setInterval(() => {
       if (!isPaused) {
         setMalusTimer(malusSystem.getRemainingTime());
@@ -123,7 +126,7 @@ export const GameUI = ({
 
 
 
-  // Timer pour le special. 
+  // Timer pour le special.
   useEffect(() => {
     let interval1: ReturnType<typeof setInterval> | null = null;
     if (superPad.player1) {
@@ -144,7 +147,7 @@ export const GameUI = ({
       if (interval1) clearInterval(interval1);
     };
   }, [superPad.player1]);
-  
+
 
 
 
@@ -153,7 +156,7 @@ export const GameUI = ({
 
   useEffect(() => {
     let interval2: ReturnType<typeof setInterval> | null = null;
-  
+
     if (superPad.player2) {
       setSpecialTimer2(5);
       interval2 = setInterval(() => {
@@ -168,12 +171,12 @@ export const GameUI = ({
     } else {
       setSpecialTimer2(0);
     }
-  
+
     return () => {
       if (interval2) clearInterval(interval2);
     };
   }, [superPad.player2]);
-  
+
 
 
 
@@ -264,7 +267,7 @@ export const GameUI = ({
               style={{ width: `${(stamina.player1 / 10) * 100}%` }}
             ></div>
           </div>
-      
+
           <div className="text-xs text-center mt-1 font-semibold">
             {stamina.player1 < 10 ? (
               <span className="bg-black text-white px-2 py-0.5 rounded">
@@ -287,7 +290,7 @@ export const GameUI = ({
 
       {/*touche haut bas joueur 2*/}
     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
-      
+
       {/* Flèches haut/bas */}
         <div className="flex flex-col space-y-2">
       <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
@@ -384,24 +387,17 @@ export const GameUI = ({
             >
               Rejouer
             </button>
-            
-            
+
+
 
             <button
               onClick={() => {
                 if (typeof window !== "undefined") {
                   const audio = window.Game_Audio as { pause?: () => void };
-                  if (audio?.pause) 
+                  if (audio?.pause)
                     audio.pause();
                 }
-                // Vérifier si on est en mode tournoi
-                const tournamentId = localStorage.getItem("tournamentId");
-                if (tournamentId) {
-                  // Rediriger vers la page du tournoi
-                  router.push(`/game/tournament`);
-                } else {
-                  window.history.back();
-                }
+                window.history.back();
               }}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
             >
