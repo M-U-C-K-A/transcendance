@@ -28,8 +28,6 @@ export default function InvitationPage({ params }: { params: { slug: string } })
           return
         }
 
-        toast.loading('Rejoindre la partie...') // Toast de chargement
-
         const response = await fetch('/api/game/travel', {
           method: 'POST',
           headers: {
@@ -43,7 +41,6 @@ export default function InvitationPage({ params }: { params: { slug: string } })
 
         if (!response.ok) {
           throw new Error('Échec de la requête')
-		  toast.error("Error, Échec de la requête")
         }
 
         const data = await response.json()

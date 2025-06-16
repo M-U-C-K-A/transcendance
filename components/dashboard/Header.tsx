@@ -68,7 +68,7 @@
                 </Avatar>
               </>
             ) : (
-              <Link href={`/auth?redirect=${locale}`}>
+              <Link href={`/${locale}/auth`}>
                 <Button variant="ghost" size="sm" aria-label="Sign In">
                   <LogIn className="h-5 w-5" /> Sign in
                 </Button>
