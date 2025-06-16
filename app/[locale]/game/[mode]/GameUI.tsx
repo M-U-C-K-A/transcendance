@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ControlsConfig } from "./ControlsConfig"
 import { displayKey } from "./ControlsConfig"
 import { MalusSystem } from "./MalusSystem"
+import { useRouter } from "next/router"
 
 
 
@@ -64,6 +65,7 @@ export const GameUI = ({
   const { controls } = useControls();
     const [wasPausedBeforeControls, setWasPausedBeforeControls] = useState(false);
   
+  const router = useRouter();
 
 
 
@@ -102,8 +104,7 @@ export const GameUI = ({
     
     const interval = setInterval(() => {
       if (!isPaused) {
-        const remainingTime = malusSystem.getRemainingTime();
-        setMalusTimer(remainingTime);
+        setMalusTimer(malusSystem.getRemainingTime());
       }
     }, 100);
 
@@ -201,7 +202,7 @@ export const GameUI = ({
 
 
         {/* Barre de chargement du Malus centrée sous le score */}
-        {enableMaluses && malusSystem && (
+        {enableMaluses && (
         <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
             <span className="mb-1 text-sm font-semibold text-red-700">Malus dans :</span>
             <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300 relative">
@@ -393,7 +394,14 @@ export const GameUI = ({
                   if (audio?.pause) 
                     audio.pause();
                 }
-                window.history.back();
+                // Vérifier si on est en mode tournoi
+                const tournamentId = localStorage.getItem("tournamentId");
+                if (tournamentId) {
+                  // Rediriger vers la page du tournoi
+                  router.push(`/game/tournament`);
+                } else {
+                  window.history.back();
+                }
               }}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
             >
