@@ -1,6 +1,6 @@
 // sound.ts
 // ----------------
-// Gestion centralisée de tous les sons du jeu
+// Gestion centralisee de tous les sons du jeu
 
 import { Sound } from "@babylonjs/core";
 
@@ -17,7 +17,7 @@ export const updateAllSoundsVolume = (sounds: Sound[], volume: number) => {
 };
 
 
-// de base a 0.2 mais réassigné dans score
+// de base a 0.2 mais reassigne dans score
 export const playGoalSound = (volume = 0.2) => {
   const whistles = [
     "/sounds/sifflet-1.mp3",
@@ -32,8 +32,3 @@ export const playGoalSound = (volume = 0.2) => {
 
 
 
-export const playApplause = (volume = 0.2) => {
-  const audio = new window.Audio("/sounds/Applause  Sound Effect.mp3");
-  audio.volume = volume;
-  audio.play();
-};

@@ -29,10 +29,10 @@ export class MalusSystem {
     this.setScore = setScore;
     this.setWinner = setWinner;
 
-    // Créer le matériau pour le Malus
+    // Creer le materiau pour le Malus
     this.MalusMaterial = new StandardMaterial("MalusMaterial", scene);
     this.MalusMaterial.diffuseColor = new Color3(1, 0, 0); // Rouge
-    this.MalusMaterial.emissiveColor = new Color3(0.5, 0, 0); // Légère lueur rouge
+    this.MalusMaterial.emissiveColor = new Color3(0.5, 0, 0); // Legère lueur rouge
     this.MalusMaterial.alpha = 0.8;
   }
 
@@ -105,11 +105,11 @@ export class MalusSystem {
       this.MalusTextMesh.dispose();
     }
 
-    // Créer un nouveau Malus
+    // Creer un nouveau Malus
     this.MalusMesh = Mesh.CreateBox("Malus", 4, this.scene); // 4x plus gros
     this.MalusMesh.material = this.MalusMaterial;
 
-    // Position aléatoire sur la map
+    // Position aleatoire sur la map
     const x = Math.random() * 20 - 10; // Entre -10 et 10
     const y = 0.25; // Même hauteur que la balle
     const z = 0;
@@ -118,7 +118,7 @@ export class MalusSystem {
     // Ajouter le texte "-1"
     this.MalusTextMesh = Mesh.CreatePlane("MalusText", 4, this.scene);
     this.MalusTextMesh.position = new Vector3(x, y, z + 0.1);
-    this.MalusTextMesh.rotation.y = Math.PI; // Faire face à la caméra
+    this.MalusTextMesh.rotation.y = Math.PI; // Faire face à la camera
 
     // Ajouter la collision avec la balle
     this.MalusMesh.actionManager = new ActionManager(this.scene);
@@ -126,18 +126,18 @@ export class MalusSystem {
       new ExecuteCodeAction(
         { trigger: ActionManager.OnIntersectionEnterTrigger, parameter: this.scene.getMeshByName("ball") },
         () => {
-          // On retire 1 point à l'adversaire du dernier joueur ayant touché la balle
+          // On retire 1 point à l'adversaire du dernier joueur ayant touche la balle
           const newScore = {
             player1: this.gameRefs.score.current.player1,
             player2: this.gameRefs.score.current.player2
           };
           
-          // Récupérer le dernier touché de l'historique
+          // Recuperer le dernier touche de l'historique
           const lastTouch = this.gameRefs.touchHistory?.[this.gameRefs.touchHistory.length - 1];
           
           if (lastTouch) {
             if (lastTouch.player === 1) {
-              // Joueur 1 a touché la balle en dernier → on enlève 1 à joueur 2
+              // Joueur 1 a touche la balle en dernier → on enlève 1 à joueur 2
               newScore.player2 = newScore.player2 - 1;
               if (this.setScore) this.setScore(newScore);
               if (this.gameRefs.score) this.gameRefs.score.current = newScore;
@@ -145,7 +145,7 @@ export class MalusSystem {
               else if (newScore.player1 >= 5 && this.setWinner) this.setWinner("Joueur 1");
               else if (newScore.player2 >= 5 && this.setWinner) this.setWinner("Joueur 2");
             } else {
-              // Joueur 2 a touché la balle en dernier → on enlève 1 à joueur 1
+              // Joueur 2 a touche la balle en dernier → on enlève 1 à joueur 1
               newScore.player1 = newScore.player1 - 1;
               if (this.setScore) this.setScore(newScore);
               if (this.gameRefs.score) this.gameRefs.score.current = newScore;
@@ -154,7 +154,7 @@ export class MalusSystem {
               else if (newScore.player1 >= 5 && this.setWinner) this.setWinner("Joueur 1");
             }
           } else {
-            // Cas par défaut (aucun toucher connu) → on enlève à player2
+            // Cas par defaut (aucun toucher connu) → on enlève à player2
             newScore.player2 = newScore.player2 - 1;
             if (this.setScore) this.setScore(newScore);
             if (this.gameRefs.score) this.gameRefs.score.current = newScore;
