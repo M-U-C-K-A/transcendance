@@ -18,7 +18,14 @@ export default function Pong3D({
 	enableMaluses = false,
 	volume = 0.2,
 	baseSpeed = 16,
-}: Pong3DProps & { enableSpecial?: boolean, enableMaluses?: boolean, volume?: number, baseSpeed?: number }) {
+	gamemode,
+}: Pong3DProps & {
+	enableSpecial?: boolean,
+	enableMaluses?: boolean,
+	volume?: number,
+	baseSpeed?: number,
+	gamemode?: string
+}) {
 
 
 	// ─── References = non rerender par react mais par babylon / WebGL : garde acces a ces donnes  ─────────────────────────────────────────────
@@ -283,6 +290,7 @@ export default function Pong3D({
 				showGoal={showGoal}
 				lastScoreType={lastScoreType}
 				malusSystem={MalusSystemRef.current}
+				gamemode={gamemode}
 			/>
 		</div>
 	);

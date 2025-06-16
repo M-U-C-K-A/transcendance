@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { toast } from "react-hot-toast";
 
 
 // Pour customi
@@ -94,6 +93,7 @@ interface SettingsPanelProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
   baseSpeed: number;
   setBaseSpeed: Dispatch<SetStateAction<number>>;
+  canStart: boolean;
 }
 
 
@@ -120,7 +120,8 @@ export default function SettingsPanel({
   setEnableSpecial,
   baseSpeed,
   setBaseSpeed,
-}: SettingsPanelProps) 
+  canStart,
+}: SettingsPanelProps)
 {
   // Ajoutons des logs pour déboguer
   console.log("Mode actuel:", gamemode);
@@ -151,9 +152,8 @@ export default function SettingsPanel({
     },
   });
 
-
-
-
+  // Ajout d'un état pour savoir si le tournoi a commencé
+  const [tournamentStarted, setTournamentStarted] = useState(false);
 
   // Initialize game info from localStorage
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function SettingsPanel({
     try {
       const token = localStorage.getItem("token");
       console.log("Token:", token);
-      
+
       const response = await fetch("/api/tournament/create", {
         method: "POST",
         headers: {
@@ -215,25 +215,27 @@ export default function SettingsPanel({
           slot: data.playerCount,
         }),
       });
-      
+
       if (!response.ok) throw new Error("Erreur lors de la création du tournoi");
-      
+
       const tournamentData = await response.json();
       console.log("Réponse du serveur:", tournamentData);
-      
+
       // Stocker les informations du tournoi
       localStorage.setItem("tournamentId", tournamentData.tournamentId);
       localStorage.setItem("tournamentSlot", tournamentData.tournamentSlot);
-      
-      // Ajouter le host comme premier participant
-      setParticipants([{
+
+      // Ajouter le host comme premier participant et le stocker dans le localStorage
+      const hostParticipant = {
         id: tournamentData.hostId,
         username: tournamentData.username,
         elo: tournamentData.elo,
         win: tournamentData.win,
         lose: tournamentData.lose
-      }]);
-      
+      };
+      localStorage.setItem("tournamentParticipants", JSON.stringify([hostParticipant]));
+      setParticipants([hostParticipant]);
+
       // Afficher la popup de join
       setShowJoinDialog(true);
     } catch (error) {
@@ -270,45 +272,10 @@ export default function SettingsPanel({
 
   const shouldShowCreationDialog = () => {
     if (gamemode !== "tournament") return false;
+    if (typeof window === 'undefined') return false;
     const tournamentId = localStorage.getItem("tournamentId");
     return !tournamentId;
   };
-
-
-
-
-  const canStart = useMemo(() => {
-    return colorP1 !== null && colorP2 !== null && MapStyle !== null;
-  }, [gamemode, gameInfo?.players?.length, colorP1, colorP2, MapStyle]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -318,7 +285,7 @@ export default function SettingsPanel({
     try {
       const token = localStorage.getItem("token");
       const tournamentId = localStorage.getItem("tournamentId");
-      
+
       const response = await fetch("/api/tournament/join", {
         method: "POST",
         headers: {
@@ -332,25 +299,26 @@ export default function SettingsPanel({
       });
 
       if (!response.ok) throw new Error("Erreur lors de la jointure du tournoi");
-      
+
       const userData = await response.json();
-      console.log("Nouveau participant reçu:", userData); // Debug log
-      
-      // Mettre à jour les participants de manière synchrone
+      console.log("Nouveau participant reçu:", userData);
+
+      // Mettre à jour les participants
       setParticipants(prev => {
         const newParticipants = [...prev, userData];
-        console.log("Mise à jour des participants:", newParticipants); // Debug log
-        
+        localStorage.setItem("tournamentParticipants", JSON.stringify(newParticipants));
+
         // Vérifier si le tournoi est plein
         const tournamentSlot = localStorage.getItem("tournamentSlot");
         if (newParticipants.length >= Number(tournamentSlot)) {
-          // Attendre que l'état soit mis à jour avant de créer le bracket
-          setTimeout(() => {
-            startTournament();
-            setShowJoinDialog(false);
-          }, 0);
+          // Créer le bracket localement
+          const matches = createBracket(newParticipants);
+          setBracket(matches);
+          setCurrentMatch(matches[0]);
+          setCurrentMatchIndex(0);
+          setShowJoinDialog(false);
         }
-        
+
         return newParticipants;
       });
     } catch (error) {
@@ -388,10 +356,29 @@ export default function SettingsPanel({
   // Ajoutons un état pour suivre le match en cours
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
 
+  // Synchronisation des participants avec le localStorage au chargement
+  useEffect(() => {
+    if (gamemode === "tournament") {
+      const stored = localStorage.getItem("tournamentParticipants");
+      if (stored) {
+        setParticipants(JSON.parse(stored));
+      }
+    }
+  }, [gamemode]);
+
+  // Synchronisation des participants avec le localStorage à chaque modification
+  useEffect(() => {
+    if (gamemode === "tournament") {
+      localStorage.setItem("tournamentParticipants", JSON.stringify(participants));
+    }
+  }, [participants, gamemode]);
+
   // Fonction pour créer le bracket
-  const createBracket = (players: typeof participants) => {
-    console.log("Création du bracket avec les joueurs:", players); // Debug log
-    
+  const createBracket = (playersParam?: typeof participants) => {
+    // Toujours relire la liste du localStorage pour être sûr d'avoir tout le monde
+    const players = playersParam || JSON.parse(localStorage.getItem("tournamentParticipants") || "[]");
+    console.log("Création du bracket avec les joueurs:", players);
+
     // S'assurer que nous avons tous les joueurs
     if (players.length !== Number(localStorage.getItem("tournamentSlot"))) {
       console.error("Nombre de joueurs incorrect:", players.length);
@@ -402,7 +389,7 @@ export default function SettingsPanel({
     const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
     const matches: BracketMatch[] = [];
     const totalRounds = Math.ceil(Math.log2(players.length));
-    
+
     // Créer les matchs du premier tour
     for (let i = 0; i < players.length; i += 2) {
       if (i + 1 < players.length) {
@@ -434,7 +421,7 @@ export default function SettingsPanel({
       currentRoundMatches = matchesInRound;
     }
 
-    console.log("Bracket créé:", matches); // Debug log
+    console.log("Bracket créé:", matches);
     return matches;
   };
 
@@ -443,36 +430,56 @@ export default function SettingsPanel({
     setBracket(prevBracket => {
       const newBracket = [...prevBracket];
       const currentMatch = newBracket.find(m => m.id === matchId);
-      
+
       if (!currentMatch) return prevBracket;
-      
+
       // Mettre à jour le statut du match actuel
       currentMatch.status = "completed";
       currentMatch.winner = winner;
-      
+
       // Trouver le match suivant dans le bracket
       const nextRound = currentMatch.round + 1;
       const nextMatchNumber = Math.ceil(currentMatch.matchNumber / 2);
       const nextMatch = newBracket.find(m => m.round === nextRound && m.matchNumber === nextMatchNumber);
-      
+
       if (nextMatch) {
         // Déterminer si le gagnant doit être player1 ou player2 dans le match suivant
         const isFirstPlayer = currentMatch.matchNumber % 2 === 1;
-        
+
         // Mettre à jour le match suivant avec le gagnant
         if (isFirstPlayer) {
           nextMatch.player1 = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
         } else {
           nextMatch.player2 = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
         }
-        
+
         // Mettre à jour le match en cours
         setCurrentMatch(nextMatch);
         setCurrentMatchIndex(newBracket.indexOf(nextMatch));
       }
-      
+
       return newBracket;
     });
+  };
+
+  // Ajoutons un état pour les matchs
+  const [matches, setMatches] = useState<TournamentMatch[]>([]);
+  const [currentMatch, setCurrentMatch] = useState<TournamentMatch | null>(null);
+
+  // Ajoutons une fonction pour passer au match suivant
+  const goToNextMatch = () => {
+    if (currentMatchIndex < bracket.length - 1) {
+      const nextIndex = currentMatchIndex + 1;
+      setCurrentMatchIndex(nextIndex);
+      setCurrentMatch(bracket[nextIndex]);
+
+      // Mettre à jour le statut du match précédent
+      setBracket(prevBracket => {
+        const newBracket = [...prevBracket];
+        newBracket[currentMatchIndex].status = "completed";
+        return newBracket;
+      });
+    }
   };
 
   // Ajoutons une interface pour le type TournamentMatch
@@ -503,15 +510,15 @@ export default function SettingsPanel({
     try {
       const token = localStorage.getItem("token");
       const tournamentId = localStorage.getItem("tournamentId");
-      
+
       // Créer le bracket avec tous les participants
       const matches = createBracket(participants);
-      
+
       if (matches.length === 0) {
         console.error("Erreur lors de la création du bracket");
         return;
       }
-      
+
       // Envoyer le bracket au serveur
       const response = await fetch("/api/tournament/start", {
         method: "POST",
@@ -519,46 +526,48 @@ export default function SettingsPanel({
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           tournamentId,
-          matches 
+          matches
         }),
       });
 
       if (!response.ok) {
         throw new Error("Erreur lors du démarrage du tournoi");
       }
-      
+
       // Mettre à jour l'état avec les matchs
       setBracket(matches);
       setCurrentMatch(matches[0]);
       setCurrentMatchIndex(0);
-      
-      // Afficher une notification de succès
-      toast.success("Tournoi démarré avec succès !");
+
     } catch (error) {
       console.error("Erreur lors du démarrage du tournoi:", error);
-      toast.error("Erreur lors du démarrage du tournoi");
     }
   };
 
-  // Ajoutons un état pour les matchs
-  const [matches, setMatches] = useState<TournamentMatch[]>([]);
-  const [currentMatch, setCurrentMatch] = useState<TournamentMatch | null>(null);
+  // Ajout d'un effet pour démarrer automatiquement le tournoi si le bracket est prêt
+  useEffect(() => {
+    if (gamemode === "tournament" && bracket.length > 0 && !tournamentStarted) {
+      setTournamentStarted(true);
+      setCurrentMatch(bracket[0]);
+      setCurrentMatchIndex(0);
+    }
+  }, [bracket, gamemode, tournamentStarted]);
 
-  // Ajoutons une fonction pour passer au match suivant
-  const goToNextMatch = () => {
+  // Callback pour la fin d'un match
+  const handleMatchEnd = (winner: string) => {
+    updateBracketAfterMatch(currentMatch?.id || '', winner);
+    // Si ce n'est pas le dernier match, passer au suivant
     if (currentMatchIndex < bracket.length - 1) {
-      const nextIndex = currentMatchIndex + 1;
-      setCurrentMatchIndex(nextIndex);
-      setCurrentMatch(bracket[nextIndex]);
-      
-      // Mettre à jour le statut du match précédent
-      setBracket(prevBracket => {
-        const newBracket = [...prevBracket];
-        newBracket[currentMatchIndex].status = "completed";
-        return newBracket;
-      });
+      setTimeout(() => {
+        setCurrentMatchIndex((idx) => idx + 1);
+        setCurrentMatch(bracket[currentMatchIndex + 1]);
+      }, 1500); // Petite pause pour voir le résultat
+    } else {
+      // Fin du tournoi
+      setTournamentStarted(false);
+      // Optionnel: afficher le gagnant du tournoi
     }
   };
 
@@ -566,10 +575,10 @@ export default function SettingsPanel({
     <div className="container mx-auto px-4 py-8 max-w-10xl">
       {/* Popup de création de tournoi - Vérification plus stricte */}
       {gamemode === "tournament" && (
-        <Dialog 
+        <Dialog
           open={shouldShowCreationDialog()}
           onOpenChange={(open) => {
-            if (!open && !localStorage.getItem("tournamentId")) {
+            if (!open && typeof window !== 'undefined' && !localStorage.getItem("tournamentId")) {
               router.push("/");
             }
           }}
@@ -582,11 +591,11 @@ export default function SettingsPanel({
               </DialogDescription>
             </DialogHeader>
 
-            <form 
+            <form
               onSubmit={form.handleSubmit((data) => {
                 console.log("Formulaire soumis avec les données:", data);
                 createGame(data);
-              })} 
+              })}
               className="space-y-6"
             >
               <div className="space-y-3">
@@ -627,8 +636,8 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full py-6 text-lg"
                 disabled={isLoading}
               >
@@ -644,8 +653,8 @@ export default function SettingsPanel({
       )}
 
       {/* Popup de join */}
-      {showJoinDialog && (
-        <Dialog 
+      {gamemode === "tournament" && showJoinDialog && (
+        <Dialog
           open={participants.length < Number(localStorage.getItem("tournamentSlot"))}
           onOpenChange={(open) => {
             if (!open && participants.length < Number(localStorage.getItem("tournamentSlot"))) {
@@ -693,7 +702,7 @@ export default function SettingsPanel({
                     <span className="text-sm font-medium text-muted-foreground">
                       Joueur {index + 1}:
                     </span>
-                    <img 
+                    <img
                       src={`/profilepicture/${participant.id}.webp`}
                       alt={participant.username}
                       className="w-8 h-8 rounded-full"
@@ -842,16 +851,34 @@ export default function SettingsPanel({
                   </Alert>
                 )}
 
-                <Button
-                  onClick={onStart}
-                  disabled={!canStart}
-                  className="w-full py-6 text-lg"
-                  variant={canStart ? "default" : "secondary"}
-                >
-                  {gamemode === "tournament"
-                    ? "🏆 Démarrer le Tournoi"
-                    : "🚀 Lancer la Partie"}
-                </Button>
+                {gamemode === "tournament" ? (
+                  <Button
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        onStart();
+                        if (currentMatch) {
+                          setTimeout(() => {
+                            updateBracketAfterMatch(currentMatch.id, "winner_id");
+                          }, 1000);
+                          }
+                        }
+                      }}
+                    disabled={!canStart}
+                    className="w-full py-6 text-lg"
+                    variant={canStart ? "default" : "secondary"}
+                  >
+                    🏆 Lancer le Match
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={onStart}
+                    disabled={!canStart}
+                    className="w-full py-6 text-lg"
+                    variant={canStart ? "default" : "secondary"}
+                  >
+                    🚀 Lancer la Partie
+                  </Button>
+                )}
               </div>
             </div>
           </Card>
@@ -867,8 +894,8 @@ export default function SettingsPanel({
         onClose={() => setIsControlsConfigOpen(false)}
       />
 
-      {/* Affichage du match en cours */}
-      {currentMatch && (
+      {/* Affichage du match en cours - uniquement pour les tournois */}
+      {gamemode === "tournament" && tournamentStarted && currentMatch && (
         <Card className="p-6 mb-6">
           <h3 className="text-xl font-semibold mb-4">
             Match {currentMatch.round}.{currentMatch.matchNumber}
@@ -878,7 +905,7 @@ export default function SettingsPanel({
               <span className="text-sm font-medium text-muted-foreground">Joueur 1:</span>
               {currentMatch.player1 ? (
                 <>
-                  <img 
+                  <img
                     src={`/profilepicture/${currentMatch.player1.id}.webp`}
                     alt={currentMatch.player1.username}
                     className="w-12 h-12 rounded-full"
@@ -894,14 +921,14 @@ export default function SettingsPanel({
                 <span className="text-muted-foreground">En attente</span>
               )}
             </div>
-            
+
             <span className="text-2xl font-bold">VS</span>
-            
+
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-muted-foreground">Joueur 2:</span>
               {currentMatch.player2 ? (
                 <>
-                  <img 
+                  <img
                     src={`/profilepicture/${currentMatch.player2.id}.webp`}
                     alt={currentMatch.player2.username}
                     className="w-12 h-12 rounded-full"
@@ -918,25 +945,11 @@ export default function SettingsPanel({
               )}
             </div>
           </div>
-
-          {/* Bouton pour lancer le match */}
-          <Button 
-            onClick={() => {
-              // Lancer le match
-              onStart();
-            }}
-            className="w-full mt-4"
-            disabled={!currentMatch.player1 || !currentMatch.player2}
-          >
-            {!currentMatch.player1 || !currentMatch.player2 
-              ? "En attente des joueurs" 
-              : "Lancer le Match"}
-          </Button>
         </Card>
       )}
 
-      {/* Affichage du bracket */}
-      {bracket.length > 0 && (
+      {/* Affichage du bracket - uniquement pour les tournois */}
+      {gamemode === "tournament" && bracket.length > 0 && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-6">Bracket du Tournoi</h2>
           <div className="flex gap-8 overflow-x-auto pb-4">
@@ -946,8 +959,8 @@ export default function SettingsPanel({
                 {bracket
                   .filter(match => match.round === round)
                   .map(match => (
-                    <Card 
-                      key={match.id} 
+                    <Card
+                      key={match.id}
                       className={`p-4 ${
                         match.id === currentMatch?.id ? 'border-primary' : ''
                       }`}
@@ -957,7 +970,7 @@ export default function SettingsPanel({
                           <span className="text-sm font-medium text-muted-foreground">Joueur 1:</span>
                           {match.player1 ? (
                             <>
-                              <img 
+                              <img
                                 src={`/profilepicture/${match.player1.id}.webp`}
                                 alt={match.player1.username}
                                 className="w-6 h-6 rounded-full"
@@ -975,7 +988,7 @@ export default function SettingsPanel({
                           <span className="text-sm font-medium text-muted-foreground">Joueur 2:</span>
                           {match.player2 ? (
                             <>
-                              <img 
+                              <img
                                 src={`/profilepicture/${match.player2.id}.webp`}
                                 alt={match.player2.username}
                                 className="w-6 h-6 rounded-full"

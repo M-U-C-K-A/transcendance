@@ -27,8 +27,8 @@ interface Track {
 
 export default function Page() {
   const params = useParams();
-  const gamemode = params?.mode ?? "quickmatch";
-  const locale = params?.locale ?? "fr";
+  const gamemode = typeof params?.mode === 'string' ? params.mode : "quickmatch";
+  const locale = typeof params?.locale === 'string' ? params.locale : "fr";
 
 
 
@@ -171,7 +171,7 @@ export default function Page() {
 
 
 
-  // ... = {}    prop le param de ft et la var envoye ici. 
+  // ... = {}    prop le param de ft et la var envoye ici.
 
 
       {/* le <> === fragment vide pour tout renvoyer d un coup */}
@@ -222,6 +222,7 @@ export default function Page() {
               enableMaluses={enableMaluses}
               enableSpecial={enableSpecial}
               baseSpeed={baseSpeed}
+              gamemode={gamemode}
             />
           )}
     </ControlsProvider>

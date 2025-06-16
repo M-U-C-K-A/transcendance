@@ -294,7 +294,7 @@ export function TournamentContent({ locale }: GameTabsContentProps) {
 
             <CardFooter className="flex gap-3">
               <PrimaryActionButton
-                href={`/${locale}/tournament/create`}
+                href={`/${locale}/game/tournament`}
                 icon={PlusIcon}
                 text={t("dashboard.tournament.createButton")}
               />
