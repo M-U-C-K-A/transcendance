@@ -102,7 +102,8 @@ export const GameUI = ({
     
     const interval = setInterval(() => {
       if (!isPaused) {
-        setMalusTimer(malusSystem.getRemainingTime());
+        const remainingTime = malusSystem.getRemainingTime();
+        setMalusTimer(remainingTime);
       }
     }, 100);
 
@@ -200,7 +201,7 @@ export const GameUI = ({
 
 
         {/* Barre de chargement du Malus centrée sous le score */}
-        {enableMaluses && (
+        {enableMaluses && malusSystem && (
         <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
             <span className="mb-1 text-sm font-semibold text-red-700">Malus dans :</span>
             <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300 relative">

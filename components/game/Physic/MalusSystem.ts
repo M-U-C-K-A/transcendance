@@ -43,11 +43,13 @@ export class MalusSystem {
 
     this.lastUpdateTime = Date.now();
     this.isPaused = false;
+    this.remainingTime = 15000;
 
     this.spawnInterval = setInterval(() => {
       if (this.gameRefs.isPaused?.current) {
         if (!this.isPaused) {
           this.isPaused = true;
+          this.lastUpdateTime = Date.now();
         }
         return;
       }
@@ -61,7 +63,7 @@ export class MalusSystem {
       const deltaTime = currentTime - this.lastUpdateTime;
       this.lastUpdateTime = currentTime;
 
-      this.remainingTime -= deltaTime;
+      this.remainingTime = Math.max(0, this.remainingTime - deltaTime);
 
       if (this.remainingTime <= 0) {
         this.spawnMalus();
@@ -91,10 +93,7 @@ export class MalusSystem {
   }
 
   public getRemainingTime(): number {
-    if (this.gameRefs.isPaused?.current) {
-      return Math.max(0, this.remainingTime / 1000);
-    }
-    return Math.max(0, this.remainingTime / 1000);
+    return Math.ceil(this.remainingTime / 1000);
   }
 
   private spawnMalus() {

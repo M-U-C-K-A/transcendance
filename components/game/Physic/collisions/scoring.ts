@@ -78,6 +78,10 @@ export function handleScoring(
       setWinner("Joueur 1");
       return;
     }
+
+
+    resetBall("player2");
+    
   }
 
 
