@@ -7,7 +7,8 @@ import { GameTabs } from "@/components/dashboard/GameTabs"
 import { ChatSection } from "@/components/dashboard/ChatSection"
 
 export default function DashboardClient({ locale, jwtToken }: { locale: string, jwtToken: string }) {
-
+  localStorage.removeItem("currentGameId");
+  localStorage.removeItem("currentGameName");
   return (
     <div className="bg-background min-h-screen">
       <Header locale={locale} />
