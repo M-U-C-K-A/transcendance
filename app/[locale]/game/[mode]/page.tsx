@@ -180,7 +180,7 @@ export default function Page() {
     <ControlsProvider>
       {/* HEADER */}
       <Header locale={locale as string} />
-
+<div className="h-full flex justify-center items-center">
           {!gameStarted ? (
             <SettingsPanel
               COLORS={COLORS}
@@ -225,6 +225,7 @@ export default function Page() {
               gamemode={gamemode}
             />
           )}
+</div>
     </ControlsProvider>
     </>
   );

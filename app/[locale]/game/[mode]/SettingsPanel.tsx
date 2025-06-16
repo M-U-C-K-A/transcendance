@@ -845,11 +845,11 @@ export default function SettingsPanel({
                 </Button>
 
                 {!canStart && (
-                  <Alert variant="destructive">
-                    <AlertDescription className="w-full text-center">
+                    <Alert variant="destructive">
+                    <AlertDescription className="w-full flex justify-center items-center text-center">
                       Sélectionnez une couleur et une map pour commencer
                     </AlertDescription>
-                  </Alert>
+                    </Alert>
                 )}
 
                 {gamemode === "tournament" ? (
