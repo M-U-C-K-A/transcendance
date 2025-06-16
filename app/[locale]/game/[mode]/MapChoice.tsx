@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Toggle } from "@/components/ui/toggle";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 interface MapChoiceProps {
   MapStyle: "classic" | "red" | "neon";
@@ -17,27 +18,10 @@ type MapKey = "classic" | "red" | "neon";
 
 interface Map {
   key: MapKey;
-  img: string;
+  imgLight: string;
+  imgDark: string;
   color: string;
 }
-
-const maps: Map[] = [
-  {
-    key: "classic",
-    img: "/game/classic.png",
-    color: "border-gray-400 dark:border-gray-300"
-  },
-  {
-    key: "red",
-    img: "/game/hell.png",
-    color: "border-red-500 dark:border-red-400"
-  },
-  {
-    key: "neon",
-    img: "/game/neon.png",
-    color: "border-pink-500 dark:border-pink-400"
-  },
-];
 
 export default function MapChoice({
   MapStyle,
@@ -47,6 +31,29 @@ export default function MapChoice({
   enableSpecial,
   setEnableSpecial
 }: MapChoiceProps) {
+  const { theme } = useTheme();
+
+  const maps: Map[] = [
+    {
+      key: "classic",
+      imgLight: "/game/classic-light.png",
+      imgDark: "/game/classic-dark.png",
+      color: "border-gray-400 dark:border-gray-300"
+    },
+    {
+      key: "red",
+      imgLight: "/game/hell-light.png",
+      imgDark: "/game/hell-dark.png",
+      color: "border-red-500 dark:border-red-400"
+    },
+    {
+      key: "neon",
+      imgLight: "/game/neon-light.png",
+      imgDark: "/game/neon-dark.png",
+      color: "border-pink-500 dark:border-pink-400"
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-3 gap-4">
@@ -55,20 +62,21 @@ export default function MapChoice({
             key={map.key}
             onClick={() => setMapStyle(map.key)}
             className={`
-              cursor-pointer transition-all hover:shadow-md
+              cursor-pointer transition-all hover:shadow-md p-0
               ${MapStyle === map.key ?
-                `${map.color} border-2 scale-[1.02] shadow-lg` :
-                'border border-muted-foreground/30 hover:border-muted-foreground/50'
+                `${map.color} border-2 scale-[1.02] shadow-lg rounded-md` :
+                'border border-muted-foreground/30 hover:border-muted-foreground/50 rounded-md'
               }
             `}
           >
-            <div className="relative aspect-video overflow-hidden">
+            <div className="relative aspect-video w-full h-full">
               <Image
-                src={map.img}
+                src={theme === "dark" ? map.imgDark : map.imgLight}
                 alt={map.key}
                 fill
-                className="object-cover"
+                className="object-cover rounded-md"
                 quality={100}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               {MapStyle === map.key && (
                 <div className="absolute inset-0 bg-black/20 dark:bg-white/10 flex items-center justify-center">
