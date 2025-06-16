@@ -1,30 +1,37 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import Pong3D from "@/components/game/Pong3D";
 import { JSX } from "react";
+import { BracketMatch } from "@/types/BracketMatch";
 
 
 // dispatch = recoit une ft et renvoit sont inverse (prev) => !prev
 
-interface GameUIProps {
+interface ButtonsProps {
   showVolumeSlider: boolean;
-  setShowVolumeSlider: Dispatch<SetStateAction<boolean>>;
+  setShowVolumeSlider: (show: boolean) => void;
   volume: number;
-  setVolume: Dispatch<SetStateAction<number>>;
+  setVolume: (volume: number) => void;
   showTrackMenu: boolean;
-  setShowTrackMenu: Dispatch<SetStateAction<boolean>>;
-  TRACKS: { label: string; src: string }[];
+  setShowTrackMenu: (show: boolean) => void;
+  TRACKS: string[];
   currentTrackIndex: number;
-  setCurrentTrackIndex: Dispatch<SetStateAction<number>>;
+  setCurrentTrackIndex: (index: number) => void;
   restartGame: () => void;
   cameraKey: number;
-  setCameraKey: Dispatch<SetStateAction<number>>;
+  setCameraKey: (key: number) => void;
   paddle1Color: string;
   paddle2Color: string;
-  MapStyle: "classic" | "red" | "neon";
+  MapStyle: string;
   enableMaluses: boolean;
   enableSpecial: boolean;
   baseSpeed: number;
-  gamemode?: string;
+  gamemode: string;
+  currentMatch: BracketMatch | null;
+  updateBracketAfterMatch: (matchId: string, winner: string) => void;
+  score: { player1: number; player2: number };
+  setScore: (score: { player1: number; player2: number }) => void;
+  winner: string | null;
+  setWinner: (winner: string | null) => void;
 }
 
 export default function Buttons({
@@ -47,7 +54,30 @@ export default function Buttons({
   enableSpecial,
   baseSpeed,
   gamemode,
-}: GameUIProps): JSX.Element {
+  currentMatch,
+  updateBracketAfterMatch,
+  score,
+  setScore,
+  winner,
+  setWinner,
+}: ButtonsProps): JSX.Element {
+  useEffect(() => {
+    if (
+      gamemode === "tournament" &&
+      currentMatch &&
+      winner &&
+      currentMatch.status !== "completed"
+    ) {
+      const winnerId = winner === "player1"
+        ? currentMatch.player1.id
+        : winner === "player2"
+          ? currentMatch.player2.id
+          : winner;
+
+      updateBracketAfterMatch(currentMatch.id, winnerId);
+    }
+  }, [winner, currentMatch, gamemode, updateBracketAfterMatch]);
+
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border mt-4">
 
@@ -125,7 +155,7 @@ export default function Buttons({
         <div className="absolute top-12 left-2 z-30 bg-card border border-border rounded shadow-lg p-2 space-y-1">
           {TRACKS.map((track, idx) => (
             <button
-              key={track.label}
+              key={track}
               onClick={() => {
                 setCurrentTrackIndex(idx);
                 setShowTrackMenu(false);
@@ -134,7 +164,7 @@ export default function Buttons({
                 idx === currentTrackIndex ? "bg-blue-500 text-white" : "hover:bg-gray-200"
               }`}
             >
-              {track.label}
+              {track}
             </button>
           ))}
         </div>
@@ -158,6 +188,10 @@ export default function Buttons({
         volume={volume}
         baseSpeed={baseSpeed}
         gamemode={gamemode}
+        score={score}
+        setScore={setScore}
+        winner={winner}
+        setWinner={setWinner}
       />
 
 
