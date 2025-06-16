@@ -10,12 +10,17 @@ export function updateMiniPaddle(miniPaddle: Mesh, miniDirRef: { current: number
     return;
   }
 
+  // la vitesse de deplacement a chaque frame
   miniPaddle.position.x += MINI_SPEED * miniDirRef.current * deltaTime;
 
-  if (miniPaddle.position.x > MINI_BOUND_X) {
+  // une fois arrive a la limite repart dans l autre sens
+  if (miniPaddle.position.x > MINI_BOUND_X) 
+  {
     miniPaddle.position.x = MINI_BOUND_X;
     miniDirRef.current = -1;
-  } else if (miniPaddle.position.x < -MINI_BOUND_X) {
+  }
+  else if (miniPaddle.position.x < -MINI_BOUND_X)
+  {
     miniPaddle.position.x = -MINI_BOUND_X;
     miniDirRef.current = 1;
   }
