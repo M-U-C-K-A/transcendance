@@ -131,7 +131,7 @@ export default {
       "createTitle": "New Tournament",
       "createDescription": "Configure a tournament with your rules and preferences",
       "participants": "Participants",
-      "participantsDesc": "Invite up to 128 players",
+      "participantsDesc": "Invite up to 16 players",
       "schedule": "Schedule",
       "scheduleDesc": "Plan matches over multiple days",
       "proTipContent": "Prepare your rules in advance for quick setup",

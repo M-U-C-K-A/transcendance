@@ -131,7 +131,7 @@ export default {
       "createTitle": "New Tourney",
       "createDescription": "Set up your competition",
       "participants": "Players",
-      "participantsDesc": "Up to 128 can join",
+      "participantsDesc": "Up to 16 can join",
       "schedule": "When",
       "scheduleDesc": "Plan over multiple days",
       "proTipContent": "Have your rules ready",
