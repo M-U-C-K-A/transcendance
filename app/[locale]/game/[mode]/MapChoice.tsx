@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Toggle } from "@/components/ui/toggle";
 import Image from "next/image";
@@ -13,49 +13,31 @@ interface MapChoiceProps {
   setEnableSpecial: Dispatch<SetStateAction<boolean>>;
 }
 
-
-
-// peut valoir ces str , rien d autre 
 type MapKey = "classic" | "red" | "neon";
-
-
-
 
 interface Map {
   key: MapKey;
-  label: string;
   img: string;
-  buttonVariant: string;
+  color: string;
 }
-
-
-
-// pour les bouttons et l img des maps
 
 const maps: Map[] = [
   {
     key: "classic",
-    label: "Classic",
     img: "/game/classic.png",
-    buttonVariant: "classic",
+    color: "border-gray-400 dark:border-gray-300"
   },
   {
     key: "red",
-    label: "Enfer",
     img: "/game/hell.png",
-    buttonVariant: "hell",
+    color: "border-red-500 dark:border-red-400"
   },
   {
     key: "neon",
-    label: "Neon",
     img: "/game/neon.png",
-    buttonVariant: "neon",
+    color: "border-pink-500 dark:border-pink-400"
   },
 ];
-
-
-
-
 
 export default function MapChoice({
   MapStyle,
@@ -65,138 +47,101 @@ export default function MapChoice({
   enableSpecial,
   setEnableSpecial
 }: MapChoiceProps) {
-  
-  
-  
   return (
-    
-    
-    
-    <div className="text-foreground">
-      {/* Choix du style du sol ("Map") */}
-
-
-      <div className="mb-2 text-center font-medium">Choisissez la map :</div>
-
-      <div className="flex justify-center items-end space-x-8 mt-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-3 gap-4">
         {maps.map((map) => (
-          <div key={map.key} className="flex flex-col items-center">
-            <Image
-              width={200}
-              height={200}
-              src={map.img}
-              alt={map.label}
-              className={`w-30 h-18 object-cover rounded-lg border-4 mb-2
-                ${
-                  MapStyle === map.key
-                    ? map.key === 'neon'
-                      ? 'border-pink-500 dark:border-pink-400 scale-105 animate-pulse-slow'
-                      : map.key === 'red'
-                        ? 'border-red-600 dark:border-red-400'
-                        : 'border-gray-800 dark:border-white/80 scale-105 animate-pulse-slow'
-                    : 'border-gray-300 dark:border-zinc-700'
-                }`}
-            />
-            
-            
-            <Button
-              variant={map.buttonVariant as "classic" | "hell" | "neon" | null | undefined}
-              onClick={() => setMapStyle(map.key)}
-              className={`mt-1 w-32 text-center ${MapStyle === map.key ? "scale-105 shadow-lg" : "opacity-80"}`}
-            >
-              {map.label}
-            </Button>
-
-
-          </div>
-
+          <Card
+            key={map.key}
+            onClick={() => setMapStyle(map.key)}
+            className={`
+              cursor-pointer transition-all hover:shadow-md
+              ${MapStyle === map.key ?
+                `${map.color} border-2 scale-[1.02] shadow-lg` :
+                'border border-muted-foreground/30 hover:border-muted-foreground/50'
+              }
+            `}
+          >
+            <div className="relative aspect-video overflow-hidden">
+              <Image
+                src={map.img}
+                alt={map.key}
+                fill
+                className="object-cover"
+                quality={100}
+              />
+              {MapStyle === map.key && (
+                <div className="absolute inset-0 bg-black/20 dark:bg-white/10 flex items-center justify-center">
+                  <div className="bg-white dark:bg-black rounded-full p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
         ))}
-
       </div>
 
-
-
-
-
-      {/* duration 0 = instant hover */}
-  
-      <div className="mt-8 flex justify-between items-center space-x-4">
-        {/* Option Malus */}
+      <div className="grid grid-cols-2 gap-4">
         <TooltipProvider delayDuration={0}>
-
-    
           <Tooltip>
-            {/* s affiche  */}
             <TooltipTrigger asChild>
-              <div className="w-full border rounded-md">
+              <div>
                 <Toggle
                   pressed={enableMaluses}
                   onPressedChange={() => setEnableMaluses(!enableMaluses)}
-                  className={`w-full data-[state=on]:bg-red-600 data-[state=on]:text-white data-[state=on]:dark:bg-red-500 data-[state=on]:dark:border-red-400 data-[state=on]:dark:text-white dark:border dark:border-zinc-500 ${enableMaluses ? "animate-pulse" : ""}`}
+                  className="w-full h-12 data-[state=on]:bg-red-600 data-[state=on]:text-white data-[state=on]:dark:bg-red-500 animate-pulse"
                 >
-                  {enableMaluses ? "Malus Activés" : "Activer les Malus"}
+                  <span className="font-medium">
+                    {enableMaluses ? "Malus ON" : "Malus OFF"}
+                  </span>
                 </Toggle>
               </div>
             </TooltipTrigger>
-
-            {/* &quot  = char speciaux en html*/}
-            <TooltipContent side="left" className="max-w-[250px] p-4">
+            <TooltipContent side="top" className="max-w-[250px] p-4">
               <div className="space-y-2">
                 <h4 className="font-semibold">Système de Malus</h4>
                 <p className="text-sm text-muted-foreground">
-                  Un Malus &quot;🟥&quot; apparaît toutes les 15 secondes sur la map.<br />
-                  Le toucher retire 1 point à l&apos;adversaire !
+                  Un Malus "🟥" apparaît toutes les 15 secondes sur la map.
+                  Le toucher retire 1 point à l'adversaire !
                 </p>
                 <p className="text-sm text-red-400 font-medium">
                   ⚠️ Arriver à -5 points signifie que vous avez perdu !
                 </p>
               </div>
             </TooltipContent>
-
           </Tooltip>
-
-
         </TooltipProvider>
 
-
-
-
-
-        {/*  coup spe */}
         <TooltipProvider delayDuration={0}>
-
-
           <Tooltip>
-
             <TooltipTrigger asChild>
-              <div className="w-full border rounded-md">
+              <div>
                 <Toggle
                   pressed={enableSpecial}
                   onPressedChange={() => setEnableSpecial(!enableSpecial)}
-                  className={`w-full data-[state=on]:bg-cyan-500 data-[state=on]:text-white data-[state=on]:dark:bg-cyan-400 data-[state=on]:dark:border-cyan-300 data-[state=on]:dark:text-white dark:border dark:border-zinc-500 ${enableSpecial ? "animate-pulse" : ""}`}
+                  className="w-full h-12 data-[state=on]:bg-cyan-600 data-[state=on]:text-white data-[state=on]:dark:bg-cyan-500 animate-pulse"
                 >
-                  {enableSpecial ? "Coup spécial Activé" : "Activer le Coup spécial"}
+                  <span className="font-medium">
+                    {enableSpecial ? "Spécial ON" : "Spécial OFF"}
+                  </span>
                 </Toggle>
               </div>
             </TooltipTrigger>
-
-            <TooltipContent side="right" className="max-w-[250px] p-4">
+            <TooltipContent side="top" className="max-w-[250px] p-4">
               <div className="space-y-2">
                 <h4 className="font-semibold">Coup Spécial</h4>
                 <p className="text-sm text-muted-foreground">
-                  Chaque joueur remplit une barre en touchant la balle.<br />
-                  Après 10 frappes, vous pouvez activer un &quot;coup spécial&quot; :<br />
-                  votre pad grossit et renvoie la balle plus vite. L&apos;effet dure 5 secondes.
+                  Chaque joueur remplit une barre en touchant la balle.
+                  Après 10 frappes, vous pouvez activer un "coup spécial" :
+                  votre pad grossit et renvoie la balle plus vite. L'effet dure 5 secondes.
                 </p>
               </div>
             </TooltipContent>
-            
           </Tooltip>
-
-
         </TooltipProvider>
-
-
       </div>
     </div>
   );
