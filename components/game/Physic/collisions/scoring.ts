@@ -37,6 +37,10 @@ export function handleScoring(
       if (gameRefs.score.current) 
         gameRefs.score.current = score;
 
+      if (score.player2 === 5)
+        setWinner("player2");
+
+    
       resetBall("player1");
   }
 
@@ -51,6 +55,11 @@ export function handleScoring(
 
     if (gameRefs.score.current) 
       gameRefs.score.current = score;
+
+
+    if (score.player1 === 5)
+      setWinner("player1");
+
 
     resetBall("player2");
   }
