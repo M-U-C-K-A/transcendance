@@ -317,7 +317,7 @@ export const initgamePhysic = (
 
 
 
-    // // Empeche le rendu Donc met en Pause 
+    //
     // if (
     //   !gameRefs.isPaused ||
     //   !gameRefs.countdown ||
