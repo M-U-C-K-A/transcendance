@@ -2,7 +2,7 @@
 // -----------------
 
 import { Vector3, Mesh } from "@babylonjs/core";
-import type { Sound } from "@babylonjs/core/Audio/sound";
+import { PlayRandomHitSound } from "../sound";
 
 // Cooldown de collision par mur (module scope)
 const lastWallCollision = { left: 0, right: 0 };
@@ -11,6 +11,7 @@ export function collideWalls(
   ball: Mesh,
   ballV: Vector3,
   currentSpeed: number,
+  volume?: number
 ): { newVelocity: Vector3; newSpeed: number } | null 
 {
 
@@ -40,6 +41,7 @@ export function collideWalls(
     const dirAfter = new Vector3(-Math.abs(ballV.x), 0, ballV.z).normalize(); // vecteur sans vitess
     const newVelocity = dirAfter.scale(currentSpeed); // avec vitesse 
 
+    PlayRandomHitSound(volume);
 
     return { newVelocity, newSpeed: currentSpeed };
   }
@@ -61,7 +63,8 @@ export function collideWalls(
     const dirAfter = new Vector3(Math.abs(ballV.x), 0, ballV.z).normalize();
     const newVelocity = dirAfter.scale(currentSpeed);
 
-
+    PlayRandomHitSound(volume);
+    
     return { newVelocity, newSpeed: currentSpeed };
   }
 

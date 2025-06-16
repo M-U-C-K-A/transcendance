@@ -1,13 +1,13 @@
 // collisionPaddles.ts
 // --------------------
 
-import { Vector3, Color3, Mesh, StandardMaterial } from "@babylonjs/core";
-import type { Sound } from "@babylonjs/core/Audio/sound";
+import { Vector3, Mesh, StandardMaterial } from "@babylonjs/core";
 import {
   PADDLE_HALF_WIDTH,
   MAX_BOUNCE_ANGLE,
 } from "../constants";
 import type { SetStaminaFunction } from "../../gameTypes";
+import { PlayRandomHitSound } from "../sound";
 
 
 
@@ -28,12 +28,11 @@ export function collidePaddle1(
   ball: Mesh,
   paddle1: Mesh,
   currentSpeed: number,
-  ballMat: StandardMaterial,
-  p1Mat: StandardMaterial,
   stamina: { player1: number; player2: number },
   setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean },
-  enableSpecial?: boolean
+  enableSpecial?: boolean,
+  volume?: number
 ): { newVelocity: Vector3; newSpeed: number } | null
 {
 
@@ -104,7 +103,7 @@ export function collidePaddle1(
 
 
 
-
+    PlayRandomHitSound(volume);
 
 
     return { newVelocity, newSpeed: speed };
@@ -127,12 +126,11 @@ export function collidePaddle2(
   ball: Mesh,
   paddle2: Mesh,
   currentSpeed: number,
-  ballMat: StandardMaterial,
-  p2Mat: StandardMaterial,
   stamina: { player1: number; player2: number },
   setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean },
-  enableSpecial?: boolean
+  enableSpecial?: boolean,
+  volume?: number
 ): { newVelocity: Vector3; newSpeed: number } | null 
 {
 
@@ -195,7 +193,7 @@ export function collidePaddle2(
 
     const newVelocity = dirAfter.scale(speed);
 
-
+    PlayRandomHitSound(volume);
 
     return { newVelocity, newSpeed: speed };
   }
