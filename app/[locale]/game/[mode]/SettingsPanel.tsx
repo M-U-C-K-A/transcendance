@@ -133,6 +133,9 @@ export default function SettingsPanel({
     lose: number;
   }>>([]);
 
+  const [showWinnerDialog, setShowWinnerDialog] = useState(false);
+  const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
+
   const form = useForm<GameCreationData>({
     resolver: zodResolver(gameCreationSchema),
     defaultValues: {
@@ -142,77 +145,43 @@ export default function SettingsPanel({
     },
   });
 
-  // Ajout d'un useEffect pour gérer la fin d'un match
-  useEffect(() => {
-    if (gamemode === "tournament" && currentMatch && matchCompleted && currentWinner) {
-      console.log("Mise à jour du bracket après match terminé");
-      console.log("Match actuel:", currentMatch);
-      console.log("Gagnant:", currentWinner);
+  const sendTournamentResult = async (winner: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const tournamentId = localStorage.getItem("tournamentId");
 
-      // Mettre à jour le bracket avec le gagnant
-      updateBracketAfterMatch(currentMatch.id, currentWinner);
-
-      // Créer une nouvelle copie du bracket
-      const updatedBracket = [...bracket];
-      const currentMatchIndex = updatedBracket.findIndex(m => m.id === currentMatch.id);
-
-      if (currentMatchIndex !== -1) {
-        // Trouver le gagnant dans le match actuel
-        const winner = currentMatch.player1?.username === currentWinner
-          ? currentMatch.player1
-          : currentMatch.player2;
-
-        console.log("Joueur gagnant trouvé:", winner);
-
-        if (winner) {
-          // Calculer l'index du prochain match dans le bracket
-          const nextMatchIndex = Math.floor(currentMatchIndex / 2) + Math.ceil(bracket.length / 2);
-          console.log("Index du prochain match calculé:", nextMatchIndex);
-
-          if (nextMatchIndex < updatedBracket.length) {
-            const nextMatch = updatedBracket[nextMatchIndex];
-            console.log("Prochain match avant mise à jour:", nextMatch);
-
-            // Déterminer si c'est le premier ou le deuxième joueur du prochain match
-            const isFirstPlayer = currentMatchIndex % 2 === 0;
-
-            // Mettre à jour le prochain match avec le gagnant
-            if (isFirstPlayer) {
-              nextMatch.player1 = winner;
-            } else {
-              nextMatch.player2 = winner;
-            }
-
-            console.log("Prochain match après mise à jour:", nextMatch);
-
-            // Mettre à jour le bracket
-            setBracket(updatedBracket);
-
-            // Sauvegarder dans le localStorage
-            localStorage.setItem("tournamentBracket", JSON.stringify(updatedBracket));
-
-            // Trouver le prochain match à jouer
-            const nextPendingMatch = updatedBracket.find(match =>
-              match.status === "pending" &&
-              match.player1 !== null &&
-              match.player2 !== null
-            );
-
-            if (nextPendingMatch) {
-              const nextPendingMatchIndex = updatedBracket.findIndex(m => m.id === nextPendingMatch.id);
-              setCurrentMatch(nextPendingMatch);
-              setCurrentMatchIndex(nextPendingMatchIndex);
-            } else {
-              console.log("Aucun prochain match à jouer trouvé");
-            }
-          }
-        }
+      if (!token || !tournamentId) {
+        console.error("Token ou ID du tournoi manquant");
+        return;
       }
 
-      setMatchCompleted(false);
-      setCurrentWinner(null);
+      const response = await fetch("/api/tournament/result/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: winner,
+          tournamentId: tournamentId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi du résultat du tournoi");
+      }
+
+      setTournamentWinner(winner);
+      setShowWinnerDialog(true);
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 3000);
+
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du résultat:", error);
     }
-  }, [matchCompleted, currentMatch, currentWinner, gamemode, bracket, currentMatchIndex, updateBracketAfterMatch]);
+  };
 
   // Fonction pour gérer la fin d'un match
   const handleMatchEnd = (winner: string) => {
@@ -231,6 +200,43 @@ export default function SettingsPanel({
         if (match) {
           match.status = "completed";
           match.winner = winner;
+
+          // Trouver le match du prochain tour
+          const nextRound = match.round + 1;
+          const nextMatchNumber = Math.ceil(match.matchNumber / 2);
+          const nextMatch = newBracket.find(m =>
+            m.round === nextRound &&
+            m.matchNumber === nextMatchNumber
+          );
+
+          if (nextMatch) {
+            // Trouver le gagnant dans le match actuel
+            const winnerPlayer = match.player1?.username === winner
+              ? match.player1
+              : match.player2;
+
+            if (winnerPlayer) {
+              // Déterminer si c'est le premier ou le deuxième joueur du prochain match
+              const isFirstPlayer = match.matchNumber % 2 === 1;
+
+              // Mettre à jour le prochain match avec le gagnant
+              if (isFirstPlayer) {
+                nextMatch.player1 = winnerPlayer;
+              } else {
+                nextMatch.player2 = winnerPlayer;
+              }
+
+              console.log("Prochain match mis à jour avec le gagnant:", nextMatch);
+            }
+          }
+
+          // Vérifier si c'est le dernier match et s'il est terminé
+          const lastMatch = newBracket[newBracket.length - 1];
+          if (lastMatch && lastMatch.status === "completed" && lastMatch.winner) {
+            console.log("Tournoi terminé, envoi du résultat");
+            sendTournamentResult(lastMatch.winner);
+          }
+
           console.log("Bracket mis à jour avec le gagnant:", newBracket);
           localStorage.setItem("tournamentBracket", JSON.stringify(newBracket));
         }
@@ -256,19 +262,53 @@ export default function SettingsPanel({
           }
         });
 
+        // Vérifier si des matchs sont terminés mais que les gagnants ne sont pas placés
+        parsedBracket.forEach((match: BracketMatch) => {
+          if (match.status === "completed" && match.winner) {
+            const nextRound = match.round + 1;
+            const nextMatchNumber = Math.ceil(match.matchNumber / 2);
+            const nextMatch = parsedBracket.find(m =>
+              m.round === nextRound &&
+              m.matchNumber === nextMatchNumber
+            );
+
+            if (nextMatch) {
+              const winnerPlayer = match.player1?.username === match.winner
+                ? match.player1
+                : match.player2;
+
+              if (winnerPlayer) {
+                const isFirstPlayer = match.matchNumber % 2 === 1;
+                if (isFirstPlayer) {
+                  nextMatch.player1 = winnerPlayer;
+                } else {
+                  nextMatch.player2 = winnerPlayer;
+                }
+              }
+            }
+          }
+        });
+
         setBracket(parsedBracket);
 
-        // Trouver le premier match en attente avec deux joueurs
-        const nextMatch = parsedBracket.find((match: BracketMatch) =>
-          match.status === "pending" &&
-          match.player1 !== null &&
-          match.player2 !== null
-        );
+        // Vérifier si le tournoi est terminé
+        const lastMatch = parsedBracket[parsedBracket.length - 1];
+        if (lastMatch && lastMatch.status === "completed" && lastMatch.winner) {
+          console.log("Tournoi terminé lors du chargement, envoi du résultat");
+          sendTournamentResult(lastMatch.winner);
+        } else {
+          // Trouver le premier match en attente avec deux joueurs
+          const nextMatch = parsedBracket.find((match: BracketMatch) =>
+            match.status === "pending" &&
+            match.player1 !== null &&
+            match.player2 !== null
+          );
 
-        if (nextMatch) {
-          const nextMatchIndex = parsedBracket.findIndex((m: BracketMatch) => m.id === nextMatch.id);
-          setCurrentMatch(nextMatch);
-          setCurrentMatchIndex(nextMatchIndex);
+          if (nextMatch) {
+            const nextMatchIndex = parsedBracket.findIndex((m: BracketMatch) => m.id === nextMatch.id);
+            setCurrentMatch(nextMatch);
+            setCurrentMatchIndex(nextMatchIndex);
+          }
         }
       }
     }
@@ -483,7 +523,6 @@ export default function SettingsPanel({
   const startTournament = async () => {
     if (gamemode !== "tournament") return;
 
-    try {
       const token = localStorage.getItem("token");
       const tournamentId = localStorage.getItem("tournamentId");
 
@@ -496,23 +535,6 @@ export default function SettingsPanel({
         return;
       }
 
-      // Envoyer le bracket au serveur
-      const response = await fetch("/api/tournament/start", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          tournamentId,
-          matches
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors du démarrage du tournoi");
-      }
-
       // Initialiser le bracket et le premier match
       setBracket(matches);
       setCurrentMatch(matches[0]);
@@ -520,9 +542,6 @@ export default function SettingsPanel({
       setTournamentStarted(true);
       localStorage.setItem("tournamentBracket", JSON.stringify(matches));
 
-    } catch (error) {
-      console.error("Erreur lors du démarrage du tournoi:", error);
-    }
   };
 
   return (
@@ -672,6 +691,24 @@ export default function SettingsPanel({
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Dialog de victoire */}
+      <Dialog open={showWinnerDialog} onOpenChange={setShowWinnerDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-green-500">
+              🏆 Tournoi Terminé ! 🏆
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center py-6">
+            <h3 className="text-xl font-semibold mb-2">Vainqueur du Tournoi</h3>
+            <p className="text-3xl font-bold text-primary">{tournamentWinner}</p>
+            <p className="text-sm text-muted-foreground mt-4">
+              Redirection vers le dashboard...
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {(gamemode === "custom" || gamemode === "tournament") && (
