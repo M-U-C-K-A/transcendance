@@ -15,7 +15,7 @@ export function startCountdown(
 
 
 
-  // Créer un état pour bloquer les changements de pause
+  // Creer un etat pour bloquer les changements de pause
   const blockPauseChanges = { current: true };
 
   let cnt = duration;
@@ -40,7 +40,7 @@ export function startCountdown(
       clearInterval(iv); // ft ts qui le stop en fin de chiffre
       setCountdown(null); // met a null. pour l affichage game UI
       setIsPaused(false); // remet en marche 
-      blockPauseChanges.current = false; // Débloque après le décompte
+      blockPauseChanges.current = false; // Debloque après le decompte
       callback(); // active la fonction si y a
     }
 
@@ -50,7 +50,7 @@ export function startCountdown(
 
 
 
-  // Retourne la fonction pour débloquer si nécessaire
+  // Retourne la fonction pour debloquer si necessaire
   return () => {
     blockPauseChanges.current = false;
   };

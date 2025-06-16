@@ -7,6 +7,10 @@ import { collideTrianglePrism } from "./collisionTriangles";
 import { collideWalls } from "./collisionWalls";
 import type { SetStaminaFunction } from "../../gameTypes";
 
+
+
+
+
 export function handleCollisions(
   ball: Mesh,
   paddle1: Mesh,
@@ -31,7 +35,12 @@ export function handleCollisions(
   setStamina: SetStaminaFunction,
   superPad?: { player1: boolean; player2: boolean },
   enableSpecial?: boolean
-): { newVelocity: Vector3; newSpeed: number } | null {
+): { newVelocity: Vector3; newSpeed: number } | null
+{
+
+
+
+
   // Collision avec les paddles
   const paddle1Collision = collidePaddle1(
     ball,
@@ -46,6 +55,10 @@ export function handleCollisions(
   );
   if (paddle1Collision) return paddle1Collision;
 
+
+
+
+
   const paddle2Collision = collidePaddle2(
     ball,
     paddle2,
@@ -59,58 +72,95 @@ export function handleCollisions(
   );
   if (paddle2Collision) return paddle2Collision;
 
+
+
+
+
+
+
   // Collision avec les bumpers
-  if (bumperLeft) {
+  if (bumperLeft) 
+  {
     const bumperLeftCollision = collideBumper(
       ball,
       bumperLeft,
       ballV,
       currentSpeed,
     );
-    if (bumperLeftCollision) return bumperLeftCollision;
+    if (bumperLeftCollision) 
+      return bumperLeftCollision;
   }
-  if (bumperRight) {
+  
+  
+  if (bumperRight) 
+  {
     const bumperRightCollision = collideBumper(
       ball,
       bumperRight,
       ballV,
       currentSpeed,
     );
-    if (bumperRightCollision) return bumperRightCollision;
+    if (bumperRightCollision) 
+      return bumperRightCollision;
   }
 
+
+
+
+
+
   // Collision avec le mini-paddle
-  if (miniPaddle) {
+  if (miniPaddle) 
+  {
     const miniPaddleCollision = collideMiniPaddle(
       ball,
       miniPaddle,
       ballV,
       currentSpeed,
     );
-    if (miniPaddleCollision) return miniPaddleCollision;
+    if (miniPaddleCollision) 
+      return miniPaddleCollision;
   }
 
-  // Collision avec les triangles
+
+
+
+
+
   const triangles = [rightTri, leftTri, rightTriOuterLeft, leftTriOuterLeft, rightTriOuterRight, leftTriOuterRight];
-  for (const tri of triangles) {
-    if (tri) {
+  
+  // pour chaque elem de "triangles"  on cree une var qui lui est = pour itere sur tous ces types "mesh"
+  for (const tri of triangles) 
+  {
+    if (tri) 
+    {
       const triangleCollision = collideTrianglePrism(
         ball,
         tri,
         ballV,
         currentSpeed,
       );
-      if (triangleCollision) return triangleCollision;
+      if (triangleCollision) 
+        return triangleCollision;
     }
   }
 
-  // Collision avec les murs
+
+
+
+
+
+
   const wallCollision = collideWalls(
     ball,
     ballV,
     currentSpeed,
   );
-  if (wallCollision) return wallCollision;
+  if (wallCollision)
+    return wallCollision;
+
+
+
 
   return null;
 }
