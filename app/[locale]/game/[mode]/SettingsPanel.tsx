@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { toast } from "react-hot-toast";
+import { Toaster as toast } from "@/components/ui/sonner";
 
 
 // Pour customi
