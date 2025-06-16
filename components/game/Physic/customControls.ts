@@ -25,7 +25,7 @@ export function updateControls(newControls: Controls) {
   // Mise à jour des contrôles
   currentControls = newControls;
   
-  // Nettoyage des touches actuellement pressées
+  // Nettoyage des touches actuellement pressees
   keys.clear();
 }
 
