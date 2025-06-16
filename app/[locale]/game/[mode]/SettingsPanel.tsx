@@ -121,6 +121,8 @@ export default function SettingsPanel({
   const [isLoading, setIsLoading] = useState(false);
   const jwtToken = useJWT();
   const router = useRouter();
+  const [matchCompleted, setMatchCompleted] = useState(false);
+  const [currentWinner, setCurrentWinner] = useState<string | null>(null);
 
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [participants, setParticipants] = useState<Array<{
@@ -140,6 +142,103 @@ export default function SettingsPanel({
     },
   });
 
+  // Ajout d'un useEffect pour gérer la fin d'un match
+  useEffect(() => {
+    if (gamemode === "tournament" && currentMatch && matchCompleted && currentWinner) {
+      console.log("Mise à jour du bracket après match terminé");
+      console.log("Match actuel:", currentMatch);
+      console.log("Gagnant:", currentWinner);
+
+      // Mettre à jour le bracket avec le gagnant
+      updateBracketAfterMatch(currentMatch.id, currentWinner);
+
+      // Créer une nouvelle copie du bracket
+      const updatedBracket = [...bracket];
+      const currentMatchIndex = updatedBracket.findIndex(m => m.id === currentMatch.id);
+
+      if (currentMatchIndex !== -1) {
+        // Trouver le gagnant dans le match actuel
+        const winner = currentMatch.player1?.username === currentWinner
+          ? currentMatch.player1
+          : currentMatch.player2;
+
+        console.log("Joueur gagnant trouvé:", winner);
+
+        if (winner) {
+          // Calculer l'index du prochain match dans le bracket
+          const nextMatchIndex = Math.floor(currentMatchIndex / 2) + Math.ceil(bracket.length / 2);
+          console.log("Index du prochain match calculé:", nextMatchIndex);
+
+          if (nextMatchIndex < updatedBracket.length) {
+            const nextMatch = updatedBracket[nextMatchIndex];
+            console.log("Prochain match avant mise à jour:", nextMatch);
+
+            // Déterminer si c'est le premier ou le deuxième joueur du prochain match
+            const isFirstPlayer = currentMatchIndex % 2 === 0;
+
+            // Mettre à jour le prochain match avec le gagnant
+            if (isFirstPlayer) {
+              nextMatch.player1 = winner;
+            } else {
+              nextMatch.player2 = winner;
+            }
+
+            console.log("Prochain match après mise à jour:", nextMatch);
+
+            // Mettre à jour le bracket
+            setBracket(updatedBracket);
+
+            // Sauvegarder dans le localStorage
+            localStorage.setItem("tournamentBracket", JSON.stringify(updatedBracket));
+
+            // Trouver le prochain match à jouer
+            const nextPendingMatch = updatedBracket.find(match =>
+              match.status === "pending" &&
+              match.player1 !== null &&
+              match.player2 !== null
+            );
+
+            if (nextPendingMatch) {
+              const nextPendingMatchIndex = updatedBracket.findIndex(m => m.id === nextPendingMatch.id);
+              setCurrentMatch(nextPendingMatch);
+              setCurrentMatchIndex(nextPendingMatchIndex);
+            } else {
+              console.log("Aucun prochain match à jouer trouvé");
+            }
+          }
+        }
+      }
+
+      setMatchCompleted(false);
+      setCurrentWinner(null);
+    }
+  }, [matchCompleted, currentMatch, currentWinner, gamemode, bracket, currentMatchIndex, updateBracketAfterMatch]);
+
+  // Fonction pour gérer la fin d'un match
+  const handleMatchEnd = (winner: string) => {
+    if (gamemode === "tournament" && currentMatch) {
+      console.log("Fin du match détectée");
+      console.log("Match:", currentMatch);
+      console.log("Gagnant:", winner);
+
+      setCurrentWinner(winner);
+      setMatchCompleted(true);
+
+      // Mettre à jour le statut du match dans le bracket
+      setBracket(prevBracket => {
+        const newBracket = [...prevBracket];
+        const match = newBracket.find(m => m.id === currentMatch.id);
+        if (match) {
+          match.status = "completed";
+          match.winner = winner;
+          console.log("Bracket mis à jour avec le gagnant:", newBracket);
+          localStorage.setItem("tournamentBracket", JSON.stringify(newBracket));
+        }
+        return newBracket;
+      });
+    }
+  };
+
   // Synchronisation du bracket avec le localStorage - uniquement pour le mode tournoi
   useEffect(() => {
     if (gamemode === "tournament") {
@@ -158,6 +257,19 @@ export default function SettingsPanel({
         });
 
         setBracket(parsedBracket);
+
+        // Trouver le premier match en attente avec deux joueurs
+        const nextMatch = parsedBracket.find((match: BracketMatch) =>
+          match.status === "pending" &&
+          match.player1 !== null &&
+          match.player2 !== null
+        );
+
+        if (nextMatch) {
+          const nextMatchIndex = parsedBracket.findIndex((m: BracketMatch) => m.id === nextMatch.id);
+          setCurrentMatch(nextMatch);
+          setCurrentMatchIndex(nextMatchIndex);
+        }
       }
     }
   }, [gamemode, setBracket]);
@@ -165,6 +277,7 @@ export default function SettingsPanel({
   // Mise à jour du localStorage quand le bracket change - uniquement pour le mode tournoi
   useEffect(() => {
     if (gamemode === "tournament" && bracket.length > 0) {
+      console.log("Mise à jour du localStorage avec le nouveau bracket:", bracket);
       localStorage.setItem("tournamentBracket", JSON.stringify(bracket));
     }
   }, [bracket, gamemode]);
@@ -695,7 +808,7 @@ export default function SettingsPanel({
                 {gamemode === "tournament" ? (
                   <Button
                     onClick={() => {
-                      if (currentMatch) {
+                      if (currentMatch && !matchCompleted) {
                         console.log("Lancement du match:", currentMatch);
                         // Marquer le match comme en cours seulement s'il n'a pas déjà un gagnant
                         setBracket(prevBracket => {
@@ -708,13 +821,21 @@ export default function SettingsPanel({
                           return newBracket;
                         });
                         onStart();
+                        // Simuler la fin du match (à remplacer par la vraie logique de fin de match)
+                        setTimeout(() => {
+                          // Simuler un gagnant aléatoire pour le test
+                          const winner = Math.random() > 0.5 ? currentMatch.player1?.username : currentMatch.player2?.username;
+                          if (winner) {
+                            handleMatchEnd(winner);
+                          }
+                        }, 5000); // 5 secondes pour l'exemple, à ajuster
                       }
                     }}
-                    disabled={!canStart}
+                    disabled={!canStart || matchCompleted || currentMatch?.status === "completed"}
                     className="w-full py-6 text-lg"
-                    variant={canStart ? "default" : "secondary"}
+                    variant={canStart && !matchCompleted && currentMatch?.status !== "completed" ? "default" : "secondary"}
                   >
-                    🏆 Lancer le Match
+                    {currentMatch?.status === "completed" ? "Match Terminé" : "🏆 Lancer le Match"}
                   </Button>
                 ) : (
                   <Button
@@ -746,6 +867,8 @@ export default function SettingsPanel({
         <Card className="p-6 mb-6">
           <h3 className="text-xl font-semibold mb-4">
             Match {currentMatch.round}.{currentMatch.matchNumber}
+            {currentMatch.status === "completed" && " (Terminé)"}
+            {currentMatch.status === "ongoing" && " (En cours)"}
           </h3>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -792,6 +915,13 @@ export default function SettingsPanel({
               )}
             </div>
           </div>
+          {currentMatch.winner && (
+            <div className="mt-4 text-center">
+              <p className="text-lg font-semibold text-green-500">
+                Vainqueur: {currentMatch.winner}
+              </p>
+            </div>
+          )}
         </Card>
       )}
 
