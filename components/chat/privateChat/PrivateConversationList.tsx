@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/i18n-client";
 
 // Schéma de validation pour l'ajout de contact
 const AddContactSchema = z.object({
@@ -97,6 +98,8 @@ export function PrivateConversationList({
 			setIsLoading(false);
 		}
 	};
+
+	const t = useI18n();
 	return (
 		<div className="flex-1 overflow-y-auto max-h-[600px]">
 			<div className="p-4">
@@ -170,7 +173,7 @@ export function PrivateConversationList({
 					</div>
 				) : (
 					<p className="text-muted-foreground text-center py-8">
-						Aucune conversation privée
+						{t('chat.noPrivateConversation')}
 					</p>
 				)}
 			</div>

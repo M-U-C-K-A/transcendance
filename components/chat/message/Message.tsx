@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/hover-card";
 import { CalendarDays } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/i18n-client";
 
 type MessageProps = {
   message: {
@@ -92,7 +93,7 @@ export function Message({ message, currentUser }: MessageProps) {
     // Print table
     console.table([logData]);
   }
-
+  const t = useI18n();
 if (message.typeMessage === "INVITATION") {
   return (
     <div className="w-full my-2 mb-4">
@@ -138,7 +139,7 @@ if (message.typeMessage === "INVITATION") {
           href={`/game/invite/${message.text}`}
           className="text-xs px-3 py-1 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition whitespace-nowrap"
         >
-          🎮 Rejoindre
+          {t('game.create.joininvitation')}
         </Link>
       </div>
     </div>
