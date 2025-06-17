@@ -48,11 +48,15 @@ export function PrivateChat({
     : "/profilepicture/0.webp";
 
   const filteredMessages = useMemo(() => {
-    return messages.filter(
-      (msg) =>
-        (msg.user.name === selectedUser && msg.recipient?.name === currentUser) ||
-        (msg.user.name === currentUser && msg.recipient?.name === selectedUser)
-    );
+    if (!selectedUser) return [];
+
+    return messages.filter(msg => {
+      const isSentMessage = msg.user.name === currentUser &&
+                          msg.recipient?.name === selectedUser;
+      const isReceivedMessage = msg.user.name === selectedUser &&
+                              msg.recipient?.name === currentUser;
+      return isSentMessage || isReceivedMessage;
+    }).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }, [messages, selectedUser, currentUser]);
 
   return (
@@ -90,7 +94,7 @@ export function PrivateChat({
           <MessageList
             messages={filteredMessages}
             currentUser={currentUser}
-            className="max-h-[450px]"
+            className="flex-1 overflow-y-auto max-h-[calc(100vh-200px)]"
             onInvitationClick={(content) => {
               if (content.includes("Rejoignez ma partie")) {
                 fetch('/api/game/join', {
