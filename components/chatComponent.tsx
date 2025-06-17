@@ -30,7 +30,7 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
     messages: privateMessages,
     fetchPrivateMessages,
     isLoading,
-    error
+    error: currentError
   } = usePrivateMessages(currentUser);
 
   useEffect(() => {
@@ -140,77 +140,31 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
     }
   };
 
-  const sendInvitation = () => {
-    sendMessage('INVITATION');
-  };
-
-  const isLoading = activeTab === "public" ? loadingPublic : loadingPrivate;
-  const error = activeTab === "public" ? errorPublic : errorPrivate;
-
-  if (isLoading) {
-    return <div className="flex h-full justify-center items-center">Chargement...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
-  }
-
   return (
-    <Tabs
-      defaultValue="public"
-      onValueChange={(val) => {
-        setActiveTab(val as Tab);
-        setNewMessage("");
-        setSendError(null);
-        if (val === "public") setSelectedPrivateUser(null);
-      }}
-      className="h-full flex flex-col overflow-y-hidden"
-    >
-      <TabsList className="grid grid-cols-2 w-full">
-        <TabsTrigger value="public">{t('chat.public')}</TabsTrigger>
-        <TabsTrigger value="private">{t('chat.private')}</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="public" className="flex-1">
-        <PublicChat
-          messages={publicMessages}
-          newMessage={newMessage}
-          onNewMessageChange={setNewMessage}
-          onSendMessage={(e) => {
-            e.preventDefault();
-            sendMessage();
-          }}
-          placeholder={placeholder}
-          currentUser={currentUser}
-        />
-      </TabsContent>
-
-      <TabsContent value="private" className="flex-1">
-        <PrivateChat
-          messages={privateMessages}
-          conversations={privateConversations}
-          selectedUser={selectedPrivateUser}
-          currentUser={currentUser}
-          newMessage={newMessage}
-          newPrivateUser={newPrivateUser}
-          onNewMessageChange={setNewMessage}
-          onNewPrivateUserChange={setNewPrivateUser}
-          onSendMessage={(e) => {
-            e.preventDefault();
-            sendMessage('PRIVATE');
-          }}
-          onAddNewUser={() => {
-            if (newPrivateUser.trim()) {
-              setNewPrivateUser("");
-            }
-          }}
-          onSelectUser={setSelectedPrivateUser}
-          onBack={() => setSelectedPrivateUser(null)}
-          onContactAdded={handleContactAdded}
-          sendError={sendError}
-          onSendInvitation={sendInvitation}
-        />
-      </TabsContent>
-    </Tabs>
+    <div className="h-full flex flex-col overflow-y-hidden">
+      <PrivateChat
+        messages={privateMessages}
+        conversations={privateConversations}
+        selectedUser={selectedPrivateUser}
+        currentUser={currentUser}
+        newMessage={newMessage}
+        newPrivateUser={newPrivateUser}
+        onNewMessageChange={setNewMessage}
+        onNewPrivateUserChange={setNewPrivateUser}
+        onSendMessage={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        onAddNewUser={() => {
+          if (newPrivateUser.trim()) {
+            setNewPrivateUser("");
+          }
+        }}
+        onSelectUser={setSelectedPrivateUser}
+        onBack={() => setSelectedPrivateUser(null)}
+        onContactAdded={handleContactAdded}
+        sendError={sendError}
+      />
+    </div>
   );
 }

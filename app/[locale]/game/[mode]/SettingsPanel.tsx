@@ -588,6 +588,15 @@ export default function SettingsPanel({
 
   const t = useI18n();
 
+  // Affiche la popup de création de tournoi si aucun tournoi n'est en cours et qu'on n'est pas déjà en train de rejoindre
+  function shouldShowCreationDialog() {
+    return (
+      gamemode === "tournament" &&
+      typeof window !== "undefined" &&
+      !localStorage.getItem("tournamentId") &&
+      !showJoinDialog
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-10xl">
