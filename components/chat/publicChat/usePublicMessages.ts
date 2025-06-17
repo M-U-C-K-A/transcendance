@@ -72,7 +72,6 @@ const transformApiMessage = useCallback((apiMessage: generalMessage): Message =>
 	ws.onmessage = (event) => {
 	  try {
 		const data = JSON.parse(event.data);
-		console.log("➡️ Données WebSocket reçues :", data);
 		if (data.type === "NEW_PUBLIC_MESSAGE") {
 		  const newMsg = transformApiMessage(data.message);
 		  setMessages((prev) => [...prev, newMsg]);

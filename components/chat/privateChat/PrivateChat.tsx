@@ -48,16 +48,12 @@ export function PrivateChat({
     : "/profilepicture/0.webp";
 
   const filteredMessages = useMemo(() => {
-    if (!selectedUser) return [];
-
-    return messages.filter(msg => {
-      const isSentMessage = msg.user.name === currentUser &&
-                          msg.recipient?.name === selectedUser;
-      const isReceivedMessage = msg.user.name === selectedUser &&
-                              msg.recipient?.name === currentUser;
-      return isSentMessage || isReceivedMessage;
-    }).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-  }, [messages, selectedUser, currentUser]);
+    return messages.filter(
+      (msg) =>
+        msg.user.name === selectedUser ||
+        (msg.recipient && msg.recipient.name === selectedUser)
+    );
+  }, [messages, selectedUser]);
 
   return (
     <div className="flex flex-col h-full justify-between">
@@ -91,20 +87,7 @@ export function PrivateChat({
             <span className="font-medium">{selectedUser}</span>
           </div>
 
-          <MessageList
-            messages={filteredMessages}
-            currentUser={currentUser}
-            className="flex-1 overflow-y-auto max-h-[calc(100vh-200px)]"
-            onInvitationClick={(content) => {
-              if (content.includes("Rejoignez ma partie")) {
-                fetch('/api/game/join', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ reason: 'from-invite', content }),
-                }).catch(console.error);
-              }
-            }}
-          />
+          <MessageList messages={filteredMessages} currentUser={currentUser} className="max-h-[450px]"/>
 
           {sendError && (
             <div className="text-red-500 text-sm text-center px-4 py-2">
@@ -117,8 +100,6 @@ export function PrivateChat({
             onChange={onNewMessageChange}
             onSubmit={onSendMessage}
             placeholder={`Message à ${selectedUser}`}
-            isPrivate={true}
-            recipientId={selectedConversation?.id}
           />
         </>
       )}
