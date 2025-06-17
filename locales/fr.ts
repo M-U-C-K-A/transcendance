@@ -4,8 +4,10 @@ export default {
   "back_to_home": "Retour à l'accueil",
 
   "common": {
-    "appName": "PongMaster",
+    "save": "Enregistrer",
+    "appName": "ft_transcendance",
     "login": "Connexion",
+    "verify": "Vérifier",
     "register": "S'inscrire",
     "freeRegister": "Inscription gratuite",
     "statistics": "Statistiques",
@@ -15,6 +17,53 @@ export default {
     "removing": "Suppression",
     "remove": "Supprimer",
     "copyright": "© 2025 PongMaster Enterprise. Tous droits réservés."
+  },
+
+  "gdpr": {
+    "title": "Gestion des données personnelles",
+    "validation": {
+      "passwordRequired": "Le mot de passe est requis",
+      "usernameRequired": "Le nom d'utilisateur est requis",
+      "invalidEmail": "Email invalide",
+      "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères"
+    },
+    "sections" : {
+      "personalData": {
+        "title": "Données personnelles",
+        "firstName": "Prénom",
+        "description": "Mettez à jour vos données personnelles",
+        "manageButton": "Gérer mes données",
+        "lastName": "Nom",
+        "email": "Email",
+        "username": "Nom d'utilisateur",
+        "update": "Mettre à jour"
+      },
+      "critical": {
+        "title": "Données critiques",
+        "deleteAccount": "Supprimer le compte",
+        "deleteWarning": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+        "deleteButton": "Supprimer le compte"
+      },
+      "password": "Mot de passe"
+    },
+    "alerts": {
+      "delete":{
+        "title": "Supprimer le compte",
+        "description": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+        "confirm":  "Confirmer"
+      }
+    },
+    "toasts": {
+      "verificationSuccess": "Vérification réussie",
+      "updateSuccess": "Vos informations ont été mises à jour",
+      "deleteSuccess": "Votre compte a été supprimé avec succès"
+    },
+    "errors": {
+      "incorrectPassword": "Mot de passe incorrect",
+      "updateFailed": "Échec de la mise à jour",
+      "deleteFailed": "Échec de la suppression du compte",
+      "genericError": "Une erreur est survenue"
+    }
   },
 
   "landing": {
@@ -27,7 +76,10 @@ export default {
       "title": "Fonctionnalités",
       "gameModes": {
         "title": "Modes de jeu",
-        "description": "Classique, personnalisé ou tournoi. Choisissez votre façon de jouer et défiez vos adversaires."
+        "description": "Classique, personnalisé ou tournoi. Choisissez votre façon de jouer et défiez vos adversaires.",
+        "classic": "Classique",
+        "red": "Rouge",
+        "neon": "Néon"
       },
       "chat": {
         "title": "Chat en temps réel",
@@ -316,3 +368,6 @@ export default {
     }
   }
 }
+
+
+

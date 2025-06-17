@@ -43,37 +43,50 @@ export class MalusSystem {
 
 
 
-
+  // check les pauses 
   public startMalusSystem() 
   {
-    this.spawnInterval = setInterval(() => {
-      // Arrêter si le jeu est en pause
-      if (this.gameRefs.isPaused?.current) {
-        if (!this.isPaused) {
-          this.isPaused = true;
+
+    this.spawnInterval = setInterval(() => 
+    {
+
+      // si on pause on save le temps 
+      if (this.gameRefs.isPaused?.current) 
+      {
+        if (!this.isPaused) 
           this.lastUpdateTime = Date.now();
-        }
         return;
       }
     
-      // **NOUVEAU : Arrêter si un winner existe**
-      if (this.gameRefs.winner?.current) {
+
+      // si partie fini que ca spwan plus 
+      if (this.gameRefs.winner?.current) 
+      {
         this.stopMalusSystem();
         return;
       }
     
-      if (this.isPaused) {
-        this.isPaused = false;
-        this.lastUpdateTime = Date.now();
-      }
+
+
+
       const deltaTime = Date.now() - this.lastUpdateTime;
       this.lastUpdateTime = Date.now();
       this.remainingTime = Math.max(0, this.remainingTime - deltaTime);
-      if (this.remainingTime <= 0) {
+
+
+
+      // fin du compteur = spawn malus
+      if (this.remainingTime <= 0) 
+      {
         this.spawnMalus();
         this.remainingTime = 15000;
       }
+
+
+
     }, 100);
+
+
   }
 
 
@@ -83,11 +96,14 @@ export class MalusSystem {
 
 
 
-  public stopMalusSystem() {
+  public stopMalusSystem() 
+  {
     if (this.spawnInterval) {
       clearInterval(this.spawnInterval);
       this.spawnInterval = null;
     }
+
+    
     if (this.MalusMesh) {
       this.MalusMesh.dispose();
       this.MalusMesh = null;
@@ -101,7 +117,8 @@ export class MalusSystem {
 
 
 
-  public getRemainingTime(): number {
+  public getRemainingTime(): number 
+  {
     return Math.ceil(this.remainingTime / 1000);
   }
 

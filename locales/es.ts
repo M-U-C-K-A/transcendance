@@ -4,8 +4,10 @@ export default {
   "back_to_home": "Volver al inicio",
 
   "common": {
-    "appName": "PongMaster",
+    "save": "Guardar",
+    "appName": "ft_transcendance",
     "login": "Iniciar sesión",
+    "verify": "Verificar",
     "register": "Registrarse",
     "freeRegister": "Registro gratuito",
     "statistics": "Estadísticas",
@@ -15,6 +17,53 @@ export default {
     "removing": "Eliminando",
     "remove": "Eliminar",
     "copyright": "© 2025 PongMaster Enterprise. Todos los derechos reservados."
+  },
+
+  "gdpr": {
+    "title": "Gestión de datos personales",
+    "validation": {
+      "passwordRequired": "La contraseña es obligatoria",
+      "usernameRequired": "El nombre de usuario es obligatorio",
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres"
+    },
+    "sections" : {
+      "personalData": {
+        "title": "Datos personales",
+        "firstName": "Nombre",
+        "description": "Actualiza tus datos personales",
+        "manageButton": "Gestionar mis datos",
+        "lastName": "Apellido",
+        "email": "Correo electrónico",
+        "username": "Nombre de usuario",
+        "update": "Actualizar"
+      },
+      "critical": {
+        "title": "Datos críticos",
+        "deleteAccount": "Eliminar cuenta",
+        "deleteWarning": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.",
+        "deleteButton": "Eliminar cuenta"
+      },
+      "password": "Contraseña"
+    },
+    "alerts": {
+      "delete":{
+        "title": "Eliminar cuenta",
+        "description": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.",
+        "confirm":  "Confirmar"
+      }
+    },
+    "toasts": {
+      "verificationSuccess": "Verificación exitosa",
+      "updateSuccess": "Tu información ha sido actualizada",
+      "deleteSuccess": "Tu cuenta ha sido eliminada exitosamente"
+    },
+    "errors": {
+      "incorrectPassword": "Contraseña incorrecta",
+      "updateFailed": "Error al actualizar",
+      "deleteFailed": "Error al eliminar la cuenta",
+      "genericError": "Ha ocurrido un error"
+    }
   },
 
   "landing": {
@@ -27,7 +76,10 @@ export default {
       "title": "Características",
       "gameModes": {
         "title": "Modos de juego",
-        "description": "Clásico, personalizado o torneo. Elige tu forma de jugar y desafía a tus oponentes."
+        "description": "Clásico, personalizado o torneo. Elige tu forma de jugar y desafía a tus oponentes.",
+        "classic": "Clásico",
+        "red": "Rojo",
+        "neon": "Neón"
       },
       "chat": {
         "title": "Chat en tiempo real",

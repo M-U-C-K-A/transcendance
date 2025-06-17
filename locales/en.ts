@@ -368,6 +368,15 @@ export default {
     "title": "ft_Transcendance",
   },
 
+  "chat": {
+    "title": "General Chat",
+    "placeholder": "Write a message...",
+    "public": "Public",
+    "private": "Private",
+    "invitation": "Invitation",
+    "noPrivateConversation": "No private conversation",
+  },
+
   "game": {
     "back": "Back to dashboard",
     "info": {
@@ -452,6 +461,7 @@ export default {
     "create": {
       "ongoing": "Ongoing",
       "slow": "Slow",
+      "joininvitation": "Join",
       "speed": "Speed Selection",
       "medium": "Medium",
       "fast": "Fast",
