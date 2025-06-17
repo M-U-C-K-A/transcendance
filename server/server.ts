@@ -22,13 +22,11 @@ import newMessageRoute from './routes/chat/newMessageRoute';
 import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
-import generalChatRoute from './routes/chat/generalChatRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
-import fastifyCookie from '@fastify/cookie';
 import gameCreationRoute from './routes/match/gameCreation';
 import register2FARoute from './routes/auth/register/2FAregisterRoute';
 import Check2FARoute from './routes/auth/register/2FACheckRoute';
@@ -64,9 +62,6 @@ app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
 });
 
-app.register(fastifyCookie, {
-  secret: process.env.COOKIE_SECRET || 'a_secret_key',
-});
 
 async function main() {
 	const port = 3001;
@@ -74,7 +69,6 @@ async function main() {
 	await app.register(profileRoute);
 	await app.register(health);
 	await app.register(loginRoute);
-	await app.register(generalChatRoute);
 	await app.register(privateChatRoute);
 	await app.register(editProfileRoute);
 	await app.register(sendMessageRoute);
