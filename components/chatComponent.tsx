@@ -165,6 +165,10 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     }
   };
 
+  const sendInvitation = () => {
+    sendMessage('INVITATION');
+  };
+
   const isLoading = activeTab === "public" ? loadingPublic : loadingPrivate;
   const error = activeTab === "public" ? errorPublic : errorPrivate;
 
@@ -229,6 +233,7 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
           onBack={() => setSelectedPrivateUser(null)}
           onContactAdded={handleContactAdded}
           sendError={sendError}
+          onSendInvitation={sendInvitation}
         />
       </TabsContent>
     </Tabs>

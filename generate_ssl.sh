@@ -14,6 +14,8 @@ else
   echo "Certificate already exists."
 fi
 
+
+
 # Lance nginx, capture l’erreur si elle arrive et ne quitte pas le script
 nginx -g "daemon off;" || echo "⚠️ Nginx failed to start. Check your configuration."
 # Optionnel: pour ne pas sortir du script (par exemple loop ou sleep)

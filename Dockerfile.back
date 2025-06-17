@@ -16,4 +16,5 @@ COPY . .
 
 EXPOSE 3001
 
+
 CMD ["pnpm", "run", "dev:server"]

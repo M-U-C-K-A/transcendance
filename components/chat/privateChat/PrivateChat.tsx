@@ -22,6 +22,7 @@ interface PrivateChatProps {
   onBack: () => void;
   onContactAdded: (contact: { id: number; userName: string }) => void;
   sendError: string | null;
+  onSendInvitation?: () => void;
 }
 
 export function PrivateChat({
@@ -39,6 +40,7 @@ export function PrivateChat({
   onBack,
   onContactAdded,
   sendError,
+  onSendInvitation,
 }: PrivateChatProps) {
   const selectedConversation = conversations.find(
     (c) => c.userName === selectedUser
@@ -101,6 +103,15 @@ export function PrivateChat({
             onSubmit={onSendMessage}
             placeholder={`Message à ${selectedUser}`}
           />
+          {onSendInvitation && selectedUser && (
+            <Button
+              className="mt-2"
+              variant="outline"
+              onClick={onSendInvitation}
+            >
+              Inviter à rejoindre la partie
+            </Button>
+          )}
         </>
       )}
     </div>
