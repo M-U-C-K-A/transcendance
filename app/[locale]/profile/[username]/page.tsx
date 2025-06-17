@@ -13,6 +13,7 @@ import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfileCard } from "@/components/profile/UserInfo"
 import { useJWT } from "@/hooks/use-jwt"
+import { useI18n } from "@/i18n-client"
 
 interface UserInfo {
   id: number
@@ -70,6 +71,7 @@ interface ProfileData {
 }
 
 export default function ProfilePage() {
+  const t = useI18n()
   const params = useParams()
   const username = params.username as string
   const locale = params.locale as string
@@ -88,22 +90,21 @@ export default function ProfilePage() {
           },
         })
         if (!response.ok) {
-          throw new Error("Failed to fetch profile data")
+          throw new Error(t('profile.errors.fetchFailed'))
         }
         const data = await response.json()
         setProfileData(data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred")
-        console.error("Error fetching profile data:", err)
+        setError(err instanceof Error ? err.message : t('profile.errors.unknown'))
+        console.error(t('profile.errors.fetchError'), err)
       } finally {
         setIsLoading(false)
       }
     }
     if (jwt && username) {
-    fetchProfileData()
-  }
-}, [jwt, username])
-
+      fetchProfileData()
+    }
+  }, [jwt, username, t])
 
   if (isLoading) {
     return <ProfileSkeleton locale={locale} />
@@ -114,14 +115,14 @@ export default function ProfilePage() {
       <div className="flex items-center justify-center h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Error</CardTitle>
+            <CardTitle>{t('common.error')}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-red-500">{error}</p>
           </CardContent>
           <CardFooter>
             <Link href="/dashboard">
-              <Button variant="outline">Return to Dashboard</Button>
+              <Button variant="outline">{t('profile.returnToDashboard')}</Button>
             </Link>
           </CardFooter>
         </Card>
@@ -134,14 +135,14 @@ export default function ProfilePage() {
       <div className="flex items-center justify-center h-screen">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Profile Not Found</CardTitle>
+            <CardTitle>{t('profile.notFound.title')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>The requested profile does not exist.</p>
+            <p>{t('profile.notFound.description')}</p>
           </CardContent>
           <CardFooter>
             <Link href="/dashboard">
-              <Button variant="outline">Return to Dashboard</Button>
+              <Button variant="outline">{t('profile.returnToDashboard')}</Button>
             </Link>
           </CardFooter>
         </Card>
@@ -165,8 +166,8 @@ export default function ProfilePage() {
       id: match.id,
       date: new Date(match.MDate).toLocaleDateString(),
       opponentId,
-      opponent: `User ${opponentId}`,
-      result: match.winnerId === userInfo.id ? "Victoire" : "Défaite",
+      opponent: `${t('profile.match.opponentPrefix')} ${opponentId}`,
+      result: match.winnerId === userInfo.id ? t('profile.match.victory') : t('profile.match.defeat'),
       score: `${playerScore}-${opponentScore}`,
       eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`,
       opponentAvatar: `/profilepicture/${opponentId}.webp`,
@@ -181,41 +182,42 @@ export default function ProfilePage() {
         <div className="flex justify-between items-center mb-8">
           <Link href="/dashboard">
             <Button variant="outline" size="sm" className="flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" /> Retour au tableau de bord
+              <ArrowLeft className="h-4 w-4" /> {t('profile.returnToDashboard')}
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">Profil de {userInfo.username}</h1>
+          <h1 className="text-2xl font-bold">
+            {t('profile.title', { username: userInfo.username })}
+          </h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-4">
-
-      <UserProfileCard user={userInfo} locale={locale} isBlocked={profileData.isBlocked} />
+            <UserProfileCard user={userInfo} locale={locale} isBlocked={profileData.isBlocked} />
 
             <Card className="bg-card border shadow-sm mt-6">
               <CardHeader>
-                <CardTitle>Statistiques</CardTitle>
+                <CardTitle>{t('profile.stats.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Parties jouées</span>
+                    <span className="text-muted-foreground">{t('profile.stats.gamesPlayed')}</span>
                     <span className="font-medium">{userInfo.win + userInfo.lose}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Taux de victoire</span>
+                    <span className="text-muted-foreground">{t('profile.stats.winRate')}</span>
                     <span className="font-medium">{winRate}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Points marqués</span>
+                    <span className="text-muted-foreground">{t('profile.stats.pointsScored')}</span>
                     <span className="font-medium">{userInfo.pointScored}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Points concédés</span>
+                    <span className="text-muted-foreground">{t('profile.stats.pointsConceded')}</span>
                     <span className="font-medium">{userInfo.pointConcede}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tournois gagnés</span>
+                    <span className="text-muted-foreground">{t('profile.stats.tournamentsWon')}</span>
                     <span className="font-medium">{userInfo.tournamentWon}</span>
                   </div>
                 </div>
@@ -223,32 +225,33 @@ export default function ProfilePage() {
             </Card>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid grid-cols-3 mb-6">
-                <TabsTrigger value="overview">Aperçu</TabsTrigger>
-                <TabsTrigger value="matches">Historique des matchs</TabsTrigger>
-                <TabsTrigger value="achievements">Réalisations</TabsTrigger>
+                <TabsTrigger value="overview">{t('profile.tabs.overview')}</TabsTrigger>
+                <TabsTrigger value="matches">{t('profile.tabs.matches')}</TabsTrigger>
+                <TabsTrigger value="achievements">{t('profile.tabs.achievements')}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview">
                 <Card className="bg-card border shadow-sm mb-6">
                   <CardHeader>
-                    <CardTitle>Évolution ELO</CardTitle>
-                    <CardDescription>Progression du classement ELO au cours des derniers mois</CardDescription>
+                    <CardTitle>{t('profile.elo.title')}</CardTitle>
+                    <CardDescription>{t('profile.elo.description')}</CardDescription>
                   </CardHeader>
                   <CardContent className="h-64 flex items-center justify-center">
                     <div className="text-center text-muted-foreground">
-                      Graphique d&apos;évolution ELO (similaire à celui de la page stats)
+                      {t('profile.elo.chartPlaceholder')}
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-card border shadow-sm">
                   <CardHeader>
-                    <CardTitle>Derniers matchs</CardTitle>
-                    <CardDescription>Résultats des matchs récents</CardDescription>
+                    <CardTitle>{t('profile.recentMatches.title')}</CardTitle>
+                    <CardDescription>
+                      {t('profile.recentMatches.description')}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -256,15 +259,19 @@ export default function ProfilePage() {
                         <div key={match.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
                           <div>
                             <div className="flex items-center">
-                              <p className="font-medium">vs {match.opponent}</p>
+                              <p className="font-medium">
+                                {t('profile.match.versus', { opponent: match.opponent })}
+                              </p>
                               <span className="text-xs text-muted-foreground ml-2">{match.date}</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">Score: {match.score}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {t('profile.match.score', { score: match.score })}
+                            </p>
                           </div>
                           <div className="flex items-center gap-3">
                             <Badge
                               className={
-                                match.result === "Victoire"
+                                match.result === t('profile.match.victory')
                                   ? "bg-green-500/20 text-green-500"
                                   : "bg-red-500/20 text-red-500"
                               }
@@ -282,8 +289,12 @@ export default function ProfilePage() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" className="w-full" onClick={() => setActiveTab("matches")}>
-                      Voir tous les matchs
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setActiveTab("matches")}
+                    >
+                      {t('profile.viewAllMatches')}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -292,19 +303,21 @@ export default function ProfilePage() {
               <TabsContent value="matches">
                 <Card className="bg-card border shadow-sm">
                   <CardHeader>
-                    <CardTitle>Historique des matchs</CardTitle>
-                    <CardDescription>Tous les matchs joués par {userInfo.username}</CardDescription>
+                    <CardTitle>{t('profile.matches.title')}</CardTitle>
+                    <CardDescription>
+                      {t('profile.matches.description', { username: userInfo.username })}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
                           <tr className="border-b">
-                            <th className="text-left py-3 px-4 font-medium">Date</th>
-                            <th className="text-left py-3 px-4 font-medium">Adversaire</th>
-                            <th className="text-left py-3 px-4 font-medium">Résultat</th>
-                            <th className="text-left py-3 px-4 font-medium">Score</th>
-                            <th className="text-right py-3 px-4 font-medium">Δ ELO</th>
+                            <th className="text-left py-3 px-4 font-medium">{t('profile.matches.date')}</th>
+                            <th className="text-left py-3 px-4 font-medium">{t('profile.matches.opponent')}</th>
+                            <th className="text-left py-3 px-4 font-medium">{t('profile.matches.result')}</th>
+                            <th className="text-left py-3 px-4 font-medium">{t('profile.matches.score')}</th>
+                            <th className="text-right py-3 px-4 font-medium">{t('profile.matches.eloChange')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -325,7 +338,7 @@ export default function ProfilePage() {
                               <td className="py-3 px-4">
                                 <Badge
                                   className={
-                                    match.result === "Victoire"
+                                    match.result === t('profile.match.victory')
                                       ? "bg-green-500/20 text-green-500"
                                       : "bg-red-500/20 text-red-500"
                                   }
@@ -351,105 +364,105 @@ export default function ProfilePage() {
               <TabsContent value="achievements">
                 <Card className="bg-card border shadow-sm">
                   <CardHeader>
-                    <CardTitle>Réalisations</CardTitle>
-                    <CardDescription>Badges et trophées débloqués</CardDescription>
+                    <CardTitle>{t('profile.achievements.title')}</CardTitle>
+                    <CardDescription>{t('profile.achievements.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
                         {
-                          title: "Premier Pas",
-                          description: "Jouer votre première partie de Pong",
+                          title: t('profile.achievements.beginner.title'),
+                          description: t('profile.achievements.beginner.description'),
                           icon: "🏓",
                           unlocked: achievements.beginner,
                         },
                         {
-                          title: "Humiliation",
-                          description: "Gagner une partie sans concéder de point",
+                          title: t('profile.achievements.humiliation.title'),
+                          description: t('profile.achievements.humiliation.description'),
                           icon: "😳",
                           unlocked: achievements.humiliation,
                         },
                         {
-                          title: "Défaite Honteuse",
-                          description: "Perdre une partie sans marquer de point",
+                          title: t('profile.achievements.shamefullLose.title'),
+                          description: t('profile.achievements.shamefullLose.description'),
                           icon: "🤦",
                           unlocked: achievements.shamefullLose,
                         },
                         {
-                          title: "Rivalité",
-                          description: "Jouer plusieurs fois contre le même adversaire",
+                          title: t('profile.achievements.rivality.title'),
+                          description: t('profile.achievements.rivality.description'),
                           icon: "⚔️",
                           unlocked: achievements.rivality,
                         },
                         {
-                          title: "Fair Play",
-                          description: "Jouer de manière exemplaire",
+                          title: t('profile.achievements.fairPlay.title'),
+                          description: t('profile.achievements.fairPlay.description'),
                           icon: "🤝",
                           unlocked: achievements.fairPlay,
                         },
                         {
-                          title: "Dernière Seconde",
-                          description: "Gagner une partie au dernier moment",
+                          title: t('profile.achievements.lastSecond.title'),
+                          description: t('profile.achievements.lastSecond.description'),
                           icon: "⏱️",
                           unlocked: achievements.lastSecond,
                         },
                         {
-                          title: "Comeback",
-                          description: "Gagner après avoir été mené",
+                          title: t('profile.achievements.comeback.title'),
+                          description: t('profile.achievements.comeback.description'),
                           icon: "🔄",
                           unlocked: achievements.comeback,
                         },
                         {
-                          title: "Partie Longue",
-                          description: "Jouer une partie de plus de 10 minutes",
+                          title: t('profile.achievements.longGame.title'),
+                          description: t('profile.achievements.longGame.description'),
                           icon: "⏳",
                           unlocked: achievements.longGame,
                         },
                         {
-                          title: "Champion de Tournoi",
-                          description: "Remporter un tournoi",
+                          title: t('profile.achievements.winTournament.title'),
+                          description: t('profile.achievements.winTournament.description'),
                           icon: "🏆",
                           unlocked: achievements.winTournament,
                         },
                         {
-                          title: "Amical",
-                          description: "Jouer une partie amicale",
+                          title: t('profile.achievements.friendly.title'),
+                          description: t('profile.achievements.friendly.description'),
                           icon: "🤗",
                           unlocked: achievements.friendly,
                         },
                         {
-                          title: "Numéro 1",
-                          description: "Atteindre la première place du classement",
+                          title: t('profile.achievements.rank1.title'),
+                          description: t('profile.achievements.rank1.description'),
                           icon: "🥇",
                           unlocked: achievements.rank1,
                         },
                         {
-                          title: "Perdant",
-                          description: "Perdre 10 parties",
+                          title: t('profile.achievements.looser.title'),
+                          description: t('profile.achievements.looser.description'),
                           icon: "😢",
                           unlocked: achievements.looser,
                         },
                         {
-                          title: "Vainqueur",
-                          description: "Gagner 10 parties",
+                          title: t('profile.achievements.winner.title'),
+                          description: t('profile.achievements.winner.description'),
                           icon: "😎",
                           unlocked: achievements.winner,
                         },
                         {
-                          title: "Buteur",
-                          description: "Marquer 100 points",
+                          title: t('profile.achievements.scorer.title'),
+                          description: t('profile.achievements.scorer.description'),
                           icon: "🎯",
                           unlocked: achievements.scorer,
                         },
                         {
-                          title: "Émotif",
-                          description: "Utiliser tous les emojis disponibles",
+                          title: t('profile.achievements.emoji.title'),
+                          description: t('profile.achievements.emoji.description'),
                           icon: "😊",
                           unlocked: achievements.emoji,
                         },
                         {
-                          title: "Rageux",
-                          description: "Quitter une partie en cours",
+                          title: t('profile.achievements.rage.title'),
+                          description: t('profile.achievements.rage.description'),
                           icon: "😠",
                           unlocked: achievements.rage,
                         },
