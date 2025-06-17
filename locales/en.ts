@@ -4,6 +4,7 @@ export default {
   "back_to_home": "Back to Home",
 
   "common": {
+    "save": "Save",
     "appName": "ft_transcendance",
     "login": "Login",
     "verify": "Verify",
@@ -119,6 +120,7 @@ export default {
 
   "auth": {
     "login": {
+      "submitting": "Submitting...",
       "title": "Login",
       "subtitle": "Sign in to access your PongMaster account",
       "emailLabel":"Email",
@@ -179,6 +181,24 @@ export default {
       "codeHint": "Code",
       "submit": "Verify",
     },
+  },
+
+  "profileEdit": {
+    "title": "Edit profile",
+    "usernameLabel": "Username",
+    "description": "Edit your profile",
+    "submit": "Save",
+    "bioLabel": "Bio",
+    "upload": {
+      "dragDrop": "Drag and drop",
+      "clickToSelect": "drag and drop your avatar here or click to upload",
+
+    }
+  },
+
+  "Log": {
+    "in": "Sign in",
+    "out": "Log out",
   },
 
   "dashboard": {

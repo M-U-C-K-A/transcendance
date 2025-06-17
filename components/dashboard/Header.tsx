@@ -9,10 +9,14 @@
   import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
   import { ProfileEditDialog } from "../setting/profile-edit-dialog"
   import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
+  
 
   interface HeaderProps {
     locale: string
   }
+
+
+
 
   export function Header({ locale }: HeaderProps) {
     const username = useUsernameFromJWT() || ''
@@ -26,6 +30,9 @@
         window.location.href = `/${locale}/auth`
       }
     }
+     
+
+
 
     return (
       <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
@@ -55,7 +62,7 @@
                   aria-label="Log Out"
                   onClick={handleLogout}
                 >
-                  <LogOut className="h-5 w-5" /> Log Out
+                  <LogOut className="h-5 w-5" /> {t('Log.out')}
                 </Button>
                 <Avatar>
                   <AvatarImage
@@ -70,7 +77,7 @@
             ) : (
               <Link href={`/auth`}>
                 <Button variant="ghost" size="sm" aria-label="Sign In">
-                  <LogIn className="h-5 w-5" /> Sign in
+                  <LogIn className="h-5 w-5" /> {t('Log.in')}
                 </Button>
               </Link>
             )}
