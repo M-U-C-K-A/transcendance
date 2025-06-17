@@ -8,13 +8,12 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 		const { code } = request.body as { code: string }
 
 		if (!user) {
-			console.log('User not found in request');
 			return reply.code(400).send({ error: 'parameter is required' })
 		}
 
 		try {
 			const result = await joinMatchFromInvite(user.id, code)
-			console.log(result)
+			console.log("👺👺👺👺👺👺👺👺", result)
 			return (reply.code(200).send({ result }))
 		} catch (err: any) {
 			console.error('Error in joinMatch:', err);
@@ -22,6 +21,8 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 				return reply.code(404).send({ error: 'User not found' })
 			} else if (err.message === 'Not valid invitation') {
 				return reply.code(404).send({ error: 'Not valid invitation' })
+			} else if (err.message == 'Match already finished') {
+				return reply.code(401).send({ error: 'Match already finished' })
 			}
 			return reply.code(500).send({ error: 'Internal server error' })
 		}

@@ -44,6 +44,12 @@ export function MessageInput({
     e.preventDefault();
     if (!hasGame) return;
 
+    // Empêche l'envoi sans destinataire en privé
+    if (isPrivate && !recipientId) {
+      alert("Aucun destinataire sélectionné !");
+      return;
+    }
+
     const content = `${gameData.id}`;
     const messageType = 'INVITATION';
 
@@ -69,7 +75,6 @@ export function MessageInput({
         console.error("Erreur lors de l'envoi du message de jeu", response.statusText);
       } else {
         onChange('');
-        onSubmit(e); // Trigger message list refresh
       }
     } catch (error) {
       console.error("Erreur réseau lors de l'envoi du message de jeu", error);
@@ -85,10 +90,11 @@ export function MessageInput({
               <Button
                 variant="outline"
                 size="icon"
-                className="opacity-100 cursor-pointer"
+                className={`opacity-100 cursor-pointer${isPrivate && !recipientId ? ' opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleGameClick}
                 aria-label="Partager une partie"
                 type="button"
+                disabled={isPrivate && !recipientId}
               >
                 <Swords className="h-4 w-4" />
               </Button>

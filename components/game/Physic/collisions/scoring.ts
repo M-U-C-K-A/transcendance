@@ -24,36 +24,36 @@ export function handleScoring(
   resetBall: (loser: "player1" | "player2") => void,
   gameRefs: GameRefs,
   volume?: number
-): void 
+): void
 {
 
 
-  if (ball.position.z < -20) 
+  if (ball.position.z < -20)
   {
       score.player2 += 1;
       setScore({ ...score });
       playGoalSound(volume);
 
-      if (gameRefs.score.current) 
+      if (gameRefs.score.current)
         gameRefs.score.current = score;
 
       if (score.player2 === 3)
         setWinner("player2");
 
-    
+
       resetBall("player1");
   }
 
 
 
 
-  if (ball.position.z > 20) 
+  if (ball.position.z > 20)
   {
     score.player1 += 1;
     setScore({ ...score });
     playGoalSound(volume);
 
-    if (gameRefs.score.current) 
+    if (gameRefs.score.current)
       gameRefs.score.current = score;
 
 
@@ -62,5 +62,5 @@ export function handleScoring(
 
 
     resetBall("player2");
-  }
+  } 
 }

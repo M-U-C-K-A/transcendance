@@ -140,6 +140,8 @@ export default function SettingsPanel({
   const [showWinnerDialog, setShowWinnerDialog] = useState(false);
   const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
 
+  const [showCustomDialog, setShowCustomDialog] = useState(false);
+
   const form = useForm<GameCreationData>({
     resolver: zodResolver(gameCreationSchema),
     defaultValues: {
@@ -364,6 +366,24 @@ export default function SettingsPanel({
     }
   }, [gamemode]);
 
+  // Afficher la popup custom si aucune partie custom n'est en cours
+  useEffect(() => {
+    if (gamemode === "custom") {
+      const storedGameId = localStorage.getItem("currentGameId");
+      const storedGameName = localStorage.getItem("currentGameName");
+      if (!storedGameId || !storedGameName) {
+        setShowCustomDialog(true);
+      } else if (!gameInfo) {
+        setGameInfo({
+          id: storedGameId,
+          name: storedGameName,
+          players: [],
+          status: "waiting"
+        });
+      }
+    }
+  }, [gamemode]);
+
   const createGame = async (data: GameCreationData) => {
     console.log("Création du tournoi avec les données:", data);
     setIsLoading(true);
@@ -410,29 +430,6 @@ export default function SettingsPanel({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const fetchGameInfo = async () => {
-    if (gamemode !== "custom" && gamemode !== "tournament") return;
-
-    try {
-      const res = await fetch("/api/game/infocreation");
-      const data = await res.json();
-      setGameInfo(data);
-      if (data?.id) {
-        localStorage.setItem("currentGameId", data.id);
-        localStorage.setItem("currentGameName", data.name);
-      }
-    } catch (err) {
-      console.error("Erreur récupération info:", err);
-    }
-  };
-
-  const shouldShowCreationDialog = () => {
-    if (gamemode !== "tournament") return false;
-    if (typeof window === 'undefined') return false;
-    const tournamentId = localStorage.getItem("tournamentId");
-    return !tournamentId;
   };
 
   // Ajoutons la fonction pour rejoindre le tournoi
@@ -558,9 +555,36 @@ export default function SettingsPanel({
 
   };
 
-
-
-
+  const createCustomGame = async (name: string) => {
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/game/custom", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) throw new Error("Erreur lors de la création");
+      const gameData = await response.json();
+      localStorage.setItem("currentGameId", gameData.hashedCode);
+      localStorage.setItem("currentGameName", gameData.name);
+      setGameInfo({
+        id: gameData.hashedCode,
+        name: gameData.name,
+        players: [],
+        status: "waiting"
+      });
+      setShowCustomDialog(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur création partie custom:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const t = useI18n();
 
@@ -749,6 +773,31 @@ export default function SettingsPanel({
                 {t('game.tournament.create.backdashboard')}
               </Button>
             </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Popup de création de partie custom */}
+      {gamemode === "custom" && showCustomDialog && (
+        <Dialog open={showCustomDialog} onOpenChange={() => {}}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Créer une partie personnalisée</DialogTitle>
+              <DialogDescription>Choisissez un nom pour votre partie</DialogDescription>
+            </DialogHeader>
+            <form onSubmit={e => {
+              e.preventDefault();
+              const name = e.currentTarget.customName.value;
+              if (name && name.length >= 3) createCustomGame(name);
+            }} className="space-y-6">
+              <div className="space-y-3">
+                <Label htmlFor="customName">Nom de la partie</Label>
+                <Input id="customName" name="customName" placeholder="Ma partie" minLength={3} required disabled={isLoading} />
+              </div>
+              <Button type="submit" className="w-full py-6 text-lg" disabled={isLoading}>
+                {isLoading ? <span className="animate-pulse">Création...</span> : "Créer la partie"}
+              </Button>
+            </form>
           </DialogContent>
         </Dialog>
       )}

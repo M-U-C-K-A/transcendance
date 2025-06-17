@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
-import { broadcastMessage, broadcastToAll } from './websocketChat';
+import { broadcastMessage } from './websocketChat';
 import { PrismaClient } from "@prisma/client";
 
 const Prisma = new PrismaClient()
@@ -19,14 +19,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 
 		try {
 			const wsMessage = await sendMessage(sender.id, data);
-
-			if (!data.recipient) {
-				broadcastToAll({
-					type: 'NEW_PUBLIC_MESSAGE',
-					message: wsMessage
-			});
-
-			} else if (data.recipient) {
+			if (data.recipient) {
 
 				const privateMessage = {
 					id: wsMessage.id,
@@ -46,7 +39,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 						username: sender.username,
 					},
 				};
-
+				console.log(privateMessage)
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage
