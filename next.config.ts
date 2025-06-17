@@ -68,8 +68,8 @@ const nextConfig: NextConfig = {
         destination: "https://backend/chat/block"
       },
       {
-        source: "/api/game/typecreation",
-        destination: "https://backend/game/typecreation"
+        source: "/api/game/custom",
+        destination: "https://backend/game/custom"
       },
       {
         source: "/api/game/travel",
