@@ -9,7 +9,6 @@ import profileRoute from './routes/profile/usersprofile';
 import health from './routes/health';
 import loginRoute from './routes/auth/login/login';
 import sendMessageRoute from './routes/chat/sendMessage';
-import tournamentRoutes from './routes/tournament';
 import { loggerConfig } from './config/logger';
 import friendListRoute from './routes/friends/friendListRoute';
 import leaderboardRoute from './routes/user/leaderboardRoute';
