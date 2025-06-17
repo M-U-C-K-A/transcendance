@@ -37,7 +37,7 @@ export function handleScoring(
       if (gameRefs.score.current) 
         gameRefs.score.current = score;
 
-      if (score.player2 === 5)
+      if (score.player2 === 3)
         setWinner("player2");
 
     
@@ -57,7 +57,7 @@ export function handleScoring(
       gameRefs.score.current = score;
 
 
-    if (score.player1 === 5)
+    if (score.player1 === 3)
       setWinner("player1");
 
 

@@ -4,6 +4,7 @@ export default {
   "back_to_home": "Back to Home",
 
   "common": {
+    "confirm": "Confirm",
     "save": "Save",
     "appName": "ft_transcendance",
     "login": "Login",
@@ -27,6 +28,14 @@ export default {
       "invalidEmail": "Invalid email",
       "passwordMinLength": "Password must be at least 8 characters"
     },
+      "modals": {
+        "password": {
+          "title": "Password",
+          "label": "Enter your new password",
+          "description": "Change your password",
+          "placeholder": "********",
+          }
+        },
     "sections" : {
       "personalData": {
         "title": "Personal Data",
@@ -64,7 +73,7 @@ export default {
       "updateFailed": "Update failed",
       "deleteFailed": "Account deletion failed",
       "genericError": "An error occurred"
-    },
+    }
   },
 
   "landing": {
@@ -304,7 +313,7 @@ export default {
         "back": "Back to Dashboard",
         "completed": "Completed",
         "start": "Start Match",
-        "select": "Please select all players to start the tournament."
+        "select": "Please select all players to start the match."
       }
     },
     "colleagues": {
@@ -371,7 +380,7 @@ export default {
   },
 
   "chat": {
-    "title": "General Chat",
+    "title": "Chat",
     "placeholder": "Write a message...",
     "public": "Public",
     "private": "Private",
@@ -399,7 +408,15 @@ export default {
       "error": {
         "alreadyassigned1": "The key",
         "alreadyassigned2": "is already assigned to another command."
-      }
+      },
+      "title": "Controls",
+      "player1": "Player 1",
+      "player2": "Player 2",
+      "up": "Up",
+      "down": "Down",
+      "special": "Special",
+      "cancel": "Cancel",
+      "save": "Save"
     },
     "chat": {
       "title": "Game chat"
@@ -457,7 +474,7 @@ export default {
         "back": "Back to Dashboard",
         "completed": "Completed",
         "start": "Start Match",
-        "select": "Please select all players to start the tournament."
+        "select": "Please select all players to start the match."
       }
     },
     "create": {
@@ -491,21 +508,11 @@ export default {
       "specialoff": "Special OFF",
       "malusdescription": "A malus appears every 15 seconds on the map. Touching it removes 1 point from the opponent!",
       "specialdescription": "After 10 strikes, you can activate a special move: your pad grows and returns the ball faster. The effect lasts 5 seconds.",
-      "malusloss": "Arriving at -5 points means you've lost!",
-      "special": "Special",
+      "malusloss": "Arriving at -3 points means you've lost!",
+      "special": "Special"
     },
     "map": {
       "title": "Map Selection"
-    },
-    "controls": {
-      "title": "Controls",
-      "player1": "Player 1",
-      "player2": "Player 2",
-      "up": "Up",
-      "down": "Down",
-      "special": "Special",
-      "cancel": "Cancel",
-      "save": "Save"
     }
   },
 
