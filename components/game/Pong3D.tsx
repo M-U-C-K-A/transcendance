@@ -213,45 +213,45 @@ export default function Pong3D({
 
 
 	useEffect(() =>
-	{
-		if (winner)
 		{
-			const sendScore = async () =>
+			if (winner)
 			{
-
-				try
+				const sendScore = async () =>
 				{
-					const response = await fetch('/api/game/result', {
-						method: 'POST',
-						headers:
-						{
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${localStorage.getItem("token")}`
-						},
-						body: JSON.stringify({
-							player1Score: score.player1,
-							player2Score: score.player2,
-							gameId: localStorage.getItem("currentGameId") || -1,
-						})
-					});
 
-					if (response.ok)
+					try
 					{
-						console.log('Score envoye avec succès !');
+						const response = await fetch('/api/game/result', {
+							method: 'POST',
+							headers:
+							{
+								'Content-Type': 'application/json',
+								'Authorization': `Bearer ${localStorage.getItem("token")}`
+							},
+							body: JSON.stringify({
+								player1Score: score.player1,
+								player2Score: score.player2,
+								gameId: localStorage.getItem("currentGameId") || -1,
+							})
+						});
+
+						if (response.ok)
+						{
+							console.log('Score envoye avec succès !');
+						}
 					}
-				}
 
-				catch (error)
-				{
-					console.error('Erreur, winneur non envoye :', error);
-				}
+					catch (error)
+					{
+						console.error('Erreur, winneur non envoye :', error);
+					}
 
 
-			};
+				};
 
-			sendScore();
-		}
-	}, [winner, score]);
+				sendScore();
+			}
+		}, [winner, score]);
 
 
 

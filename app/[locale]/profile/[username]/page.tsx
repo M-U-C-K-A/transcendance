@@ -164,9 +164,9 @@ export default function ProfilePage() {
 
     return {
       id: match.id,
-      date: new Date(match.MDate).toLocaleDateString(),
+      date: new Date(match.mDate).toLocaleDateString(),
       opponentId,
-      opponent: `${t('profile.match.opponentPrefix')} ${opponentId}`,
+      opponent: isPlayer1 ? match.player2?.username : match.player1?.username,
       result: match.winnerId === userInfo.id ? t('profile.match.victory') : t('profile.match.defeat'),
       score: `${playerScore}-${opponentScore}`,
       eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`,

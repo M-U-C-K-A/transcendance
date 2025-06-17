@@ -99,7 +99,8 @@ export function PrivateChat({
             value={newMessage}
             onChange={onNewMessageChange}
             onSubmit={onSendMessage}
-            placeholder={`Message à ${selectedUser}`}
+            isPrivate={true}
+            recipientId={selectedConversation?.id}
           />
         </>
       )}

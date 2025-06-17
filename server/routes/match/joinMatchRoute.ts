@@ -22,6 +22,8 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 				return reply.code(404).send({ error: 'User not found' })
 			} else if (err.message === 'Not valid invitation') {
 				return reply.code(404).send({ error: 'Not valid invitation' })
+			} else if (err.message == 'Match already finished') {
+				return reply.code(401).send({ error: 'Match already finished' })
 			}
 			return reply.code(500).send({ error: 'Internal server error' })
 		}

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Message } from "../publicChat/types";
-import { WS_URL } from "../publicChat/usePublicMessages";
+import { Message } from "./type";
+
+const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || '';
 
 interface RawMessage {
 	id: number;
@@ -75,13 +76,15 @@ export const usePrivateMessages = (currentUser: string) => {
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'NEW_PRIVATE_MESSAGE') {
+				const isSender = data.message.user?.username === currentUser;
 				const rawMessage = {
 					id: data.message.id,
-					sender: data.message.sender,
+					sender: data.message.user,
 					collegue: data.message.recipient,
 					content: data.message.content,
 					sendAt: data.message.sendAt,
-					isRead: false
+					isRead: false,
+					messageType: data.message.messageType
 				};
 				const newMessage = transformMessage(rawMessage);
 				setMessages(prev => [...prev, newMessage]);
