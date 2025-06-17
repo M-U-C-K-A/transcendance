@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useJWT } from "@/hooks/use-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
+import { useI18n } from "@/i18n-client"
 
 interface User {
 	username: string
@@ -23,6 +24,7 @@ interface User {
  * @returns Un composant JSX qui affiche le profil de l'utilisateur connecté.
  */
 export function UserProfile() {
+	const t = useI18n()
 	const jwt = useJWT()
 	const id = useIdFromJWT()
 	const [user, setUser] = useState<User | null>(null)
@@ -34,7 +36,6 @@ export function UserProfile() {
 					Authorization: `Bearer ${jwt}`,
 				},
 			})
-			console.log(response)
 			const data = await response.json()
 			setUser(data)
 		}
@@ -48,12 +49,14 @@ export function UserProfile() {
 	return (
 		<Card className="bg-card border shadow-sm">
 			<CardHeader>
-				<CardTitle>Profil</CardTitle>
+				<CardTitle>{t('userProfile.title')}</CardTitle>
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
 					<AvatarImage src={`/profilepicture/${id}.webp`} alt={user.username} />
-					<AvatarFallback className="text-2xl">{user?.username?.slice(0, 2).toUpperCase() || "??"}</AvatarFallback>
+					<AvatarFallback className="text-2xl">
+						{user?.username?.slice(0, 2).toUpperCase() || "??"}
+					</AvatarFallback>
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
 				<p className="text-muted-foreground mb-2">@{user.username}</p>
@@ -61,22 +64,28 @@ export function UserProfile() {
 				<div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
 					<div>
 						<p className="text-2xl font-bold text-primary">{user.win}</p>
-						<p className="text-xs text-muted-foreground">Victoires</p>
+						<p className="text-xs text-muted-foreground">
+							{t('userProfile.stats.wins')}
+						</p>
 					</div>
 					<div>
 						<p className="text-2xl font-bold text-red-400">{user.lose}</p>
-						<p className="text-xs text-muted-foreground">Défaites</p>
+						<p className="text-xs text-muted-foreground">
+							{t('userProfile.stats.losses')}
+						</p>
 					</div>
 					<div>
 						<p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
-						<p className="text-xs text-muted-foreground">Tournois</p>
+						<p className="text-xs text-muted-foreground">
+							{t('userProfile.stats.tournaments')}
+						</p>
 					</div>
 				</div>
 				<div className="flex gap-2 mb-4">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
 					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
 					<Badge variant={user.onlineStatus ? "offline" : "online"}>
-						{user.onlineStatus ? "Hors ligne" : "En ligne"}
+						{user.onlineStatus ? t('userProfile.status.offline') : t('userProfile.status.online')}
 					</Badge>
 				</div>
 			</CardContent>
