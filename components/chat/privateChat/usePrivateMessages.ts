@@ -70,7 +70,6 @@ export const usePrivateMessages = (currentUser: string) => {
 		const newSocket = new WebSocket(WS_URL, [token]);
 
 		newSocket.onopen = () => {
-			console.log("WebSocket connected for private chat");
 		};
 
 		newSocket.onmessage = (event) => {
@@ -92,7 +91,6 @@ export const usePrivateMessages = (currentUser: string) => {
 		};
 
 		newSocket.onclose = () => {
-			console.log("WebSocket disconnected, attempting reconnect...");
 			setTimeout(setupWebSocket, 3000);
 		};
 

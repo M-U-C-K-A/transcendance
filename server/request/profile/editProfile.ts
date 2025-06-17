@@ -28,10 +28,6 @@ async function saveAvatarFromBase64(base64Data: string, id: number) {
 }
 
 export default async function editProfile(id: number, username: string, newAvatarBase64: string, newBio: string, newUsername: string){
-	console.log(`Editing profile for user ID: ${id}`)
-	console.log(`Editing profile for user with username: ${username}`)
-	console.log(`Editing profile for user with new bio: ${newBio}`)
-	console.log(`Editing profile for user with new username: ${newUsername}`)
 
 	if (username !== newUsername) {
 		const result = await Prisma.user.findFirst({
@@ -56,6 +52,5 @@ export default async function editProfile(id: number, username: string, newAvata
 		}
 	})
 
-	console.log('Profile updated successfully')
 	return (true)
 }

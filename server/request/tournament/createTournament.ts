@@ -37,7 +37,5 @@ export default async function tournamentCreate(hostId: number, tournamentName: s
 		throw new Error('User not found')
 	}
 
-	console.log(`Tournament created with the name ${tournamentName} and slot ${slot}`)
-
 	return {hostId: hostId, username: host.username, elo: host.elo, win: host.win, lose: host.lose, tournamentId: tournament.id, tournamentSlot: slot}
 }

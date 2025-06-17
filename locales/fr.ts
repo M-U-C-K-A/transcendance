@@ -105,7 +105,7 @@ export default {
     }
   },
 
-  "Log":{ 
+  "Log":{
     "in": "Connexion",
     "out": "Déconnexion",
   },
@@ -275,7 +275,6 @@ export default {
   "dashboard": {
     "title": "Tableau de bord",
     "welcome": "Bienvenue",
-
     "profile": {
       "title": "Profil",
       "edit": "Modifier le profil",
@@ -286,6 +285,7 @@ export default {
     },
 
     "game": {
+      "start": "Commencer la partie",
       "quickMatch": "Partie rapide",
       "customGame": "Partie personnalisée",
       "tournament": "Tournoi",
@@ -597,6 +597,7 @@ export default {
   },
 
 }
+
 
 
 

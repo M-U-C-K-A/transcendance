@@ -40,7 +40,6 @@ export async function friendsWebSocketHandler(
 	}
 
 	friendConnections.get(userId)!.add(connection);
-	console.log(`🚨🚨🚨🚨ALERTE UTILISATEUR ${userId} CONNECTER AU WEBSOCKET POUR LES AMIS🚨🚨🚨🚨`)
 
 	await changeOnlineStatus(userId, true)
 
@@ -59,13 +58,10 @@ export async function friendsWebSocketHandler(
 }
 
 export function notifyFriend(userId: number, payload: any) {
-	console.log("TEST BROADCAST FRIENDLIST")
 	const conns = friendConnections.get(userId);
 	if (!conns) {
 		return
 	};
-	console.log("FRIENDS CONNECTION SIZE:", friendConnections.size)
-	console.log("🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅🎅", userId)
 	const msg = JSON.stringify(payload);
 	conns.forEach(ws => {
 	try {

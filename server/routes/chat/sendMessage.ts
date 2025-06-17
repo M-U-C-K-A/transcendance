@@ -13,7 +13,6 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		const sender = request.user as { id: number, username: string };
 
 		if (!data) {
-			console.log('No parameter passed in sendMessageRoute route');
 			return reply.code(400).send({ error: 'parameter is required' });
 		}
 
@@ -39,7 +38,6 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 						username: sender.username,
 					},
 				};
-				console.log(privateMessage)
 				broadcastMessage(data.recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage

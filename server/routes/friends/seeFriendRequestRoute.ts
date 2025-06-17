@@ -8,7 +8,6 @@ export default async function seeFriendRequestRoute(server: FastifyInstance) {
 
 	if (!user)
 	{
-		console.log('No parameter passed in friendListRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
