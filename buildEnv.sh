@@ -25,7 +25,11 @@ fi
   echo "GOOGLE_REDIRECT_URI=$GOOGLE_REDIRECT_URI" >> "$ENV_FILE"
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_CHAT=wss://${HOSTNAME}:3001/wss/chat" >> "$ENV_FILE"
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
-
+  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
+  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
+  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
+  echo "SMTP_PASS=jipk czwd ozxs seys" >> "$ENV_FILE"
+  echo "SMTP_MAIL=pongmaster12345@gmail.com" >> "$ENV_FILE"
 
   echo "✅ Fichier $ENV_FILE créé avec succès."
   exit 0
