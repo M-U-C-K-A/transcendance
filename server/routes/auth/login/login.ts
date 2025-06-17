@@ -8,7 +8,6 @@ export default async function loginRoute(server: FastifyInstance) {
 
 		try {
 			const result = await login(data)
-			console.log("👺👺👺👺👺👺👺", result, "👺👺👺👺👺👺👺👺")
 			return reply.code(200).send({ result })
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {

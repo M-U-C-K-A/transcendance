@@ -616,15 +616,15 @@ export default function SettingsPanel({
                 </div>
                 <Slider
                   defaultValue={[4]}
-                  min={2}
+                  min={4}
                   max={8}
-                  step={2}
+                  step={4}
                   onValueChange={(value) => form.setValue("playerCount", value[0])}
                   value={[form.watch("playerCount")]}
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground px-2">
-                  {[2, 4, 6, 8].map(num => (
+                  {[4, 8].map(num => (
                     <span key={num}>{num}</span>
                   ))}
                 </div>

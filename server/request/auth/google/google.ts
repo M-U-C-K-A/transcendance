@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import fetch from 'node-fetch';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir } from 'fs/promises';
 import path from 'path';
 import sharp from 'sharp';
 

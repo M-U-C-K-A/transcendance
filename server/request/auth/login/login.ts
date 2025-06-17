@@ -13,7 +13,10 @@ export default async function login(data: loginData) {
 	FROM "User"
 	WHERE email = ${data.email}`
 
-	if (existingUser[0]) {
+	if (!existingUser[0]) {
+		throw new Error('User not found')
+	}
+	else if (existingUser[0]) {
 		if (!existingUser[0].email) {
 			console.log('This account does not exist');
 			throw new Error ('This account does not exist')
