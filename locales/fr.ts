@@ -47,21 +47,58 @@ export default {
   "auth": {
     "login": {
       "title": "Connexion",
-      "description": "Connectez-vous pour accéder à votre compte PongMaster",
-      "email": "Email",
-      "password": "Mot de passe",
+      "subtitle": "Connectez-vous pour accéder à votre compte PongMaster",
+      "emailLabel": "Email",
+      "emailPlaceholder": "exemple@gmail.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "********",
       "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "orContinueWith": "Ou continuer avec",
       "continueWithGoogle": "Continuer avec Google",
-      "submit": "Se connecter"
+      "invalidEmail": "Email invalide",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères"
     },
     "register": {
       "title": "Inscription",
-      "description": "Créez un compte pour commencer à jouer à PongMaster",
-      "username": "Nom d'utilisateur",
-      "email": "Email",
-      "password": "Mot de passe",
-      "continueWithGoogle": "S'inscrire avec Google",
-      "submit": "Créer un compte"
+      "subtitle": "Créez un compte pour commencer à jouer à PongMaster",
+      "emailLabel": "Email",
+      "emailPlaceholder": "exemple@gmail.com",
+      "usernameLabel": "Nom d'utilisateur",
+      "usernamePlaceholder": "Choisissez un nom d'utilisateur",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "********",
+      "submit": "Créer un compte",
+      "submitting": "Création du compte...",
+      "invalidEmail": "Email invalide",
+      "usernameTooShort": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "usernameTooLong": "Le nom d'utilisateur doit contenir moins de 20 caractères",
+      "invalidChars": "Seuls les lettres, chiffres et underscores sont autorisés",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères"
+    },
+    "2fa": {
+      "title": "Vérification en 2 étapes",
+      "description": "Un code a été envoyé à {email}. Veuillez le saisir pour continuer.",
+      "invalidCode": "Code invalide",
+      "incompleteCode": "Veuillez entrer le code complet",
+      "incorrectCode": "Code incorrect",
+      "verificationError": "Erreur lors de la vérification du code",
+      "codeHint": "Entrez le code à 6 chiffres reçu par email"
+    },
+    "noAccount": "Pas de compte ?",
+    "haveAccount": "Déjà un compte ?",
+    "register": "S'inscrire",
+    "login": "Connexion",
+    "loginImageAlt": "Image d'illustration de connexion",
+    "errors": {
+      "tokenVerificationFailed": "Échec de la vérification du token",
+      "googleLoginFailed": "Connexion Google échouée",
+      "invalidFields": "Champs invalides",
+      "loginFailed": "Échec de la connexion",
+      "registrationFailed": "Échec de l'inscription",
+      "genericError": "Une erreur est survenue",
+      "sessionExpired": "Session expirée, veuillez réessayer"
     }
   },
 

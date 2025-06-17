@@ -6,21 +6,19 @@ export class MalusSystem {
   private MalusMesh: Mesh | null = null;
   private MalusMaterial: StandardMaterial;
   private spawnInterval: number | null = null;
-  private spawnTimer: number | null = null;
   private gameRefs: GameRefs;
-  private MalusTextMesh: Mesh | null = null;
   private onMalusSpawn?: () => void;
   private setScore?: (score: { player1: number; player2: number }) => void;
   private setWinner?: (winner: string | null) => void;
-  private remainingTime: number = 15000; // 15 secondes en millisecondes
-  private lastUpdateTime: number = Date.now();
-  private isPaused: boolean = false;
+  private remainingTime = 15000;
+  private lastUpdateTime = Date.now();
+  private isPaused = false;
 
   constructor(
-    scene: Scene, 
+    scene: Scene,
     gameRefs: GameRefs,
-    onMalusSpawn?: () => void, 
-    setScore?: (score: { player1: number; player2: number }) => void, 
+    onMalusSpawn?: () => void,
+    setScore?: (score: { player1: number; player2: number }) => void,
     setWinner?: (winner: string | null) => void
   ) {
     this.scene = scene;
@@ -28,23 +26,17 @@ export class MalusSystem {
     this.onMalusSpawn = onMalusSpawn;
     this.setScore = setScore;
     this.setWinner = setWinner;
-
-    // Creer le materiau pour le Malus
     this.MalusMaterial = new StandardMaterial("MalusMaterial", scene);
-    this.MalusMaterial.diffuseColor = new Color3(1, 0, 0); // Rouge
-    this.MalusMaterial.emissiveColor = new Color3(0.5, 0, 0); // Legère lueur rouge
+    this.MalusMaterial.diffuseColor = new Color3(1, 0, 0);
+    this.MalusMaterial.emissiveColor = new Color3(0.5, 0, 0);
     this.MalusMaterial.alpha = 0.8;
   }
 
   public startMalusSystem() {
-    if (this.spawnInterval) {
-      clearInterval(this.spawnInterval);
-    }
-
+    if (this.spawnInterval) clearInterval(this.spawnInterval);
     this.lastUpdateTime = Date.now();
     this.isPaused = false;
     this.remainingTime = 15000;
-
     this.spawnInterval = setInterval(() => {
       if (this.gameRefs.isPaused?.current) {
         if (!this.isPaused) {
@@ -53,18 +45,13 @@ export class MalusSystem {
         }
         return;
       }
-
       if (this.isPaused) {
         this.isPaused = false;
         this.lastUpdateTime = Date.now();
       }
-
-      const currentTime = Date.now();
-      const deltaTime = currentTime - this.lastUpdateTime;
-      this.lastUpdateTime = currentTime;
-
+      const deltaTime = Date.now() - this.lastUpdateTime;
+      this.lastUpdateTime = Date.now();
       this.remainingTime = Math.max(0, this.remainingTime - deltaTime);
-
       if (this.remainingTime <= 0) {
         this.spawnMalus();
         this.remainingTime = 15000;
@@ -73,22 +60,13 @@ export class MalusSystem {
   }
 
   public stopMalusSystem() {
-    if (this.spawnTimer !== null) {
-      clearInterval(this.spawnTimer);
-      this.spawnTimer = null;
-    }
-    // Supprimer le Malus existant
-    if (this.MalusMesh) {
-      this.MalusMesh.dispose();
-      this.MalusMesh = null;
-    }
-    if (this.MalusTextMesh) {
-      this.MalusTextMesh.dispose();
-      this.MalusTextMesh = null;
-    }
     if (this.spawnInterval) {
       clearInterval(this.spawnInterval);
       this.spawnInterval = null;
+    }
+    if (this.MalusMesh) {
+      this.MalusMesh.dispose();
+      this.MalusMesh = null;
     }
   }
 
@@ -97,83 +75,34 @@ export class MalusSystem {
   }
 
   private spawnMalus() {
-    // Supprimer l'ancien Malus s'il existe
-    if (this.MalusMesh) {
-      this.MalusMesh.dispose();
-    }
-    if (this.MalusTextMesh) {
-      this.MalusTextMesh.dispose();
-    }
-
-    // Creer un nouveau Malus
-    this.MalusMesh = Mesh.CreateBox("Malus", 4, this.scene); // 4x plus gros
+    if (this.MalusMesh) this.MalusMesh.dispose();
+    this.MalusMesh = Mesh.CreateBox("Malus", 4, this.scene);
     this.MalusMesh.material = this.MalusMaterial;
-
-    // Position aleatoire sur la map
-    const x = Math.random() * 20 - 10; // Entre -10 et 10
-    const y = 0.25; // Même hauteur que la balle
-    const z = 0;
-    this.MalusMesh.position = new Vector3(x, y, z);
-
-    // Ajouter le texte "-1"
-    this.MalusTextMesh = Mesh.CreatePlane("MalusText", 4, this.scene);
-    this.MalusTextMesh.position = new Vector3(x, y, z + 0.1);
-    this.MalusTextMesh.rotation.y = Math.PI; // Faire face à la camera
-
-    // Ajouter la collision avec la balle
+    const x = Math.random() * 20 - 10;
+    this.MalusMesh.position = new Vector3(x, 0.25, 0);
     this.MalusMesh.actionManager = new ActionManager(this.scene);
     this.MalusMesh.actionManager.registerAction(
       new ExecuteCodeAction(
         { trigger: ActionManager.OnIntersectionEnterTrigger, parameter: this.scene.getMeshByName("ball") },
         () => {
-          // On retire 1 point à l'adversaire du dernier joueur ayant touche la balle
-          const newScore = {
-            player1: this.gameRefs.score.current.player1,
-            player2: this.gameRefs.score.current.player2
-          };
-          
-          // Recuperer le dernier touche de l'historique
+          const score = { ...this.gameRefs.score.current };
           const lastTouch = this.gameRefs.touchHistory?.[this.gameRefs.touchHistory.length - 1];
-          
           if (lastTouch) {
-            if (lastTouch.player === 1) {
-              // Joueur 1 a touche la balle en dernier → on enlève 1 à joueur 2
-              newScore.player2 = newScore.player2 - 1;
-              if (this.setScore) this.setScore(newScore);
-              if (this.gameRefs.score) this.gameRefs.score.current = newScore;
-              if (newScore.player2 <= -5 && this.setWinner) this.setWinner("Joueur 1");
-              else if (newScore.player1 >= 5 && this.setWinner) this.setWinner("Joueur 1");
-              else if (newScore.player2 >= 5 && this.setWinner) this.setWinner("Joueur 2");
-            } else {
-              // Joueur 2 a touche la balle en dernier → on enlève 1 à joueur 1
-              newScore.player1 = newScore.player1 - 1;
-              if (this.setScore) this.setScore(newScore);
-              if (this.gameRefs.score) this.gameRefs.score.current = newScore;
-              if (newScore.player1 <= -5 && this.setWinner) this.setWinner("Joueur 2");
-              else if (newScore.player2 >= 5 && this.setWinner) this.setWinner("Joueur 2");
-              else if (newScore.player1 >= 5 && this.setWinner) this.setWinner("Joueur 1");
-            }
+            if (lastTouch.player === 1) score.player2--;
+            else score.player1--;
           } else {
-            // Cas par defaut (aucun toucher connu) → on enlève à player2
-            newScore.player2 = newScore.player2 - 1;
-            if (this.setScore) this.setScore(newScore);
-            if (this.gameRefs.score) this.gameRefs.score.current = newScore;
-            if (newScore.player2 <= -5 && this.setWinner) this.setWinner("Joueur 1");
-            else if (newScore.player1 >= 5 && this.setWinner) this.setWinner("Joueur 1");
-            else if (newScore.player2 >= 5 && this.setWinner) this.setWinner("Joueur 2");
+            score.player2--;
           }
-          
-          // Supprimer le Malus et le texte
+          if (this.setScore) this.setScore(score);
+          if (this.gameRefs.score) this.gameRefs.score.current = score;
+          const win1 = score.player1 >= 5, win2 = score.player2 >= 5, lose1 = score.player1 <= -5, lose2 = score.player2 <= -5;
+          if ((lose2 || win1) && this.setWinner) this.setWinner("Joueur 1");
+          else if ((lose1 || win2) && this.setWinner) this.setWinner("Joueur 2");
           this.MalusMesh?.dispose();
           this.MalusMesh = null;
-          this.MalusTextMesh?.dispose();
-          this.MalusTextMesh = null;
         }
       )
     );
-
-    if (this.onMalusSpawn) {
-      this.onMalusSpawn();
-    }
+    if (this.onMalusSpawn) this.onMalusSpawn();
   }
 } 
