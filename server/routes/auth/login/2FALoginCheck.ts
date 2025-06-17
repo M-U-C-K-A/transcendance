@@ -16,7 +16,6 @@ export default async function Check2FALoginRoute(server: FastifyInstance) {
 					username: result.username,
 					bio: result.bio,
 				})
-				console.log(result)
 				return reply.code(200).send({ token })
 			}
 		} catch (err: any) {

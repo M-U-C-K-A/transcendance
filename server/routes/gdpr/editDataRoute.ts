@@ -10,7 +10,6 @@ export default async function editDataRoute(server: FastifyInstance) {
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
-	console.log("🌯🌯🌯🌯🌯DATA EDIT PROFILE RGPD🌯🌯🌯🌯", user.id, data)
 	try {
 		const result = await editData(user.id, data.username, data.email, data.password, data.removeAvatar)
 		if (result) {

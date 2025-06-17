@@ -89,7 +89,6 @@ export function Message({ message, currentUser }: MessageProps) {
       typeMessage: message.typeMessage ?? "message",
     };
     // Print styled header
-    console.log("%cMessage Debug", styleHeader);
     // Print table
     console.table([logData]);
   }

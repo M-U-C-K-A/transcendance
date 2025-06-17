@@ -43,7 +43,6 @@ export async function googleConnexion(email: string, username: string, googleId:
 	})
 
 	if (isAlreadyRegister) {
-		console.log ("This user already have a logged google account")
 		return {
 			id: isAlreadyRegister.id,
 			username: isAlreadyRegister.username,
@@ -52,11 +51,9 @@ export async function googleConnexion(email: string, username: string, googleId:
 		}
 	}
 
-	console.log("pas register test")
 	const defaultBio = "👐 Hello i'm new here"
 	const newName = username + '_' + googleId
 
-	console.log(email, username, avatar, googleId)
 	const newUser = await Prisma.user.create({
 		data: {
 			username: newName,
@@ -65,7 +62,6 @@ export async function googleConnexion(email: string, username: string, googleId:
 			bio: defaultBio,
 		},
 	})
-	console.log("test after register")
 	const user = await Prisma.user.findUnique({
 		where: {
 			username: newUser.username
@@ -84,10 +80,8 @@ export async function googleConnexion(email: string, username: string, googleId:
 			id: newUser.id,
 		},
 	})
-	console.log("test image")
 	await downloadImage(avatar, user.id + ".webp")
 
-	console.log(`User ${newName} has been registered`)
 	return {
 		id: user.id,
 		username: newUser.username,

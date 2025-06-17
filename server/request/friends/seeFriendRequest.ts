@@ -14,7 +14,6 @@ export default async function seeFriendRequest(userId: number) {
 	});
 
 	if (!friendsRequests) {
-		console.log("No invitation in pending")
 		throw new Error("No invitation in pending")
 	}
 	const requesterIds = friendsRequests.map(friend => friend.id1);

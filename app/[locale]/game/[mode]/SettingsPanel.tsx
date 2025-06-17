@@ -152,8 +152,6 @@ export default function SettingsPanel({
   });
 
   const sendTournamentResult = async (winner: string) => {
-    console.log("[sendTournamentResult] Début de l'envoi du résultat");
-    console.log("[sendTournamentResult] Vainqueur:", winner);
 
     try {
       const token = localStorage.getItem("token");
@@ -178,7 +176,6 @@ export default function SettingsPanel({
         body: JSON.stringify(body),
       });
 
-      console.log("[sendTournamentResult] Réponse du serveur:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -192,10 +189,6 @@ export default function SettingsPanel({
 
   // Fonction pour gérer la fin d'un match
   const handleMatchEnd = (winner: string) => {
-    console.log("[handleMatchEnd] Début de la fonction");
-    console.log("[handleMatchEnd] Mode:", gamemode);
-    console.log("[handleMatchEnd] Match actuel:", currentMatch);
-    console.log("[handleMatchEnd] Gagnant:", winner);
 
     if (gamemode === "tournament" && currentMatch) {
       setCurrentWinner(winner);
@@ -203,7 +196,6 @@ export default function SettingsPanel({
 
       // Mettre à jour le statut du match dans le bracket
       setBracket(prevBracket => {
-        console.log("[handleMatchEnd] Bracket actuel:", prevBracket);
         const newBracket = [...prevBracket];
         const match = newBracket.find(m => m.id === currentMatch.id);
 
@@ -240,8 +232,6 @@ export default function SettingsPanel({
               if (winnerPlayer) {
                 // Déterminer si c'est le premier ou le deuxième joueur du prochain match
                 const isFirstPlayer = match.matchNumber % 2 === 1;
-                console.log("[handleMatchEnd] Le gagnant va dans player1:", isFirstPlayer);
-                console.log("[handleMatchEnd] Joueur gagnant:", winnerPlayer.username);
 
                 if (isFirstPlayer) {
                   nextMatch.player1 = winnerPlayer;
@@ -263,11 +253,9 @@ export default function SettingsPanel({
   useEffect(() => {
     if (gamemode === "tournament") {
       const storedBracket = localStorage.getItem("tournamentBracket");
-      console.log("Chargement du bracket depuis localStorage:", storedBracket);
 
       if (storedBracket) {
         const parsedBracket = JSON.parse(storedBracket);
-        console.log("Bracket parsé:", parsedBracket);
 
         // Réinitialiser les matchs en cours qui n'ont pas de gagnant
         parsedBracket.forEach((match: BracketMatch) => {
@@ -308,7 +296,6 @@ export default function SettingsPanel({
         // Vérifier si le tournoi est terminé
         const lastMatch = parsedBracket[parsedBracket.length - 1];
         if (lastMatch && lastMatch.status === "completed" && lastMatch.winner) {
-          console.log("Tournoi terminé lors du chargement, envoi du résultat");
           sendTournamentResult(lastMatch.winner);
           setCurrentMatch(lastMatch);
           setTournamentStarted(false);
@@ -333,7 +320,6 @@ export default function SettingsPanel({
   // Mise à jour du localStorage quand le bracket change - uniquement pour le mode tournoi
   useEffect(() => {
     if (gamemode === "tournament" && bracket.length > 0) {
-      console.log("Mise à jour du localStorage avec le nouveau bracket:", bracket);
       localStorage.setItem("tournamentBracket", JSON.stringify(bracket));
     }
   }, [bracket, gamemode]);
@@ -385,11 +371,9 @@ export default function SettingsPanel({
   }, [gamemode]);
 
   const createGame = async (data: GameCreationData) => {
-    console.log("Création du tournoi avec les données:", data);
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
 
       const response = await fetch("/api/tournament/create", {
         method: "POST",
@@ -406,7 +390,6 @@ export default function SettingsPanel({
       if (!response.ok) throw new Error("Erreur lors de la création du tournoi");
 
       const tournamentData = await response.json();
-      console.log("Réponse du serveur:", tournamentData);
 
       // Stocker les informations du tournoi
       localStorage.setItem("tournamentId", tournamentData.tournamentId);
@@ -453,7 +436,6 @@ export default function SettingsPanel({
       if (!response.ok) throw new Error("Erreur lors de la jointure du tournoi");
 
       const userData = await response.json();
-      console.log("Nouveau participant reçu:", userData);
 
       // Mettre à jour les participants
       setParticipants(prev => {
@@ -482,7 +464,6 @@ export default function SettingsPanel({
   const createBracket = (playersParam?: typeof participants) => {
     // Toujours relire la liste du localStorage pour être sûr d'avoir tout le monde
     const players = playersParam || JSON.parse(localStorage.getItem("tournamentParticipants") || "[]");
-    console.log("Création du bracket avec les joueurs:", players);
 
     // S'assurer que nous avons tous les joueurs
     if (players.length !== Number(localStorage.getItem("tournamentSlot"))) {
@@ -526,7 +507,6 @@ export default function SettingsPanel({
       currentRoundMatches = matchesInRound;
     }
 
-    console.log("Bracket créé:", matches);
     return matches;
   };
 
@@ -539,7 +519,6 @@ export default function SettingsPanel({
 
       // Créer le bracket avec tous les participants
       const matches = createBracket(participants);
-      console.log("Bracket créé:", matches);
 
       if (matches.length === 0) {
         console.error("Erreur lors de la création du bracket");
@@ -620,7 +599,6 @@ export default function SettingsPanel({
 
             <form
               onSubmit={form.handleSubmit((data) => {
-                console.log("Formulaire soumis avec les données:", data);
                 createGame(data);
               })}
               className="space-y-6"
@@ -751,7 +729,6 @@ export default function SettingsPanel({
         <Dialog
           open={showWinnerDialog}
           onOpenChange={(open) => {
-            console.log("[Dialog] Tentative de changement d'état:", open);
             // Empêcher la fermeture de la popup
             if (!open) return;
             setShowWinnerDialog(open);
@@ -768,7 +745,6 @@ export default function SettingsPanel({
               <p className="text-3xl font-bold text-primary mb-6">{tournamentWinner}</p>
               <Button
                 onClick={() => {
-                  console.log("[Button] Clic sur le bouton de retour");
                   // Nettoyer le localStorage avant la redirection
                   localStorage.removeItem("tournamentId");
                   localStorage.removeItem("tournamentSlot");
@@ -961,11 +937,9 @@ export default function SettingsPanel({
                       });
 
                       if (isLastMatch && isCompleted && !tournamentStarted) {
-                        console.log("Affichage du bouton Retour au Dashboard");
                         return (
                           <Button
                             onClick={() => {
-                              console.log("Clic sur Retour au Dashboard");
                               localStorage.removeItem("tournamentId");
                               localStorage.removeItem("tournamentSlot");
                               localStorage.removeItem("tournamentParticipants");
@@ -983,7 +957,6 @@ export default function SettingsPanel({
                         <Button
                           onClick={() => {
                             if (currentMatch && !matchCompleted) {
-                              console.log("Lancement du match:", currentMatch);
                               setBracket(prevBracket => {
                                 const newBracket = [...prevBracket];
                                 const match = newBracket.find(m => m.id === currentMatch.id);

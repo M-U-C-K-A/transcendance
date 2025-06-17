@@ -14,7 +14,6 @@ export default async function newMessage(recipient: string, userId: number) {
 	})
 
 	if (!userInfo) {
-		console.log("No User found")
 		throw new Error ("No User found")
 	}
 

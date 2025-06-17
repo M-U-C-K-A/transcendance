@@ -24,8 +24,6 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 			winnerId = 1;
 		}
 
-		console.log("🎅🎅🎅🎅🎅🎅🎅🎅CREATION DE LA PARTIE🎅🎅🎅🎅🎅🎅");
-
 		await Prisma.match.create({
 			data: {
 				name: "Partie Privee",

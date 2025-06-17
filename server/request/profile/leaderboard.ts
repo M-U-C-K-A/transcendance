@@ -9,7 +9,6 @@ export default async function leaderboard() {
 	ORDER BY "elo" DESC`
 
 	if (!leaderboard[0]) {
-		console.log(`Failed to get leaderboard`)
 		throw new Error(`Failed to get leaderboard`)
 	}
 

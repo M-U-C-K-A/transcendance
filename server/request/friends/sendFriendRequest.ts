@@ -10,7 +10,6 @@ export default async function sendFriendRequest(userId: number, friendName: stri
 	WHERE username = ${friendName}`
 
 	if (!newFriend[0]) {
-		console.log("This user does not exist")
 		throw new Error("This user does not exist")
 	}
 
@@ -20,7 +19,6 @@ export default async function sendFriendRequest(userId: number, friendName: stri
 	OR (id1 = ${newFriend[0].id} AND id2 = ${userId})`;
 
 	if (isAlreadyFriend[0]) {
-		console.log("This user is already a friend")
 		throw new Error("This user is already a friend")
 	}
 
