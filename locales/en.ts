@@ -4,7 +4,7 @@ export default {
   "back_to_home": "Back to Home",
 
   "common": {
-    "appName": "PongMaster",
+    "appName": "ft_transcendance",
     "login": "Login",
     "register": "Register",
     "freeRegister": "Register for free",
@@ -15,6 +15,45 @@ export default {
     "removing": "Removing",
     "remove": "Remove",
     "copyright": "© 2025 PongMaster Enterprise. All rights reserved."
+  },
+
+  "gdpr": {
+    "title": "Personal Data Management",
+    "validation": {
+      "passwordRequired": "Password is required",
+      "usernameRequired": "Username is required",
+      "invalidEmail": "Invalid email",
+      "passwordMinLength": "Password must be at least 8 characters"
+    },
+    "sections" : {
+      "personalData": {
+        "title": "Personal Data",
+        "firstName": "First Name",
+        "description": "Update your personal data",
+        "manageButton": "Manage my data",
+        "lastName": "Last Name",
+        "email": "Email",
+        "username": "Username",
+        "update": "Update",
+      },
+        "critical": {
+          "title": "Critical Data",
+          "deleteAccount": "Delete Account"
+        },
+      "password": "Password",
+      "deleteAccount": "Delete Account"
+    },
+    "toasts": {
+      "verificationSuccess": "Verification successful",
+      "updateSuccess": "Your information has been updated",
+      "deleteSuccess": "Your account has been successfully deleted"
+    },
+    "errors": {
+      "incorrectPassword": "Incorrect password",
+      "updateFailed": "Update failed",
+      "deleteFailed": "Account deletion failed",
+      "genericError": "An error occurred"
+    },
   },
 
   "landing": {
@@ -120,7 +159,6 @@ export default {
       "advantage3": "Experiment with different game modes",
       "proTipContent": "Save your favorite settings as presets for quick access"
     },
-
     "tournament": {
       "title": "Tournaments",
       "description": "Create and manage custom tournaments",
@@ -199,6 +237,9 @@ export default {
       "title": "General Chat",
       "placeholder": "Write a message..."
     }
+  },
+  "app": {
+    "name": "ft_Transcendance"
   },
 
   "game": {

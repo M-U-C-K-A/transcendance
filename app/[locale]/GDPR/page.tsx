@@ -31,25 +31,31 @@ import {
 } from "@/components/ui/alert-dialog"
 import { CreatorsCard } from "@/components/gdpr/CreatorsCard"
 import { TypographySection } from "@/components/gdpr/TypographySection"
+import { useI18n } from "@/i18n-client"
 
-// Schémas de validation
-const passwordSchema = z.object({
-	password: z.string().min(1, "Le mot de passe est requis"),
-})
 
-const userDataSchema = z.object({
-	id: z.number(),
-	username: z.string().min(1, "Le nom d'utilisateur est requis"),
-	email: z.string().email("Email invalide"),
-	password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères").optional(),
-	removeAvatar: z.boolean().optional(),
-})
+
 
 export default function GdprPage() {
 	// États pour les modales
 	const [showPasswordModal, setShowPasswordModal] = useState(false)
 	const [showUserDataModal, setShowUserDataModal] = useState(false)
 	const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+	const t = useI18n()
+
+	const userDataSchema = z.object({
+		id: z.number(),
+		username: z.string().min(1, t('gdpr.validation.usernameRequired')),
+		email: z.string().email(t('gdpr.validation.invalidEmail')),
+		password: z.string().min(8, t('gdpr.validation.passwordMinLength')).optional(),
+		removeAvatar: z.boolean().optional(),
+	})
+
+	// Schémas de validation
+	const passwordSchema = z.object({
+		password: z.string().min(1, t('gdpr.validation.passwordRequired')),
+	})
+
 
 	// États pour les formulaires
 	const [password, setPassword] = useState("")
@@ -86,9 +92,9 @@ export default function GdprPage() {
 				setUserData(validatedData)
 				setShowPasswordModal(false)
 				setShowUserDataModal(true)
-				toast.success("Vérification réussie")
+				toast.success(t('gdpr.toasts.verificationSuccess'))
 			} else {
-				throw new Error("Mot de passe incorrect")
+				throw new Error(t('gdpr.errors.incorrectPassword'))
 			}
 		} catch (error) {
 			handleError(error)
@@ -118,10 +124,8 @@ export default function GdprPage() {
 				body: JSON.stringify(validatedData),
 			})
 
-
-
 			if (response.ok) {
-				toast.success("Vos informations ont été mises à jour")
+				toast.success(t('gdpr.toasts.updateSuccess'))
 				setShowUserDataModal(false)
 				setRemoveAvatar(false)
 
@@ -132,7 +136,7 @@ export default function GdprPage() {
 					window.location.reload()
 				}
 			} else {
-				throw new Error("Échec de la mise à jour")
+				throw new Error(t('gdpr.errors.updateFailed'))
 			}
 		} catch (error) {
 			handleError(error)
@@ -154,13 +158,13 @@ export default function GdprPage() {
 			});
 
 			if (response.ok) {
-				toast.success("Votre compte a été supprimé avec succès");
+				toast.success(t('gdpr.toasts.deleteSuccess'));
 
 				localStorage.removeItem("token");
 
 				window.location.href = "/en";
 			} else {
-				throw new Error("Échec de la suppression du compte");
+				throw new Error(t('gdpr.errors.deleteFailed'));
 			}
 		} catch (error) {
 			handleError(error);
@@ -175,242 +179,239 @@ export default function GdprPage() {
 		if (error instanceof z.ZodError) {
 			toast.error(error.errors[0].message)
 		} else {
-			toast.error(error instanceof Error ? error.message : "Une erreur est survenue")
+			toast.error(error instanceof Error ? error.message : t('gdpr.errors.genericError'))
 		}
 	}
 
 	return (
 		<>
+			<Header />
+			<div className="max-w-5xl mx-auto py-10 space-y-6">
+				{/* Modale de vérification du mot de passe */}
+				<Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle className="text-lg font-semibold">{t('gdpr.modals.password.title')}</DialogTitle>
+							<DialogDescription className="text-sm text-muted-foreground">
+								{t('gdpr.modals.password.description')}
+							</DialogDescription>
+						</DialogHeader>
 
-		<Header />
-		<div className="max-w-5xl mx-auto py-10 space-y-6">
-			{/* Modale de vérification du mot de passe */}
-			<Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle className="text-lg font-semibold">Confirmation de sécurité</DialogTitle>
-						<DialogDescription className="text-sm text-muted-foreground">
-							Pour accéder à vos données personnelles, veuillez confirmer votre identité.
-						</DialogDescription>
-					</DialogHeader>
-
-					<form onSubmit={handlePasswordSubmit} className="space-y-4">
-						<div className="space-y-2">
-							<Label htmlFor="current-password">Mot de passe actuel</Label>
-							<Input
-								id="current-password"
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								placeholder="Entrez votre mot de passe"
-								disabled={loading}
-							/>
-						</div>
-
-						<DialogFooter>
-							<Button
-								type="button"
-								variant="outline"
-								onClick={() => setShowPasswordModal(false)}
-								disabled={loading}
-							>
-								Annuler
-							</Button>
-							<Button type="submit" disabled={loading}>
-								{loading ? "Vérification..." : "Confirmer"}
-							</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</Dialog>
-
-			{/* Modale de modification des données */}
-			<Dialog open={showUserDataModal} onOpenChange={setShowUserDataModal}>
-				<DialogContent className="sm:max-w-[600px]">
-					<DialogHeader>
-						<DialogTitle className="text-lg font-semibold">Gestion de vos données</DialogTitle>
-					</DialogHeader>
-
-					<form onSubmit={handleUserDataSubmit} className="space-y-6">
-						{/* Section Avatar */}
-						<div className="space-y-4">
-							<Label>Photo de profil</Label>
-							<div className="flex items-center gap-4">
-								<Avatar className="h-16 w-16 border">
-									{removeAvatar ? (
-										<AvatarFallback>DEL</AvatarFallback>
-									) : (
-										<>
-											<AvatarImage
-												src={`/profilepicture/${userData.id}.webp`}
-												alt="Votre avatar"
-											/>
-											<AvatarFallback>
-												{userData.username.slice(0, 2).toUpperCase()}
-											</AvatarFallback>
-										</>
-									)}
-								</Avatar>
-
-								<div className="flex items-center space-x-2">
-									<Switch
-										id="remove-avatar"
-										checked={removeAvatar}
-										onCheckedChange={setRemoveAvatar}
-									/>
-									<Label htmlFor="remove-avatar">Supprimer l'avatar</Label>
-								</div>
-							</div>
-						</div>
-
-						{/* Section Informations */}
-						<div className="space-y-4">
-							<Label>Informations personnelles</Label>
-
-							<div className="grid gap-4">
-								<div className="space-y-2">
-									<Label htmlFor="username">Nom d'utilisateur</Label>
-									<Input
-										id="username"
-										value={userData.username}
-										onChange={(e) => setUserData({...userData, username: e.target.value})}
-										disabled={loading}
-									/>
-								</div>
-
-								<div className="space-y-2">
-									<Label htmlFor="email">Adresse email</Label>
-									<Input
-										id="email"
-										type="email"
-										value={userData.email}
-										onChange={(e) => setUserData({...userData, email: e.target.value})}
-										disabled={loading}
-									/>
-								</div>
-							</div>
-						</div>
-
-						{/* Section Mot de passe */}
-						<div className="space-y-4">
-							<Label>Changer le mot de passe</Label>
+						<form onSubmit={handlePasswordSubmit} className="space-y-4">
 							<div className="space-y-2">
-								<Label htmlFor="new-password">Nouveau mot de passe (optionnel)</Label>
+								<Label htmlFor="current-password">{t('gdpr.modals.password.label')}</Label>
 								<Input
-									id="new-password"
+									id="current-password"
 									type="password"
-									value={userData.password}
-									onChange={(e) => setUserData({...userData, password: e.target.value})}
-									placeholder="Laissez vide pour ne pas modifier"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									placeholder={t('gdpr.modals.password.placeholder')}
 									disabled={loading}
 								/>
-								<p className="text-xs text-muted-foreground">
-									Minimum 8 caractères
-								</p>
 							</div>
-						</div>
 
-						<DialogFooter>
-							<Button
-								type="button"
-								variant="outline"
-								onClick={() => {
-									setShowUserDataModal(false)
-									setRemoveAvatar(false)
-								}}
-								disabled={loading}
+							<DialogFooter>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => setShowPasswordModal(false)}
+									disabled={loading}
+								>
+									{t('common.cancel')}
+								</Button>
+								<Button type="submit" disabled={loading}>
+									{loading ? t('gdpr.modals.password.verifying') : t('common.confirm')}
+								</Button>
+							</DialogFooter>
+						</form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Modale de modification des données */}
+				<Dialog open={showUserDataModal} onOpenChange={setShowUserDataModal}>
+					<DialogContent className="sm:max-w-[600px]">
+						<DialogHeader>
+							<DialogTitle className="text-lg font-semibold">{t('gdpr.modals.userData.title')}</DialogTitle>
+						</DialogHeader>
+
+						<form onSubmit={handleUserDataSubmit} className="space-y-6">
+							{/* Section Avatar */}
+							<div className="space-y-4">
+								<Label>{t('gdpr.modals.userData.avatarLabel')}</Label>
+								<div className="flex items-center gap-4">
+									<Avatar className="h-16 w-16 border">
+										{removeAvatar ? (
+											<AvatarFallback>DEL</AvatarFallback>
+										) : (
+											<>
+												<AvatarImage
+													src={`/profilepicture/${userData.id}.webp`}
+													alt={t('gdpr.modals.userData.avatarAlt')}
+												/>
+												<AvatarFallback>
+													{userData.username.slice(0, 2).toUpperCase()}
+												</AvatarFallback>
+											</>
+										)}
+									</Avatar>
+
+									<div className="flex items-center space-x-2">
+										<Switch
+											id="remove-avatar"
+											checked={removeAvatar}
+											onCheckedChange={setRemoveAvatar}
+										/>
+										<Label htmlFor="remove-avatar">{t('gdpr.modals.userData.removeAvatar')}</Label>
+									</div>
+								</div>
+							</div>
+
+							{/* Section Informations */}
+							<div className="space-y-4">
+								<Label>{t('gdpr.modals.userData.personalInfo')}</Label>
+
+								<div className="grid gap-4">
+									<div className="space-y-2">
+										<Label htmlFor="username">{t('gdpr.modals.userData.usernameLabel')}</Label>
+										<Input
+											id="username"
+											value={userData.username}
+											onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+											disabled={loading}
+										/>
+									</div>
+
+									<div className="space-y-2">
+										<Label htmlFor="email">{t('gdpr.modals.userData.emailLabel')}</Label>
+										<Input
+											id="email"
+											type="email"
+											value={userData.email}
+											onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+											disabled={loading}
+										/>
+									</div>
+								</div>
+							</div>
+
+							{/* Section Mot de passe */}
+							<div className="space-y-4">
+								<Label>{t('gdpr.modals.userData.passwordLabel')}</Label>
+								<div className="space-y-2">
+									<Label htmlFor="new-password">{t('gdpr.modals.userData.newPasswordLabel')}</Label>
+									<Input
+										id="new-password"
+										type="password"
+										value={userData.password}
+										onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+										placeholder={t('gdpr.modals.userData.passwordPlaceholder')}
+										disabled={loading}
+									/>
+									<p className="text-xs text-muted-foreground">
+										{t('gdpr.modals.userData.passwordHint')}
+									</p>
+								</div>
+							</div>
+
+							<DialogFooter>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => {
+										setShowUserDataModal(false)
+										setRemoveAvatar(false)
+									}}
+									disabled={loading}
+								>
+									{t('common.cancel')}
+								</Button>
+								<Button type="submit" disabled={loading}>
+									{loading ? t('gdpr.modals.userData.saving') : t('gdpr.modals.userData.saveChanges')}
+								</Button>
+							</DialogFooter>
+						</form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Alerte de suppression de compte */}
+				<AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>{t('gdpr.alerts.delete.title')}</AlertDialogTitle>
+							<AlertDialogDescription>
+								{t('gdpr.alerts.delete.description')}
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel disabled={deleteLoading}>{t('common.cancel')}</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={handleAccountDeletion}
+								className="bg-destructive hover:bg-destructive/90"
+								disabled={deleteLoading}
 							>
-								Annuler
-							</Button>
-							<Button type="submit" disabled={loading}>
-								{loading ? "Enregistrement..." : "Enregistrer les modifications"}
-							</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</Dialog>
+								{deleteLoading ? t('gdpr.alerts.delete.deleting') : t('gdpr.alerts.delete.confirm')}
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
 
-			{/* Alerte de suppression de compte */}
-			<AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
-						<AlertDialogDescription>
-							Cette action supprimera définitivement votre compte et toutes vos données.
-							Vous ne pourrez pas annuler cette opération.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel disabled={deleteLoading}>Annuler</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={handleAccountDeletion}
-							className="bg-destructive hover:bg-destructive/90"
-							disabled={deleteLoading}
-						>
-							{deleteLoading ? "Suppression..." : "Supprimer mon compte"}
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+				{/* Contenu principal */}
+				<Card>
+					<CardHeader>
+						<CardTitle className="text-2xl font-bold">{t('gdpr.title')}</CardTitle>
+					</CardHeader>
 
-			{/* Contenu principal */}
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-2xl font-bold">Gestion de vos données personnelles</CardTitle>
-				</CardHeader>
-
-				<CardContent className="space-y-6">
-					{/* Section Données personnelles */}
-					<section className="space-y-4">
-						<div className="flex justify-between items-center">
-							<div>
-								<h2 className="text-lg font-semibold">Vos données personnelles</h2>
-								<p className="text-sm text-muted-foreground">
-									Consultez et modifiez les informations associées à votre compte
-								</p>
+					<CardContent className="space-y-6">
+						{/* Section Données personnelles */}
+						<section className="space-y-4">
+							<div className="flex justify-between items-center">
+								<div>
+									<h2 className="text-lg font-semibold">{t('gdpr.sections.personalData.title')}</h2>
+									<p className="text-sm text-muted-foreground">
+										{t('gdpr.sections.personalData.description')}
+									</p>
+								</div>
+								<Button onClick={() => setShowPasswordModal(true)}>
+									{t('gdpr.sections.personalData.manageButton')}
+								</Button>
 							</div>
-							<Button onClick={() => setShowPasswordModal(true)}>
-								Gérer mes données
-							</Button>
-						</div>
-					</section>
+						</section>
 
-					<Separator />
+						<Separator />
 
-					{/* Section Créateurs */}
-					<CreatorsCard />
+						{/* Section Créateurs */}
+						<CreatorsCard />
 
+						<Separator />
 
-					<Separator />
+						{/* Section Actions critiques */}
+						<section className="space-y-4">
+							<h2 className="text-lg font-semibold text-destructive">{t('gdpr.sections.critical.title')}</h2>
 
-					{/* Section Actions critiques */}
-					<section className="space-y-4">
-						<h2 className="text-lg font-semibold text-destructive">Actions critiques</h2>
+							<div className="rounded-lg border border-destructive/30 p-4 space-y-3">
+								<div>
+									<h3 className="font-medium">{t('gdpr.sections.critical.deleteAccount')}</h3>
+									<p className="text-sm text-muted-foreground">
+										{t('gdpr.sections.critical.deleteWarning')}
+									</p>
+								</div>
 
-						<div className="rounded-lg border border-destructive/30 p-4 space-y-3">
-							<div>
-								<h3 className="font-medium">Suppression du compte</h3>
-								<p className="text-sm text-muted-foreground">
-									Cette action est irréversible. Toutes vos données seront définitivement supprimées.
-								</p>
+								<Button
+									variant="destructive"
+									onClick={() => setShowDeleteAlert(true)}
+									className="w-full sm:w-auto"
+								>
+									{t('gdpr.sections.critical.deleteButton')}
+								</Button>
 							</div>
+						</section>
+						<Separator />
 
-							<Button
-								variant="destructive"
-								onClick={() => setShowDeleteAlert(true)}
-								className="w-full sm:w-auto"
-							>
-								Supprimer mon compte
-							</Button>
-						</div>
-					</section>
-					<Separator />
-
-					{/* Section Typographie */}
-					<TypographySection />
-				</CardContent>
-			</Card>
-		</div>
+						{/* Section Typographie */}
+						<TypographySection />
+					</CardContent>
+				</Card>
+			</div>
 		</>
 	)
 }
