@@ -235,10 +235,6 @@ export default function Pong3D({
 							})
 						});
 
-						if (response.ok)
-						{
-							console.log('Score envoye avec succès !');
-						}
 					}
 
 					catch (error)

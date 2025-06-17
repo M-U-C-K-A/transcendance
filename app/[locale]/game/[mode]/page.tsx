@@ -187,19 +187,15 @@ export default function Page() {
 	const updateBracketAfterMatch = (matchId: string, winner: string) => {
 		if (gamemode !== "tournament") return;
 
-		console.log("Mise à jour du bracket après match:", { matchId, winner });
 
 		setBracket(prevBracket => {
-			console.log("Bracket actuel:", prevBracket);
 			const newBracket = [...prevBracket];
 			const currentMatch = newBracket.find(m => m.id === matchId);
 
 			if (!currentMatch) {
-				console.log("Match non trouvé dans le bracket");
 				return prevBracket;
 			}
 
-			console.log("Match actuel trouvé:", currentMatch);
 
 			// Mettre à jour le statut du match actuel
 			currentMatch.status = "completed";
@@ -208,19 +204,15 @@ export default function Page() {
 			// Trouver le match suivant dans le bracket
 			const nextRound = currentMatch.round + 1;
 			const nextMatchNumber = Math.ceil(currentMatch.matchNumber / 2);
-			console.log("Recherche du match suivant:", { nextRound, nextMatchNumber });
 
 			const nextMatch = newBracket.find(m => m.round === nextRound && m.matchNumber === nextMatchNumber);
-			console.log("Match suivant trouvé:", nextMatch);
 
 			if (nextMatch) {
 				// Déterminer si le gagnant doit être player1 ou player2 dans le match suivant
 				const isFirstPlayer = currentMatch.matchNumber % 2 === 1;
-				console.log("Le gagnant sera player1:", isFirstPlayer);
 
 				// Mettre à jour le match suivant avec le gagnant
 				const winnerPlayer = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
-				console.log("Joueur gagnant:", winnerPlayer);
 
 				if (isFirstPlayer) {
 					nextMatch.player1 = winnerPlayer;
@@ -233,19 +225,16 @@ export default function Page() {
 					nextMatch.status = "pending";
 				}
 
-				console.log("Match suivant mis à jour:", nextMatch);
 
 				// Mettre à jour le match en cours
 				setCurrentMatch(nextMatch);
 				setCurrentMatchIndex(newBracket.indexOf(nextMatch));
 			} else {
-				console.log("Pas de match suivant trouvé - fin du tournoi");
 				setTournamentStarted(false);
 			}
 
 			// Sauvegarder le bracket mis à jour dans le localStorage
 			localStorage.setItem("tournamentBracket", JSON.stringify(newBracket));
-			console.log("Bracket mis à jour et sauvegardé:", newBracket);
 
 			return newBracket;
 		});

@@ -22,7 +22,6 @@ export default async function meProfileInfo(userId: number) {
 	})
 
 	if (!userInfo) {
-		console.log(`Failed to get user's info`)
 		throw new Error(`Failed to get user's info`)
 	}
 

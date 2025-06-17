@@ -106,7 +106,7 @@ export default {
   },
 
 
-  "Log":{ 
+  "Log":{
     "in": "Iniciar sesión",
     "out": "Cerrar sesión",
   },
@@ -184,6 +184,7 @@ export default {
 
     "game": {
       "back": "Back to dashboard",
+      "start": "Initiar partida",
       "info": {
         "title": "Information",
         "gameMode": "Game mode",
@@ -195,7 +196,7 @@ export default {
         "quickMatch": "Match Rapido",
         "customGame": "Partida Personalizada",
         "tournament": "Torneo",
-        
+
       },
       "whatIsQuickMatch": "¿Qué es un match rápido?",
         "quickMatchExplanation1": "Un match rápido es la forma más rápida de empezar a jugar a PongMaster.",
@@ -629,3 +630,4 @@ export default {
     "noPrivateConversation": "Sin conversación privada"
   }
 }
+

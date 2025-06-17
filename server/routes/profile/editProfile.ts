@@ -10,7 +10,6 @@ export default async function editProfileRoute(server: FastifyInstance) {
 
 	if (!user || !newInfo)
 	{
-		console.log('wrong parameter in editProfileRoute route')
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 

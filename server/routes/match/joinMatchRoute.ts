@@ -13,7 +13,6 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 
 		try {
 			const result = await joinMatchFromInvite(user.id, code)
-			console.log("👺👺👺👺👺👺👺👺", result)
 			return (reply.code(200).send({ result }))
 		} catch (err: any) {
 			console.error('Error in joinMatch:', err);

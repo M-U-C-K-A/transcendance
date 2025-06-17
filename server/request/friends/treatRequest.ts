@@ -10,7 +10,6 @@ export default async function treatRequest(userId: number, friendName: string, a
 	WHERE username = ${friendName}`;
 
 	if (!friendId[0]) {
-		console.log("Friend Id not found");
 		throw new Error("Friend Id not found");
 	}
 
@@ -33,7 +32,7 @@ export default async function treatRequest(userId: number, friendName: string, a
 			},
 		});
 	}
-	
+
 	notifyFriend(userId, {
 	type: "NEW_FRIEND",
 		from: {
