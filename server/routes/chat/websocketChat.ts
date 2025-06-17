@@ -2,7 +2,6 @@ import changeOnlineStatus from '@/server/request/profile/changeOnlineStatus';
 import { FastifyRequest } from 'fastify';
 import { WebSocket } from 'ws';
 
-// One socket per user
 const connections = new Map<number, WebSocket>();
 
 interface ChatQuery { token?: string; }
@@ -55,15 +54,4 @@ export function broadcastMessage(userId: number, message: any) {
 		ws.send(JSON.stringify(message));
 		console.log(`🐂🐂🐂🐂🐂🐂Message envoyé à l'utilisateur ${userId}🐂🐂🐂🐂🐂`);
 	}
-}
-
-export function broadcastToAll(message: any) {
-	console.log("🔴 Message reçu via WS général :", message);
-	const messageString = JSON.stringify(message);
-	connections.forEach((ws, userId) => {
-		if (ws.readyState === WebSocket.OPEN) {
-			ws.send(messageString);
-		}
-	});
-	console.log(`Broadcasted to ${connections.size} users`);
 }

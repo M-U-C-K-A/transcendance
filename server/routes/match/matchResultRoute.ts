@@ -8,11 +8,15 @@ server.post("/game/result", { preHandler: authMiddleware }, async function (requ
 	const body = request.body as { player1Score: number; player2Score: number; gameId: string};
 	const user = request.user as { id: number };
 
-	const gameId = Number(body.gameId);
 	const p1Score = body.player1Score;
 	const p2Score = body.player2Score;
 
-	const decodedID = decodeMatchId(gameId.toString())
+	let decodedID: number;
+	if (body.gameId == "-1") {
+		decodedID = -1;
+	} else {
+		decodedID = decodeMatchId(body.gameId);
+	}
 
 	try {
 		const result = await matchResult( p1Score, p2Score, decodedID, user.id );

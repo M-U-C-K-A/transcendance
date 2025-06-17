@@ -13,7 +13,7 @@ export default async function matchCreate(matchName: string, hostId: number) {
 	});
 
 	if (!hostData) {
-		throw new Error ("t'es qui ptdrrrrrr ?")
+		throw new Error ("User not found")
 	}
 
 	const matchInfo = await Prisma.match.create ({

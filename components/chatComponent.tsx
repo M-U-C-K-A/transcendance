@@ -1,14 +1,10 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { PublicChat } from "./chat/publicChat/PublicChat";
 import { PrivateChat } from "./chat/privateChat/PrivateChat";
-import { usePublicMessages } from "./chat/publicChat/usePublicMessages";
 import { usePrivateMessages } from "./chat/privateChat/usePrivateMessages";
 import { PrivateConversation } from "./chat/privateChat/type";
 import { useI18n } from "@/i18n-client";
-
-type Tab = "public" | "private";
 
 interface ChatComponentProps {
   placeholder?: string;
@@ -21,8 +17,7 @@ interface SendMessageData {
   messageType: string;
 }
 
-export function ChatComponent({ placeholder = "Écrivez un message...", currentUser }: ChatComponentProps) {
-  const [activeTab, setActiveTab] = useState<Tab>("public");
+export function ChatComponent({ placeholder = "\u00c9crivez un message...", currentUser }: ChatComponentProps) {
   const [selectedPrivateUser, setSelectedPrivateUser] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [newPrivateUser, setNewPrivateUser] = useState("");
@@ -30,19 +25,12 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   const [sendError, setSendError] = useState<string | null>(null);
 
   const t = useI18n();
-  
-  const {
-    messages: publicMessages,
-    fetchMessages,
-    isLoading: loadingPublic,
-    error: errorPublic
-  } = usePublicMessages();
 
   const {
     messages: privateMessages,
     fetchPrivateMessages,
-    isLoading: loadingPrivate,
-    error: errorPrivate
+    isLoading,
+    error
   } = usePrivateMessages(currentUser);
 
   useEffect(() => {
@@ -70,9 +58,9 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
     setPrivateConversations(Array.from(conversationsMap.values()));
   }, [privateMessages, currentUser]);
 
-  const sendMessage = useCallback(async (messageType: 'GENERAL' | 'PRIVATE' | 'INVITATION' = activeTab === 'public' ? 'GENERAL' : 'PRIVATE') => {
-    if (!newMessage.trim() && messageType !== 'INVITATION') {
-      setSendError("Le message ne peut pas être vide");
+  const sendMessage = useCallback(async () => {
+    if (!newMessage.trim()) {
+      setSendError("Le message ne peut pas \u00eatre vide");
       return;
     }
 
@@ -80,27 +68,25 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 
     const payload: SendMessageData = {
       content: newMessage,
-      messageType,
+      messageType: "PRIVATE",
     };
 
-    if (activeTab === "private") {
-      if (!selectedPrivateUser) {
-        setSendError("Aucun destinataire sélectionné.");
-        return;
-      }
-
-      const recipientConversation = privateConversations.find(
-        conv => conv.userName === selectedPrivateUser
-      );
-      const recipientId = recipientConversation?.id;
-
-      if (!recipientId) {
-        setSendError("Destinataire introuvable.");
-        return;
-      }
-
-      payload.recipient = recipientId;
+    if (!selectedPrivateUser) {
+      setSendError("Aucun destinataire s\u00e9lectionn\u00e9.");
+      return;
     }
+
+    const recipientConversation = privateConversations.find(
+      conv => conv.userName === selectedPrivateUser
+    );
+    const recipientId = recipientConversation?.id;
+
+    if (!recipientId) {
+      setSendError("Destinataire introuvable.");
+      return;
+    }
+
+    payload.recipient = recipientId;
 
     try {
       const res = await fetch("/api/chat/send", {
@@ -116,33 +102,22 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
 
       if (!res.ok) {
         if (responseBody.error === "This user blocked you") {
-          setSendError("Cet utilisateur vous a bloqué.");
+          setSendError("Cet utilisateur vous a bloqu\u00e9.");
         } else if (responseBody.error === "You blocked this user") {
-          setSendError("Vous avez bloqué cet utilisateur.");
+          setSendError("Vous avez bloqu\u00e9 cet utilisateur.");
         } else {
-          setSendError(responseBody.error || "Échec de l'envoi du message.");
+          setSendError(responseBody.error || "\u00c9chec de l'envoi du message.");
         }
         return;
       }
 
       setNewMessage("");
-      if (activeTab === "public") {
-        await fetchMessages();
-      } else {
-        await fetchPrivateMessages();
-      }
+      await fetchPrivateMessages();
     } catch (err) {
       setSendError("Une erreur est survenue lors de l'envoi.");
       console.error("Erreur lors de l'envoi du message :", err);
     }
-  }, [
-    newMessage,
-    activeTab,
-    selectedPrivateUser,
-    fetchMessages,
-    fetchPrivateMessages,
-    privateConversations
-  ]);
+  }, [newMessage, selectedPrivateUser, fetchPrivateMessages, privateConversations]);
 
   const handleContactAdded = (contact: { id: number; userName: string }) => {
     setSelectedPrivateUser(contact.userName);

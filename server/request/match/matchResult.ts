@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { decodeMatchId } from './joinMatch';
 
 const Prisma = new PrismaClient()
 
@@ -83,6 +82,8 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 				winnerId: winnerId,
 				p1Score: p1Score,
 				p2Score: p2Score,
+				p1EloGain: 0,
+				p2EloGain: 0,
 			},
 		});
 	}

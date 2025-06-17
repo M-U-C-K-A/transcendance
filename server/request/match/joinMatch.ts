@@ -2,9 +2,12 @@ import { PrismaClient } from '@prisma/client';
 import Hashids from 'hashids';
 
 const Prisma = new PrismaClient();
-const hashids = new Hashids("CACA BOUDIN", 8);
+const hashids = new Hashids("CLE MATCH", 8);
 
 export function decodeMatchId(hashedId: string): number {
+	if (hashedId == "-1") {
+		return -1
+	}
 	const decoded = hashids.decode(hashedId);
 	if (!decoded.length) {
 		throw new Error(`Impossible de décoder l'ID du match: ${hashedId}`);
@@ -13,17 +16,9 @@ export function decodeMatchId(hashedId: string): number {
 }
 
 export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
-	console.log("URL DE LINVIT", inviteUrl);
-	console.log(userId);
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
-
 	const matchId = decodeMatchId(inviteUrl);
 
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
-	console.log("URL DE LINVIT", matchId);
-	console.log(userId);
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅");
+
 	const userInfo = await Prisma.user.findUnique({
 		where: { id: userId },
 		select: { username: true, elo: true }
@@ -46,9 +41,21 @@ export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
 		},
 	});
 
-	console.log("🌅🌅🌅🌅🌅🌅🌅🌅🌅", findMatch)
 	if (findMatch?.id) {
 		throw new Error('User already in game')
+	}
+
+	const matchState = await Prisma.match.findFirst({
+		where: {
+			p2Id: { not: null},
+		},
+		select: {
+			p2Id: true,
+		},
+	});
+
+	if (matchState) {
+		throw new Error('Match already finished')
 	}
 
 	const updatedMatch = await Prisma.match.update({
