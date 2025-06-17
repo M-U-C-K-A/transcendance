@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { BracketMatch } from "@/types/BracketMatch";
+import { useI18n } from "@/i18n-client";
+
 
 const gameCreationSchema = z.object({
   name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
@@ -204,17 +206,14 @@ export default function SettingsPanel({
         const match = newBracket.find(m => m.id === currentMatch.id);
 
         if (match) {
-          console.log("[handleMatchEnd] Match trouvé dans le bracket:", match);
           match.status = "completed";
           match.winner = winner;
 
           // Vérifier si c'est le dernier match
           const lastMatch = newBracket[newBracket.length - 1];
-          console.log("[handleMatchEnd] Dernier match:", lastMatch);
-          console.log("[handleMatchEnd] Match actuel est le dernier:", lastMatch.id === match.id);
+
 
           if (lastMatch && lastMatch.id === match.id) {
-            console.log("[handleMatchEnd] C'est le dernier match");
             // Marquer le tournoi comme terminé
             setTournamentStarted(false);
             // Envoyer le résultat au serveur
@@ -559,6 +558,13 @@ export default function SettingsPanel({
 
   };
 
+
+
+
+
+  const t = useI18n();
+
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-10xl">
       {/* Popup de création de tournoi - Vérification plus stricte */}
@@ -573,9 +579,9 @@ export default function SettingsPanel({
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Créer un Tournoi</DialogTitle>
+              <DialogTitle>{t('game.tournament.create.title')}</DialogTitle>
               <DialogDescription>
-                Configurez les paramètres de votre tournoi
+                {t('game.tournament.create.description')}
               </DialogDescription>
             </DialogHeader>
 
@@ -587,10 +593,10 @@ export default function SettingsPanel({
               className="space-y-6"
             >
               <div className="space-y-3">
-                <Label htmlFor="gameName">Nom du tournoi</Label>
+                <Label htmlFor="gameName">{t('game.tournament.create.name')}</Label>
                 <Input
                   id="gameName"
-                  placeholder="Mon Tournoi"
+                  placeholder={t('game.tournament.create.placeholder')}
                   {...form.register("name")}
                   disabled={isLoading}
                 />
@@ -603,7 +609,7 @@ export default function SettingsPanel({
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <Label>Nombre de participants</Label>
+                  <Label>{t('game.tournament.create.playerCount')}</Label>
                   <span className="font-bold text-lg">
                     {form.watch("playerCount")}
                   </span>
@@ -630,9 +636,9 @@ export default function SettingsPanel({
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <span className="animate-pulse">Création en cours...</span>
+                  <span className="animate-pulse">{t('game.tournament.create.loading')}</span>
                 ) : (
-                  "Créer le Tournoi"
+                  t('game.tournament.create.create')
                 )}
               </Button>
             </form>
@@ -652,9 +658,9 @@ export default function SettingsPanel({
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Rejoindre le Tournoi</DialogTitle>
+              <DialogTitle>{t('game.tournament.create.join')}</DialogTitle>
               <DialogDescription>
-                Entrez votre nom d'utilisateur pour participer
+                {t('game.tournament.create.description')}
               </DialogDescription>
             </DialogHeader>
 
@@ -665,7 +671,7 @@ export default function SettingsPanel({
               e.currentTarget.reset();
             }} className="space-y-6">
               <div className="space-y-3">
-                <Label htmlFor="username">Nom d'utilisateur</Label>
+                <Label htmlFor="username">{t('game.tournament.create.username')}</Label>
                 <Input
                   id="username"
                   name="username"
@@ -675,7 +681,7 @@ export default function SettingsPanel({
               </div>
 
               <Button type="submit" className="w-full">
-                Rejoindre
+                {t('game.tournament.create.join')}
               </Button>
             </form>
 
@@ -688,7 +694,7 @@ export default function SettingsPanel({
                 {participants.map((participant, index) => (
                   <div key={participant.id} className="flex items-center gap-3 p-2 bg-secondary/20 rounded">
                     <span className="text-sm font-medium text-muted-foreground">
-                      Joueur {index + 1}:
+                      {t('game.tournament.create.player')} {index + 1}:
                     </span>
                     <img
                       src={`/profilepicture/${participant.id}.webp`}
@@ -721,11 +727,11 @@ export default function SettingsPanel({
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="text-center text-2xl font-bold text-green-500">
-                🏆 Tournoi Terminé ! 🏆
+                {t('game.tournament.create.finished')}
               </DialogTitle>
             </DialogHeader>
             <div className="text-center py-6">
-              <h3 className="text-xl font-semibold mb-2">Vainqueur du Tournoi</h3>
+              <h3 className="text-xl font-semibold mb-2">{t('game.tournament.create.winner')}</h3>
               <p className="text-3xl font-bold text-primary mb-6">{tournamentWinner}</p>
               <Button
                 onClick={() => {
@@ -740,7 +746,7 @@ export default function SettingsPanel({
                 }}
                 className="w-full py-6 text-lg"
               >
-                Retour au Dashboard
+                {t('game.tournament.create.backdashboard')}
               </Button>
             </div>
           </DialogContent>
@@ -751,7 +757,7 @@ export default function SettingsPanel({
         {(gamemode === "custom" || gamemode === "tournament") && (
           <div className="lg:col-span-3 space-y-6">
             <Card className="p-4">
-              <h2 className="text-xl font-semibold mb-4">Participants</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('game.tournament.create.participants')}</h2>
               <div className="space-y-3">
                 {gameInfo?.players?.length > 0 ? (
                   gameInfo.players.map((player) => (
@@ -777,7 +783,7 @@ export default function SettingsPanel({
 
             {gamemode === "tournament" && gameInfo?.upcomingMatches && (
               <Card className="p-4">
-                <h2 className="text-xl font-semibold mb-4">Arbre du Tournoi</h2>
+                <h2 className="text-xl font-semibold mb-4">{t('game.tournament.create.tree')}</h2>
                 <div className="space-y-4">
                   {gameInfo.upcomingMatches.map((match, idx) => (
                     <div key={idx} className="border rounded-lg p-3">
@@ -799,7 +805,7 @@ export default function SettingsPanel({
                       <div className="mt-2 text-xs text-muted-foreground flex justify-between">
                         <span>{match.time}</span>
                         {match.status === 'ongoing' && (
-                          <span className="text-green-500">• En cours</span>
+                          <span className="text-green-500">• {t('game.create.ongoing')}</span>
                         )}
                       </div>
                     </div>
@@ -818,7 +824,7 @@ export default function SettingsPanel({
           <Card className="p-6 rounded-xl">
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-semibold mb-4">Configuration de la Map</h2>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.map.title')}</h2>
                 <MapChoice
                   MapStyle={MapStyle}
                   setMapStyle={setMapStyle}
@@ -830,7 +836,7 @@ export default function SettingsPanel({
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4">Choix des Couleurs</h2>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
                 <ColorChoice
                   COLORS={COLORS}
                   currentPlayer={currentPlayer}
@@ -843,12 +849,12 @@ export default function SettingsPanel({
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4">Vitesse de la balle</h2>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.speed')}</h2>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {[
-                    { speed: 16, label: "🐢 Lent", color: "bg-green-500" },
-                    { speed: 24, label: "⚡ Moyen", color: "bg-yellow-400" },
-                    { speed: 36, label: "🔥 Rapide", color: "bg-red-500" },
+                    { speed: 16, label: t('game.create.slow'), color: "bg-green-500" },
+                    { speed: 24, label: t('game.create.medium'), color: "bg-yellow-400" },
+                    { speed: 36, label: t('game.create.fast'), color: "bg-red-500" },
                   ].map((item) => (
                     <Toggle
                       key={item.speed}
@@ -868,13 +874,13 @@ export default function SettingsPanel({
                   onClick={() => setIsControlsConfigOpen(true)}
                   className="w-full py-6 text-lg"
                 >
-                  🎮 Configurer les contrôles
+                  {t('game.controls.title')}
                 </Button>
 
                 {!canStart && (
                     <Alert variant="destructive">
                     <AlertDescription className="w-full flex justify-center items-center text-center">
-                      Sélectionnez une couleur et une map pour commencer
+                      {t('game.tournament.create.select')}
                     </AlertDescription>
                     </Alert>
                 )}
@@ -910,7 +916,7 @@ export default function SettingsPanel({
                             }}
                             className="w-full py-6 text-lg bg-green-500 hover:bg-green-600"
                           >
-                            Retour au Dashboard
+                            {t('game.tournament.create.back')}
                           </Button>
                         );
                       }
@@ -942,7 +948,7 @@ export default function SettingsPanel({
                           className="w-full py-6 text-lg"
                           variant={canStart && !matchCompleted && currentMatch?.status !== "completed" ? "default" : "secondary"}
                         >
-                          {currentMatch?.status === "completed" ? "Match Terminé" : "🏆 Lancer le Match"}
+                          {currentMatch?.status === "completed" ? t('game.tournament.create.completed') : t('game.tournament.create.start')}
                         </Button>
                       );
                     })()}
@@ -954,7 +960,7 @@ export default function SettingsPanel({
                     className="w-full py-6 text-lg"
                     variant={canStart ? "default" : "secondary"}
                   >
-                    🚀 Lancer la Partie
+                    {t('game.tournament.create.start')}
                   </Button>
                 )}
               </div>
@@ -982,7 +988,7 @@ export default function SettingsPanel({
           </h3>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-muted-foreground">Joueur 1:</span>
+              <span className="text-sm font-medium text-muted-foreground">{t('game.tournament.create.player1')}:</span>
               {currentMatch.player1 ? (
                 <>
                   <img
@@ -998,14 +1004,14 @@ export default function SettingsPanel({
                   </div>
                 </>
               ) : (
-                <span className="text-muted-foreground">En attente</span>
+                <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
               )}
             </div>
 
             <span className="text-2xl font-bold">VS</span>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-muted-foreground">Joueur 2:</span>
+              <span className="text-sm font-medium text-muted-foreground">{t('game.tournament.create.player2')}:</span>
               {currentMatch.player2 ? (
                 <>
                   <img
@@ -1021,7 +1027,7 @@ export default function SettingsPanel({
                   </div>
                 </>
               ) : (
-                <span className="text-muted-foreground">En attente</span>
+                <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
               )}
             </div>
           </div>
@@ -1054,7 +1060,7 @@ export default function SettingsPanel({
                     >
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">Joueur 1:</span>
+                          <span className="text-sm font-medium text-muted-foreground">{t('game.tournament.create.player1')}:</span>
                           {match.player1 ? (
                             <>
                               <img
@@ -1068,11 +1074,11 @@ export default function SettingsPanel({
                               </span>
                             </>
                           ) : (
-                            <span className="text-muted-foreground">En attente</span>
+                            <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
                           )}
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground">Joueur 2:</span>
+                          <span className="text-sm font-medium text-muted-foreground">{t('game.tournament.create.player2')}:</span>
                           {match.player2 ? (
                             <>
                               <img
@@ -1086,7 +1092,7 @@ export default function SettingsPanel({
                               </span>
                             </>
                           ) : (
-                            <span className="text-muted-foreground">En attente</span>
+                            <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
                           )}
                         </div>
                         <div className="text-sm text-muted-foreground mt-2">

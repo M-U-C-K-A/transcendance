@@ -6,10 +6,7 @@ import { displayKey } from "./ControlsConfig"
 import { MalusSystem } from "./MalusSystem"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-
-
-
-
+import { useI18n } from "@/i18n-client"
 
 
 
@@ -205,7 +202,7 @@ export const GameUI = ({
 
 
 
-
+  const t = useI18n();
 
 
   return (
@@ -215,7 +212,7 @@ export const GameUI = ({
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center w-full pointer-events-none">
         <div className="text-3xl font-extrabold text-foreground bg-background/80 px-8 py-2 rounded shadow-lg border border-border mb-2 pointer-events-auto">
       {score.player1} - {score.player2}
-    </div>
+      </div>
 
 
 
@@ -225,7 +222,7 @@ export const GameUI = ({
         {/* Barre de chargement du Malus centrée sous le score */}
         {enableMaluses && (
         <div className="absolute left-1/2 top-28 transform -translate-x-1/2 flex flex-col items-center z-20">
-            <span className="mb-1 text-sm font-semibold text-red-700">Malus dans :</span>
+            <span className="mb-1 text-sm font-semibold text-red-700">{t('game.create.malusin')}:</span>
             <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-300 relative">
               <div
                 className="h-full bg-red-600 transition-all duration-500"
@@ -264,7 +261,7 @@ export const GameUI = ({
           <div className="mt-4" />
           {superPad.player1 && (
             <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">
-              Compteur de coup spécial : {specialTimer1}s
+              {t('game.create.specialcounter')}: {specialTimer1}s
             </div>
           )}
           <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
@@ -289,10 +286,10 @@ export const GameUI = ({
           <div className="text-xs text-center mt-1 font-semibold">
             {stamina.player1 < 10 ? (
               <span className="bg-black text-white px-2 py-0.5 rounded">
-                {10 - stamina.player1} frappes restantes
+                {10 - stamina.player1} {t('game.create.strikesremaining')}
               </span>
             ) : (
-              <span className="text-black">Coup spécial prêt !</span>
+              <span className="text-black">{t('game.create.specialready')}</span>
             )}
           </div>
         </>
@@ -325,7 +322,7 @@ export const GameUI = ({
         {enableSpecial && (
           <>
             {superPad.player2 && (
-              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">Compteur de coup spécial : {specialTimer2}s</div>
+              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">{t('game.create.specialcounter')}: {specialTimer2}s</div>
             )}
             <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
               {displayKey(controls.player2Special)}
@@ -347,10 +344,10 @@ export const GameUI = ({
             <div className="text-xs text-center mt-1 font-semibold">
               {stamina.player2 < 10 ? (
                 <span className="bg-black text-white px-2 py-0.5 rounded">
-                  {10 - stamina.player2} frappes restantes
+                  {10 - stamina.player2} {t('game.create.strikesremaining')}
                 </span>
               ) : (
-                <span className="text-black">Coup spécial prêt !</span>
+                <span className="text-black">{t('game.create.specialready')}</span>
               )}
             </div>
           </>
@@ -386,7 +383,7 @@ export const GameUI = ({
             transition={{ delay: 0.2 }}
             className="text-green-500 text-4xl font-extrabold mb-6"
           >
-            🏆 {winner} a gagné !
+            🏆 {t('game.create.winner')} {winner} {t('game.create.won')} !
           </motion.span>
 
 
@@ -403,7 +400,7 @@ export const GameUI = ({
               onClick={() => window.location.reload()}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
             >
-              Rejouer
+              {t('game.create.replay')}
             </button>
 
 
@@ -418,7 +415,7 @@ export const GameUI = ({
                 }}
                 className="w-full py-6 text-lg"
               >
-                Retour aux Options
+                {t('game.create.backoptions')}
               </Button>
             ) : (
               <Button
@@ -429,7 +426,7 @@ export const GameUI = ({
                 }}
                 className="w-full py-6 text-lg"
               >
-                Quitter
+                {t('game.create.quit')}
               </Button>
             )}
 
@@ -470,7 +467,7 @@ export const GameUI = ({
           ⚙️
         </button>
       <div className="bg-card border border-border rounded px-2 py-1 text-xs text-foreground">
-        Échap
+        {t('game.create.escape')}
       </div>
 
 
@@ -484,7 +481,7 @@ export const GameUI = ({
             countdown !== null ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          Reprendre
+          {t('game.create.resume')}
         </button>
       ) : (
         <button
@@ -494,7 +491,7 @@ export const GameUI = ({
             countdown !== null ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          Pause
+          {t('game.create.pause')}
         </button>
       )}
 
@@ -521,11 +518,11 @@ export const GameUI = ({
       {showGoal && (
         lastScoreType === 'malus' ? (
           <div className="fixed top-1/4 left-1/2 z-50 -translate-x-1/2 text-6xl font-extrabold text-red-600 drop-shadow-lg animate-goal-pop select-none pointer-events-none">
-            MALUS&nbsp;!
+            {t('game.create.malus')}!
           </div>
         ) : (
           <div className="fixed top-1/4 left-1/2 z-50 -translate-x-1/2 text-6xl font-extrabold text-green-500 drop-shadow-lg animate-goal-pop select-none pointer-events-none">
-            GOAL&nbsp;!
+            {t('game.create.goal')}!
           </div>
         )
       )}
