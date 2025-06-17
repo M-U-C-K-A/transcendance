@@ -79,7 +79,7 @@ export default function Buttons({
   }, [winner, currentMatch, gamemode, updateBracketAfterMatch]);
 
   return (
-    <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border mt-4">
+    <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border mt-4 flex justify-center items-center mx-auto">
 
 
 
