@@ -6,6 +6,7 @@ import { PrivateChat } from "./chat/privateChat/PrivateChat";
 import { usePublicMessages } from "./chat/publicChat/usePublicMessages";
 import { usePrivateMessages } from "./chat/privateChat/usePrivateMessages";
 import { PrivateConversation } from "./chat/privateChat/type";
+import { useI18n } from "@/i18n-client";
 
 type Tab = "public" | "private";
 
@@ -28,6 +29,8 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
   const [privateConversations, setPrivateConversations] = useState<PrivateConversation[]>([]);
   const [sendError, setSendError] = useState<string | null>(null);
 
+  const t = useI18n();
+  
   const {
     messages: publicMessages,
     fetchMessages,
@@ -185,8 +188,8 @@ export function ChatComponent({ placeholder = "Écrivez un message...", currentU
       className="h-full flex flex-col overflow-y-hidden"
     >
       <TabsList className="grid grid-cols-2 w-full">
-        <TabsTrigger value="public">Public</TabsTrigger>
-        <TabsTrigger value="private">Privé</TabsTrigger>
+        <TabsTrigger value="public">{t('chat.public')}</TabsTrigger>
+        <TabsTrigger value="private">{t('chat.private')}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="public" className="flex-1">
