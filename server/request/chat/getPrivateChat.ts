@@ -38,6 +38,7 @@ export default async function getPrivateChat(userId: number) {
 			id: msg.id,
 			content: msg.content,
 			sendAt: msg.sendAt,
+			messageType: msg.messageType,
 			user: isSender ? msg.sender : msg.recipient,
 			collegue: isSender ? msg.recipient : msg.sender,
 			sender: msg.sender
