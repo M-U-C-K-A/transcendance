@@ -24,6 +24,7 @@ import { useBioFromJWT } from "@/hooks/use-bio-from-jwt"
 import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
 import { toast } from "sonner"
 import Image from "next/image"
+import { useI18n } from "@/i18n-client"
 
 // Zod schema
 const ProfileSchema = z.object({
@@ -35,6 +36,7 @@ const ProfileSchema = z.object({
 type ProfileFormData = z.infer<typeof ProfileSchema>
 
 export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWithoutRef<typeof AlertDialogTrigger>) {
+  const t = useI18n()
   const usernameFromJWT = useUsernameFromJWT()
   const bioFromJWT = useBioFromJWT()
   const id = useIdFromJWT()
@@ -43,7 +45,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
   const [formData, setFormData] = useState<ProfileFormData>({
     username: usernameFromJWT || "",
     bio: bioFromJWT || "",
-    profilePhotoUrl: null, // On ne stocke plus l'URL depuis le JWT
+    profilePhotoUrl: null,
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [avatarUrl, setAvatarUrl] = useState(`/profilepicture/${id}.webp`)
@@ -55,7 +57,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       bio: bioFromJWT || "",
       profilePhotoUrl: null,
     })
-    setAvatarUrl(`/profilepicture/${id}.webp`) // Mise à jour de l'URL avec l'ID utilisateur
+    setAvatarUrl(`/profilepicture/${id}.webp`)
   }, [usernameFromJWT, bioFromJWT, id])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -67,18 +69,16 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
     if (files.length > 0) {
       const file = files[0]
 
-      // Vérification du type MIME
       if (!file.type.startsWith('image/')) {
-        toast.error("Type de fichier non supporté", {
-          description: "Veuillez sélectionner une image (JPEG, PNG, etc.)",
+        toast.error(t('profileEdit.errors.invalidFileType.title'), {
+          description: t('profileEdit.errors.invalidFileType.description'),
         })
         return
       }
 
-      // Vérification de la taille
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("Fichier trop volumineux", {
-          description: "La taille maximale est de 5MB",
+        toast.error(t('profileEdit.errors.fileTooLarge.title'), {
+          description: t('profileEdit.errors.fileTooLarge.description'),
         })
         return
       }
@@ -104,7 +104,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       : originalUsername
 
     const bioToSend = formData.bio?.trim() || ""
-    const avatarToSend = formData.profilePhotoUrl || null // Envoie null si pas de nouvelle image
+    const avatarToSend = formData.profilePhotoUrl || null
 
     const result = ProfileSchema.safeParse({
       username: usernameToSend,
@@ -113,7 +113,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
     })
 
     if (!result.success) {
-      toast.error("Erreur de validation", {
+      toast.error(t('profileEdit.errors.validation.title'), {
         description: Object.values(result.error.flatten().fieldErrors)
           .flat()
           .join('\n'),
@@ -140,7 +140,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Échec de la mise à jour")
+        throw new Error(data.error || t('profileEdit.errors.updateFailed'))
       }
 
       if (data.token) {
@@ -150,13 +150,13 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
       }
 
       if (avatarToSend) {
-        setAvatarUrl(`/profilepicture/${id}.webp?t=${Date.now()}`) // Ajout d'un timestamp pour éviter le cache
+        setAvatarUrl(`/profilepicture/${id}.webp?t=${Date.now()}`)
       }
 
-      toast.success("Profil mis à jour")
+      toast.success(t('profileEdit.success'))
     } catch (err) {
-      toast.error("Erreur", {
-        description: err instanceof Error ? err.message : "Erreur inconnue",
+      toast.error(t('common.error'), {
+        description: err instanceof Error ? err.message : t('profileEdit.errors.unknown'),
       })
     }
   }
@@ -164,15 +164,15 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
   return (
     <AlertDialog {...props}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="sm" aria-label="Settings">
+        <Button variant="ghost" size="sm" aria-label={t('profileEdit.settingsLabel')}>
           {children || <Settings className="h-5 w-5" />}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-[425px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Éditer le profil</AlertDialogTitle>
+          <AlertDialogTitle>{t('profileEdit.title')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Modifiez vos informations personnelles ci-dessous.
+            {t('profileEdit.description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="grid gap-4 py-4">
@@ -205,9 +205,9 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
                   <div className="flex items-center justify-center rounded-full border p-2.5">
                     <Upload className="size-6 text-muted-foreground" />
                   </div>
-                  <p className="font-medium text-sm">Glissez-déposez votre photo ici</p>
+                  <p className="font-medium text-sm">{t('profileEdit.upload.dragDrop')}</p>
                   <p className="text-muted-foreground text-xs">
-                    Ou cliquez pour sélectionner (max 5MB)
+                    {t('profileEdit.upload.clickToSelect')}
                   </p>
                 </div>
               </label>
@@ -220,7 +220,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
                       height={40}
                       quality={100}
                       src={URL.createObjectURL(selectedFile)}
-                      alt="Preview"
+                      alt={t('profileEdit.upload.previewAlt')}
                       className="h-10 w-10 object-cover rounded"
                     />
                     <span className="text-sm truncate max-w-[180px]">
@@ -245,7 +245,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
-              Nom d&apos;utilisateur
+              {t('profileEdit.usernameLabel')}
             </Label>
             <Input
               id="username"
@@ -259,7 +259,7 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="bio" className="text-right">
-              Bio
+              {t('profileEdit.bioLabel')}
             </Label>
             <Textarea
               id="bio"
@@ -267,14 +267,14 @@ export function ProfileEditDialog({ children, ...props }: React.ComponentPropsWi
               value={formData.bio}
               onChange={handleChange}
               className="col-span-3"
-              placeholder="Parlez-nous de vous..."
+              placeholder={t('profileEdit.bioPlaceholder')}
               rows={3}
             />
           </div>
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annuler</AlertDialogCancel>
-          <AlertDialogAction onClick={handleSave}>Enregistrer</AlertDialogAction>
+          <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+          <AlertDialogAction onClick={handleSave}>{t('common.save')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
