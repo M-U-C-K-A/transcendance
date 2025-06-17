@@ -22,18 +22,38 @@ export function collideMiniPaddle(
   ) 
   {
     
-    
+    // l endroit ou balle touche le pad (voir paddle collion)
     const relativeX = (ball.position.x - miniPaddle.position.x) / 2;
     const bounceAngle = relativeX * (Math.PI / 4);
+
     const dirX = Math.sin(bounceAngle);
+
+    // selon le cote du paddle on change le sens de la balle. 
+    // (pas besoin jouer car balle arrive que d un cote)
     const dirZ = ballV.z > 0 ? -Math.cos(bounceAngle) : Math.cos(bounceAngle);
+
+
+
+
+    
     const dirAfter = new Vector3(dirX, 0, dirZ).normalize();
     
-    // Le mini-pad garde la vitesse normale
+
+
+
+
+
+
     const newVelocity = dirAfter.scale(currentSpeed);
 
 
+
+
     PlayRandomHitSound(volume);
+
+
+
+
 
     return { newVelocity, newSpeed: currentSpeed };
   }

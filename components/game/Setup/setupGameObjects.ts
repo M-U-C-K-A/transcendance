@@ -1,5 +1,6 @@
 // src/setupGameObjects.ts
 // ------------------------
+import { BALL_DIAMETER } from "../Physic/constants";
 
 import {
   Scene,
@@ -63,8 +64,11 @@ export const setupGameObjects = (
   //  Paddles : dept =  largeur pour nous
   const paddleOpts = { width: 6, height: 0.5, depth: 0.5 };
   const paddle1 = MeshBuilder.CreateBox("p1", paddleOpts, scene);
+
+  // position = par rapport au centre du 
   paddle1.position.set(0, 0.25, -19);
   paddle1.material = p1Mat;
+
   const paddle2 = paddle1.clone("p2");
   paddle2.position.set(0, 0.25, 19);
   paddle2.material = p2Mat;
@@ -284,7 +288,7 @@ export const setupGameObjects = (
 
 
   //  Balle 
-  const ball = MeshBuilder.CreateSphere("ball", { diameter: 0.5 }, scene);
+  const ball = MeshBuilder.CreateSphere("ball", { diameter: BALL_DIAMETER }, scene);
   ball.material = ballMat;
   ball.position.y = 0.25;
 

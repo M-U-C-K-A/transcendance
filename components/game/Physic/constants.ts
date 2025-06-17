@@ -48,7 +48,7 @@ export const BUMPER_MID_RIGHT = +2
 
 
 
-
+export const BALL_DIAMETER = 0.5;
 
 
 // --- Angles ---

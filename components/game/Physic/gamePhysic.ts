@@ -24,6 +24,7 @@ import { movePaddles } from "./movements/paddleMovement";
 import { updateMiniPaddle } from "./movements/miniPaddleLogic";
 import { handleCollisions } from "./collisions/handleCollisions";
 import type { GameRefs, GameObjects } from "../gameTypes";
+import { movebumper } from "./movements/bumperMov";
 
 
 
@@ -392,80 +393,17 @@ export const initgamePhysic = (
 
     // mvt des bumpers
     if (bumperLeft && bumperRight)
-    {
-      // la distance en vecteur = vitesse + delta + direction
-      const moveAmount = BUMPER_SPEED * deltaTime * bumperDirRef.current;
-
-
-
-      // chaque frame = un deplacement de moveAmount 
-      // new = calcul du mouv avant attribution reeelle en dessous.
-      let newLeftX  = bumperLeft.position.x  + moveAmount;
-      let newRightX = bumperRight.position.x - moveAmount;
-
-
-
-
-
-      //  les limites des bumpers. calcul par rapport au deplacement
-      // -8  8 . si on est a  10 il renvoit 8
-      newLeftX  = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newLeftX));
-      newRightX = Math.max(BUMPER_BOUND_LEFT,  Math.min(BUMPER_BOUND_RIGHT, newRightX));
-
-
-
-      // 1 = vers le centre 
-      // stop net. 
-      if (bumperDirRef.current > 0) 
-      {
-
-        // si on arrive au middle = on se stop net ici.
-        if (newLeftX >= BUMPER_MID_LEFT)
-        {
-          newLeftX = BUMPER_MID_LEFT;
-        }
-
-
-        if (newRightX <= BUMPER_MID_RIGHT)
-          newRightX = BUMPER_MID_RIGHT;
-
-
-      }
-      else 
-      {
-        if (newLeftX <= BUMPER_BOUND_LEFT)
-          newLeftX = BUMPER_BOUND_LEFT;
-
-        if (newRightX >= BUMPER_BOUND_RIGHT)
-          newRightX = BUMPER_BOUND_RIGHT;
-      }
-
-
-      // vrai position du bumper à la fin 
-      bumperLeft.position.x  = newLeftX;
-      bumperRight.position.x = newRightX;
-
-
-
-      // Pour inverser la direction.
-      if (bumperDirRef.current > 0) 
-      {
-        if (newLeftX  === BUMPER_MID_LEFT || newRightX === BUMPER_MID_RIGHT) {
-          bumperDirRef.current = -1;
-        }
-      } else {
-        // On inverse si l'un revient à sa borne exterieure
-        if (newLeftX  === BUMPER_BOUND_LEFT || newRightX === BUMPER_BOUND_RIGHT) {
-          bumperDirRef.current = 1;
-        }
-      }
-    }
+        movebumper(bumperLeft, bumperRight, bumperDirRef, deltaTime);
+  
 
 
 
 
     // BalleV = vecteur 3d de la balle , ajuste selon le deltaTime
     // si au service ou si a subit collision  (collision result)
+    // add in place permet le deplacement, il use le vecteur (plus il )
+
+    // plus c est loin plus il va aller vite pour y etre en 1 frame.
     ball.position.addInPlace(ballV.scale(deltaTime));
 
 

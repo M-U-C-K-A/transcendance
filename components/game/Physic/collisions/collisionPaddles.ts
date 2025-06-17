@@ -38,12 +38,11 @@ export function collidePaddle1(
 
 
 
-  const cooldown = 50; // ms
+  const cooldown = 50;
   const now = Date.now();
 
 
 
-  // Collision paddle1
 
 
 
@@ -51,7 +50,8 @@ export function collidePaddle1(
 
 
 
-  // absolu sru le resultat final pour simplifier les calcul.  (calcul l ecart sans se soucier du cote ou est cet ecart)
+  // abs :  absolu sru le resultat final pour simplifier les calcul. 
+  //  (calcul l ecart sans se soucier du cote ou est cet ecart)
   if (
     ball.position.z < -19 &&
     Math.abs(ball.position.x - paddle1.position.x) < paddleWidth
@@ -59,7 +59,7 @@ export function collidePaddle1(
   {
 
 
-
+    // pour les ms (avec le mur dans le coin)
     if (now - lastPaddleCollision.p1 < cooldown) 
       return null;
 
@@ -136,13 +136,12 @@ export function collidePaddle2(
 
 
 
-  const cooldown = 50; // ms
+  const cooldown = 50;
   const now = Date.now();
 
 
 
-
-  // Collision paddle2
+  // widht = hauteur du paddle (map sur teko)
   const paddleWidth2 = (enableSpecial && superPad && superPad.player2) ? PADDLE_HALF_WIDTH * 2 : PADDLE_HALF_WIDTH;
 
 
@@ -161,36 +160,65 @@ export function collidePaddle2(
     ball.position.z = 19;
 
 
-
+    // stamina = tableau avec 2 chiffre : 1 par joue
+    // copie le tableau mais pour p2 ajoute 1. j use min car j ai besoin d une ft.
     if (enableSpecial && setStamina && stamina && stamina.player2 < 10)
       setStamina({ ...stamina, player2: Math.min(10, stamina.player2 + 1) });
 
 
 
-    // Gestion coup spécial
+    // x2  le surface de collision a check
     if (enableSpecial && superPad && superPad.player2)
       paddle2.scaling.x = 2;
-     else
+    else
       paddle2.scaling.x = 1;
 
 
 
+    // paddle pos 12
+    // balle 15
+    //  hauteur = 6.
 
+    // 15 - 12 = 3
+    // 3 / 6 = 0.5
+    // 
+    //  0.5 = milieu moitie haute 
+    //  -.0.5 aurait etee moitie basse
     const relativeIntersectX = (ball.position.x - paddle2.position.x) / paddleWidth2;
+
+
+
+    // plus le max est divise par un grand nombre plus agnle aigue
     const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE;
+
+
+
+
+    // transfo angle en position.
     const dirX = Math.sin(bounceAngle);
     const dirZ = Math.cos(bounceAngle);
+
+
+
+
+
+    // normalise = garde la direction mais met la longuer a 1.
+    // comme vecteur = droite
+    // vitesse du jeux = longueur de la droite car va deplacer de la taille de la droite
     const dirAfter = new Vector3(dirX, 0, -dirZ).normalize();
+
+
+
+
     let speed = currentSpeed;
 
-
-
-
+  // x2 vit si superapd
     if (enableSpecial && superPad && superPad.player2) 
       speed = currentSpeed * 2;
 
 
-
+    // on ajoute la vitesse (taille de la droite) au vecteur
+    // scale multiplie toutes les coordonnees par speed
     const newVelocity = dirAfter.scale(speed);
 
     PlayRandomHitSound(volume);

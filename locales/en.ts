@@ -6,6 +6,7 @@ export default {
   "common": {
     "appName": "ft_transcendance",
     "login": "Login",
+    "verify": "Verify",
     "register": "Register",
     "freeRegister": "Register for free",
     "statistics": "Statistics",
@@ -38,10 +39,19 @@ export default {
       },
         "critical": {
           "title": "Critical Data",
-          "deleteAccount": "Delete Account"
+          "deleteAccount": "Delete Account",
+          "deleteWarning": "Are you sure you want to delete your account? This action is irreversible.",
+          "deleteButton": "Delete Account",
         },
       "password": "Password",
       "deleteAccount": "Delete Account"
+    },
+    "alerts": {
+      "delete":{
+        "title": "Delete Account",
+        "description": "Are you sure you want to delete your account? This action is irreversible.",
+        "confirm":  "Confirm",
+      }
     },
     "toasts": {
       "verificationSuccess": "Verification successful",
@@ -66,7 +76,10 @@ export default {
       "title": "Features",
       "gameModes": {
         "title": "Game Modes",
-        "description": "Classic, custom or tournament. Choose your way to play and challenge your opponents."
+        "description": "Classic, custom or tournament. Choose your way to play and challenge your opponents.",
+        "classic": "Classic",
+        "red": "Red",
+        "neon": "Neon"
       },
       "chat": {
         "title": "Real-time Chat",
@@ -83,25 +96,89 @@ export default {
     }
   },
 
+  "Profile": {
+    "title": "User Profile",
+    "subtitle": "Manage your profile and settings",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+    },
+    "stats": {
+      "stats": "Stats",
+      "wins": "Wins",
+      "losses": "Losses",
+      "tournaments": "Tournaments",
+      "level": "Level",
+      "elo": "ELO",
+      "rank": "Rank",
+    }
+  },
+
   "auth": {
     "login": {
       "title": "Login",
+      "subtitle": "Sign in to access your PongMaster account",
+      "emailLabel":"Email",
       "description": "Sign in to access your PongMaster account",
-      "email": "Email",
+      "emailPlaceholder": "example@gmail.com",
       "password": "Password",
       "forgotPassword": "Forgot password?",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "********",
+      "orContinueWith": "Continue with Google",
+      "submit": "Sign in",
       "continueWithGoogle": "Continue with Google",
-      "submit": "Sign in"
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordTooLong": "Password must be less than 20 characters",
     },
     "register": {
       "title": "Register",
+      "usernameLabel": "Username",
+      "subtitle": "Create an account to start playing PongMaster",
       "description": "Create an account to start playing PongMaster",
       "username": "Username",
-      "email": "Email",
+      "emailLabel": "Email",
       "password": "Password",
       "continueWithGoogle": "Sign up with Google",
-      "submit": "Create account"
-    }
+      "submit": "Create account",
+      "emailPlaceholder": "example@gmail.com",
+      "usernamePlaceholder": "MichaelSnow",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "********",
+      "orContinueWith": "Continue with Google",
+      "invalidEmail": "Invalid email",
+      "invalidUsername": "Invalid username",
+      "invalidPassword": "Invalid password",
+      "invalidConfirmPassword": "Passwords do not match",
+      "invalidUsernameLength": "Username must be at least 3 characters",
+      "invalidPasswordLength": "Password must be at least 8 characters",
+      "invalidConfirmPasswordLength": "Passwords do not match",
+      
+    },
+    "errors":{
+        "loginFailed": "Login failed",
+        "registrationFailed": "Registration failed",
+        "verificationFailed": "Verification failed",
+        "updateFailed": "Update failed",
+        "deleteFailed": "Account deletion failed",
+        "genericError": "An error occurred",
+        "invalidEmail": "Invalid email",
+        "invalidUsername": "Invalid username",
+        "sessionExpired": "Session expired",
+    },
+    "haveAccount":"Already have an account? ",
+    "noAccount": "No account? ",
+    "registertext": "Register",
+    "logintext": "Login",
+    "2fa": {
+      "title": "Two-Factor Authentication",
+      "description": "Enter the code sent to your email",
+      "codeHint": "Code",
+      "submit": "Verify",
+    },
   },
 
   "dashboard": {
@@ -239,7 +316,8 @@ export default {
     }
   },
   "app": {
-    "name": "ft_Transcendance"
+    "name": "ft_Transcendance",
+    "title": "ft_Transcendance",
   },
 
   "game": {
@@ -264,7 +342,14 @@ export default {
       "title": "Game chat"
     },
     "winner": "has won!",
-    "finalScore": "Final score:"
+    "finalScore": "Final score:",
+    "specialControls": {
+      "title": "Special Controls",
+      "player1Special": "Player 1 Special",
+      "player2Special": "Player 2 Special",
+      "stamina": "Stamina",
+      "superPad": "Super Pad"
+    }
   },
 
   "stats": {
@@ -317,6 +402,149 @@ export default {
       "games": "Games",
       "winRate": "Win %",
       "you": "You"
+    }
+  },
+
+  "malus": {
+    "title": "Malus",
+    "description": "Collect malus to reduce opponent's score",
+    "timer": "Next malus in",
+    "collected": "Malus collected!"
+  },
+
+  "sound": {
+    "title": "Sound",
+    "volume": "Volume",
+    "mute": "Mute",
+    "unmute": "Unmute"
+  },
+
+  "settings": {
+    "title": "Game Settings",
+    "speed": "Ball Speed",
+    "volume": "Sound Volume",
+    "enableSpecial": "Enable Special Moves",
+    "enableMaluses": "Enable Maluses"
+  },
+
+  "profile": {
+    "title": "Profile of {username}",
+    "returnToDashboard": "Return to dashboard",
+    "notFound": {
+      "title": "Profile not found",
+      "description": "The requested profile does not exist."
+    },
+    "stats": {
+      "title": "Statistics",
+      "gamesPlayed": "Games played",
+      "winRate": "Win rate",
+      "pointsScored": "Points scored",
+      "pointsConceded": "Points conceded",
+      "tournamentsWon": "Tournaments won"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "matches": "Matches",
+      "achievements": "Achievements"
+    },
+    "elo": {
+      "title": "ELO Progression",
+      "description": "Your ELO evolution over time",
+      "chartPlaceholder": "ELO chart coming soon"
+    },
+    "recentMatches": {
+      "title": "Recent Matches",
+      "description": "Your last 5 matches"
+    },
+    "match": {
+      "versus": "vs {opponent}",
+      "opponentPrefix": "Opponent",
+      "victory": "Victory",
+      "defeat": "Defeat",
+      "score": "Score: {score}"
+    },
+    "viewAllMatches": "View all matches",
+    "matches": {
+      "title": "All Matches",
+      "description": "All matches played by {username}",
+      "date": "Date",
+      "opponent": "Opponent",
+      "result": "Result",
+      "score": "Score",
+      "eloChange": "ELO change"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "description": "Your unlocked achievements",
+      "beginner": {
+        "title": "Beginner",
+        "description": "Play your first match"
+      },
+      "humiliation": {
+        "title": "Humiliation",
+        "description": "Win a match 5-0"
+      },
+      "shamefullLose": {
+        "title": "Shameful Loss",
+        "description": "Lose a match 0-5"
+      },
+      "rivality": {
+        "title": "Rivalry",
+        "description": "Play 10 matches against the same opponent"
+      },
+      "fairPlay": {
+        "title": "Fair Play",
+        "description": "Never rage quit"
+      },
+      "lastSecond": {
+        "title": "Last Second",
+        "description": "Win a match at the last second"
+      },
+      "comeback": {
+        "title": "Comeback",
+        "description": "Win after being behind"
+      },
+      "longGame": {
+        "title": "Long Game",
+        "description": "Play a match longer than 10 minutes"
+      },
+      "winTournament": {
+        "title": "Tournament Winner",
+        "description": "Win a tournament"
+      },
+      "friendly": {
+        "title": "Friendly",
+        "description": "Add 5 friends"
+      },
+      "rank1": {
+        "title": "Number 1",
+        "description": "Reach the top of the ranking"
+      },
+      "looser": {
+        "title": "Looser",
+        "description": "Lose 10 matches in a row"
+      },
+      "winner": {
+        "title": "Winner",
+        "description": "Win 10 matches in a row"
+      },
+      "scorer": {
+        "title": "Scorer",
+        "description": "Score 100 points"
+      },
+      "emoji": {
+        "title": "Emoji Master",
+        "description": "Use 10 different emojis in chat"
+      },
+      "rage": {
+        "title": "Rage Quit",
+        "description": "Rage quit a match"
+      }
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch profile data",
+      "unknown": "Unknown error",
+      "fetchError": "An error occurred while fetching the profile"
     }
   }
 }

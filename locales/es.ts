@@ -47,21 +47,58 @@ export default {
   "auth": {
     "login": {
       "title": "Iniciar sesión",
-      "description": "Inicia sesión para acceder a tu cuenta de PongMaster",
-      "email": "Correo electrónico",
-      "password": "Contraseña",
+      "subtitle": "Inicia sesión para acceder a tu cuenta de PongMaster",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "ejemplo@gmail.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "********",
       "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión...",
+      "orContinueWith": "O continuar con",
       "continueWithGoogle": "Continuar con Google",
-      "submit": "Iniciar sesión"
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
     },
     "register": {
-      "title": "Registrarse",
-      "description": "Crea una cuenta para empezar a jugar a PongMaster",
-      "username": "Nombre de usuario",
-      "email": "Correo electrónico",
-      "password": "Contraseña",
-      "continueWithGoogle": "Registrarse con Google",
-      "submit": "Crear cuenta"
+      "title": "Registro",
+      "subtitle": "Crea una cuenta para empezar a jugar a PongMaster",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "ejemplo@gmail.com",
+      "usernameLabel": "Nombre de usuario",
+      "usernamePlaceholder": "Elige un nombre de usuario",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "********",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "invalidEmail": "Correo electrónico inválido",
+      "usernameTooShort": "El nombre de usuario debe tener al menos 3 caracteres",
+      "usernameTooLong": "El nombre de usuario debe tener menos de 20 caracteres",
+      "invalidChars": "Solo se permiten letras, números y guiones bajos",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+    },
+    "2fa": {
+      "title": "Verificación en dos pasos",
+      "description": "Se ha enviado un código a {email}. Por favor, introdúcelo para continuar.",
+      "invalidCode": "Código inválido",
+      "incompleteCode": "Por favor, introduce el código completo",
+      "incorrectCode": "Código incorrecto",
+      "verificationError": "Error al verificar el código",
+      "codeHint": "Introduce el código de 6 dígitos recibido por email"
+    },
+    "noAccount": "¿No tienes cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "register": "Registrarse",
+    "login": "Iniciar sesión",
+    "loginImageAlt": "Imagen de inicio de sesión",
+    "errors": {
+      "tokenVerificationFailed": "Error al verificar el token",
+      "googleLoginFailed": "Error al iniciar sesión con Google",
+      "invalidFields": "Campos inválidos",
+      "loginFailed": "Error al iniciar sesión",
+      "registrationFailed": "Error al registrarse",
+      "genericError": "Ha ocurrido un error",
+      "sessionExpired": "Sesión expirada, por favor inténtalo de nuevo"
     }
   },
 

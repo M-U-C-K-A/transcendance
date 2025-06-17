@@ -1,6 +1,7 @@
 // src/Physic/collisions/collideBumper.ts
 // --------------------------------------
 
+import { BALL_DIAMETER } from "../constants";
 import { Vector3, Mesh } from "@babylonjs/core";
 import { PlayRandomHitSound } from "../sound";
 
@@ -20,41 +21,71 @@ export function collideBumper(
 
 
 
-
+  // distance entre les centre sur les deux axe.
   const dx = ball.position.x - bumper.position.x;
   const dz = ball.position.z - bumper.position.z;
+
+  // somme des distance au carre = hypothenuse. 
+
+  // on est en vectoriel donc on bouge droite gauche haut bas donc on veut le la droite par rapport au centre
+  // comme c est un rond cest jamais sur le meme x ou z
+
+  // c est la distance reelle entre leur centre 
   const distanceXZ = Math.sqrt(dx * dx + dz * dz);
 
 
 
 
   const bumperRadius = 1.25;
-  const ballRadius   = 0.25;
+  const ballRadius   = BALL_DIAMETER / 2;
 
 
-  if (Math.abs(ball.position.y - bumper.position.y) > (ballRadius + 0.3)) 
-    return null;
+
+  
 
 
-  if (distanceXZ < bumperRadius + ballRadius)
+
+
+
+  // radiuse = point a la surface par rapport au centre ( les position sont au centre)
+  // si la surface touche le point de colision : addition de ces radius = distance minimal pour que ca se touche.
+  if (distanceXZ <= bumperRadius + ballRadius)
   {
-    // 2a) Normaliser la direction entre centre du bumper et balle
-    const nx = dx / distanceXZ;
-    const nz = dz / distanceXZ;
 
-    // 2b) Repositionner la balle à l'exterieur du cercle pour eviter "profondeur"
+
+    // diviser les cote opose par leur hypothenuse. = donne des angles 
+    const nx = dx / distanceXZ; // cos
+    const nz = dz / distanceXZ; // sin
+
+
+    // remet a la surface du bumper
     ball.position.x = bumper.position.x + nx * (bumperRadius + ballRadius);
     ball.position.z = bumper.position.z + nz * (bumperRadius + ballRadius);
 
-    // 2c) Creer un nouveau vecteur de rebond en reflechissant ballV sur la normale (nx,nz)
+
+
+    // maj le vecteur avec les angles 
     const dot = ballV.x * nx + ballV.z * nz;
+
+    // inverse le vecteur pour envoyer a l opposer 
     const reflectX = ballV.x - 2 * dot * nx;
     const reflectZ = ballV.z - 2 * dot * nz;
+
+
+
+
     const dirAfter = new Vector3(reflectX, 0, reflectZ).normalize();
+
+
+
 
     const newVelocity = dirAfter.scale(currentSpeed);
 
+
+
     PlayRandomHitSound(volume);
+
+
 
     return { newVelocity, newSpeed: currentSpeed };
   }

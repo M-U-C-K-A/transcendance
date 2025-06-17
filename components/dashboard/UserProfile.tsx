@@ -49,7 +49,7 @@ export function UserProfile() {
 	return (
 		<Card className="bg-card border shadow-sm">
 			<CardHeader>
-				<CardTitle>{t('userProfile.title')}</CardTitle>
+				<CardTitle>{t('Profile.title')}</CardTitle>
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
@@ -65,19 +65,19 @@ export function UserProfile() {
 					<div>
 						<p className="text-2xl font-bold text-primary">{user.win}</p>
 						<p className="text-xs text-muted-foreground">
-							{t('userProfile.stats.wins')}
+							{t('Profile.stats.wins')}
 						</p>
 					</div>
 					<div>
 						<p className="text-2xl font-bold text-red-400">{user.lose}</p>
 						<p className="text-xs text-muted-foreground">
-							{t('userProfile.stats.losses')}
+							{t('Profile.stats.losses')}
 						</p>
 					</div>
 					<div>
 						<p className="text-2xl font-bold text-yellow-400">{user.tournamentWon}</p>
 						<p className="text-xs text-muted-foreground">
-							{t('userProfile.stats.tournaments')}
+							{t('Profile.stats.tournaments')}
 						</p>
 					</div>
 				</div>
@@ -85,7 +85,7 @@ export function UserProfile() {
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
 					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
 					<Badge variant={user.onlineStatus ? "offline" : "online"}>
-						{user.onlineStatus ? t('userProfile.status.offline') : t('userProfile.status.online')}
+						{user.onlineStatus ? t('Profile.status.offline') : t('Profile.status.online')}
 					</Badge>
 				</div>
 			</CardContent>

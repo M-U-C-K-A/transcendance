@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ENV_FILE=".env"
 
@@ -6,9 +6,15 @@ ENV_FILE=".env"
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 HOSTNAME=$(hostname | awk '{print $1}')
 
+if [[ -z "$LOCAL_IP" ]]; then
+  echo "❌ Impossible de récupérer l'adresse IP locale."
+  exit 1
+fi
 
-
-
+  # Demande les variables nécessaires à l'utilisateur
+  read -p "👉 Entrez le GOOGLE_CLIENT_ID: " GOOGLE_CLIENT_ID
+  read -p "👉 Entrez le GOOGLE_CLIENT_SECRET: " GOOGLE_CLIENT_SECRET
+  read -p "👉 Entrez le GOOGLE_REDIRECT_URI: " GOOGLE_REDIRECT_URI
 
   echo "LOCAL_IP=$LOCAL_IP" > "$ENV_FILE"
   echo "HOSTNAME=$HOSTNAME" >> "$ENV_FILE"
@@ -23,4 +29,4 @@ HOSTNAME=$(hostname | awk '{print $1}')
 
   echo "✅ Fichier $ENV_FILE créé avec succès."
   exit 0
-
+fi

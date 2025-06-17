@@ -34,7 +34,7 @@ export function LoginPage() {
                     onClick={() => setIsLogin(false)}
                     className="h-auto p-0"
                   >
-                    {t('auth.register')}
+                    {t('auth.registertext')}
                   </Button>
                 </>
               ) : (
@@ -45,7 +45,7 @@ export function LoginPage() {
                     onClick={() => setIsLogin(true)}
                     className="h-auto p-0"
                   >
-                    {t('auth.login')}
+                    {t('auth.logintext')}
                   </Button>
                 </>
               )}

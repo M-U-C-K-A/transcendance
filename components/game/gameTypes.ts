@@ -16,9 +16,7 @@ interface Controls {
   player2Special: string;
 }
 
-/**
- * Props passées au composant Pong3D
- */
+
 export interface Pong3DProps {
   paddle1Color: string;
   paddle2Color: string;
@@ -26,9 +24,7 @@ export interface Pong3DProps {
   resetCamFlag: number;
 }
 
-/**
- * État du jeu
- */
+
 export interface GameState {
   score: { player1: number; player2: number };
   winner: string | null;
@@ -36,9 +32,7 @@ export interface GameState {
   isPaused: boolean;
 }
 
-/**
- * Références "mutables" pour lire l'état en temps réel
- */
+
 export interface GameRefs {
   score: MutableRefObject<{ player1: number; player2: number }>;
   winner: MutableRefObject<string | null>;
@@ -56,9 +50,8 @@ export interface GameRefs {
   triggerSuperPad: (player: 1 | 2) => void;
 }
 
-/**
- * Objets du jeu
- */
+
+
 export interface GameObjects {
   scene: Scene;
   camera: ArcRotateCamera;
@@ -82,20 +75,14 @@ export interface GameObjects {
   malus: Mesh | null;
 }
 
-/**
- * Historique des touches
- */
+
 export interface TouchHistory {
   player: number;
   timestamp: number;
 }
 
-/**
- * Fonction pour mettre à jour la stamina
- */
+// type qui prend une ft qui elle meme prend des param precis
 export type SetStaminaFunction = React.Dispatch<React.SetStateAction<{ player1: number; player2: number }>>;
 
-/**
- * Fonction pour mettre à jour le super pad
- */
+
 export type SetSuperPadFunction = React.Dispatch<React.SetStateAction<{ player1: boolean; player2: boolean }>>;
