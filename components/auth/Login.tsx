@@ -21,16 +21,10 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-
-// Schemas de validation
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Email invalide' }),
-  password: z.string().min(6, { message: 'Mot de passe trop court (min. 6 caractères)' }),
-});
-
-const otpSchema = z.string().length(6, { message: 'Le code doit contenir 6 chiffres' });
+import { useI18n } from "@/i18n-client";
 
 export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'form'>) {
+  const t = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -41,6 +35,14 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Schemas de validation avec traductions
+  const loginSchema = z.object({
+    email: z.string().email({ message: t('auth.login.invalidEmail') }),
+    password: z.string().min(6, { message: t('auth.login.passwordTooShort') }),
+  });
+
+  const otpSchema = z.string().length(6, { message: t('auth.2fa.invalidCode') });
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -58,7 +60,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
           localStorage.removeItem('token');
         }
       } catch (err) {
-        console.error('Token verification failed:', err);
+        console.error(t('auth.errors.tokenVerificationFailed'), err);
         localStorage.removeItem('token');
       }
     };
@@ -67,10 +69,10 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
     const errorFromUrl = searchParams.get('error');
     if (errorFromUrl === 'google_login_failed') {
-      setError("Échec de la connexion avec Google");
+      setError(t('auth.errors.googleLoginFailed'));
       window.history.replaceState(null, '', window.location.pathname);
     }
-  }, [router, searchParams]);
+  }, [router, searchParams, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +81,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
-      setError(result.error.issues[0]?.message || 'Champs invalides');
+      setError(result.error.issues[0]?.message || t('auth.errors.invalidFields'));
       setIsSubmitting(false);
       return;
     }
@@ -92,15 +94,14 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
       });
 
       if (response.ok) {
-        // Si la réponse est OK, on ouvre directement la modale OTP
         localStorage.setItem('temp_2fa_email', email);
         setShow2FAModal(true);
       } else {
         const data = await response.json();
-        throw new Error(data.message || 'Erreur lors de la connexion');
+        throw new Error(data.message || t('auth.errors.loginFailed'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      setError(err instanceof Error ? err.message : t('auth.errors.genericError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -109,7 +110,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
   const handle2FASubmit = async () => {
     const result = otpSchema.safeParse(otpCode);
     if (!result.success) {
-      setOtpError(result.error.issues[0]?.message || 'Code invalide');
+      setOtpError(result.error.issues[0]?.message || t('auth.errors.invalidCode'));
       return;
     }
 
@@ -118,7 +119,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
     try {
       const email = localStorage.getItem('temp_2fa_email');
-      if (!email) throw new Error('Session expirée, veuillez vous reconnecter');
+      if (!email) throw new Error(t('auth.errors.sessionExpired'));
 
       const response = await fetch('/api/auth/login/2fa/verify', {
         method: 'POST',
@@ -129,14 +130,14 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Code 2FA incorrect');
+        throw new Error(data.message || t('auth.2fa.incorrectCode'));
       }
 
       localStorage.setItem('token', data.token);
       localStorage.removeItem('temp_2fa_email');
       router.push('/en/dashboard');
     } catch (err) {
-      setOtpError(err instanceof Error ? err.message : 'Erreur lors de la vérification');
+      setOtpError(err instanceof Error ? err.message : t('auth.2fa.verificationError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -155,9 +156,9 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
     <>
       <form className={cn('flex flex-col gap-6', className)} onSubmit={handleSubmit} {...props}>
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Connectez-vous à votre compte</h1>
+          <h1 className="text-2xl font-bold">{t('auth.login.title')}</h1>
           <p className="text-sm text-muted-foreground">
-            Entrez votre email pour vous connecter à votre compte
+            {t('auth.login.subtitle')}
           </p>
         </div>
 
@@ -169,11 +170,11 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
         <div className="grid gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('auth.login.emailLabel')}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder={t('auth.login.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -182,9 +183,9 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
 
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password">{t('auth.login.passwordLabel')}</Label>
               <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-                Mot de passe oublié ?
+                {t('auth.login.forgotPassword')}
               </a>
             </div>
             <div className="relative">
@@ -192,6 +193,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
+                placeholder="•••••••••••••"
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
@@ -206,12 +208,12 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Connexion en cours...' : 'Se connecter'}
+            {isSubmitting ? t('auth.login.submitting') : t('auth.login.submit')}
           </Button>
 
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
-              Ou continuer avec
+              {t('auth.login.orContinueWith')}
             </span>
           </div>
 
@@ -222,7 +224,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
                 fill="currentColor"
               />
             </svg>
-            Continuer avec Google
+            {t('auth.login.continueWithGoogle')}
           </Button>
         </div>
       </form>
@@ -237,9 +239,9 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
       }}>
         <AlertDialogContent className="sm:max-w-[425px]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Vérification en 2 étapes</AlertDialogTitle>
+            <AlertDialogTitle>{t('auth.2fa.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Entrez le code à 6 chiffres envoyé à {email}
+              {t('auth.2fa.description', { email })}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -273,7 +275,7 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
                 </InputOTPGroup>
               </InputOTP>
               <p className="text-sm text-muted-foreground">
-                Code à 6 chiffres
+                {t('auth.2fa.codeHint')}
               </p>
             </div>
 
@@ -283,19 +285,19 @@ export function Login({ className, ...props }: React.ComponentPropsWithoutRef<'f
                 variant="outline"
                 onClick={() => setShow2FAModal(false)}
               >
-                Annuler
+                {t('common.cancel')}
               </Button>
               <Button
                 type="button"
                 onClick={handle2FASubmit}
                 disabled={isSubmitting || otpCode.length !== 6}
               >
-                {isSubmitting ? 'Vérification...' : 'Vérifier'}
+                {isSubmitting ? t('auth.2fa.verifying') : t('common.verify')}
               </Button>
             </div>
           </div>
         </AlertDialogContent>
       </AlertDialog>
-	      </>
+    </>
   );
 }
