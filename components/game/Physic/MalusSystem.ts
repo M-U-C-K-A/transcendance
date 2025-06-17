@@ -44,12 +44,10 @@ export class MalusSystem {
 
 
 
-  public startMalusSystem() {
-    if (this.spawnInterval) clearInterval(this.spawnInterval);
-    this.lastUpdateTime = Date.now();
-    this.isPaused = false;
-    this.remainingTime = 15000;
+  public startMalusSystem() 
+  {
     this.spawnInterval = setInterval(() => {
+      // Arrêter si le jeu est en pause
       if (this.gameRefs.isPaused?.current) {
         if (!this.isPaused) {
           this.isPaused = true;
@@ -57,6 +55,13 @@ export class MalusSystem {
         }
         return;
       }
+    
+      // **NOUVEAU : Arrêter si un winner existe**
+      if (this.gameRefs.winner?.current) {
+        this.stopMalusSystem();
+        return;
+      }
+    
       if (this.isPaused) {
         this.isPaused = false;
         this.lastUpdateTime = Date.now();
@@ -109,18 +114,22 @@ export class MalusSystem {
 
   private spawnMalus() 
   {
+    // remove si compteur a la fin et tjrs la : zone inaccessible
     if (this.MalusMesh) 
       this.MalusMesh.dispose();
+
+
 
 
     this.MalusMesh = Mesh.CreateBox("Malus", 4, this.scene);
     this.MalusMesh.material = this.MalusMaterial;
     const x = Math.random() * 20 - 10;
     this.MalusMesh.position = new Vector3(x, 0.25, 0);
+
+
+
+    
     this.MalusMesh.actionManager = new ActionManager(this.scene);
-
-
-
     this.MalusMesh.actionManager.registerAction(
       new ExecuteCodeAction(
         { trigger: ActionManager.OnIntersectionEnterTrigger, parameter: this.scene.getMeshByName("ball") },
@@ -162,9 +171,5 @@ export class MalusSystem {
 
 
 
-
-    
-    if (this.onMalusSpawn) 
-      this.onMalusSpawn();
   }
 } 

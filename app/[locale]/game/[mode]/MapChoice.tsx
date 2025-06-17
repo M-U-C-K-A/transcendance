@@ -4,6 +4,7 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/comp
 import { Toggle } from "@/components/ui/toggle";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { useI18n } from "@/i18n-client";
 
 interface MapChoiceProps {
   MapStyle: "classic" | "red" | "neon";
@@ -54,6 +55,8 @@ export default function MapChoice({
     },
   ];
 
+  const t = useI18n();
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-3 gap-4">
@@ -103,20 +106,19 @@ export default function MapChoice({
                   className="w-full h-12 data-[state=on]:bg-red-600 data-[state=on]:text-white data-[state=on]:dark:bg-red-500 animate-pulse"
                 >
                   <span className="font-medium">
-                    {enableMaluses ? "Malus ON" : "Malus OFF"}
+                    {enableMaluses ? t('game.create.maluson') : t('game.create.malusoff')}
                   </span>
                 </Toggle>
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[250px] p-4">
               <div className="space-y-2">
-                <h4 className="font-semibold">Système de Malus</h4>
+                <h4 className="font-semibold">{t('game.create.malus')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Un Malus "🟥" apparaît toutes les 15 secondes sur la map.
-                  Le toucher retire 1 point à l'adversaire !
+                  {t('game.create.malusdescription')}
                 </p>
                 <p className="text-sm text-red-400 font-medium">
-                  ⚠️ Arriver à -5 points signifie que vous avez perdu !
+                  ⚠️ {t('game.create.malusloss')}
                 </p>
               </div>
             </TooltipContent>
@@ -133,18 +135,16 @@ export default function MapChoice({
                   className="w-full h-12 data-[state=on]:bg-cyan-600 data-[state=on]:text-white data-[state=on]:dark:bg-cyan-500 animate-pulse"
                 >
                   <span className="font-medium">
-                    {enableSpecial ? "Spécial ON" : "Spécial OFF"}
+                    {enableSpecial ? t('game.create.specialon') : t('game.create.specialoff')}
                   </span>
                 </Toggle>
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[250px] p-4">
               <div className="space-y-2">
-                <h4 className="font-semibold">Coup Spécial</h4>
+                <h4 className="font-semibold">{t('game.create.special')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Chaque joueur remplit une barre en touchant la balle.
-                  Après 10 frappes, vous pouvez activer un "coup spécial" :
-                  votre pad grossit et renvoie la balle plus vite. L'effet dure 5 secondes.
+                  {t('game.create.specialdescription')}
                 </p>
               </div>
             </TooltipContent>

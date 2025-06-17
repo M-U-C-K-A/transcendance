@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { useI18n } from "@/i18n-client";
 
 
 
@@ -27,6 +28,9 @@ export default function ColorChoice({
   colorP2,
   setColorP2,
 }: ColorChoiceProps) {
+
+  const t = useI18n();
+
   return (
 
 
@@ -44,7 +48,7 @@ export default function ColorChoice({
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
-          🎖️ Joueur 1
+          🎖️ {t('game.create.player1')}
         </button>
 
 
@@ -56,7 +60,7 @@ export default function ColorChoice({
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
-          🎖️ Joueur 2
+          🎖️ {t('game.create.player2')}
         </button>
       </div>
 
@@ -66,9 +70,9 @@ export default function ColorChoice({
 
 
       <div className="text-center mb-4 text-lg font-medium text-foreground">
-        Sélectionnez la couleur pour{" "}
+        {t('game.create.colorfor')} {" "}
         <span className="font-bold">
-          {currentPlayer === 1 ? "Joueur 1" : "Joueur 2"}
+          {currentPlayer === 1 ? t('game.create.player1') : t('game.create.player2')}
         </span>
       </div>
 

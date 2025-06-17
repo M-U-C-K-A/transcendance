@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-
+import { useI18n } from "@/i18n-client";
 import { useControls } from './ControlsContext';  // LE CONTEXT DES TOUCHES
 
 
@@ -96,8 +95,9 @@ export const ControlsConfig = ({
 
 
     // message custom erreur selon touche si deja prise. 
-    if (isKeyAlreadyAssigned) {
-      setErrorMessage(`La touche "${displayKey(newKey)}" est déjà assignée à une autre commande.`);
+    if (isKeyAlreadyAssigned) 
+    {
+      setErrorMessage(`Key "${displayKey(newKey)}" is already assigned to another command.`);
       return;
     }
 
@@ -137,7 +137,7 @@ export const ControlsConfig = ({
 
 
 
-
+  const t = useI18n();
 
 
   return (
@@ -152,7 +152,7 @@ export const ControlsConfig = ({
         
         
         <DialogHeader>
-          <DialogTitle>Configuration des contrôles</DialogTitle>
+          <DialogTitle>{t('game.controls.title')}</DialogTitle>
         </DialogHeader>
 
 
@@ -172,13 +172,13 @@ export const ControlsConfig = ({
 
 
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Joueur 1</CardTitle>
+              <CardTitle className="text-lg text-center">{t('game.controls.player1')}</CardTitle>
             </CardHeader>
 
 
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="player1Up">Haut</Label>
+                <Label htmlFor="player1Up">{t('game.controls.up')}</Label>
 
 
                 <Button
@@ -194,7 +194,7 @@ export const ControlsConfig = ({
 
 
               <div className="space-y-2">
-                <Label htmlFor="player1Down">Bas</Label>
+                <Label htmlFor="player1Down">{t('game.controls.down')}</Label>
                 <Button
                   variant="outline"
                   className="w-full h-12 text-lg font-mono"
@@ -209,7 +209,7 @@ export const ControlsConfig = ({
 
 
               <div className="space-y-2">
-                <Label htmlFor="player1Special">Coup spécial</Label>
+                <Label htmlFor="player1Special">{t('game.controls.special')}</Label>
                 <Button
                   variant="outline"
                   className="w-full h-12 text-lg font-mono"
@@ -238,13 +238,13 @@ export const ControlsConfig = ({
           <Card>
 
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Joueur 2</CardTitle>
+              <CardTitle className="text-lg">{t('game.controls.player2')}</CardTitle>
             </CardHeader>
 
 
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="player2Up">Haut</Label>
+                <Label htmlFor="player2Up">{t('game.controls.up')}</Label>
                 <Button
                   variant="outline"
                   className="w-full h-12 text-lg font-mono"
@@ -260,7 +260,7 @@ export const ControlsConfig = ({
 
 
               <div className="space-y-2">
-                <Label htmlFor="player2Down">Bas</Label>
+                <Label htmlFor="player2Down">{t('game.controls.down')}</Label>
                 <Button
                   variant="outline"
                   className="w-full h-12 text-lg font-mono"
@@ -273,7 +273,7 @@ export const ControlsConfig = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="player2Special">Coup spécial</Label>
+                <Label htmlFor="player2Special">{t('game.controls.special')}</Label>
                 <Button
                   variant="outline"
                   className="w-full h-12 text-lg font-mono"
