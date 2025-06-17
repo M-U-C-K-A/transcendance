@@ -49,7 +49,6 @@ export default async function joinTournament(username: string, tournamentId: num
 				id: true
 			},
 		});
-		console.log(activeTournaments.length)
 		if (activeTournaments.length > 0) {
 			throw new Error('User already in a tournament');
 		}
@@ -95,6 +94,5 @@ export default async function joinTournament(username: string, tournamentId: num
 		},
 	});
 
-	console.log('Tournament joined successfully');
 	return (info);
 }

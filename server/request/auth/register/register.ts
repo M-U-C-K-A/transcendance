@@ -7,10 +7,8 @@ const Prisma = new PrismaClient()
 
 export async function createProfilePicture(username: string, id: number) {
 try {
-	console.log('🔧 Début création avatar');
 
 	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`;
-	console.log(`🌐 URL avatar: ${defaultAvatar}`);
 
 	const dir = path.resolve(process.cwd(), 'public', 'profilepicture');
 
@@ -75,11 +73,9 @@ export async function register(email: string) {
 
 		if (existingUser) {
 			if (existingUser.username == data.username) {
-				console.log('Username already taken')
 				throw new Error('Username already taken')
 			}
 			if (existingUser.email == data.email) {
-				console.log('Email already taken')
 				throw new Error('Email already taken')
 			}
 		}
@@ -115,7 +111,6 @@ export async function register(email: string) {
 
 		await createProfilePicture(data.username, id)
 
-		console.log(`User ${data.username} has been registered`)
 		return (newUser)
 	}
 	throw new Error("Error while creating account")

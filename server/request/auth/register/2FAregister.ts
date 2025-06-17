@@ -44,22 +44,18 @@ export default async function register2FA(data: connectionData) {
 
 	if (existingUser) {
 		if (existingUser.username == data.username) {
-			console.log('Username already taken')
 			throw new Error('Username already taken')
 		}
 		if (existingUser.email == data.email) {
-			console.log('Email already taken')
 			throw new Error('Email already taken')
 		}
 	}
 
 	if (existingUser2) {
 		if (existingUser2.username == data.username) {
-			console.log('Username already taken')
 			throw new Error('Username already taken')
 		}
 		if (existingUser2.email == data.email) {
-			console.log('Email already taken')
 			throw new Error('Email already taken')
 		}
 	}
@@ -68,7 +64,6 @@ export default async function register2FA(data: connectionData) {
 
 	const authCode = Math.floor(100000 + Math.random() * 900000).toString()
 
-	console.log("TEST CREATION GAME")
 	const newUser = await Prisma.tmpUser.create ({
 		data: {
 			username: data.username,
@@ -82,7 +77,6 @@ export default async function register2FA(data: connectionData) {
 			code: true,
 		}
 	});
-	console.log("TEST APRES CREATION GAME")
 	await transporter.sendMail({
 		from: `"PongMaster" <${process.env.SMTP_USER || 'pongmaster12345@gmail.com'}>`,
 		to: newUser.email,
@@ -121,7 +115,6 @@ export default async function register2FA(data: connectionData) {
 		`,
 	});
 
-	console.log("LA CHANCLA", newUser)
 
 	return (true)
 }

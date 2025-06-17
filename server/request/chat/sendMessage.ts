@@ -14,7 +14,6 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 		});
 
 		if (!userInfo) {
-			console.log("User not found, could not send message");
 			throw new Error("User not found, could not send message");
 		}
 

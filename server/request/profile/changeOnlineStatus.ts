@@ -17,7 +17,6 @@ export default async function changeOnlineStatus(id: number, status: boolean) {
 
 	const friendList = await friendsList(id);
 	const friendIds = friendList.map(friend => friend.id);
-	console.log("🍂🍂🍂🍂🍂CHANGEMENT DE STATUS EN LIGNE🍂🍂🍂🍂")
 	for(const f of friendIds) {
 		notifyFriend(f, {
 			type: "FRIEND_ONLINE_STATUS",
