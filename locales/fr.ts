@@ -96,7 +96,14 @@ export default {
     }
   },
 
+  "Log":{ 
+    "in": "Connexion",
+    "out": "Déconnexion",
+  },
+
   "auth": {
+    "registertext": "Inscription",
+    "logintext": "Connexion",
     "login": {
       "title": "Connexion",
       "subtitle": "Connectez-vous pour accéder à votre compte PongMaster",
@@ -116,6 +123,7 @@ export default {
       "title": "Inscription",
       "subtitle": "Créez un compte pour commencer à jouer à PongMaster",
       "emailLabel": "Email",
+      "logintext": "Connexion",
       "emailPlaceholder": "exemple@gmail.com",
       "usernameLabel": "Nom d'utilisateur",
       "usernamePlaceholder": "Choisissez un nom d'utilisateur",
@@ -140,8 +148,6 @@ export default {
     },
     "noAccount": "Pas de compte ?",
     "haveAccount": "Déjà un compte ?",
-    "register": "S'inscrire",
-    "login": "Connexion",
     "loginImageAlt": "Image d'illustration de connexion",
     "errors": {
       "tokenVerificationFailed": "Échec de la vérification du token",
@@ -169,25 +175,7 @@ export default {
 
     "game": {
       "quickMatch": "Match rapide",
-      "customGame": "Partie personnalisée",
-      "tournament": "Tournoi",
       "quickMatchDesc": "Jouez une partie classique de Pong contre un adversaire aléatoire",
-      "customGameDesc": "Créez une partie avec vos propres règles ou rejoignez une partie existante",
-      "tournamentDesc": "Participez à des tournois et gagnez des récompenses",
-      "readyToPlay": "Prêt à jouer ?",
-      "startDesc": "Cliquez sur le bouton ci-dessous pour commencer",
-      "start": "Commencer un match rapide",
-      "create": "Créer",
-      "join": "Rejoindre",
-      "availableGames": "Parties disponibles",
-      "players": "joueurs",
-      "createTournament": "Créer un tournoi",
-      "createTournamentDesc": "Organisez votre propre tournoi et invitez des participants",
-      "activeTournaments": "Tournois actifs",
-      "activeTournamentsDesc": "Rejoignez un tournoi en cours et affrontez d'autres joueurs",
-      "view": "Voir",
-      "upcomingTournaments": "Tournois à venir",
-      "register": "S'inscrire",
       "whatIsQuickMatch": "Qu'est-ce qu'un match rapide ?",
       "quickMatchExplanation1": "Le match rapide est le moyen le plus rapide de commencer à jouer à PongMaster.",
       "quickMatchExplanation2": "Vous serez jumelé à un adversaire de niveau similaire pour une partie équitable et compétitive.",
@@ -200,14 +188,20 @@ export default {
       "step3Desc": "Montez dans le classement en remportant des matchs",
       "step4": "Suivez votre progression",
       "step4Desc": "Voyez comment vos compétences s'améliorent avec des statistiques détaillées",
+      "customGame": "Partie personnalisée",
+      "customGameDesc": "Créez une partie avec vos propres règles ou rejoignez une partie existante",
       "customGameFeatures": "Fonctionnalités des parties personnalisées",
       "feature1": "Créez des matchs privés avec des amis",
       "feature2": "Personnalisez les règles et paramètres du jeu",
       "feature3": "Invitez des joueurs spécifiques à votre partie",
+      "create": "Créer",
+      "createTournamentDesc": "Organisez votre propre tournoi et invitez des participants",
       "advantage1": "Contrôle total des paramètres du jeu",
       "advantage2": "Jouez avec des amis à votre rythme",
       "advantage3": "Expérimentez différents modes de jeu",
-      "proTipContent": "Enregistrez vos paramètres préférés comme préréglages pour un accès rapide"
+      "proTipContent": "Enregistrez vos paramètres préférés comme préréglages pour un accès rapide",
+      "start": "Commencer un match rapide",
+      "tournament": "Tournoi"
     },
 
     "tournament": {
@@ -220,18 +214,14 @@ export default {
       "createTitle": "Nouveau tournoi",
       "createDescription": "Configurez un tournoi avec vos règles et préférences",
       "participants": "Participants",
-      "participantsDesc": "Invitez jusqu'à 128 joueurs",
+      "participantsDesc": "Invitez jusqu'à 16 joueurs",
       "schedule": "Calendrier",
       "scheduleDesc": "Planifiez des matchs sur plusieurs jours",
       "proTipContent": "Préparez vos règles à l'avance pour une configuration rapide",
       "createButton": "Créer",
       "templatesButton": "Modèles",
       "browse": "Parcourir",
-      "browseDesc": "Rejoignez des tournois publics",
-      "history": "Historique",
-      "historyDesc": "Vos tournois précédents",
-      "stats": "Statistiques",
-      "statsDesc": "Vos performances"
+      "browseDesc": "Rejoignez des tournois publics"
     },
     "colleagues": {
       "title": "Collègues",
@@ -255,10 +245,7 @@ export default {
         "errors": {
           "tooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères",
           "tooLong": "Le nom d'utilisateur doit comporter moins de 20 caractères",
-          "invalidChars": "Seules les lettres, chiffres et underscores sont autorisés",
-          "selfAdd": "Vous ne pouvez pas vous ajouter vous-même comme collègue",
-          "alreadyFriends": "Cet utilisateur est déjà votre collègue",
-          "pendingRequest": "Invitation déjà envoyée à cet utilisateur"
+          "invalidChars": "Seules les lettres, chiffres et underscores sont autorisés"
         },
         "success": {
           "title": "Invitation envoyée",
@@ -266,8 +253,7 @@ export default {
         },
         "error": {
           "title": "Erreur",
-          "description": "Impossible d'envoyer une invitation à {username}",
-          "userNotFound": "Utilisateur non trouvé"
+          "description": "Impossible d'envoyer une invitation à {username}"
         }
       },
       "invitations": {
@@ -306,13 +292,103 @@ export default {
       "player1Keys": "W (haut) / S (bas)",
       "player2": "Contrôles du joueur 2 :",
       "player2Keys": "↑ (haut) / ↓ (bas)",
-      "playAgain": "Rejouer"
+      "playAgain": "Rejouer",
+      "title": "Contrôles",
+      "special": "Spécial",
+      "down": "Bas",
+      "up": "Haut"
     },
     "chat": {
       "title": "Chat du jeu"
     },
     "winner": "a gagné !",
-    "finalScore": "Score final :"
+    "finalScore": "Score final :",
+    "quickMatch": "Match rapide",
+    "customGame": "Partie personnalisée",
+    "tournament": "Tournoi",
+    "quickMatchDesc": "Jouez une partie classique de Pong contre un adversaire aléatoire",
+    "customGameDesc": "Créez une partie avec vos propres règles ou rejoignez une partie existante",
+    "tournamentDesc": "Participez à des tournois et gagnez des récompenses",
+    "readyToPlay": "Prêt à jouer ?",
+    "startDesc": "Cliquez sur le bouton ci-dessous pour commencer",
+    "start": "Commencer un match rapide",
+    "create": {
+      "title": "Créer",
+      "description": "Configurez les paramètres de votre tournoi ci-dessous.",
+      "name": "Nom du tournoi",
+      "placeholder": "Entrez le nom du tournoi",
+      "playerCount": "Nombre de joueurs",
+      "loading": "Création...",
+      "create": "Créer le tournoi",
+      "join": "Rejoindre le tournoi",
+      "username": "Nom d'utilisateur",
+      "player": "Joueur",
+      "finished": "Tournoi terminé !",
+      "winner": "Vainqueur",
+      "backdashboard": "Retour au tableau de bord",
+      "participants": "Participants",
+      "tree": "Arbre du tournoi",
+      "player1": "Joueur 1",
+      "player2": "Joueur 2",
+      "waiting": "En attente d'un joueur...",
+      "back": "Retour au tableau de bord",
+      "completed": "Terminé",
+      "start": "Démarrer le tournoi",
+      "select": "Veuillez sélectionner tous les joueurs pour démarrer le tournoi.",
+      "malusoff": "Malus désactivé",
+      "specialoff": "Spécial désactivé",
+      "color": "Couleur",
+      "colorfor": "Couleur pour",
+      "speed": "Vitesse",
+      "slow": "Lent",
+      "medium": "Moyen",
+      "fast": "Rapide",
+      "joininvitation": "Rejoindre l'invitation",
+      "escape": "Échap",
+      "resume": "Reprendre",
+      "pause": "Pause",
+      "goal": "But",
+      "won": "a gagné",
+      "quit": "Quitter",
+      "replay": "Rejouer",
+      "strikesremaining": "frappes restantes",
+      "malusin": "Prochain malus dans",
+      "malus": "Malus",
+      "specialcounter": "Spécial prêt dans"
+    },
+    "join": "Rejoindre",
+    "availableGames": "Parties disponibles",
+    "players": "joueurs",
+    "createTournament": "Créer un tournoi",
+    "createTournamentDesc": "Organisez votre propre tournoi et invitez des participants",
+    "activeTournaments": "Tournois actifs",
+    "activeTournamentsDesc": "Rejoignez un tournoi en cours et affrontez d'autres joueurs",
+    "view": "Voir",
+    "upcomingTournaments": "Tournois à venir",
+    "register": "S'inscrire",
+    "whatIsQuickMatch": "Qu'est-ce qu'un match rapide ?",
+    "quickMatchExplanation1": "Le match rapide est le moyen le plus rapide de commencer à jouer à PongMaster.",
+    "quickMatchExplanation2": "Vous serez jumelé à un adversaire de niveau similaire pour une partie équitable et compétitive.",
+    "howItWorks": "Comment ça marche",
+    "step1": "Trouver un adversaire",
+    "step1Desc": "Notre système vous trouvera un adversaire adapté en fonction de votre classement ELO",
+    "step2": "Connectez-vous avec des joueurs",
+    "step2Desc": "Jouez contre de vrais adversaires du monde entier",
+    "step3": "Affrontez et gagnez",
+    "step3Desc": "Montez dans le classement en remportant des matchs",
+    "step4": "Suivez votre progression",
+    "step4Desc": "Voyez comment vos compétences s'améliorent avec des statistiques détaillées",
+    "customGameFeatures": "Fonctionnalités des parties personnalisées",
+    "feature1": "Créez des matchs privés avec des amis",
+    "feature2": "Personnalisez les règles et paramètres du jeu",
+    "feature3": "Invitez des joueurs spécifiques à votre partie",
+    "advantage1": "Contrôle total des paramètres du jeu",
+    "advantage2": "Jouez avec des amis à votre rythme",
+    "advantage3": "Expérimentez différents modes de jeu",
+    "proTipContent": "Enregistrez vos paramètres préférés comme préréglages pour un accès rapide",
+    "map": {
+      "title": "Choix de la carte"
+    }
   },
 
   "stats": {
@@ -366,6 +442,162 @@ export default {
       "winRate": "Taux de victoire %",
       "you": "Vous"
     }
+  },
+
+  "Profile": {
+    "title": "Profil utilisateur",
+    "subtitle": "Gérez votre profil et vos paramètres",
+    "email": "Email",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "status": {
+      "online": "En ligne",
+      "offline": "Hors ligne"
+    },
+    "stats": {
+      "stats": "Statistiques",
+      "wins": "Victoires",
+      "losses": "Défaites",
+      "tournaments": "Tournois",
+      "level": "Niveau",
+      "elo": "ELO",
+      "rank": "Rang"
+    }
+  },
+  "profileEdit": {
+    "title": "Modifier le profil",
+    "usernameLabel": "Nom d'utilisateur",
+    "description": "Modifier votre profil",
+    "submit": "Enregistrer",
+    "bioLabel": "Bio",
+    "upload": {
+      "dragDrop": "Glisser-déposer",
+      "clickToSelect": "glissez-déposez votre avatar ici ou cliquez pour téléverser"
+    }
+  },
+  "app": {
+    "name": "ft_Transcendance",
+    "title": "ft_Transcendance"
+  },
+  "chat": {
+    "title": "Chat général",
+    "placeholder": "Écrivez un message...",
+    "public": "Public",
+    "private": "Privé",
+    "invitation": "Invitation",
+    "noPrivateConversation": "Aucune conversation privée"
+  },
+  "tournament": {
+    "title": "Tournois",
+    "description": "Créez et gérez des tournois personnalisés",
+    "featuresTitle": "Fonctionnalités des tournois",
+    "feature1": "Tableaux personnalisables",
+    "feature2": "Gestion des participants",
+    "feature3": "Calendrier intégré",
+    "createTitle": "Nouveau tournoi",
+    "createDescription": "Configurez un tournoi avec vos règles et préférences",
+    "participants": "Participants",
+    "participantsDesc": "Invitez jusqu'à 16 joueurs",
+    "schedule": "Calendrier",
+    "scheduleDesc": "Planifiez des matchs sur plusieurs jours",
+    "proTipContent": "Préparez vos règles à l'avance pour une configuration rapide",
+    "createButton": "Créer",
+    "templatesButton": "Modèles",
+    "browse": "Parcourir",
+    "browseDesc": "Rejoignez des tournois publics",
+    "history": "Historique",
+    "historyDesc": "Vos tournois précédents",
+    "stats": "Statistiques",
+    "statsDesc": "Vos performances",
+    "create": {
+      "title": "Créer un tournoi",
+      "description": "Configurez les paramètres de votre tournoi ci-dessous.",
+      "name": "Nom du tournoi",
+      "placeholder": "Entrez le nom du tournoi",
+      "playerCount": "Nombre de joueurs",
+      "loading": "Création...",
+      "create": "Créer le tournoi",
+      "join": "Rejoindre le tournoi",
+      "username": "Nom d'utilisateur",
+      "player": "Joueur",
+      "finished": "Tournoi terminé !",
+      "winner": "Vainqueur",
+      "backdashboard": "Retour au tableau de bord",
+      "participants": "Participants",
+      "tree": "Arbre du tournoi",
+      "player1": "Joueur 1",
+      "player2": "Joueur 2",
+      "waiting": "En attente d'un joueur...",
+      "back": "Retour au tableau de bord",
+      "completed": "Terminé",
+      "start": "Démarrer le tournoi",
+      "select": "Veuillez sélectionner tous les joueurs pour démarrer le tournoi.",
+      "escape": "Échap",
+      "resume": "Reprendre",
+      "pause": "Pause",
+      "goal": "But",
+      "won": "a gagné",
+      "quit": "Quitter",
+      "replay": "Rejouer",
+      "strikesremaining": "frappes restantes",
+      "malusin": "Prochain malus dans",
+      "malus": "Malus",
+      "specialcounter": "Spécial prêt dans"
+    }
+  },
+  "colleagues": {
+    "title": "Collègues",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "add": "Ajouter un collègue",
+    "notLoggedIn": "Vous n'êtes pas connecté",
+    "viewProfile": "Voir le profil",
+    "noFriends": "Vous n'avez pas encore de collègues",
+    "remove": "Supprimer",
+    "removeFriendTitle": "Supprimer un collègue",
+    "removeFriendConfirmation": "Êtes-vous sûr de vouloir supprimer ce collègue ?",
+    "pendingInvitations": "Invitations en attente",
+    "nofriendswaiting": "Aucun collègue en liste d'attente",
+    "addDialog": {
+      "title": "Ajouter un collègue",
+      "usernameLabel": "Nom d'utilisateur",
+      "usernamePlaceholder": "Entrez le nom d'utilisateur de votre collègue",
+      "submit": "Envoyer une invitation",
+      "submitting": "Envoi en cours...",
+      "errors": {
+        "tooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères",
+        "tooLong": "Le nom d'utilisateur doit comporter moins de 20 caractères",
+        "invalidChars": "Seules les lettres, chiffres et underscores sont autorisés",
+        "selfAdd": "Vous ne pouvez pas vous ajouter vous-même comme collègue",
+        "alreadyFriends": "Cet utilisateur est déjà votre collègue",
+        "pendingRequest": "Invitation déjà envoyée à cet utilisateur"
+      },
+      "success": {
+        "title": "Invitation envoyée",
+        "description": "Une invitation a été envoyée à {username}"
+      },
+      "error": {
+        "title": "Erreur",
+        "description": "Impossible d'envoyer une invitation à {username}",
+        "userNotFound": "Utilisateur non trouvé"
+      }
+    },
+    "invitations": {
+      "title": "Invitations en attente",
+      "received": "Invitations reçues",
+      "sent": "Invitations envoyées",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "cancel": "Annuler",
+      "empty": "Aucune invitation en attente",
+      "acceptSuccess": "Invitation acceptée",
+      "declineSuccess": "Invitation refusée",
+      "cancelSuccess": "Invitation annulée"
+    }
+  },
+  "chat": {
+    "title": "Chat général",
+    "placeholder": "Écrivez un message..."
   }
 }
 

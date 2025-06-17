@@ -363,6 +363,8 @@ export default {
       "placeholder": "Write a message..."
     }
   },
+
+  
   "app": {
     "name": "ft_Transcendance",
     "title": "ft_Transcendance",

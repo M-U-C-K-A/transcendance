@@ -75,6 +75,10 @@ export class MalusSystem {
 
 
 
+
+
+
+
       // fin du compteur = spawn malus
       if (this.remainingTime <= 0) 
       {
@@ -95,7 +99,7 @@ export class MalusSystem {
 
 
 
-
+  // clean stop tout
   public stopMalusSystem() 
   {
     if (this.spawnInterval) {
@@ -116,7 +120,7 @@ export class MalusSystem {
 
 
 
-
+  // temps en sec : pour le timer
   public getRemainingTime(): number 
   {
     return Math.ceil(this.remainingTime / 1000);
