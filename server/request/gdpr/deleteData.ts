@@ -26,6 +26,7 @@ export default async function deleteData(userId: number, username: string) {
 			alias: random,
 		}
 	});
+
 	const random2 = "deleteduser_" + Math.floor(100000 + Math.random() * 900000).toString()
 
 	if (isNotGoogle.pass) {
