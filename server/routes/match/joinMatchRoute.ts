@@ -8,13 +8,12 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 		const { code } = request.body as { code: string }
 
 		if (!user) {
-			console.log('User not found in request');
 			return reply.code(400).send({ error: 'parameter is required' })
 		}
 
 		try {
 			const result = await joinMatchFromInvite(user.id, code)
-			console.log(result)
+			console.log("👺👺👺👺👺👺👺👺", result)
 			return (reply.code(200).send({ result }))
 		} catch (err: any) {
 			console.error('Error in joinMatch:', err);
