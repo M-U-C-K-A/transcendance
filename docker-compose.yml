@@ -5,18 +5,18 @@ x-buildkit: &buildkit-args
 services:
   backend:
     build:
-      context: .  # L endroit d ou on va build + pouvoir use les fichier le cpy et use le dockerfile.   
+      context: .
       dockerfile: Dockerfile.back
       <<: *buildkit-args
     container_name: transcendance-back
-    working_dir: /app # la ou on va exec les cmds
+    working_dir: /app
     ports:
-      - "3001:3001" # gauche = ma machine, droite = le container.
-    volumes: # donnes persistentes. non bind-mount ici car declarer dans volumes en bas (donc pas co a ma machine : faut rebuild si changement)
-      - ./server:/app/server
-      - ./prisma:/app/prisma
-      - ./ssl:/app/ssl
-      - ./public/profilepicture:/app/public/profilepicture
+      - "3001:3001"
+    volumes:
+      - backend_server_data:/app/server
+      - backend_prisma_data:/app/prisma
+      - backend_ssl_data:/app/ssl
+      - backend_profilepicture_data:/app/public/profilepicture
     environment:
       - NODE_ENV=development
 
@@ -30,7 +30,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./:/app
+      - frontend_app_data:/app
       - node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
@@ -50,7 +50,6 @@ services:
       - frontend
     entrypoint: ["/bin/sh", "/usr/local/bin/generate_ssl.sh"]
 
-
   studio:
     build:
       context: .
@@ -61,106 +60,18 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - ./:/app
+      - studio_app_data:/app
       - node_modules:/app/node_modules
     environment:
       - DATABASE_URL=file:./prisma/data/test.sqlite
     depends_on:
       - backend
 
-volumes: # gerer par docker + shared entre les containers.
+volumes:
   node_modules:
-
-
-
-
-
-
-
-
-
-
-
-# VERSION NON BIND-MOUNT
-
-
-# x-buildkit: &buildkit-args
-#   args:
-#     - DOCKER_BUILDKIT=1
-
-# services:
-#   backend:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.back
-#       <<: *buildkit-args
-#     container_name: transcendance-back
-#     working_dir: /app
-#     ports:
-#       - "3001:3001"
-#     volumes:
-#       - backend_server:/app/server
-#       - backend_prisma:/app/prisma
-#       - backend_ssl:/app/ssl
-#       - backend_profilepicture:/app/public/profilepicture
-#     environment:
-#       - NODE_ENV=development
-
-#   frontend:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.front
-#       <<: *buildkit-args
-#     container_name: transcendance-front
-#     working_dir: /app
-#     ports:
-#       - "3000:3000"
-#     volumes:
-#       - frontend_app:/app
-#       - node_modules:/app/node_modules
-#     environment:
-#       - NODE_ENV=development
-
-#   nginx:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.nginx
-#     ports:
-#       - "8443:443"
-#       - "8080:80"
-#     volumes:
-#       - nginx_conf:/etc/nginx/conf.d
-#       - nginx_ssl:/etc/nginx/certs
-#       - nginx_scripts:/usr/local/bin
-#     depends_on:
-#       - frontend
-#     entrypoint: ["/bin/sh", "/usr/local/bin/generate_ssl.sh"]
-
-#   studio:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.studio
-#       <<: *buildkit-args
-#     container_name: transcendance-studio
-#     working_dir: /app
-#     ports:
-#       - "5555:5555"
-#     volumes:
-#       - studio_app:/app
-#       - node_modules:/app/node_modules
-#     environment:
-#       - DATABASE_URL=file:./prisma/data/test.sqlite
-#     depends_on:
-#       - backend
-
-# volumes:
-#   node_modules:
-#   backend_server:
-#   backend_prisma:
-#   backend_ssl:
-#   backend_profilepicture:
-#   frontend_app:
-#   nginx_conf:
-#   nginx_ssl:
-#   nginx_scripts:
-#   studio_app:
+  backend_server_data:
+  backend_prisma_data:
+  backend_ssl_data:
+  backend_profilepicture_data:
+  frontend_app_data:
+  studio_app_data:
