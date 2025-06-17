@@ -96,7 +96,15 @@ export default {
     }
   },
 
+
+  "Log":{ 
+    "in": "Iniciar sesión",
+    "out": "Cerrar sesión",
+  },
+
   "auth": {
+    "registertext": "Registro",
+    "logintext": "Iniciar sesión",
     "login": {
       "title": "Iniciar sesión",
       "subtitle": "Inicia sesión para acceder a tu cuenta de PongMaster",
@@ -140,8 +148,6 @@ export default {
     },
     "noAccount": "¿No tienes cuenta?",
     "haveAccount": "¿Ya tienes una cuenta?",
-    "register": "Registrarse",
-    "login": "Iniciar sesión",
     "loginImageAlt": "Imagen de inicio de sesión",
     "errors": {
       "tokenVerificationFailed": "Error al verificar el token",
@@ -169,25 +175,7 @@ export default {
 
     "game": {
       "quickMatch": "Partida rápida",
-      "customGame": "Partida personalizada",
-      "tournament": "Torneo",
       "quickMatchDesc": "Juega una partida clásica de Pong contra un oponente aleatorio",
-      "customGameDesc": "Crea una partida con tus propias reglas o únete a una existente",
-      "tournamentDesc": "Participa en torneos y gana recompensas",
-      "readyToPlay": "¿Listo para jugar?",
-      "startDesc": "Haz clic en el botón de abajo para empezar",
-      "start": "Empezar partida rápida",
-      "create": "Crear",
-      "join": "Unirse",
-      "availableGames": "Partidas disponibles",
-      "players": "jugadores",
-      "createTournament": "Crear torneo",
-      "createTournamentDesc": "Organiza tu propio torneo e invita a participantes",
-      "activeTournaments": "Torneos activos",
-      "activeTournamentsDesc": "Únete a un torneo en curso y compite contra otros jugadores",
-      "view": "Ver",
-      "upcomingTournaments": "Próximos torneos",
-      "register": "Registrarse",
       "whatIsQuickMatch": "¿Qué es una partida rápida?",
       "quickMatchExplanation1": "La partida rápida es la forma más rápida de empezar a jugar a PongMaster.",
       "quickMatchExplanation2": "Se te emparejará con un oponente de nivel similar para una partida justa y competitiva.",
@@ -200,14 +188,20 @@ export default {
       "step3Desc": "Asciende en el ranking ganando partidas",
       "step4": "Seguir tu progreso",
       "step4Desc": "Observa cómo mejoran tus habilidades con estadísticas detalladas",
+      "customGame": "Partida personalizada",
+      "customGameDesc": "Crea una partida con tus propias reglas o únete a una existente",
       "customGameFeatures": "Características de partidas personalizadas",
       "feature1": "Crea partidas privadas con amigos",
       "feature2": "Personaliza las reglas y ajustes del juego",
       "feature3": "Invita a jugadores específicos a tu partida",
+      "create": "Crear",
+      "createTournamentDesc": "Organiza tu propio torneo e invita a participantes",
       "advantage1": "Control total sobre los parámetros del juego",
       "advantage2": "Juega con amigos a tu ritmo",
       "advantage3": "Experimenta con diferentes modos de juego",
-      "proTipContent": "Guarda tus ajustes favoritos como presets para un acceso rápido"
+      "proTipContent": "Guarda tus ajustes favoritos como presets para un acceso rápido",
+      "start": "Empezar partida rápida",
+      "tournament": "Torneo"
     },
 
     "tournament": {
@@ -227,11 +221,7 @@ export default {
       "createButton": "Crear",
       "templatesButton": "Plantillas",
       "browse": "Explorar",
-      "browseDesc": "Únete a torneos públicos",
-      "history": "Historial",
-      "historyDesc": "Tus torneos anteriores",
-      "stats": "Estadísticas",
-      "statsDesc": "Tus rendimientos"
+      "browseDesc": "Únete a torneos públicos"
     },
     "colleagues": {
       "title": "Colegas",
@@ -255,10 +245,7 @@ export default {
         "errors": {
           "tooShort": "El nombre de usuario debe tener al menos 3 caracteres",
           "tooLong": "El nombre de usuario debe tener menos de 20 caracteres",
-          "invalidChars": "Solo se permiten letras, números y guiones bajos",
-          "selfAdd": "No puedes añadirte a ti mismo como colega",
-          "alreadyFriends": "Este usuario ya es tu colega",
-          "pendingRequest": "Invitación ya enviada a este usuario"
+          "invalidChars": "Solo se permiten letras, números y guiones bajos"
         },
         "success": {
           "title": "Invitación enviada",
@@ -266,21 +253,8 @@ export default {
         },
         "error": {
           "title": "Error",
-          "description": "No se pudo enviar la invitación a {username}",
-          "userNotFound": "Usuario no encontrado"
+          "description": "No se pudo enviar la invitación a {username}"
         }
-      },
-      "invitations": {
-        "title": "Invitaciones pendientes",
-        "received": "Invitaciones recibidas",
-        "sent": "Invitaciones enviadas",
-        "accept": "Aceptar",
-        "decline": "Rechazar",
-        "cancel": "Cancelar",
-        "empty": "No hay invitaciones pendientes",
-        "acceptSuccess": "Invitación aceptada",
-        "declineSuccess": "Invitación rechazada",
-        "cancelSuccess": "Invitación cancelada"
       }
     },
 
@@ -306,13 +280,93 @@ export default {
       "player1Keys": "W (arriba) / S (abajo)",
       "player2": "Controles del jugador 2:",
       "player2Keys": "↑ (arriba) / ↓ (abajo)",
-      "playAgain": "Jugar de nuevo"
+      "playAgain": "Jugar de nuevo",
+      "special": "Especial",
+      "down": "Abajo",
+      "up": "Arriba"
     },
     "chat": {
       "title": "Chat del juego"
     },
     "winner": "¡ha ganado!",
-    "finalScore": "Puntuación final:"
+    "finalScore": "Puntuación final:",
+    "quickMatch": "Partida rápida",
+    "customGame": "Partida personalizada",
+    "tournament": "Torneo",
+    "quickMatchDesc": "Juega una partida clásica de Pong contra un oponente aleatorio",
+    "customGameDesc": "Crea una partida con tus propias reglas o únete a una existente",
+    "tournamentDesc": "Participa en torneos y gana recompensas",
+    "readyToPlay": "¿Listo para jugar?",
+    "startDesc": "Haz clic en el botón de abajo para empezar",
+    "start": "Empezar partida rápida",
+    "create": "Crear",
+    "join": "Unirse",
+    "availableGames": "Partidas disponibles",
+    "players": "jugadores",
+    "createTournament": "Crear torneo",
+    "createTournamentDesc": "Organiza tu propio torneo e invita a participantes",
+    "activeTournaments": "Torneos activos",
+    "activeTournamentsDesc": "Únete a un torneo en curso y compite contra otros jugadores",
+    "view": "Ver",
+    "upcomingTournaments": "Próximos torneos",
+    "register": "Registrarse",
+    "whatIsQuickMatch": "¿Qué es una partida rápida?",
+    "quickMatchExplanation1": "La partida rápida es la forma más rápida de empezar a jugar a PongMaster.",
+    "quickMatchExplanation2": "Se te emparejará con un oponente de nivel similar para una partida justa y competitiva.",
+    "howItWorks": "Cómo funciona",
+    "step1": "Encontrar un oponente",
+    "step1Desc": "Nuestro sistema te encontrará un oponente adecuado según tu clasificación ELO",
+    "step2": "Conectarse con jugadores",
+    "step2Desc": "Juega contra oponentes reales de todo el mundo",
+    "step3": "Competir y ganar",
+    "step3Desc": "Asciende en el ranking ganando partidas",
+    "step4": "Seguir tu progreso",
+    "step4Desc": "Observa cómo mejoran tus habilidades con estadísticas detalladas",
+    "customGameFeatures": "Características de partidas personalizadas",
+    "feature1": "Crea partidas privadas con amigos",
+    "feature2": "Personaliza las reglas y ajustes del juego",
+    "feature3": "Invita a jugadores específicos a tu partida",
+    "advantage1": "Control total sobre los parámetros del juego",
+    "advantage2": "Juega con amigos a tu ritmo",
+    "advantage3": "Experimenta con diferentes modos de juego",
+    "proTipContent": "Guarda tus ajustes favoritos como presets para un acceso rápido",
+    "map": {
+      "title": "Selección de mapa"
+    },
+    "create": {
+      "malusoff": "Malus desactivado",
+      "specialoff": "Especial desactivado",
+      "color": "Color",
+      "player1": "Jugador 1",
+      "player2": "Jugador 2",
+      "colorfor": "Color para",
+      "speed": "Velocidad",
+      "slow": "Lento",
+      "medium": "Medio",
+      "fast": "Rápido",
+      "joininvitation": "Unirse a la invitación",
+      "escape": "Esc",
+      "resume": "Reanudar",
+      "pause": "Pausa",
+      "goal": "Gol",
+      "winner": "Ganador",
+      "won": "ha ganado",
+      "quit": "Salir",
+      "replay": "Repetir",
+      "strikesremaining": "golpes restantes",
+      "malusin": "Próximo malus en",
+      "malus": "Malus",
+      "specialcounter": "Especial listo en"
+    },
+    "controls": {
+      "title": "Controles"
+    },
+    "tournament": {
+      "create": {
+        "select": "Por favor, selecciona todos los jugadores para iniciar el torneo.",
+        "start": "Iniciar torneo"
+      }
+    }
   },
 
   "stats": {
@@ -366,5 +420,49 @@ export default {
       "winRate": "Tasa de victorias %",
       "you": "Tú"
     }
+  },
+
+  "Profile": {
+    "title": "Perfil de usuario",
+    "subtitle": "Gestiona tu perfil y configuración",
+    "email": "Correo electrónico",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "status": {
+      "online": "En línea",
+      "offline": "Desconectado"
+    },
+    "stats": {
+      "stats": "Estadísticas",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "tournaments": "Torneos",
+      "level": "Nivel",
+      "elo": "ELO",
+      "rank": "Rango"
+    }
+  },
+  "profileEdit": {
+    "title": "Editar perfil",
+    "usernameLabel": "Nombre de usuario",
+    "description": "Editar tu perfil",
+    "submit": "Guardar",
+    "bioLabel": "Biografía",
+    "upload": {
+      "dragDrop": "Arrastrar y soltar",
+      "clickToSelect": "arrastra y suelta tu avatar aquí o haz clic para subir"
+    }
+  },
+  "app": {
+    "name": "ft_Transcendance",
+    "title": "ft_Transcendance"
+  },
+  "chat": {
+    "title": "Chat general",
+    "placeholder": "Escribe un mensaje...",
+    "public": "Público",
+    "private": "Privado",
+    "invitation": "Invitación",
+    "noPrivateConversation": "Sin conversación privada"
   }
 }
