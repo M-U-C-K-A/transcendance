@@ -1,0 +1,14 @@
+FROM node:18-alpine3.18
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+COPY Back/prisma .
+
+RUN pnpm install --frozen-lockfile
+
+
+ENV DATABASE_URL="file:./prisma/data/test.sqlite"
+
+EXPOSE 5555

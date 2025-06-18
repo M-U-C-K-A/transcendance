@@ -1,0 +1,15 @@
+FROM node:18-alpine3.18
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+COPY Front/ .
+
+RUN pnpm install --frozen-lockfile
+
+# Créer un lien symbolique pour servir les fichiers statiques depuis Shared/public
+RUN ln -sf /app/Shared/public /app/public
+
+EXPOSE 3000
+CMD ["pnpm", "run", "dev"]

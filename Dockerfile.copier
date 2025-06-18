@@ -1,0 +1,7 @@
+FROM alpine:3.18
+
+# On place tout le dossier Shared dans l'image
+COPY Shared ./Shared
+
+# Au démarrage, on copie dans /shared (volume Docker)
+

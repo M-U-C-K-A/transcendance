@@ -79,3 +79,10 @@ DOCKER_BUILDKIT=0 docker compose up --build
 
 pnpm tsc --noEmit
 pnpm lint
+
+
+
+
+docker system prune -a
+
+docker volume ls -q | xargs docker volume rm
