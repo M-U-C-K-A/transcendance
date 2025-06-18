@@ -171,7 +171,7 @@ export default {
       "invalidUsernameLength": "Username must be at least 3 characters",
       "invalidPasswordLength": "Password must be at least 8 characters",
       "invalidConfirmPasswordLength": "Passwords do not match",
-
+      
     },
     "errors":{
         "loginFailed": "Login failed",
@@ -192,7 +192,6 @@ export default {
       "title": "Two-Factor Authentication",
       "description": "Enter the code sent to your email",
       "codeHint": "Code",
-      "incorrectCode": "Incorrect code",
       "submit": "Verify",
     },
   },
@@ -374,7 +373,7 @@ export default {
     }
   },
 
-
+  
   "app": {
     "name": "ft_Transcendance",
     "title": "ft_Transcendance",

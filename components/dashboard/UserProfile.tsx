@@ -83,7 +83,6 @@ export function UserProfile() {
 				</div>
 				<div className="flex gap-2 mb-4">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
 					<Badge variant={user.onlineStatus ? "offline" : "online"}>
 						{user.onlineStatus ? t('Profile.status.offline') : t('Profile.status.online')}
 					</Badge>
