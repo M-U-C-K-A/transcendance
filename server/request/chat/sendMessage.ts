@@ -1,48 +1,43 @@
-import { sendMessageData } from '@/server/request/chat/interface';
 import { PrismaClient } from '@prisma/client'
 
 const Prisma = new PrismaClient()
 
-export default async function sendMessage(sender: number, data: sendMessageData) {
-	let isGeneral: boolean = true;
-	let recipientId: number | null = null;
+export default async function sendMessage(sender: number, recipient: number, content: string, messageType: string ) {
 
-	if (data.recipient) {
-		const userInfo = await Prisma.user.findUnique({
-			where: { id: data.recipient },
-			select: { id: true }
-		});
-
-		if (!userInfo) {
-			throw new Error("User not found, could not send message");
+	const userInfo = await Prisma.user.findUnique({
+		where: {
+			id: recipient
+		},
+		select: {
+			id: true
 		}
+	});
 
-		const isBlocked = await Prisma.block.findFirst({
-			where: {
-				OR: [
-					{ id1: userInfo.id, id2: sender },
-					{ id1: sender, id2: userInfo.id }
-				],
-			},
-		});
+	if (!userInfo) {
+		throw new Error("User not found, could not send message");
+	}
 
-		if (isBlocked?.id1 === sender) {
-			throw new Error("You blocked this user");
-		} else if (isBlocked?.id2 === sender) {
-			throw new Error("This user blocked you");
-		}
+	const isBlocked = await Prisma.block.findFirst({
+		where: {
+			OR: [
+				{ id1: userInfo.id, id2: sender },
+				{ id1: sender, id2: userInfo.id }
+			],
+		},
+	});
 
-		recipientId = userInfo.id;
-		isGeneral = false;
+	if (isBlocked?.id1 === sender) {
+		throw new Error("You blocked this user");
+	} else if (isBlocked?.id2 === sender) {
+		throw new Error("This user blocked you");
 	}
 
 	const message = await Prisma.message.create({
 		data: {
 			senderId: sender,
-			recipientId: recipientId,
-			content: data.content,
-			isGeneral: isGeneral,
-			messageType: data.messageType,
+			recipientId: recipient,
+			content: content,
+			messageType: messageType,
 		},
 		select: {
 			id: true,
@@ -72,7 +67,7 @@ export default async function sendMessage(sender: number, data: sendMessageData)
 		id: message.id,
 		content: message.content,
 		sendAt: message.sendAt,
-		messageType: data.messageType,
+		messageType: messageType,
 		sender: {
 			id: senderInfo.id,
 			username: senderInfo.username,

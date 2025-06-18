@@ -1,22 +1,26 @@
 import { PrismaClient } from "@prisma/client";
-import { id } from "../chat/interface";
 import { notifyFriend } from "@/server/routes/friends/websocketFriends";
 
 const Prisma = new PrismaClient();
 
 export default async function treatRequest(userId: number, friendName: string, asAccepted: boolean, username: string) {
-	const friendId = await Prisma.$queryRaw<id[]>`
-	SELECT id FROM "User"
-	WHERE username = ${friendName}`;
+	const friendId = await Prisma.user.findFirst({
+		where: {
+			username: friendName,
+		},
+		select: {
+			id: true,
+		},
+	});
 
-	if (!friendId[0]) {
+	if (!friendId) {
 		throw new Error("Friend Id not found");
 	}
 
 	if (asAccepted) {
 		await Prisma.friends.updateMany({
 			where: {
-				id1: friendId[0].id,
+				id1: friendId.id,
 				id2: userId,
 			},
 			data: {
@@ -27,7 +31,7 @@ export default async function treatRequest(userId: number, friendName: string, a
 	else {
 		await Prisma.friends.deleteMany({
 			where: {
-				id1: friendId[0].id,
+				id1: friendId.id,
 				id2: userId,
 			},
 		});
@@ -36,11 +40,11 @@ export default async function treatRequest(userId: number, friendName: string, a
 	notifyFriend(userId, {
 	type: "NEW_FRIEND",
 		from: {
-			id: friendId[0].id,
+			id: friendId.id,
 		}
 	})
 
-	notifyFriend(friendId[0].id, {
+	notifyFriend(friendId.id, {
 	type: "NEW_FRIEND",
 		from: {
 			id: userId,

@@ -25,12 +25,6 @@ export interface id{
 	id: number
 }
 
-export interface sendMessageData{
-	recipient?: number
-	content: string
-	messageType: string
-}
-
 export interface returnData {
 	id: number | null
 	username: string | null

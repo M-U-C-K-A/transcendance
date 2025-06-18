@@ -1,24 +1,31 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
-import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
 import { broadcastMessage } from './websocketChat';
 import { PrismaClient } from "@prisma/client";
+import { sendMessageData } from "@/types/chat";
 
 const Prisma = new PrismaClient()
 
 export default async function sendMessageRoute(server: FastifyInstance) {
 	server.post('/chat/send', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-		const data = request.body as sendMessageData;
+		const data = sendMessageData.safeParse(request.body);
 		const sender = request.user as { id: number, username: string };
 
 		if (!data) {
 			return reply.code(400).send({ error: 'parameter is required' });
 		}
 
+		if (!data.success) {
+			return reply.status(400).send({
+				errors: data.error.flatten().fieldErrors,
+			})
+		}
+
+		const { recipient, content, messageType } = data.data
+
 		try {
-			const wsMessage = await sendMessage(sender.id, data);
-			if (data.recipient) {
+			const wsMessage = await sendMessage(sender.id, recipient, content, messageType);
 
 				const privateMessage = {
 					id: wsMessage.id,
@@ -38,7 +45,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 						username: sender.username,
 					},
 				};
-				broadcastMessage(data.recipient, {
+				broadcastMessage(recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage
 				})
@@ -47,7 +54,6 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage
 				});
-			}
 
 			return reply.code(200).send({
 				message: "Message sent successfully",

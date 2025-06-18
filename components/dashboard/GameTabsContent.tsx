@@ -37,7 +37,7 @@ const FeatureStep = ({ icon: Icon, title, description }: {
       <Icon className="h-5 w-5 text-primary" />
     </div>
     <div>
-      <h4 className="font-medium">{title}</h4>
+      <h3 className="font-medium">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
     </div>
   </div>

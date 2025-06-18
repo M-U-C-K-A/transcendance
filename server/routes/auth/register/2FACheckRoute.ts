@@ -5,7 +5,6 @@ import { login2FA } from '@/types/auth'
 
 export default async function Check2FARoute(server: FastifyInstance) {
 	server.post('/auth/register/2fa/verify', async (request: FastifyRequest, reply: FastifyReply) => {
-
 		const data = login2FA.safeParse(request.body)
 
 		if (!data.success) {
