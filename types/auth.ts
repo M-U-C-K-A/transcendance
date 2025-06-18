@@ -1,38 +1,47 @@
 import { z } from "zod";
+import { useI18n } from "@/i18n-client";
 
-// The path of where the schema are used is specified above the
+const t = useI18n();
 
-//	/auth/login
+// /auth/login
 export const loginData = z.object({
 	pass: z.string()
-	.min(6, { message: 'Password too short'})
-	.max(30, { message: 'Password too long'}),
-	email: z.string().email()
-	.min(5, { message: 'Email too short'})
-	.max(100, { message: 'Email too long'}),
+		.min(6, { message: t('zod.password.tooShort') })
+		.max(30, { message: t('zod.password.tooLong') })
+		.regex(/[a-z]/, { message: t('zod.password.needLowercase') })
+		.regex(/[A-Z]/, { message: t('zod.password.needUppercase') })
+		.regex(/\d/, { message: t('zod.password.needNumber') })
+		.regex(/[^A-Za-z0-9]/, { message: t('zod.password.needSpecialChar') }),
+	email: z.string().email({ message: t('zod.email.invalid') })
+		.min(5, { message: t('zod.email.tooShort') })
+		.max(100, { message: t('zod.email.tooLong') }),
 });
 
-//	/auth/login/2fa/verify
+// /auth/login/2fa/verify
+// /auth/register/2fa/verify
 export const login2FA = z.object({
-	email: z.string().email()
-	.min(5, { message: 'Email too short'})
-	.max(100, { message: 'Email too long'}),
+	email: z.string().email({ message: t('zod.email.invalid') })
+		.min(5, { message: t('zod.email.tooShort') })
+		.max(100, { message: t('zod.email.tooLong') }),
 	code: z.string()
-	.min(6, { message: 'Code must be 6 character long'})
-	.max(6, { message: 'Code must be 6 character long'}),
-})
+		.min(6, { message: t('zod.code.invalid') })
+		.max(6, { message: t('zod.code.invalid') }),
+});
 
-//	/auth/register
+// /auth/register
 export const registerData = z.object({
 	username: z.string()
-	.min(3, { message: 'Username too short'})
-	.max(20, { message: 'Username too long'})
-	.regex(/^[a-zA-Z0-9_]+$/, { message: 'Invalid character in username'}),
+		.min(3, { message: t('zod.username.tooShort') })
+		.max(20, { message: t('zod.username.tooLong') })
+		.regex(/^[a-zA-Z0-9_]+$/, { message: t('zod.username.invalidChar') }),
 	pass: z.string()
-	.min(6, { message: 'Password too short'})
-	.max(30, { message: 'Password too long'})
-	,
-	email: z.string().email()
-	.min(5, { message: 'Email too short'})
-	.max(100, { message: 'Email too long'}),
-})
+		.min(6, { message: t('zod.password.tooShort') })
+		.max(30, { message: t('zod.password.tooLong') })
+		.regex(/[a-z]/, { message: t('zod.password.needLowercase') })
+		.regex(/[A-Z]/, { message: t('zod.password.needUppercase') })
+		.regex(/\d/, { message: t('zod.password.needNumber') })
+		.regex(/[^A-Za-z0-9]/, { message: t('zod.password.needSpecialChar') }),
+	email: z.string().email({ message: t('zod.email.invalid') })
+		.min(5, { message: t('zod.email.tooShort') })
+		.max(100, { message: t('zod.email.tooLong') }),
+});

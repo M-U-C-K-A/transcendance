@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { connectionData } from '@/server/routes/auth/interface'
 import bcrypt from 'bcrypt'
 import nodemailer from 'nodemailer'
 
@@ -15,12 +14,12 @@ export const transporter = nodemailer.createTransport({
 	},
 })
 
-export default async function register2FA(data: connectionData) {
+export default async function register2FA(username: string, pass: string, email: string) {
 	const existingUser = await Prisma.user.findFirst({
 		where: {
 			OR: [
-			{ username: data.username },
-			{ email: data.email },
+			{ username: username },
+			{ email: email },
 			],
 		},
 		select: {
@@ -32,8 +31,8 @@ export default async function register2FA(data: connectionData) {
 	const existingUser2 = await Prisma.tmpUser.findFirst({
 		where: {
 			OR: [
-			{ username: data.username },
-			{ email: data.email },
+			{ username: username },
+			{ email: email },
 			],
 		},
 		select: {
@@ -43,31 +42,31 @@ export default async function register2FA(data: connectionData) {
 	})
 
 	if (existingUser) {
-		if (existingUser.username == data.username) {
+		if (existingUser.username == username) {
 			throw new Error('Username already taken')
 		}
-		if (existingUser.email == data.email) {
+		if (existingUser.email == email) {
 			throw new Error('Email already taken')
 		}
 	}
 
 	if (existingUser2) {
-		if (existingUser2.username == data.username) {
+		if (existingUser2.username == username) {
 			throw new Error('Username already taken')
 		}
-		if (existingUser2.email == data.email) {
+		if (existingUser2.email == email) {
 			throw new Error('Email already taken')
 		}
 	}
 
-	const hashedPass = await bcrypt.hash(data.pass, 10)
+	const hashedPass = await bcrypt.hash(pass, 10)
 
 	const authCode = Math.floor(100000 + Math.random() * 900000).toString()
 
 	const newUser = await Prisma.tmpUser.create ({
 		data: {
-			username: data.username,
-			email: data.email,
+			username: username,
+			email: email,
 			pass: hashedPass,
 			code: authCode,
 		},
@@ -77,6 +76,7 @@ export default async function register2FA(data: connectionData) {
 			code: true,
 		}
 	});
+
 	await transporter.sendMail({
 		from: `"PongMaster" <${process.env.SMTP_USER || 'pongmaster12345@gmail.com'}>`,
 		to: newUser.email,

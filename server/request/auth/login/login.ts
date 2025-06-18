@@ -1,34 +1,36 @@
 import { PrismaClient } from '@prisma/client'
-import { loginData } from '@/server/routes/auth/interface'
-import { returnData } from '../interface'
 import bcrypt from 'bcrypt'
 import { transporter } from '../register/2FAregister'
-import { emit } from 'process'
 
 const Prisma = new PrismaClient()
 
-export default async function login(data: loginData) {
-	const existingUser = await Prisma.$queryRaw<loginData[]>`
-	SELECT pass, email
-	FROM "User"
-	WHERE email = ${data.email}`
+export default async function login(email: string, pass: string) {
+	const existingUser = await Prisma.user.findFirst({
+		where: {
+			email: email,
+		},
+		select: {
+			email: true,
+			pass: true
+		},
+	});
 
-	if (!existingUser[0]) {
+	if (!existingUser) {
 		throw new Error('User not found')
 	}
-	else if (existingUser[0]) {
-		if (!existingUser[0].email) {
+	else if (existingUser) {
+		if (!existingUser.email) {
 			throw new Error ('This account does not exist')
 		}
 	}
 
-	const goodPass = await bcrypt.compare(data.pass, existingUser[0].pass)
+	const goodPass = await bcrypt.compare(pass, existingUser[0].pass)
 
 	if (goodPass) {
 
 		const userInfo = await Prisma.user.findFirst({
 			where: {
-				email: data.email,
+				email: email,
 			},
 			select: {
 				username: true,
@@ -38,7 +40,7 @@ export default async function login(data: loginData) {
 
 		await Prisma.user.update({
 			where: {
-				email: data.email,
+				email: email,
 			},
 			data: {
 				code: authCode,
@@ -48,7 +50,7 @@ export default async function login(data: loginData) {
 		if (userInfo?.username) {
 			await transporter.sendMail({
 				from: `"Your App Name" <pongmaster12345@gmail.com>`,
-				to: data.email,
+				to: email,
 				subject: 'Your Two‑Factor Authentication Code',
 				text: `Hello ${userInfo.username},\n\nYour authentication code is: ${authCode}\n\nEnter this code to complete your registration.`,
 				html: `
@@ -61,7 +63,6 @@ export default async function login(data: loginData) {
 
 				return (true)
 		}
-
 	}
 	else {
 		throw new Error ('Wrong password')
