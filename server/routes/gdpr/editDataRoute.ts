@@ -1,17 +1,27 @@
 import authMiddleware from "@/server/authMiddleware";
 import editData from "@/server/request/gdpr/editData";
+import { editDataGdpr } from "@/types/gdpr";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function editDataRoute(server: FastifyInstance) {
 	server.post('/gdpr/send', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
-	const data = request.body as { username: string, email: string, password: string, removeAvatar: boolean }
+	const data = editDataGdpr.safeParse(request.body)
 
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
+
+	if (!data.success) {
+		return reply.status(400).send({
+			errors: data.error.flatten().fieldErrors,
+		})
+	}
+
+	const { username, email, password, removeAvatar } = data.data
+
 	try {
-		const result = await editData(user.id, data.username, data.email, data.password, data.removeAvatar)
+		const result = await editData(user.id, username, email, password, removeAvatar)
 		if (result) {
 			const token = server.jwt.sign({
 				id: result.id,

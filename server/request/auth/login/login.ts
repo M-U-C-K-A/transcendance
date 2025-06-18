@@ -15,7 +15,7 @@ export default async function login(email: string, pass: string) {
 		},
 	});
 
-	if (!existingUser) {
+	if (!existingUser || !existingUser.pass) {
 		throw new Error('User not found')
 	}
 	else if (existingUser) {
@@ -24,7 +24,7 @@ export default async function login(email: string, pass: string) {
 		}
 	}
 
-	const goodPass = await bcrypt.compare(pass, existingUser[0].pass)
+	const goodPass = await bcrypt.compare(pass, existingUser.pass)
 
 	if (goodPass) {
 

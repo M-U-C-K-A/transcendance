@@ -47,7 +47,6 @@ export default function GdprPage() {
 		id: z.number(),
 		username: z.string().min(1, t('gdpr.validation.usernameRequired')),
 		email: z.string().email(t('gdpr.validation.invalidEmail')),
-		password: z.string().min(8, t('gdpr.validation.passwordMinLength')).optional(),
 		removeAvatar: z.boolean().optional(),
 	})
 
