@@ -10,7 +10,7 @@ export default {
     "login": "Iniciar sesión",
     "verify": "Verificar",
     "register": "Registrarse",
-    "freeRegister": "Registro gratuito",
+    "freeRegister": "Regístrate gratis",
     "statistics": "Estadísticas",
     "dashboard": "Panel de control",
     "back": "Atrás",
@@ -25,17 +25,17 @@ export default {
     "validation": {
       "passwordRequired": "La contraseña es obligatoria",
       "usernameRequired": "El nombre de usuario es obligatorio",
-      "invalidEmail": "Correo electrónico inválido",
+      "invalidEmail": "Email inválido",
       "passwordMinLength": "La contraseña debe tener al menos 8 caracteres"
     },
-    "modals": {
-      "password": {
-        "title": "Contraseña",
-        "label": "Introduce tu nueva contraseña",
-        "description": "Cambia tu contraseña",
-        "placeholder": "********",
-      }
-    },
+      "modals": {
+        "password": {
+          "title": "Contraseña",
+          "label": "Ingresa tu nueva contraseña",
+          "description": "Cambia tu contraseña",
+          "placeholder": "********",
+          }
+        },
     "sections" : {
       "personalData": {
         "title": "Datos personales",
@@ -43,23 +43,24 @@ export default {
         "description": "Actualiza tus datos personales",
         "manageButton": "Gestionar mis datos",
         "lastName": "Apellido",
-        "email": "Correo electrónico",
+        "email": "Email",
         "username": "Nombre de usuario",
-        "update": "Actualizar"
+        "update": "Actualizar",
       },
-      "critical": {
-        "title": "Datos críticos",
-        "deleteAccount": "Eliminar cuenta",
-        "deleteWarning": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.",
-        "deleteButton": "Eliminar cuenta"
-      },
-      "password": "Contraseña"
+        "critical": {
+          "title": "Datos críticos",
+          "deleteAccount": "Eliminar cuenta",
+          "deleteWarning": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+          "deleteButton": "Eliminar cuenta",
+        },
+      "password": "Contraseña",
+      "deleteAccount": "Eliminar cuenta"
     },
     "alerts": {
       "delete":{
         "title": "Eliminar cuenta",
-        "description": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.",
-        "confirm":  "Confirmar"
+        "description": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+        "confirm":  "Confirmar",
       }
     },
     "toasts": {
@@ -71,7 +72,7 @@ export default {
       "incorrectPassword": "Contraseña incorrecta",
       "updateFailed": "Error al actualizar",
       "deleteFailed": "Error al eliminar la cuenta",
-      "genericError": "Ha ocurrido un error"
+      "genericError": "Ocurrió un error"
     }
   },
 
@@ -96,77 +97,122 @@ export default {
       },
       "elo": {
         "title": "Seguimiento ELO",
-        "description": "Sigue tu progreso con nuestro sistema de clasificación ELO y compara tu rendimiento."
+        "description": "Sigue tu progreso con nuestro sistema de ranking ELO y compara tu rendimiento."
       }
     },
     "cta": {
       "title": "¿Listo para jugar?",
-      "subtitle": "Únete a nuestra comunidad de jugadores profesionales y empieza a mejorar ahora."
+      "subtitle": "Únete a nuestra comunidad de jugadores profesionales y comienza a mejorar ahora."
     }
   },
 
-
-  "Log":{
-    "in": "Iniciar sesión",
-    "out": "Cerrar sesión",
+  "Profile": {
+    "title": "Perfil de usuario",
+    "subtitle": "Gestiona tu perfil y configuración",
+    "email": "Email",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "status": {
+      "online": "En línea",
+      "offline": "Desconectado",
+    },
+    "stats": {
+      "stats": "Estadísticas",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "tournaments": "Torneos",
+      "level": "Nivel",
+      "elo": "ELO",
+      "rank": "Rango",
+    }
   },
 
   "auth": {
-    "registertext": "Registro",
-    "logintext": "Iniciar sesión",
     "login": {
+      "invalidEmail": "Email inválido",
+      "submitting": "Enviando...",
       "title": "Iniciar sesión",
       "subtitle": "Inicia sesión para acceder a tu cuenta de PongMaster",
-      "emailLabel": "Correo electrónico",
+      "emailLabel":"Email",
+      "description": "Inicia sesión para acceder a tu cuenta de PongMaster",
       "emailPlaceholder": "ejemplo@gmail.com",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
       "passwordLabel": "Contraseña",
       "passwordPlaceholder": "********",
-      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "orContinueWith": "Continuar con Google",
       "submit": "Iniciar sesión",
-      "submitting": "Iniciando sesión...",
-      "orContinueWith": "O continuar con",
       "continueWithGoogle": "Continuar con Google",
-      "invalidEmail": "Correo electrónico inválido",
-      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "passwordTooLong": "La contraseña debe tener menos de 20 caracteres",
     },
     "register": {
-      "title": "Registro",
-      "subtitle": "Crea una cuenta para empezar a jugar a PongMaster",
-      "emailLabel": "Correo electrónico",
-      "emailPlaceholder": "ejemplo@gmail.com",
+      "title": "Registrarse",
       "usernameLabel": "Nombre de usuario",
-      "usernamePlaceholder": "Elige un nombre de usuario",
+      "subtitle": "Crea una cuenta para empezar a jugar PongMaster",
+      "description": "Crea una cuenta para empezar a jugar PongMaster",
+      "username": "Nombre de usuario",
+      "emailLabel": "Email",
+      "password": "Contraseña",
+      "invalidChars": "Solo se permiten letras, números y guiones bajos",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+      "passwordTooLong": "La contraseña debe tener menos de 20 caracteres",
+      "continueWithGoogle": "Regístrate con Google",
+      "submit": "Crear cuenta",
+      "emailPlaceholder": "ejemplo@gmail.com",
+      "usernamePlaceholder": "MichaelSnow",
       "passwordLabel": "Contraseña",
       "passwordPlaceholder": "********",
-      "submit": "Crear cuenta",
-      "submitting": "Creando cuenta...",
-      "invalidEmail": "Correo electrónico inválido",
-      "usernameTooShort": "El nombre de usuario debe tener al menos 3 caracteres",
-      "usernameTooLong": "El nombre de usuario debe tener menos de 20 caracteres",
-      "invalidChars": "Solo se permiten letras, números y guiones bajos",
-      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+      "orContinueWith": "Continuar con Google",
+      "invalidEmail": "Email inválido",
+      "invalidUsername": "Nombre de usuario inválido",
+      "invalidPassword": "Contraseña inválida",
+      "invalidConfirmPassword": "Las contraseñas no coinciden",
+      "invalidUsernameLength": "El nombre de usuario debe tener al menos 3 caracteres",
+      "invalidPasswordLength": "La contraseña debe tener al menos 8 caracteres",
+      "invalidConfirmPasswordLength": "Las contraseñas no coinciden",
+
     },
+    "errors":{
+        "loginFailed": "Error al iniciar sesión",
+        "registrationFailed": "Error al registrarse",
+        "verificationFailed": "Error de verificación",
+        "updateFailed": "Error al actualizar",
+        "deleteFailed": "Error al eliminar la cuenta",
+        "genericError": "Ocurrió un error",
+        "invalidEmail": "Email inválido",
+        "invalidUsername": "Nombre de usuario inválido",
+        "sessionExpired": "Sesión expirada",
+    },
+    "haveAccount":"¿Ya tienes una cuenta? ",
+    "noAccount": "¿No tienes cuenta? ",
+    "registertext": "Regístrate",
+    "logintext": "Iniciar sesión",
     "2fa": {
-      "title": "Verificación en dos pasos",
-      "description": "Se ha enviado un código a {email}. Por favor, introdúcelo para continuar.",
-      "invalidCode": "Código inválido",
-      "incompleteCode": "Por favor, introduce el código completo",
+      "title": "Autenticación de dos factores",
+      "description": "Ingresa el código enviado a tu email",
+      "codeHint": "Código",
       "incorrectCode": "Código incorrecto",
-      "verificationError": "Error al verificar el código",
-      "codeHint": "Introduce el código de 6 dígitos recibido por email"
+      "submit": "Verificar",
     },
-    "noAccount": "¿No tienes cuenta?",
-    "haveAccount": "¿Ya tienes una cuenta?",
-    "loginImageAlt": "Imagen de inicio de sesión",
-    "errors": {
-      "tokenVerificationFailed": "Error al verificar el token",
-      "googleLoginFailed": "Error al iniciar sesión con Google",
-      "invalidFields": "Campos inválidos",
-      "loginFailed": "Error al iniciar sesión",
-      "registrationFailed": "Error al registrarse",
-      "genericError": "Ha ocurrido un error",
-      "sessionExpired": "Sesión expirada, por favor inténtalo de nuevo"
+  },
+
+  "profileEdit": {
+    "title": "Editar perfil",
+    "usernameLabel": "Nombre de usuario",
+    "description": "Edita tu perfil",
+    "submit": "Guardar",
+    "bioLabel": "Biografía",
+    "upload": {
+      "dragDrop": "Arrastrar y soltar",
+      "clickToSelect": "arrastra y suelta tu avatar aquí o haz clic para subir",
+
     }
+  },
+
+  "Log": {
+    "in": "Iniciar sesión",
+    "out": "Cerrar sesión",
   },
 
   "dashboard": {
@@ -183,169 +229,47 @@ export default {
     },
 
     "game": {
-      "back": "Back to dashboard",
-      "start": "Initiar partida",
-      "info": {
-        "title": "Information",
-        "gameMode": "Game mode",
-        "rules": "Rules",
-        "firstToFive": "First to 5 points",
-        "players": "Players",
-        "player1": "Player 1",
-        "player2": "Player 2",
-        "quickMatch": "Match Rapido",
-        "customGame": "Partida Personalizada",
-        "tournament": "Torneo",
-
-      },
-      "whatIsQuickMatch": "¿Qué es un match rápido?",
-        "quickMatchExplanation1": "Un match rápido es la forma más rápida de empezar a jugar a PongMaster.",
-        "quickMatchExplanation2": "Serás emparejado con un oponente de nivel similar para un juego justo y competitivo.",
-        "howItWorks": "Cómo funciona",
-        "quickMatch": "Match Rapido",
-        "customGame": "Partida Personalizada",
-        "tournament": "Torneo",
-        "quickMatchDesc": "Juega un partido clásico de Pong contra un oponente aleatorio",
-        "customGameDesc": "Crea un partido con tus propias reglas o únete a un partido existente",
-        "tournamentDesc": "Participa en torneos y gana recompensas",
-        "step1": "Encontrar un oponente",
-        "step1Desc": "Nuestro sistema encontrará un oponente adecuado según tu clasificación ELO",
-        "step2": "Conectarse con jugadores",
-        "step2Desc": "Juega con jugadores del mundo entero",
-        "step3": "Affronta y gana",
-        "step3Desc": "Sube en el ranking ganando partidos",
-        "step4": "Sigue tu progreso",
-        "step4Desc": "Mira cómo mejoras tus habilidades con estadísticas detalladas",
-        "customGameFeatures": "Características de partidas personalizadas",
-        "feature1": "Crea partidos privados con amigos",
-        "feature2": "Personaliza las reglas y parámetros del juego",
-        "createTournamentDesc": "Organiza tu propio partido y invita a un amigo",
-        "activeTournaments": "Torneos activos",
-        "activeTournamentsDesc": "Únete a un torneo en curso y enfrenta a otros jugadores",
-        "view": "Ver",
-        "upcomingTournaments": "Torneos próximos",
-        "advantage1": "Control total de los parámetros del juego",
-        "advantage2": "Juega con amigos a tu ritmo",
-        "advantage3": "Experimenta diferentes modos de juego",
-        "feature3": "Invita a jugadores específicos a tu partido",
-        "proTipContent": "Guarda tus parámetros favoritos como preferencias para un acceso rápido",
-      "controls": {
-        "player1": "Player 1 Controls:",
-        "player1Keys": "W (up) / S (down)",
-        "player2": "Player 2 Controls:",
-        "player2Keys": "↑ (up) / ↓ (down)",
-        "playAgain": "Play again",
-        "error": {
-          "alreadyassigned1": "The key",
-          "alreadyassigned2": "is already assigned to another command."
-        },
-        "title": "Controls",
-        "player1": "Player 1",
-        "player2": "Player 2",
-        "up": "Up",
-        "down": "Down",
-        "special": "Special",
-        "cancel": "Cancel",
-        "save": "Save"
-      },
-      "chat": {
-        "title": "Game chat"
-      },
-      "winner": "has won!",
-      "finalScore": "Final score:",
-      "specialControls": {
-        "title": "Special Controls",
-        "player1Special": "Player 1 Special",
-        "player2Special": "Player 2 Special",
-        "stamina": "Stamina",
-        "superPad": "Super Pad"
-      },
-      "tournament": {
-        "title": "Tournaments",
-        "description": "Create and manage custom tournaments",
-        "featuresTitle": "Tournament Features",
-        "feature1": "Customizable brackets",
-        "feature2": "Participant management",
-        "feature3": "Integrated calendar",
-        "createTitle": "New Tournament",
-        "createDescription": "Configure a tournament with your rules and preferences",
-        "participants": "Participants",
-        "participantsDesc": "Invite up to 16 players",
-        "schedule": "Schedule",
-        "scheduleDesc": "Plan matches over multiple days",
-        "proTipContent": "Prepare your rules in advance for quick setup",
-        "createButton": "Create",
-        "templatesButton": "Templates",
-        "browse": "Browse",
-        "browseDesc": "Join public tournaments",
-        "history": "History",
-        "historyDesc": "Your previous tournaments",
-        "stats": "Statistics",
-        "statsDesc": "Your performances",
-        "create": {
-          "title": "Create a Tournament",
-          "description": "Configure your tournament settings below.",
-          "name": "Tournament Name",
-          "placeholder": "Enter tournament name",
-          "playerCount": "Number of Players",
-          "loading": "Creating...",
-          "create": "Create Tournament",
-          "join": "Join Tournament",
-          "username": "Username",
-          "player": "Player",
-          "finished": "Tournament Finished!",
-          "winner": "Winner",
-          "backdashboard": "Back to Dashboard",
-          "participants": "Participants",
-          "tree": "Tournament Bracket",
-          "player1": "Player 1",
-          "player2": "Player 2",
-          "waiting": "Waiting for player...",
-          "back": "Back to Dashboard",
-          "completed": "Completed",
-          "start": "Start Match",
-          "select": "Please select all players to start the tournament."
-        }
-      },
-      "create": {
-        "ongoing": "Ongoing",
-        "slow": "Slow",
-        "joininvitation": "Join",
-        "speed": "Speed Selection",
-        "medium": "Medium",
-        "fast": "Fast",
-        "player1": "Player 1",
-        "player2": "Player 2",
-        "color": "Color Selection",
-        "colorfor": "Color for",
-        "malusin": "Next malus in",
-        "specialcounter": "Special ready in",
-        "strikesremaining": "strikes remaining",
-        "specialready": "Special ready!",
-        "winner": "Winner",
-        "escape": "Escape",
-        "won": "won",
-        "replay": "Replay",
-        "backoptions": "Back to options",
-        "quit": "Quit",
-        "resume": "Resume",
-        "pause": "Pause",
-        "malus": "Malus",
-        "goal": "Goal",
-        "maluson": "Malus ON",
-        "malusoff": "Malus OFF",
-        "specialon": "Special ON",
-        "specialoff": "Special OFF",
-        "malusdescription": "A malus appears every 15 seconds on the map. Touching it removes 1 point from the opponent!",
-        "specialdescription": "After 10 strikes, you can activate a special move: your pad grows and returns the ball faster. The effect lasts 5 seconds.",
-        "malusloss": "Arriving at -3 points means you've lost!",
-        "special": "Special",
-      },
-      "map": {
-        "title": "Map Selection"
-      }
+      "quickMatch": "Partida rápida",
+      "customGame": "Partida personalizada",
+      "tournament": "Torneo",
+      "quickMatchDesc": "Juega una partida clásica de Pong contra un oponente aleatorio",
+      "customGameDesc": "Crea un juego con tus propias reglas o únete a un juego existente",
+      "tournamentDesc": "Participa en torneos y gana recompensas",
+      "readyToPlay": "¿Listo para jugar?",
+      "startDesc": "Haz clic en el botón de abajo para comenzar",
+      "start": "Comenzar partida rápida",
+      "create": "Crear",
+      "join": "Unirse",
+      "availableGames": "Juegos disponibles",
+      "players": "jugadores",
+      "createTournament": "Crear torneo",
+      "createTournamentDesc": "Organiza tu propio torneo e invita participantes",
+      "activeTournaments": "Torneos activos",
+      "activeTournamentsDesc": "Únete a un torneo en curso y compite contra otros jugadores",
+      "view": "Ver",
+      "upcomingTournaments": "Próximos torneos",
+      "register": "Registrarse",
+      "whatIsQuickMatch": "¿Qué es una partida rápida?",
+      "quickMatchExplanation1": "Partida rápida es la forma más rápida de empezar a jugar PongMaster.",
+      "quickMatchExplanation2": "Se te emparejará con un oponente de nivel similar para un juego justo y competitivo.",
+      "howItWorks": "Cómo funciona",
+      "step1": "Encuentra un oponente",
+      "step1Desc": "Nuestro sistema te encontrará un oponente adecuado según tu puntuación ELO",
+      "step2": "Conéctate con jugadores",
+      "step2Desc": "Juega contra oponentes reales de todo el mundo",
+      "step3": "Compite y gana",
+      "step3Desc": "Asciende en el ranking ganando partidos",
+      "step4": "Sigue tu progreso",
+      "step4Desc": "Observa cómo mejoran tus habilidades con estadísticas detalladas",
+      "customGameFeatures": "Características de partida personalizada",
+      "feature1": "Crea partidas privadas con amigos",
+      "feature2": "Personaliza reglas y configuraciones del juego",
+      "feature3": "Invita jugadores específicos a tu juego",
+      "advantage1": "Control total sobre los parámetros del juego",
+      "advantage2": "Juega con amigos a tu propio ritmo",
+      "advantage3": "Experimenta con diferentes modos de juego",
+      "proTipContent": "Guarda tus configuraciones favoritas como presets para acceso rápido"
     },
-
     "tournament": {
       "title": "Torneos",
       "description": "Crea y gestiona torneos personalizados",
@@ -353,17 +277,45 @@ export default {
       "feature1": "Eliminatorias personalizables",
       "feature2": "Gestión de participantes",
       "feature3": "Calendario integrado",
-      "createTitle": "Nuevo torneo",
+      "createTitle": "Nuevo Torneo",
       "createDescription": "Configura un torneo con tus reglas y preferencias",
       "participants": "Participantes",
       "participantsDesc": "Invita hasta 16 jugadores",
-      "schedule": "Calendario",
+      "schedule": "Programación",
       "scheduleDesc": "Planifica partidos durante varios días",
-      "proTipContent": "Prepara tus reglas con antelación para una configuración rápida",
+      "proTipContent": "Prepara tus reglas con anticipación para una configuración rápida",
       "createButton": "Crear",
       "templatesButton": "Plantillas",
       "browse": "Explorar",
-      "browseDesc": "Únete a torneos públicos"
+      "browseDesc": "Únete a torneos públicos",
+      "history": "Historial",
+      "historyDesc": "Tus torneos anteriores",
+      "stats": "Estadísticas",
+      "statsDesc": "Tus rendimientos",
+      "create": {
+        "title": "Crear un Torneo",
+        "description": "Configura las opciones de tu torneo a continuación.",
+        "name": "Nombre del Torneo",
+        "placeholder": "Ingresa el nombre del torneo",
+        "playerCount": "Número de Jugadores",
+        "loading": "Creando...",
+        "create": "Crear Torneo",
+        "join": "Unirse al Torneo",
+        "username": "Nombre de usuario",
+        "player": "Jugador",
+        "finished": "¡Torneo Finalizado!",
+        "winner": "Ganador",
+        "backdashboard": "Volver al Panel",
+        "participants": "Participantes",
+        "tree": "Eliminatoria del Torneo",
+        "player1": "Jugador 1",
+        "player2": "Jugador 2",
+        "waiting": "Esperando jugador...",
+        "back": "Volver al Panel",
+        "completed": "Completado",
+        "start": "Comenzar Partido",
+        "select": "Por favor selecciona todos los jugadores para comenzar el partido."
+      }
     },
     "colleagues": {
       "title": "Colegas",
@@ -381,13 +333,16 @@ export default {
       "addDialog": {
         "title": "Añadir un colega",
         "usernameLabel": "Nombre de usuario",
-        "usernamePlaceholder": "Introduce el nombre de usuario de tu colega",
+        "usernamePlaceholder": "Ingresa el nombre de usuario de tu colega",
         "submit": "Enviar invitación",
         "submitting": "Enviando...",
         "errors": {
           "tooShort": "El nombre de usuario debe tener al menos 3 caracteres",
           "tooLong": "El nombre de usuario debe tener menos de 20 caracteres",
-          "invalidChars": "Solo se permiten letras, números y guiones bajos"
+          "invalidChars": "Solo se permiten letras, números y guiones bajos",
+          "selfAdd": "No puedes añadirte a ti mismo como colega",
+          "alreadyFriends": "Este usuario ya es tu colega",
+          "pendingRequest": "Invitación ya enviada a este usuario"
         },
         "success": {
           "title": "Invitación enviada",
@@ -395,8 +350,21 @@ export default {
         },
         "error": {
           "title": "Error",
-          "description": "No se pudo enviar la invitación a {username}"
+          "description": "No se pudo enviar invitación a {username}",
+          "userNotFound": "Usuario no encontrado"
         }
+      },
+      "invitations": {
+        "title": "Invitaciones pendientes",
+        "received": "Invitaciones recibidas",
+        "sent": "Invitaciones enviadas",
+        "accept": "Aceptar",
+        "decline": "Rechazar",
+        "cancel": "Cancelar",
+        "empty": "No hay invitaciones pendientes",
+        "acceptSuccess": "Invitación aceptada",
+        "declineSuccess": "Invitación rechazada",
+        "cancelSuccess": "Invitación cancelada"
       }
     },
 
@@ -407,8 +375,22 @@ export default {
   },
 
 
+  "app": {
+    "name": "ft_Transcendance",
+    "title": "ft_Transcendance",
+  },
+
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Escribe un mensaje...",
+    "public": "Público",
+    "private": "Privado",
+    "invitation": "Invitación",
+    "noPrivateConversation": "No hay conversaciones privadas",
+  },
+
   "game": {
-    "back": "Volver al panel de control",
+    "back": "Volver al panel",
     "info": {
       "title": "Información",
       "gameMode": "Modo de juego",
@@ -419,21 +401,23 @@ export default {
       "player2": "Jugador 2"
     },
     "controls": {
-      "title": "Controles",
-      "player1": "Jugador 1",
+      "player1": "Controles Jugador 1:",
       "player1Keys": "W (arriba) / S (abajo)",
-      "player2": "Jugador 2",
+      "player2": "Controles Jugador 2:",
       "player2Keys": "↑ (arriba) / ↓ (abajo)",
       "playAgain": "Jugar de nuevo",
+      "error": {
+        "alreadyassigned1": "La tecla",
+        "alreadyassigned2": "ya está asignada a otro comando."
+      },
+      "title": "Controles",
+      "player1": "Jugador 1",
+      "player2": "Jugador 2",
       "up": "Arriba",
       "down": "Abajo",
       "special": "Especial",
       "cancel": "Cancelar",
-      "save": "Guardar",
-      "error": {
-        "alreadyassigned1": "La tecla",
-        "alreadyassigned2": "ya está asignada a otro comando."
-      }
+      "save": "Guardar"
     },
     "chat": {
       "title": "Chat del juego"
@@ -441,7 +425,7 @@ export default {
     "winner": "¡ha ganado!",
     "finalScore": "Puntuación final:",
     "specialControls": {
-      "title": "Controles especiales",
+      "title": "Controles Especiales",
       "player1Special": "Especial Jugador 1",
       "player2Special": "Especial Jugador 2",
       "stamina": "Resistencia",
@@ -450,17 +434,17 @@ export default {
     "tournament": {
       "title": "Torneos",
       "description": "Crea y gestiona torneos personalizados",
-      "featuresTitle": "Características de torneos",
+      "featuresTitle": "Características de Torneos",
       "feature1": "Eliminatorias personalizables",
       "feature2": "Gestión de participantes",
       "feature3": "Calendario integrado",
-      "createTitle": "Nuevo torneo",
+      "createTitle": "Nuevo Torneo",
       "createDescription": "Configura un torneo con tus reglas y preferencias",
       "participants": "Participantes",
       "participantsDesc": "Invita hasta 16 jugadores",
-      "schedule": "Calendario",
+      "schedule": "Programación",
       "scheduleDesc": "Planifica partidos durante varios días",
-      "proTipContent": "Prepara tus reglas con antelación para una configuración rápida",
+      "proTipContent": "Prepara tus reglas con anticipación para una configuración rápida",
       "createButton": "Crear",
       "templatesButton": "Plantillas",
       "browse": "Explorar",
@@ -468,54 +452,54 @@ export default {
       "history": "Historial",
       "historyDesc": "Tus torneos anteriores",
       "stats": "Estadísticas",
-      "statsDesc": "Tus resultados",
+      "statsDesc": "Tus rendimientos",
       "create": {
-        "title": "Crear un torneo",
-        "description": "Configura los parámetros de tu torneo abajo.",
-        "name": "Nombre del torneo",
-        "placeholder": "Introduce el nombre del torneo",
-        "playerCount": "Número de jugadores",
+        "title": "Crear un Torneo",
+        "description": "Configura las opciones de tu torneo a continuación.",
+        "name": "Nombre del Torneo",
+        "placeholder": "Ingresa el nombre del torneo",
+        "playerCount": "Número de Jugadores",
         "loading": "Creando...",
-        "create": "Crear torneo",
-        "join": "Unirse al torneo",
+        "create": "Crear Torneo",
+        "join": "Unirse al Torneo",
         "username": "Nombre de usuario",
         "player": "Jugador",
-        "finished": "¡Torneo terminado!",
+        "finished": "¡Torneo Finalizado!",
         "winner": "Ganador",
-        "backdashboard": "Volver al panel de control",
+        "backdashboard": "Volver al Panel",
         "participants": "Participantes",
-        "tree": "Cuadro del torneo",
+        "tree": "Eliminatoria del Torneo",
         "player1": "Jugador 1",
         "player2": "Jugador 2",
-        "waiting": "Esperando a un jugador...",
-        "back": "Volver al panel de control",
-        "completed": "Terminado",
-        "start": "Iniciar match",
-        "select": "Por favor, selecciona todos los jugadores para iniciar el match."
+        "waiting": "Esperando jugador...",
+        "back": "Volver al Panel",
+        "completed": "Completado",
+        "start": "Comenzar Partido",
+        "select": "Por favor selecciona todos los jugadores para comenzar el partido."
       }
     },
     "create": {
       "ongoing": "En curso",
       "slow": "Lento",
-      "joininvitation": "Unirse a la invitación",
-      "speed": "Velocidad",
+      "joininvitation": "Unirse",
+      "speed": "Selección de Velocidad",
       "medium": "Medio",
       "fast": "Rápido",
       "player1": "Jugador 1",
       "player2": "Jugador 2",
-      "color": "Color",
+      "color": "Selección de Color",
       "colorfor": "Color para",
       "malusin": "Próximo malus en",
       "specialcounter": "Especial listo en",
       "strikesremaining": "golpes restantes",
       "specialready": "¡Especial listo!",
       "winner": "Ganador",
-      "escape": "Esc",
-      "won": "ha ganado",
+      "escape": "Escapar",
+      "won": "ganó",
       "replay": "Repetir",
       "backoptions": "Volver a opciones",
       "quit": "Salir",
-      "resume": "Reanudar",
+      "resume": "Continuar",
       "pause": "Pausa",
       "malus": "Malus",
       "goal": "Gol",
@@ -523,18 +507,18 @@ export default {
       "malusoff": "Malus DESACTIVADO",
       "specialon": "Especial ACTIVADO",
       "specialoff": "Especial DESACTIVADO",
-      "malusdescription": "Un malus aparece cada 15 segundos en el mapa. ¡Tocarlo quita 1 punto al oponente!",
-      "specialdescription": "Tras 10 golpes, puedes activar un movimiento especial: tu paleta crece y devuelve la pelota más rápido. El efecto dura 5 segundos.",
-      "malusloss": "¡Llegar a -5 puntos significa que has perdido!",
+      "malusdescription": "¡Un malus aparece cada 15 segundos en el mapa. ¡Tocarlo elimina 1 punto del oponente!",
+      "specialdescription": "Después de 10 golpes, puedes activar un movimiento especial: tu paleta crece y devuelve la pelota más rápido. El efecto dura 5 segundos.",
+      "malusloss": "¡Llegar a -3 puntos significa que has perdido!",
       "special": "Especial"
     },
     "map": {
-      "title": "Selección de mapa"
+      "title": "Selección de Mapa"
     }
   },
 
   "stats": {
-    "title": "Estadísticas y ranking ELO",
+    "title": "Estadísticas y Ranking ELO",
     "period": "Período",
     "lastMonth": "Último mes",
     "lastQuarter": "Último trimestre",
@@ -550,7 +534,7 @@ export default {
     },
     "statistics": {
       "title": "Estadísticas",
-      "gamesPlayed": "Partidas jugadas",
+      "gamesPlayed": "Partidos jugados",
       "winRate": "Tasa de victorias",
       "pointsScored": "Puntos anotados",
       "pointsConceded": "Puntos concedidos",
@@ -558,14 +542,14 @@ export default {
       "tournamentsWon": "Torneos ganados"
     },
     "elo": {
-      "title": "Tu evolución ELO",
+      "title": "Tu Evolución ELO",
       "description": "Sigue la evolución de tu puntuación ELO en el tiempo",
       "progression": "Progresión del período",
       "bestElo": "Mejor ELO alcanzado"
     },
     "matches": {
-      "title": "Historial de partidas recientes",
-      "description": "Consulta tus últimas partidas y su impacto en tu ELO",
+      "title": "Historial de Partidos Recientes",
+      "description": "Revisa tus últimos partidos y su impacto en tu ELO",
       "date": "Fecha",
       "opponent": "Oponente",
       "result": "Resultado",
@@ -576,58 +560,156 @@ export default {
     },
     "ranking": {
       "title": "Ranking global",
-      "description": "Descubre tu posición en el ranking de los mejores jugadores",
+      "description": "Descubre tu posición en el ranking de mejores jugadores",
       "rank": "Rango",
       "player": "Jugador",
       "elo": "ELO",
-      "games": "Partidas",
-      "winRate": "Tasa de victorias %",
+      "games": "Partidos",
+      "winRate": "% Victorias",
       "you": "Tú"
     }
   },
 
-  "Profile": {
-    "title": "Perfil de usuario",
-    "subtitle": "Gestiona tu perfil y configuración",
-    "email": "Correo electrónico",
-    "username": "Nombre de usuario",
-    "password": "Contraseña",
-    "status": {
-      "online": "En línea",
-      "offline": "Desconectado"
+  "malus": {
+    "title": "Malus",
+    "description": "Recoge malus para reducir la puntuación del oponente",
+    "timer": "Próximo malus en",
+    "collected": "¡Malus recolectado!"
+  },
+
+  "sound": {
+    "title": "Sonido",
+    "volume": "Volumen",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido"
+  },
+
+  "settings": {
+    "title": "Configuración del Juego",
+    "speed": "Velocidad de la Pelota",
+    "volume": "Volumen del Sonido",
+    "enableSpecial": "Activar Movimientos Especiales",
+    "enableMaluses": "Activar Maluses"
+  },
+
+  "profile": {
+    "title": "Perfil de {username}",
+    "returnToDashboard": "Volver al panel",
+    "notFound": {
+      "title": "Perfil no encontrado",
+      "description": "El perfil solicitado no existe."
     },
     "stats": {
-      "stats": "Estadísticas",
-      "wins": "Victorias",
-      "losses": "Derrotas",
-      "tournaments": "Torneos",
-      "level": "Nivel",
-      "elo": "ELO",
-      "rank": "Rango"
+      "title": "Estadísticas",
+      "gamesPlayed": "Partidos jugados",
+      "winRate": "Tasa de victorias",
+      "pointsScored": "Puntos anotados",
+      "pointsConceded": "Puntos concedidos",
+      "tournamentsWon": "Torneos ganados"
+    },
+    "tabs": {
+      "overview": "Resumen",
+      "matches": "Partidos",
+      "achievements": "Logros"
+    },
+    "elo": {
+      "title": "Progresión ELO",
+      "description": "Tu evolución ELO en el tiempo",
+      "chartPlaceholder": "Gráfico ELO próximamente"
+    },
+    "recentMatches": {
+      "title": "Partidos Recientes",
+      "description": "Tus últimos 5 partidos"
+    },
+    "match": {
+      "versus": "vs {opponent}",
+      "opponentPrefix": "Oponente",
+      "victory": "Victoria",
+      "defeat": "Derrota",
+      "score": "Puntuación: {score}"
+    },
+    "viewAllMatches": "Ver todos los partidos",
+    "matches": {
+      "title": "Todos los Partidos",
+      "description": "Todos los partidos jugados por {username}",
+      "date": "Fecha",
+      "opponent": "Oponente",
+      "result": "Resultado",
+      "score": "Puntuación",
+      "eloChange": "Cambio ELO"
+    },
+    "achievements": {
+      "title": "Logros",
+      "description": "Tus logros desbloqueados",
+      "beginner": {
+        "title": "Principiante",
+        "description": "Juega tu primer partido"
+      },
+      "humiliation": {
+        "title": "Humillación",
+        "description": "Gana un partido 5-0"
+      },
+      "shamefullLose": {
+        "title": "Derrota Vergonzosa",
+        "description": "Pierde un partido 0-5"
+      },
+      "rivality": {
+        "title": "Rivalidad",
+        "description": "Juega 10 partidos contra el mismo oponente"
+      },
+      "fairPlay": {
+        "title": "Juego Limpio",
+        "description": "Nunca abandones por rabia"
+      },
+      "lastSecond": {
+        "title": "Último Segundo",
+        "description": "Gana un partido en el último segundo"
+      },
+      "comeback": {
+        "title": "Remontada",
+        "description": "Gana después de ir perdiendo"
+      },
+      "longGame": {
+        "title": "Partido Largo",
+        "description": "Juega un partido de más de 10 minutos"
+      },
+      "winTournament": {
+        "title": "Ganador de Torneo",
+        "description": "Gana un torneo"
+      },
+      "friendly": {
+        "title": "Amigable",
+        "description": "Añade 5 amigos"
+      },
+      "rank1": {
+        "title": "Número 1",
+        "description": "Llega a lo más alto del ranking"
+      },
+      "looser": {
+        "title": "Perdedor",
+        "description": "Pierde 10 partidos seguidos"
+      },
+      "winner": {
+        "title": "Ganador",
+        "description": "Gana 10 partidos seguidos"
+      },
+      "scorer": {
+        "title": "Anotador",
+        "description": "Anota 100 puntos"
+      },
+      "emoji": {
+        "title": "Maestro de Emojis",
+        "description": "Usa 10 emojis diferentes en el chat"
+      },
+      "rage": {
+        "title": "Abandono por Rabia",
+        "description": "Abandona un partido por rabia"
+      }
+    },
+    "errors": {
+      "fetchFailed": "Error al obtener datos del perfil",
+      "unknown": "Error desconocido",
+      "fetchError": "Ocurrió un error al obtener el perfil"
     }
-  },
-  "profileEdit": {
-    "title": "Editar perfil",
-    "usernameLabel": "Nombre de usuario",
-    "description": "Editar tu perfil",
-    "submit": "Guardar",
-    "bioLabel": "Biografía",
-    "upload": {
-      "dragDrop": "Arrastrar y soltar",
-      "clickToSelect": "arrastra y suelta tu avatar aquí o haz clic para subir"
-    }
-  },
-  "app": {
-    "name": "ft_Transcendance",
-    "title": "ft_Transcendance"
-  },
-  "chat": {
-    "title": "Chat ",
-    "placeholder": "Escribe un mensaje...",
-    "public": "Público",
-    "private": "Privado",
-    "invitation": "Invitación",
-    "noPrivateConversation": "Sin conversación privada"
   }
 }
-
