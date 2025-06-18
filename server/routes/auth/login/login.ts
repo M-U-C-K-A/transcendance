@@ -1,13 +1,21 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import login from '../../../request/auth/login/login'
-import { loginData } from '../interface'
+import { loginData } from '@/types/auth'
 
 export default async function loginRoute(server: FastifyInstance) {
 	server.post('/auth/login', async (request: FastifyRequest, reply: FastifyReply) => {
 		const data = loginData.safeParse(request.body)
-		
+
+		if (!data.success) {
+			return reply.status(400).send({
+				errors: data.error.flatten().fieldErrors,
+			})
+		}
+
+		const { email, pass } = data.data
+
 		try {
-			const result = await login(data)
+			const result = await login(email, pass)
 			return reply.code(200).send({ result })
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {
