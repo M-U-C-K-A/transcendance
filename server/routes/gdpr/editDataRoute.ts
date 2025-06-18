@@ -1,9 +1,9 @@
 import authMiddleware from "@/server/authMiddleware";
 import editData from "@/server/request/gdpr/editData";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function editDataRoute(server: FastifyInstance) {
-	server.post('/gdpr/send', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/gdpr/send', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
 	const data = request.body as { username: string, email: string, password: string, removeAvatar: boolean }
 

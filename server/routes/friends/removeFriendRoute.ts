@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from '../../authMiddleware'
 import removeFriend from "@/server/request/friends/removeFriend";
 
 export default async function removeFriendRoute(server: FastifyInstance) {
-	server.post('/friends/remove', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/friends/remove', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number , username: string}
 	const { id } = request.body as { id: number}
 

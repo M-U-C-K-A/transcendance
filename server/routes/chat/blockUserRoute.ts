@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from "@/server/authMiddleware";
 import blockUser from "@/server/request/chat/blockUser";
 
 export default async function blockUserRoute(server: FastifyInstance) {
-	server.post('/chat/block', {preHandler: authMiddleware}, async function (request, reply) {
+	server.post('/chat/block', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
 	const blockedUser  = request.body as { id: number}
 	const userId = request.user as { id: number }
 

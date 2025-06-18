@@ -1,9 +1,9 @@
 import authMiddleware from "@/server/authMiddleware";
 import viewData from "@/server/request/gdpr/viewData";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function viewDataRoute(server: FastifyInstance) {
-	server.post('/gdpr/verify', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/gdpr/verify', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
 	const { password } = request.body as { password: string }
 

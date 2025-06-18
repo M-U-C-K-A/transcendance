@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from '../../authMiddleware';
 import { joinMatchFromInvite } from "@/server/request/match/joinMatch";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
-	server.post('/game/travel', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/game/travel', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 		const user = request.user as { id: number }
 		const { code } = request.body as { code: string }
 

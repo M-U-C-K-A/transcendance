@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import { sendMessageData } from '@/server/request/chat/interface';
 import authMiddleware from "@/server/authMiddleware";
@@ -8,7 +8,7 @@ import { PrismaClient } from "@prisma/client";
 const Prisma = new PrismaClient()
 
 export default async function sendMessageRoute(server: FastifyInstance) {
-	server.post('/chat/send', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/chat/send', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 		const data = request.body as sendMessageData;
 		const sender = request.user as { id: number, username: string };
 
