@@ -1,29 +1,38 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from '../../authMiddleware';
 import { joinMatchFromInvite } from "@/server/request/match/joinMatch";
+import { matchCode } from "@/types/match";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/travel', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-		const user = request.user as { id: number }
-		const { code } = request.body as { code: string }
+	const user = request.user as { id: number }
+	const data = matchCode.safeParse(request.body)
 
-		if (!user) {
-			return reply.code(400).send({ error: 'parameter is required' })
-		}
+	if (!user) {
+		return reply.code(400).send({ error: 'parameter is required' })
+	}
 
-		try {
-			const result = await joinMatchFromInvite(user.id, code)
-			return (reply.code(200).send({ result }))
-		} catch (err: any) {
-			console.error('Error in joinMatch:', err);
-			if (err.message === 'User not found') {
-				return reply.code(404).send({ error: 'User not found' })
-			} else if (err.message === 'Not valid invitation') {
-				return reply.code(404).send({ error: 'Not valid invitation' })
-			} else if (err.message == 'Match already finished') {
-				return reply.code(401).send({ error: 'Match already finished' })
-			}
-			return reply.code(500).send({ error: 'Internal server error' })
+	if (!data.success) {
+		return reply.status(400).send({
+			errors: data.error.flatten().fieldErrors,
+		})
+	}
+
+	const { code } = data.data
+	
+	try {
+		const result = await joinMatchFromInvite(user.id, code)
+		return (reply.code(200).send({ result }))
+	} catch (err: any) {
+		console.error('Error in joinMatch:', err);
+		if (err.message === 'User not found') {
+			return reply.code(404).send({ error: 'User not found' })
+		} else if (err.message === 'Not valid invitation') {
+			return reply.code(404).send({ error: 'Not valid invitation' })
+		} else if (err.message == 'Match already finished') {
+			return reply.code(401).send({ error: 'Match already finished' })
 		}
-	})
+		return reply.code(500).send({ error: 'Internal server error' })
+	}
+})
 }

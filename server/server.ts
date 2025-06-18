@@ -23,7 +23,6 @@ import joinMatchRoute from './routes/match/joinMatchRoute';
 import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
-import matchListRoute from './routes/match/matchListRoute';
 import { googleLogin } from './routes/auth/google/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
@@ -34,9 +33,6 @@ import Check2FALoginRoute from './routes/auth/login/2FALoginCheck';
 import viewDataRoute from './routes/gdpr/viewDataRoute';
 import editDataRoute from './routes/gdpr/editDataRoute';
 import deleteDataRoute from './routes/gdpr/deleteDataRoute';
-import tournamentJoinRoute from './routes/tournament/joinTournament';
-import tournamentCreateRoute from './routes/tournament/createTournament';
-import resultTournamentRoute from './routes/tournament/resultTournamentRoute';
 
 dotenv.config();
 
@@ -83,7 +79,6 @@ async function main() {
 	await app.register(joinMatchRoute);
 	await app.register(matchResultRoute);
 	await app.register(blockUserRoute);
-	await app.register(matchListRoute);
 	await app.register(googleLogin);
 	await app.register(gameCreationRoute)
 	await app.register(register2FARoute)
@@ -92,9 +87,6 @@ async function main() {
 	await app.register(viewDataRoute)
 	await app.register(editDataRoute)
 	await app.register(deleteDataRoute)
-	await app.register(tournamentJoinRoute)
-	await app.register(tournamentCreateRoute)
-	await app.register(resultTournamentRoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);

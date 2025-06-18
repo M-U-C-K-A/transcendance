@@ -7,16 +7,16 @@ export default async function meProfile(server: FastifyInstance) {
 		const user = request.user as { id: number }
 
 		if (!user) {
-			return reply.code(400).send({ error: 'User information not found in token' })
+			return reply.code(400).send({ error:"'User information not found in token" })
 		}
 
 		try {
 			const result = await meProfileInfo(user.id)
 			return reply.code(200).send(result)
 		} catch (err: any) {
-			if (err.message == `Failed to get user's info`)
-				return reply.code(404).send({ error: `Failed to get user's info`})
-			return reply.code(500).send({ error: 'internal server error' })
+			if (err.message == "Failed to get user's info") {
+				return reply.code(404).send({ error: "Failed to get user's info"})
+			} return reply.code(500).send({ error: 'internal server error' })
 		}
 	})
 }

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 //	the path of where the schema are used is specified above it
 
+// /friends/accept
 export const acceptFriend = z.object({
 	username: z.string()
 	.min(3, { message: 'Username too short'})
