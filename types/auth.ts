@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+//	the path of where the schema are used is specified above it
+
 //	/auth/login
 export const loginData = z.object({
 	password: z.string()

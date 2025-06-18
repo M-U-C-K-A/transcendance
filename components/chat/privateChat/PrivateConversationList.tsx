@@ -4,14 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n-client";
-
-// Schéma de validation pour l'ajout de contact
-const AddContactSchema = z.object({
-	username: z.string()
-		.min(3, "Le nom doit contenir au moins 3 caractères")
-		.max(20, "Le nom ne peut pas dépasser 20 caractères")
-		.regex(/^[a-zA-Z0-9_]+$/, "Caractères alphanumériques seulement"),
-});
+import { onlyUsername } from "@/types/chat";
 
 type PrivateConversation = {
 	id: number;
@@ -54,9 +47,9 @@ export function PrivateConversationList({
 				return;
 			}
 
-			const validatedUsername = AddContactSchema.parse({
+			const { username: validatedUsername } = onlyUsername.parse({
 				username: newPrivateUser.trim(),
-			}).username;
+			});
 
 			setIsLoading(true);
 

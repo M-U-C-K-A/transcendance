@@ -50,6 +50,12 @@ export function PendingInvitations() {
   })
 
   const handleInvitationResponse = async (username: string, accept: boolean) => {
+
+    const data = {
+      username: username,
+      asAccepted: accept
+    }
+
     try {
       const response = await fetch(`/api/friends/accept`, {
         method: 'POST',
@@ -57,10 +63,7 @@ export function PendingInvitations() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({
-          username,
-          asAccepted: accept
-        }),
+        body: JSON.stringify({ username: username, asAccepted: accept }),
       })
 
       if (!response.ok) {

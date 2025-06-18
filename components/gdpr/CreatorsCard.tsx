@@ -17,9 +17,9 @@ const creators = [
   {
     initials: "RB",
     image: "https://cdn.intra.42.fr/users/71cfca25335ff0dd421f5d6a4377dbd9/rbardet-.jpg",
-    name: "Robin Bardet",
+    name: "Robin Bardet-Tomczak",
     role: "Backend Developer",
-    email: "rbardet@student.42lehavre.fr"
+    email: "rbarde-t@student.42lehavre.fr"
   },
   {
     initials: "TR",
