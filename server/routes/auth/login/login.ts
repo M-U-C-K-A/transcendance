@@ -12,10 +12,10 @@ export default async function loginRoute(server: FastifyInstance) {
 			})
 		}
 
-		const { email, pass } = data.data
+		const { email, password } = data.data
 
 		try {
-			const result = await login(email, pass)
+			const result = await login(email, password)
 			return reply.code(200).send({ result })
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {

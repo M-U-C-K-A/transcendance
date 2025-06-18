@@ -2,7 +2,6 @@
 
 ENV_FILE=".env"
 
-# Récupère la première IP locale (hors loopback)
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 HOSTNAME=$(hostname | awk '{print $1}')
 
@@ -11,7 +10,6 @@ if [[ -z "$LOCAL_IP" ]]; then
   exit 1
 fi
 
-  # Demande les variables nécessaires à l'utilisateur
   read -p "👉 Entrez le GOOGLE_CLIENT_ID: " GOOGLE_CLIENT_ID
   read -p "👉 Entrez le GOOGLE_CLIENT_SECRET: " GOOGLE_CLIENT_SECRET
   read -p "👉 Entrez le GOOGLE_REDIRECT_URI: " GOOGLE_REDIRECT_URI
@@ -24,9 +22,6 @@ fi
   echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> "$ENV_FILE"
   echo "GOOGLE_REDIRECT_URI=$GOOGLE_REDIRECT_URI" >> "$ENV_FILE"
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_CHAT=wss://${HOSTNAME}:3001/wss/chat" >> "$ENV_FILE"
-  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
-  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
-  echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
   echo "NEXT_PUBLIC_WEBSOCKET_FOR_FRIENDS=wss://${HOSTNAME}:3001/wss/friends" >> "$ENV_FILE"
   echo "SMTP_PASS=jipk czwd ozxs seys" >> "$ENV_FILE"
   echo "SMTP_MAIL=pongmaster12345@gmail.com" >> "$ENV_FILE"

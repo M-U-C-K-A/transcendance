@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import checkLogin2FA from '@/server/request/auth/login/2FACheckLogin'
 import getLoginData from '@/server/request/auth/login/getLoginInfo'
-import { login2FA } from '../interface'
+import { login2FA } from '@/types/auth'
 
 export default async function Check2FALoginRoute(server: FastifyInstance) {
 	server.post('/auth/login/2fa/verify', async (request: FastifyRequest, reply: FastifyReply) => {
