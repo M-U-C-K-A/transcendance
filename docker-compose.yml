@@ -1,166 +1,65 @@
-x-buildkit: &buildkit-args
-  args:
-    - DOCKER_BUILDKIT=1
-
 services:
+  copier:
+    build:
+      context: . 
+      dockerfile: Dockerfile.copier
+    container_name: transcendance-copier
+    volumes:
+      - shared_code:/shared_code
+    entrypoint: ["sh", "-c", "cp -r Shared/* /shared_code"]
+  
   backend:
     build:
-      context: .  # L endroit d ou on va build + pouvoir use les fichier le cpy et use le dockerfile.   
-      dockerfile: Dockerfile.back
-      <<: *buildkit-args
+      context: .
+      dockerfile: Back/Dockerfile.back
     container_name: transcendance-back
-    working_dir: /app # la ou on va exec les cmds
-    ports:
-      - "3001:3001" # gauche = ma machine, droite = le container.
-    volumes: # donnes persistentes. non bind-mount ici car declarer dans volumes en bas (donc pas co a ma machine : faut rebuild si changement)
-      - ./server:/app/server
-      - ./prisma:/app/prisma
-      - ./ssl:/app/ssl
-      - ./public/profilepicture:/app/public/profilepicture
-    environment:
-      - NODE_ENV=development
+    depends_on:
+      - copier
+    volumes:
+      - prisma_data:/app/prisma/data
+      - shared_code:/app/Shared
+    command: pnpm run dev:server
 
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.front
-      <<: *buildkit-args
+      dockerfile: Front/Dockerfile.front
     container_name: transcendance-front
-    working_dir: /app
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./:/app
-      - node_modules:/app/node_modules
-    environment:
-      - NODE_ENV=development
-
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "8443:443"
-      - "8080:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./ssl:/etc/nginx/certs
-      - ./generate_ssl.sh:/usr/local/bin/generate_ssl.sh
     depends_on:
-      - frontend
-    entrypoint: ["/bin/sh", "/usr/local/bin/generate_ssl.sh"]
-
+      - copier
+    volumes:
+      - shared_code:/app/Shared
+    command: pnpm run dev
 
   studio:
     build:
       context: .
-      dockerfile: Dockerfile.studio
-      <<: *buildkit-args
+      dockerfile: Back/prisma/Dockerfile.studio
     container_name: transcendance-studio
-    working_dir: /app
+    depends_on:
+      - backend
     ports:
       - "5555:5555"
     volumes:
-      - ./:/app
-      - node_modules:/app/node_modules
+      - prisma_data:/app/data
     environment:
-      - DATABASE_URL=file:./prisma/data/test.sqlite
+      - DATABASE_URL=file:./Back/prisma/data/test.sqlite
+    command: pnpx prisma studio --schema=./schema.prisma
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile.nginx
+    container_name: transcendance-nginx
+    ports:
+      - "8443:443"
+      - "8080:80"
     depends_on:
+      - frontend
       - backend
+    volumes:
+      - shared_code:/app/Shared
 
-volumes: # gerer par docker + shared entre les containers.
-  node_modules:
-
-
-
-
-
-
-
-
-
-
-
-# VERSION NON BIND-MOUNT
-
-
-# x-buildkit: &buildkit-args
-#   args:
-#     - DOCKER_BUILDKIT=1
-
-# services:
-#   backend:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.back
-#       <<: *buildkit-args
-#     container_name: transcendance-back
-#     working_dir: /app
-#     ports:
-#       - "3001:3001"
-#     volumes:
-#       - backend_server:/app/server
-#       - backend_prisma:/app/prisma
-#       - backend_ssl:/app/ssl
-#       - backend_profilepicture:/app/public/profilepicture
-#     environment:
-#       - NODE_ENV=development
-
-#   frontend:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.front
-#       <<: *buildkit-args
-#     container_name: transcendance-front
-#     working_dir: /app
-#     ports:
-#       - "3000:3000"
-#     volumes:
-#       - frontend_app:/app
-#       - node_modules:/app/node_modules
-#     environment:
-#       - NODE_ENV=development
-
-#   nginx:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.nginx
-#     ports:
-#       - "8443:443"
-#       - "8080:80"
-#     volumes:
-#       - nginx_conf:/etc/nginx/conf.d
-#       - nginx_ssl:/etc/nginx/certs
-#       - nginx_scripts:/usr/local/bin
-#     depends_on:
-#       - frontend
-#     entrypoint: ["/bin/sh", "/usr/local/bin/generate_ssl.sh"]
-
-#   studio:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile.studio
-#       <<: *buildkit-args
-#     container_name: transcendance-studio
-#     working_dir: /app
-#     ports:
-#       - "5555:5555"
-#     volumes:
-#       - studio_app:/app
-#       - node_modules:/app/node_modules
-#     environment:
-#       - DATABASE_URL=file:./prisma/data/test.sqlite
-#     depends_on:
-#       - backend
-
-# volumes:
-#   node_modules:
-#   backend_server:
-#   backend_prisma:
-#   backend_ssl:
-#   backend_profilepicture:
-#   frontend_app:
-#   nginx_conf:
-#   nginx_ssl:
-#   nginx_scripts:
-#   studio_app:
+volumes:
+  prisma_data:
+  shared_code:

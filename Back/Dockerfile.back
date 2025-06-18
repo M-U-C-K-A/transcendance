@@ -1,0 +1,16 @@
+FROM node:18-alpine3.18
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+COPY Back/ .
+COPY Shared/ ./Shared/
+
+RUN pnpm install --frozen-lockfile
+
+RUN pnpx prisma generate --schema=./prisma/schema.prisma
+
+EXPOSE 3001
+
+CMD ["pnpm", "run", "dev:server"]
