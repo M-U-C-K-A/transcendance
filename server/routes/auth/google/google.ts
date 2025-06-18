@@ -1,8 +1,8 @@
 import { googleConnexion } from '@/server/request/auth/google/google';
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 export async function googleLogin(server: FastifyInstance) {
-	server.get('/auth/google/callback', async (request, reply) => {
+	server.get('/auth/google/callback', async (request: FastifyRequest, reply: FastifyReply) => {
 	const { code } = request.query as { code: string };
 
 	if (!code) {

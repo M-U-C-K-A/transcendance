@@ -1,10 +1,10 @@
 import authMiddleware from "@/server/authMiddleware";
 import matchCreate from "@/server/request/match/matchCreate";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import Hashids from 'hashids';
 
 export default async function gameCreationRoute(server: FastifyInstance) {
-	server.post('/game/custom', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/game/custom', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const matchInfo = request.body as {name: string }
 	const user = request.user as {id: number}
 

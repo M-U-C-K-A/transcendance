@@ -1,10 +1,10 @@
 import authMiddleware from "@/server/authMiddleware";
 import { decodeMatchId } from "@/server/request/match/joinMatch";
 import matchResult from "@/server/request/match/matchResult";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function matchResultRoute(server: FastifyInstance) {
-server.post("/game/result", { preHandler: authMiddleware }, async function (request, reply) {
+server.post("/game/result", { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const body = request.body as { player1Score: number; player2Score: number; gameId: string};
 	const user = request.user as { id: number };
 

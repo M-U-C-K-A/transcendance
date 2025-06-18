@@ -1,9 +1,9 @@
-import { FastifyInstance, FastifyRequest } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import getUserInfo from '../../request/profile/usersProfile'
 import authMiddleware from '@/server/authMiddleware'
 
 export default async function profileRoute(server: FastifyInstance) {
-  server.get('/profile/:username', { preHandler: authMiddleware }, async function (request: any, reply) {
+  server.get('/profile/:username', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 
 	const id = parseInt(request.params.username, 10)
 	const userId = request.user

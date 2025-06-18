@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from '../../authMiddleware'
 import treatRequest from "@/server/request/friends/treatRequest";
 
 export default async function acceptRequestRoute(server: FastifyInstance) {
-	server.post('/friends/accept', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/friends/accept', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number, username: string }
 	const param = request.body as { username: string, asAccepted: boolean }
 

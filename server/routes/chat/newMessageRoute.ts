@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from "@/server/authMiddleware";
 import newMessage from "@/server/request/chat/newMessage";
 
 export default async function newMessageRoute(server: FastifyInstance) {
-	server.post('/chat/create', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/chat/create', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const { username } = request.body as { username: string };
 	const  userId = request.user as { id: number }
 

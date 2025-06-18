@@ -1,11 +1,11 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import login from '../../../request/auth/login/login'
 import { loginData } from '../interface'
 
 export default async function loginRoute(server: FastifyInstance) {
-	server.post('/auth/login', async (request, reply) => {
-		const data = request.body as loginData
-
+	server.post('/auth/login', async (request: FastifyRequest, reply: FastifyReply) => {
+		const data = loginData.safeParse(request.body)
+		
 		try {
 			const result = await login(data)
 			return reply.code(200).send({ result })

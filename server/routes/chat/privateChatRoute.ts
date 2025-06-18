@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from "@/server/authMiddleware";
 import getPrivateChat from "@/server/request/chat/getPrivateChat";
 
 export default async function privateChatRoute(server: FastifyInstance) {
-	server.get('/chat/receive/private', {preHandler: authMiddleware}, async function (request, reply) {
+	server.get('/chat/receive/private', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number}
 
 	if (!user) {

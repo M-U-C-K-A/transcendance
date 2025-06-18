@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import  sendFriendRequest  from "../../request/friends/sendFriendRequest";
 import authMiddleware from '../../authMiddleware'
 
 export default async function friendRequestRoute(server: FastifyInstance) {
-	server.post('/friends/request', { preHandler: authMiddleware }, async function (request, reply) {
+	server.post('/friends/request', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
 	const { username } = request.body as { username: string }
 

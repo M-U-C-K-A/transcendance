@@ -1,9 +1,9 @@
 import authMiddleware from "@/server/authMiddleware";
 import resultTournament from "@/server/request/tournament/resultTournament";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function resultTournamentRoute(server: FastifyInstance) {
-	server.post('/tournament/result', {preHandler: authMiddleware}, async function (request, reply) {
+	server.post('/tournament/result', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.body as { username: string, tournamentId: string }
 
 	const id = Number(user.tournamentId)

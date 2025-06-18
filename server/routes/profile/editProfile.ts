@@ -1,10 +1,10 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import  editProfile  from "../../request/profile/editProfile"
 import authMiddleware from "@/server/authMiddleware";
 import meProfileInfo from "@/server/request/profile/meProfile";
 
 export default async function editProfileRoute(server: FastifyInstance) {
-	server.post('/editprofile', {preHandler: authMiddleware}, async function (request, reply) {
+	server.post('/editprofile', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number; username: string; bio: string}
 	const newInfo = request.body as { newAvatar: string, newUsername: string, newBio: string}
 
