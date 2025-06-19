@@ -23,9 +23,10 @@ dist/
 
 prisma/data/test.sqlite 
 
+.pnpm-store
 
 # next.js
-/.next/
+.next
 /out/
 
 # production
