@@ -5,8 +5,9 @@ up:
 	docker-compose -f docker-compose-prod.yml up --build
 
 clean:
-	docker volume ls -q | xargs docker volume rm
 	docker system prune -a
+	docker volume ls -q | xargs docker volume rm
+	
 
 down:
 	docker compose -f docker-compose-prod.yml down
