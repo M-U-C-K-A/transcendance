@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import leaderboard from "@/server/request/profile/leaderboard";
+import leaderboard from "@/server/request/user/leaderboard";
 import authMiddleware from "@/server/authMiddleware";
 
 export default async function leaderboardRoute(server: FastifyInstance) {

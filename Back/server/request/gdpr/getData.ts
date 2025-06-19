@@ -5,25 +5,27 @@ const Prisma = new PrismaClient();
 
 export default async function getData(userId: number) {
   const userData = await Prisma.user.findFirst({
-	where: { id: userId },
-	select: {
-	  username: true,
-	  email: true,
-	  bio: true,
-	  as2FA: true,
-	  elo: true,
-	  win: true,
-	  lose: true,
-	  pointScored: true,
-	  pointConcede: true,
+	where: {
+		id: userId
 	},
-  });
+	select: {
+			username: true,
+			email: true,
+			bio: true,
+			as2FA: true,
+			elo: true,
+			win: true,
+			lose: true,
+			pointScored: true,
+			pointConcede: true,
+		},
+	});
 
-  if (!userData) {
-	throw new Error("User not found");
-  }
+	if (!userData) {
+		throw new Error("User not found");
+	}
 
-  await transporter.sendMail({
+	await transporter.sendMail({
 	from: `"PongMaster" <${process.env.SMTP_USER || "pongmaster12345@gmail.com"}>`,
 	to: userData.email,
 	subject: "Your Personal Data - PongMaster",
@@ -86,12 +88,12 @@ export default async function getData(userId: number) {
 		<hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
 
 		<p style="font-size: 12px; color: #999; text-align: center;">
-		  © ${new Date().getFullYear()} PongMaster. All rights reserved.<br />
-		  This is an automated message. Please do not reply directly.
+			© ${new Date().getFullYear()} PongMaster. All rights reserved.<br />
+			This is an automated message. Please do not reply directly.
 		</p>
 	  </div>
 	`,
-  });
+	});
 
-  return(true)
+	return(true)
 }
