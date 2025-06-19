@@ -13,7 +13,8 @@ export default async function get2FAStateRoute(server: FastifyInstance) {
 
 	try {
 		const result = await get2FAState(user.id);
-		return reply.code(200).send(result);
+		console.log({result})
+		return reply.code(200).send({ result });
 	} catch (err: any) {
 		 if (err.message === 'User not found') {
 			return reply.code(500).send({ error: err.message });
