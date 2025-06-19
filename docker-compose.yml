@@ -18,6 +18,7 @@ services:
     volumes:
       - prisma_data:/app/prisma/data
       - shared_code:/app/Shared
+      - ssl_certs:/app/Shared/certs
     command: pnpm run dev:server
 
   frontend:
@@ -49,7 +50,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: nginx/Dockerfile.nginx
+      dockerfile: Nginx/Dockerfile.nginx
     container_name: transcendance-nginx
     ports:
       - "8443:443"
@@ -59,7 +60,9 @@ services:
       - backend
     volumes:
       - shared_code:/app/Shared
+      - ssl_certs:/etc/nginx/certs
 
 volumes:
   prisma_data:
   shared_code:
+  ssl_certs:
