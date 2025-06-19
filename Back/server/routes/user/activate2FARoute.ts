@@ -5,14 +5,15 @@ import enable2FA from "@/server/request/user/activate2FA";
 export default async function enable2FARoute(server: FastifyInstance) {
 	server.post('/gdpr/twofa', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
 	console.log("👺👺👺POSTTWOFA")
+	const data = request.body as { enabled: boolean }
 	const user = request.user as { id: number }
 
-	if (!user) {
+	if (!user || !data.enabled) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	try {
-		const result = await enable2FA(user.id);
+		const result = await enable2FA(user.id, data.enabled);
 		console.log({result})
 		return reply.code(200).send({ result });
 	} catch (err: any) {
