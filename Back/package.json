@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev:server": "mkdir -p data && tsx server/server.ts"
+    "dev:server": "mkdir -p data && tsx server/server.ts",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@dicebear/collection": "^9.2.2",

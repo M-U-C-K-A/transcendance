@@ -95,6 +95,19 @@ const nextConfig: NextConfig = {
 				source: "/api/gdpr/twofa",
 				destination: "http://backend:3001/gdpr/twofa"
 			},
+			// Images statiques VERSIO DEV
+			{
+				source: "/profilepicture/:path*",
+				destination: "/Shared/public/profilepicture/:path*"
+			},
+			{
+				source: "/game/:path*",
+				destination: "/Shared/public/game/:path*"
+			},
+			{
+				source: "/sounds/:path*",
+				destination: "/Shared/public/sounds/:path*"
+			},
 		];
 	},
 	async headers() {
