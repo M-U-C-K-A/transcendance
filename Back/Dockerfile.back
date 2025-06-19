@@ -7,12 +7,14 @@ RUN apk add --no-cache sqlite sqlite-dev
 
 RUN npm install -g pnpm
 
+# Copier package.json d'abord
+COPY Back/package.json Back/pnpm-lock.yaml* ./
+
 RUN pnpm install
 
+# Puis copier le reste des fichiers
 COPY Back/ .
 COPY Shared/ ./Shared/
-
-# RUN pnpm install
 
 RUN pnpx prisma generate --schema=./prisma/schema.prisma
 
