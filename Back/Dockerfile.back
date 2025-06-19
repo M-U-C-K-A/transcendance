@@ -2,6 +2,9 @@ FROM node:18-alpine3.18
 
 WORKDIR /app
 
+# Installer sqlite et sqlite-dev avec apk
+RUN apk add --no-cache sqlite sqlite-dev
+
 RUN npm install -g pnpm
 
 COPY Back/ .
@@ -14,3 +17,4 @@ RUN pnpx prisma generate --schema=./prisma/schema.prisma
 EXPOSE 3001
 
 CMD ["pnpm", "run", "dev:server"]
+
