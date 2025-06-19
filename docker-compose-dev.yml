@@ -15,6 +15,7 @@ services:
       - ./Back/pnpm-lock.yaml:/app/pnpm-lock.yaml
       - ./Back/tsconfig.json:/app/tsconfig.json
       - ./Shared:/app/Shared
+      - ssl_certs:/app/Shared/certs
     command: sh -c "pnpm install && pnpx prisma generate --schema=./prisma/schema.prisma && pnpx prisma db push --schema=./prisma/schema.prisma && pnpm run dev:server"
 
 
@@ -57,4 +58,7 @@ services:
       - backend
     volumes:
       - ./Shared:/app/Shared
-      - ./Nginx/certs:/etc/nginx/certs
+      - ssl_certs:/etc/nginx/certs
+
+volumes:
+  ssl_certs:
