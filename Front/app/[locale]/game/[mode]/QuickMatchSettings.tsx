@@ -1,0 +1,150 @@
+"use client";
+
+import { Dispatch, SetStateAction, useState } from "react";
+import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
+import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
+import { ControlsConfig } from "./ControlsConfig";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Toggle } from "@/components/ui/toggle";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ChatSection } from "@/components/dashboard/ChatSection";
+import { useI18n } from "@/i18n-client";
+
+export interface QuickMatchSettingsProps {
+  COLORS: string[];
+  currentPlayer: 1 | 2;
+  setCurrentPlayer: Dispatch<SetStateAction<1 | 2>>;
+  colorP1: string | null;
+  setColorP1: Dispatch<SetStateAction<string | null>>;
+  colorP2: string | null;
+  setColorP2: Dispatch<SetStateAction<string | null>>;
+  MapStyle: "classic" | "red" | "neon";
+  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
+  onStart: () => void;
+  enableMaluses: boolean;
+  setEnableMaluses: Dispatch<SetStateAction<boolean>>;
+  enableSpecial: boolean;
+  setEnableSpecial: Dispatch<SetStateAction<boolean>>;
+  baseSpeed: number;
+  setBaseSpeed: Dispatch<SetStateAction<number>>;
+  canStart: boolean;
+  locale: string;
+}
+
+export function QuickMatchSettings({
+  COLORS,
+  currentPlayer,
+  setCurrentPlayer,
+  colorP1,
+  setColorP1,
+  colorP2,
+  setColorP2,
+  MapStyle,
+  setMapStyle,
+  onStart,
+  enableMaluses,
+  setEnableMaluses,
+  enableSpecial,
+  setEnableSpecial,
+  baseSpeed,
+  setBaseSpeed,
+  canStart,
+  locale,
+}: QuickMatchSettingsProps) {
+  const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
+  const t = useI18n();
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-10xl">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-8">
+          <Card className="p-6 rounded-xl">
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.map.title')}</h2>
+                <MapChoice
+                  MapStyle={MapStyle}
+                  setMapStyle={setMapStyle}
+                  enableMaluses={enableMaluses}
+                  setEnableMaluses={setEnableMaluses}
+                  enableSpecial={enableSpecial}
+                  setEnableSpecial={setEnableSpecial}
+                />
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
+                <ColorChoice
+                  COLORS={COLORS}
+                  currentPlayer={currentPlayer}
+                  setCurrentPlayer={setCurrentPlayer}
+                  colorP1={colorP1}
+                  setColorP1={setColorP1}
+                  colorP2={colorP2}
+                  setColorP2={setColorP2}
+                />
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.speed')}</h2>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {[
+                    { speed: 16, label: t('game.create.slow'), color: "bg-green-500" },
+                    { speed: 24, label: t('game.create.medium'), color: "bg-yellow-400" },
+                    { speed: 36, label: t('game.create.fast'), color: "bg-red-500" },
+                  ].map((item) => (
+                    <Toggle
+                      key={item.speed}
+                      pressed={baseSpeed === item.speed}
+                      onPressedChange={() => setBaseSpeed(item.speed)}
+                      className={`px-4 py-2 ${baseSpeed === item.speed ? item.color : ''}`}
+                    >
+                      {item.label}
+                    </Toggle>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsControlsConfigOpen(true)}
+                  className="w-full py-6 text-lg"
+                >
+                  {t('game.controls.title')}
+                </Button>
+
+                {!canStart && (
+                  <Alert variant="destructive">
+                    <AlertDescription className="w-full flex justify-center items-center text-center">
+                      {t('game.tournament.create.select')}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  onClick={onStart}
+                  disabled={!canStart}
+                  className="w-full py-6 text-lg"
+                  variant={canStart ? "default" : "secondary"}
+                >
+                  {t('game.tournament.create.start')}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="lg:col-span-4">
+          <ChatSection />
+        </div>
+      </div>
+
+      <ControlsConfig
+        isOpen={isControlsConfigOpen}
+        onClose={() => setIsControlsConfigOpen(false)}
+      />
+    </div>
+  );
+}
