@@ -1,4 +1,4 @@
-.PHONY: start
+.PHONY: start up clean re
 
 up:	
 	@./buildEnv.sh

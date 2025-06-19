@@ -4,7 +4,6 @@ import enable2FA from "@/server/request/user/activate2FA";
 
 export default async function enable2FARoute(server: FastifyInstance) {
 	server.post('/gdpr/twofa', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log("👺👺👺POSTTWOFA")
 	const user = request.user as { id: number }
 
 	if (!user) {
