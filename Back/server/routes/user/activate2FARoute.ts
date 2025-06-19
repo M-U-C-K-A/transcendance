@@ -4,20 +4,20 @@ import enable2FA from "@/server/request/user/activate2FA";
 
 export default async function enable2FARoute(server: FastifyInstance) {
 	server.post('/gdpr/twofa', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log("👺👺👺POSTTWOFA")
-	const data = request.body as { enabled: boolean }
 	const user = request.user as { id: number }
 
-	if (!user || !data.enabled) {
+	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	try {
-		const result = await enable2FA(user.id, data.enabled);
+		const result = await enable2FA(user.id);
 		console.log({result})
 		return reply.code(200).send({ result });
 	} catch (err: any) {
-		return reply.code(500).send({ error: 'Internal server error' });
+		 if (err.message === 'User not found') {
+			return reply.code(500).send({ error: err.message });
+		} return reply.code(500).send({ error: 'Internal server error' });
 	}
 });
 }
