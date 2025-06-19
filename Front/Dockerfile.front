@@ -6,7 +6,7 @@ RUN npm install -g pnpm
 
 COPY Front/ .
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Créer un lien symbolique pour servir les fichiers statiques depuis Shared/public
 RUN ln -sf /app/Shared/public /app/public

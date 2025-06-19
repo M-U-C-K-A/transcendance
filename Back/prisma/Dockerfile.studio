@@ -6,7 +6,7 @@ RUN npm install -g pnpm
 
 COPY Back/prisma .
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 
 ENV DATABASE_URL="file:./prisma/data/test.sqlite"

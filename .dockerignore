@@ -26,7 +26,6 @@ tmp-*/
 .DS_Store
 Thumbs.db
 
-.prisma/
 
 __pycache__/
 *.pyc

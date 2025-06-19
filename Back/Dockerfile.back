@@ -7,7 +7,7 @@ RUN npm install -g pnpm
 COPY Back/ .
 COPY Shared/ ./Shared/
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 RUN pnpx prisma generate --schema=./prisma/schema.prisma
 
