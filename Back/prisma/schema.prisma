@@ -23,7 +23,8 @@ model User {
 	avatar			String?
 	bio				String?
 	code			String?
-	onlineStatus	Boolean	@default(false)
+	as2FA			Boolean		@default(false)
+	onlineStatus	Boolean		@default(false)
 	elo				Int			@default(1200)
 	win				Int			@default(0)
 	lose			Int			@default(0)

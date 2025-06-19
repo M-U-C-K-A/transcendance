@@ -14,7 +14,7 @@
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.2",
     "@fastify/websocket": "^11.1.0",
-    "@prisma/client": "6.9.0",
+    "@prisma/client": "6.10.1",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
@@ -39,7 +39,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.17.46",
     "@types/ws": "^8.18.1",
-    "prisma": "6.9.0",
+    "prisma": "6.10.1",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
