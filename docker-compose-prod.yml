@@ -1,0 +1,71 @@
+services:
+  copier:
+    build:
+      context: . 
+      dockerfile: Dockerfile.copier
+    container_name: transcendance-copier
+    volumes:
+      - shared_code:/app/Shared
+    entrypoint: ["sh", "-c", "cp -r Shared/* /app/Shared"]
+  
+  backend:
+    build:
+      context: .
+      dockerfile: Back/Dockerfile.back
+    container_name: transcendance-back
+    depends_on:
+      - copier
+    volumes:
+      - prisma_data:/app/prisma/data
+      - shared_code:/app/Shared
+      - ssl_certs:/app/Shared/certs
+    command: pnpm run dev:server
+
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Front/Dockerfile.front
+    container_name: transcendance-front
+    depends_on:
+      - copier
+    volumes:
+      - shared_code:/app/Shared
+    command: pnpm run dev
+
+
+  studio:
+    build:
+      context: .
+      dockerfile: Back/prisma/Dockerfile.studio
+    container_name: transcendance-studio
+    depends_on:
+      - backend
+    ports:
+      - "5555:5555"
+    volumes:
+      - prisma_data:/app/data
+    environment:
+      - DATABASE_URL=file:./Back/prisma/data/test.sqlite
+    command: pnpx prisma studio --schema=./schema.prisma
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Nginx/Dockerfile.nginx
+    container_name: transcendance-nginx
+    ports:
+      - "8443:443"
+      - "8080:80"
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - shared_code:/app/Shared
+      - ssl_certs:/etc/nginx/certs
+
+volumes:
+  prisma_data:
+  shared_code:
+  ssl_certs:
+

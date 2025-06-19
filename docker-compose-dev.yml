@@ -1,36 +1,26 @@
 services:
-  copier:
-    build:
-      context: . 
-      dockerfile: Dockerfile.copier
-    container_name: transcendance-copier
-    volumes:
-      - shared_code:/shared_code
-    entrypoint: ["sh", "-c", "cp -r Shared/* /shared_code"]
   
   backend:
     build:
       context: .
-      dockerfile: Back/Dockerfile.back
-    container_name: transcendance-back
-    depends_on:
-      - copier
+      dockerfile: Back/Dockerfile.devback
+    container_name: transcendance-back-dev
     volumes:
-      - prisma_data:/app/prisma/data
-      - shared_code:/app/Shared
-      - ssl_certs:/app/Shared/certs
-    command: pnpm run dev:server
+      - ./Back:/app
+      - ./Shared:/app/Shared
+    command: sh -c "pnpm install && pnpm run dev:server"
+
 
   frontend:
     build:
       context: .
-      dockerfile: Front/Dockerfile.front
-    container_name: transcendance-front
-    depends_on:
-      - copier
+      dockerfile: Front/Dockerfile.devfront
+    container_name: transcendance-front-dev
     volumes:
-      - shared_code:/app/Shared
-    command: pnpm run dev
+      - ./Front:/app      
+      - ./Shared:/app/Shared
+    command: sh -c "pnpm install && pnpm run dev"
+
 
   studio:
     build:

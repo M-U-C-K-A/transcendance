@@ -13,3 +13,7 @@ RUN ln -sf /app/Shared/public /app/public
 
 EXPOSE 3000
 CMD ["pnpm", "run", "dev"]
+
+
+
+
