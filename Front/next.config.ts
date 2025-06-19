@@ -91,6 +91,10 @@ const nextConfig: NextConfig = {
 				source: "/api/gdpr/getdata",
 				destination: "http://backend:3001/gdpr/getdata"
 			},
+			{
+				source: "/api/gdpr/twofa",
+				destination: "http://backend:3001/gdpr/twofa"
+			},
 		];
 	},
 	async headers() {
