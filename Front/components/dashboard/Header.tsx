@@ -9,7 +9,7 @@
   import { useUsernameFromJWT } from "@/hooks/use-username-from-jwt"
   import { ProfileEditDialog } from "../setting/profile-edit-dialog"
   import { useIdFromJWT } from "@/hooks/use-id-from-jwt"
-  
+
 
   interface HeaderProps {
     locale: string
@@ -30,14 +30,14 @@
         window.location.href = `/${locale}/auth`
       }
     }
-     
+
 
 
 
     return (
       <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
         <div className="container mx-auto py-4 flex justify-between items-center">
-          <Link href={`/`} className="items-center gap-2 hidden md:flex">
+          <Link href={`/dashboard`} className="items-center gap-2 hidden md:flex">
             <Activity className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold">{t('common.appName')}</h1>
           </Link>

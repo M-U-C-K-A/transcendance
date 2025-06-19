@@ -33,14 +33,12 @@ import { CreatorsCard } from "@/components/gdpr/CreatorsCard"
 import { TypographySection } from "@/components/gdpr/TypographySection"
 import { useI18n } from "@/i18n-client"
 
-
-
-
 export default function GdprPage() {
 	// États pour les modales
 	const [showPasswordModal, setShowPasswordModal] = useState(false)
 	const [showUserDataModal, setShowUserDataModal] = useState(false)
 	const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+	const [showGetDataAlert, setShowGetDataAlert] = useState(false)
 	const t = useI18n()
 
 	const userDataSchema = z.object({
@@ -55,7 +53,6 @@ export default function GdprPage() {
 		password: z.string().min(1, t('gdpr.validation.passwordRequired')),
 	})
 
-
 	// États pour les formulaires
 	const [password, setPassword] = useState("")
 	const [userData, setUserData] = useState({
@@ -67,6 +64,7 @@ export default function GdprPage() {
 	const [removeAvatar, setRemoveAvatar] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [deleteLoading, setDeleteLoading] = useState(false)
+	const [getDataLoading, setGetDataLoading] = useState(false)
 
 	// Vérification du mot de passe
 	const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -170,6 +168,31 @@ export default function GdprPage() {
 		} finally {
 			setDeleteLoading(false);
 			setShowDeleteAlert(false);
+		}
+	};
+
+	// Récupération des données
+	const handleGetData = async () => {
+		setGetDataLoading(true);
+
+		try {
+			const response = await fetch("/api/rgpd/getdata", {
+				method: "GET",
+				headers: {
+					"Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
+				},
+			});
+
+			if (response.ok) {
+				toast.success(t('gdpr.toasts.getDataSuccess'));
+			} else {
+				throw new Error(t('gdpr.errors.getDataFailed'));
+			}
+		} catch (error) {
+			handleError(error);
+		} finally {
+			setGetDataLoading(false);
+			setShowGetDataAlert(false);
 		}
 	};
 
@@ -354,6 +377,27 @@ export default function GdprPage() {
 					</AlertDialogContent>
 				</AlertDialog>
 
+				{/* Alerte de récupération des données */}
+				<AlertDialog open={showGetDataAlert} onOpenChange={setShowGetDataAlert}>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>{t('gdpr.alerts.getData.title')}</AlertDialogTitle>
+							<AlertDialogDescription>
+								{t('gdpr.alerts.getData.description')}
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel disabled={getDataLoading}>{t('common.cancel')}</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={handleGetData}
+								disabled={getDataLoading}
+							>
+								{getDataLoading ? t('gdpr.alerts.getData.sending') : t('gdpr.alerts.getData.confirm')}
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
+
 				{/* Contenu principal */}
 				<Card>
 					<CardHeader>
@@ -372,6 +416,23 @@ export default function GdprPage() {
 								</div>
 								<Button onClick={() => setShowPasswordModal(true)}>
 									{t('gdpr.sections.personalData.manageButton')}
+								</Button>
+							</div>
+						</section>
+
+						<Separator />
+
+						{/* Section Export des données */}
+						<section className="space-y-4">
+							<div className="flex justify-between items-center">
+								<div>
+									<h2 className="text-lg font-semibold">{t('gdpr.sections.exportData.title')}</h2>
+									<p className="text-sm text-muted-foreground">
+										{t('gdpr.sections.exportData.description')}
+									</p>
+								</div>
+								<Button variant="outline" onClick={() => setShowGetDataAlert(true)}>
+									{t('gdpr.sections.exportData.requestButton')}
 								</Button>
 							</div>
 						</section>
