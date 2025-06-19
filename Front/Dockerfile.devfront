@@ -1,0 +1,18 @@
+FROM node:18-alpine3.18
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+# Copier uniquement les fichiers d'installation d'abord
+COPY Front/package.json Front/pnpm-lock.yaml ./
+RUN pnpm install
+
+# Copier le reste du code
+COPY Front/ .
+COPY Shared/ ./Shared/
+
+# Créer un lien symbolique si nécessaire
+RUN ln -sf /app/Shared/public /app/public
+
+EXPOSE 3000
