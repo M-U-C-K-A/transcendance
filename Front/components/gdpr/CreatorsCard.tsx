@@ -5,6 +5,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import Link from "next/link"
 
 const creators = [
   {
@@ -12,21 +13,24 @@ const creators = [
     image: "https://cdn.intra.42.fr/users/a2a7276c3000e4c1180a0f7c975b3e32/hdelacou.jpg",
     name: "Hugo Delacour",
     role: "Frontend Developer",
-    email: "hdelacou@student.42lehavre.fr"
+    email: "hdelacou@student.42lehavre.fr",
+    github: "https://github.com/hdelacou"
   },
   {
     initials: "RB",
     image: "https://cdn.intra.42.fr/users/71cfca25335ff0dd421f5d6a4377dbd9/rbardet-.jpg",
     name: "Robin Bardet-Tomczak",
     role: "Backend Developer",
-    email: "rbarde-t@student.42lehavre.fr"
+    email: "rbarde-t@student.42lehavre.fr",
+    github: "https://github.com/rbardet-t"
   },
   {
     initials: "TR",
     image: "https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg",
     name: "Thomas Robert",
     role: "Game & Docker",
-    email: "throbert@student.42lehavre.fr"
+    email: "throbert@student.42lehavre.fr",
+    github: "https://github.com/throbert"
   }
 ];
 
@@ -42,14 +46,16 @@ export function CreatorsCard() {
             key={creator.initials}
             className="flex flex-col items-center text-center p-4 border rounded-lg hover:bg-accent/50 transition-colors"
           >
-            <Avatar className="mb-3 h-16 w-16 rounded-full bg-muted">
-              <AvatarImage
-                src={creator.image}
-                alt="@shadcn"
-                className="object-cover h-full w-full"
-              />
-              <AvatarFallback>{creator.initials}</AvatarFallback>
-            </Avatar>
+            <Link href={creator.github} target="_blank" rel="noopener noreferrer">
+              <Avatar className="mb-3 h-16 w-16 rounded-full bg-muted">
+                <AvatarImage
+                  src={creator.image}
+                  alt={creator.name}
+                  className="object-cover h-full w-full"
+                />
+                <AvatarFallback>{creator.initials}</AvatarFallback>
+              </Avatar>
+            </Link>
             <h3 className="font-medium">{creator.name}</h3>
             <p className="text-sm text-muted-foreground">{creator.role}</p>
             <p className="text-xs text-muted-foreground mt-1">{creator.email}</p>
@@ -59,3 +65,4 @@ export function CreatorsCard() {
     </Card>
   )
 }
+

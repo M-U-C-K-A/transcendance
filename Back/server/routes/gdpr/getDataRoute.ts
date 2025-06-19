@@ -3,7 +3,7 @@ import getData from "@/server/request/gdpr/getData";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function getDataRoute(server: FastifyInstance) {
-	server.post('/gdpr/getdata', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
+	server.get('/gdpr/getdata', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
 
 	if (!user) {

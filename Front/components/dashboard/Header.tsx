@@ -27,7 +27,7 @@
     const handleLogout = () => {
       if (typeof window !== 'undefined') {
         localStorage.removeItem("token")
-        window.location.href = `/${locale}/auth`
+        window.location.href = `/auth`
       }
     }
 
