@@ -56,7 +56,7 @@ export default function GdprPage() {
 
         if (response.ok) {
           const data = await response.json()
-          setTwoFAEnabled(data.enabled)
+          setTwoFAEnabled(data.result)
         }
       } catch (error) {
         console.error("Failed to fetch 2FA status:", error)
