@@ -5,10 +5,17 @@ services:
       context: .
       dockerfile: Back/Dockerfile.devback
     container_name: transcendance-back-dev
+    ports:
+      - "3001:3001"
     volumes:
-      - ./Back:/app
+      - ./Back/server:/app/server
+      - ./Back/prisma:/app/prisma
+      - ./Back/config:/app/config
+      - ./Back/package.json:/app/package.json
+      - ./Back/pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ./Back/tsconfig.json:/app/tsconfig.json
       - ./Shared:/app/Shared
-    command: sh -c "pnpm install && pnpm run dev:server"
+    command: sh -c "pnpm install && pnpx prisma generate --schema=./prisma/schema.prisma && pnpx prisma db push --schema=./prisma/schema.prisma && pnpm run dev:server"
 
 
   frontend:
@@ -19,7 +26,7 @@ services:
     volumes:
       - ./Front:/app      
       - ./Shared:/app/Shared
-    command: sh -c "pnpm install && pnpm run dev"
+    command: sh -c "ln -sf /app/Shared/public /app/public && pnpm install && pnpm run dev"
 
 
   studio:
@@ -32,9 +39,9 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - prisma_data:/app/data
+      - ./Back/prisma:/app
     environment:
-      - DATABASE_URL=file:./Back/prisma/data/test.sqlite
+      - DATABASE_URL=file:./data/test.sqlite
     command: pnpx prisma studio --schema=./schema.prisma
 
   nginx:
@@ -49,10 +56,5 @@ services:
       - frontend
       - backend
     volumes:
-      - shared_code:/app/Shared
-      - ssl_certs:/etc/nginx/certs
-
-volumes:
-  prisma_data:
-  shared_code:
-  ssl_certs:
+      - ./Shared:/app/Shared
+      - ./Nginx/certs:/etc/nginx/certs
