@@ -6,7 +6,6 @@ import { Users, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState, useCallback } from "react"
-import { useJWT } from "@/hooks/use-jwt"
 import { AddColleagueDialog } from "./AddColleagueDialog"
 import { PendingInvitations } from "./PendingInvitations"
 import { RemoveFriendDialog } from "./RemoveFriendDialog"
@@ -20,7 +19,6 @@ interface Friend {
 }
 
 export function ColleaguesList({ locale }: { locale: string }) {
-	const jwt = useJWT()
 	const t = useI18n()
 
 	const [friends, setFriends] = useState<Friend[]>([])
@@ -30,37 +28,35 @@ export function ColleaguesList({ locale }: { locale: string }) {
 	const fetchFriends = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/friends`, {
-				headers: {
-					Authorization: `Bearer ${jwt}`,
-				},
+				credentials: 'include', // ✅ Utilisation des cookies
 			})
 			if (!response.ok) {
 				throw new Error('Failed to fetch friends')
 			}
 			const data = await response.json() as Array<{
-	id: number;
-	username: string;
-	onlineStatus: boolean;
-	avatar?: string;
-}>
+				id: number;
+				username: string;
+				onlineStatus: boolean;
+				avatar?: string;
+			}>
 
-const transformed = data.map((friend): Friend => ({
-	id: friend.id,
-	username: friend.username,
-	status: friend.onlineStatus,
-	avatar: friend.avatar ?? undefined,
-}))
+			const transformed = data.map((friend): Friend => ({
+				id: friend.id,
+				username: friend.username,
+				status: friend.onlineStatus,
+				avatar: friend.avatar ?? undefined,
+			}))
 			setFriends(transformed)
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Unknown error')
 		} finally {
 			setLoading(false)
 		}
-	}, [jwt])
+	}, [])
 
 	useEffect(() => {
-		if (jwt) fetchFriends()
-	}, [jwt, fetchFriends])
+		fetchFriends()
+	}, [fetchFriends])
 
 	useFriendSocket((data) => {
 		if (!data?.type) return
@@ -73,21 +69,6 @@ const transformed = data.map((friend): Friend => ({
 				break
 		}
 	})
-
-	if (!jwt) {
-		return (
-			<Card className="bg-card border shadow-sm mt-6">
-				<CardHeader>
-					<CardTitle className="flex items-center">
-						<Users className="mr-2 h-5 w-5" /> {t('dashboard.colleagues.title')}
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{t('dashboard.colleagues.notLoggedIn')}
-				</CardContent>
-			</Card>
-		)
-	}
 
 	if (error) {
 		return (
@@ -158,7 +139,6 @@ const transformed = data.map((friend): Friend => ({
 										</Button>
 									</Link>
 									<RemoveFriendDialog
-										jwt={jwt}
 										username={friend.username}
 										userId={friend.id}
 										onRemove={() =>
@@ -173,7 +153,6 @@ const transformed = data.map((friend): Friend => ({
 					)}
 				</div>
 
-				{/* ✅ Invitations en attente */}
 				<PendingInvitations />
 			</CardContent>
 			<CardFooter>

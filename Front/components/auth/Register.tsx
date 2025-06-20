@@ -105,9 +105,6 @@ export function Register({
 
 			if (response.ok) {
 				const data = await response.json();
-				if (data.token) {
-					localStorage.setItem('token', data.token);
-				}
 				localStorage.removeItem('temp_2fa_email');
 				router.push('/dashboard');
 			} else {
