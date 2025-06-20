@@ -70,8 +70,8 @@ export function collidePaddle1(
 
 
 
-    if (enableSpecial && setStamina && stamina && stamina.player1 < 10)
-      setStamina({ ...stamina, player1: Math.min(10, stamina.player1 + 1) });
+    if (enableSpecial && setStamina && stamina && stamina.player1 < 5)
+      setStamina({ ...stamina, player1: Math.min(5, stamina.player1 + 1) });
 
 
 
@@ -162,8 +162,8 @@ export function collidePaddle2(
 
     // stamina = tableau avec 2 chiffre : 1 par joue
     // copie le tableau mais pour p2 ajoute 1. j use min car j ai besoin d une ft.
-    if (enableSpecial && setStamina && stamina && stamina.player2 < 10)
-      setStamina({ ...stamina, player2: Math.min(10, stamina.player2 + 1) });
+    if (enableSpecial && setStamina && stamina && stamina.player2 < 5)
+      setStamina({ ...stamina, player2: Math.min(5, stamina.player2 + 1) });
 
 
 
