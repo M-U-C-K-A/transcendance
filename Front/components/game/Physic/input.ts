@@ -15,7 +15,11 @@ export const keys = new Set<string>();
 // recoit ici les input in game
 // 
 // comportement special in game (plus que detecter les touches on met des conditions)
-export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs)
+export function onKeyDown(
+  e: KeyboardEvent,
+  gameRefs: GameRefs,
+  enableAIRef?: React.MutableRefObject<boolean>
+)
 {
 
 
@@ -42,9 +46,11 @@ export function onKeyDown(e: KeyboardEvent, gameRefs: GameRefs)
     // Coup special joueur 2 (touche personnalisee)
     if (
       gameRefs.controls &&
-      e.key.toLowerCase() === gameRefs.controls.current.player2Special?.toLowerCase() &&
+      e.key.toLowerCase() ===
+        gameRefs.controls.current.player2Special?.toLowerCase() &&
       gameRefs.triggerSuperPad
     ) {
+      if (enableAIRef?.current) return; // Ne fait rien si l'IA est activée pour le joueur 2
       gameRefs.triggerSuperPad(2);
     }
     e.preventDefault();
@@ -90,11 +96,12 @@ export function onEscapeKeyDown(
 // connecte aux touche in game
 export function registerInputListeners(
   gameRefs: GameRefs,
-  setIsPaused: (isPaused: boolean) => void
+  setIsPaused: (isPaused: boolean) => void,
+  enableAIRef?: React.MutableRefObject<boolean>
 ) {
 
   // ft qui redirige les touches
-  const down = (e: KeyboardEvent) => onKeyDown(e, gameRefs);
+  const down = (e: KeyboardEvent) => onKeyDown(e, gameRefs, enableAIRef);
   const up = (e: KeyboardEvent) => onKeyUp(e);
 
   // touche pour pause 

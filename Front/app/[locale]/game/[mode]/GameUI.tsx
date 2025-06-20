@@ -264,7 +264,7 @@ export const GameUI = ({
               {t('game.create.specialcounter')}: {specialTimer1}s
             </div>
           )}
-          <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+          <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
             {displayKey(controls.player1Special)}
           </div>
         </>
@@ -272,21 +272,21 @@ export const GameUI = ({
 
 
 
-      {/* Barre de stamina = par de 10 frappe . baisse (- la stamina stocker actuel en jeu) */}
+      {/* Barre de stamina = par de 5 frappe . baisse (- la stamina stocker actuel en jeu) */}
       {enableSpecial && (
         <>
           <div className="mt-4" />
           <div className="w-10 h-3 bg-gray-200 rounded-full border border-gray-300 relative">
             <div
               className={`h-full rounded-full transition-all duration-300 ${superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
-              style={{ width: `${(stamina.player1 / 10) * 100}%` }}
+              style={{ width: `${(stamina.player1 / 5) * 100}%` }}
             ></div>
           </div>
 
           <div className="text-xs text-center mt-1 font-semibold">
-            {stamina.player1 < 10 ? (
+            {stamina.player1 < 5 ? (
               <span className="bg-black text-white px-2 py-0.5 rounded">
-                {10 - stamina.player1} {t('game.create.strikesremaining')}
+                {5 - stamina.player1} {t('game.create.strikesremaining')}
               </span>
             ) : (
               <span className="text-black">{t('game.create.specialready')}</span>
@@ -324,7 +324,7 @@ export const GameUI = ({
             {superPad.player2 && (
               <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">{t('game.create.specialcounter')}: {specialTimer2}s</div>
             )}
-            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 10 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+            <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
               {displayKey(controls.player2Special)}
             </div>
           </>
@@ -338,13 +338,13 @@ export const GameUI = ({
             <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
               <div
                 className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
-                style={{ width: `${(stamina.player2 / 10) * 100}%` }}
+                style={{ width: `${(stamina.player2 / 5) * 100}%` }}
               ></div>
             </div>
             <div className="text-xs text-center mt-1 font-semibold">
-              {stamina.player2 < 10 ? (
+              {stamina.player2 < 5 ? (
                 <span className="bg-black text-white px-2 py-0.5 rounded">
-                  {10 - stamina.player2} {t('game.create.strikesremaining')}
+                  {5 - stamina.player2} {t('game.create.strikesremaining')}
                 </span>
               ) : (
                 <span className="text-black">{t('game.create.specialready')}</span>
