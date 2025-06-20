@@ -12,6 +12,10 @@ import {
 export default function SettingsPanel(props: SettingsPanelProps) {
 	const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
 
+	// Désactive l'IA en mode tournoi et custom.
+	// Cette logique est placée ici pour s'appliquer à tous les modes de jeu.
+	const isAIDisabled = props.gamemode === "tournament" || props.gamemode === "custom";
+
 	// Logique commune à tous les modes
 	const commonProps = {
 		COLORS: props.COLORS,
@@ -33,7 +37,8 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 		locale: props.locale,
 		onStart: props.onStart,
 		enableAI: props.enableAI,
-		setEnableAI: props.setEnableAI
+		setEnableAI: props.setEnableAI,
+		isAIDisabled, // Passe la valeur au composant enfant
 	};
 
 	// Rendu conditionnel basé sur le mode de jeu
