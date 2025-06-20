@@ -22,11 +22,10 @@ export default async function Check2FARoute(server: FastifyInstance) {
 		const token = server.jwt.sign({
 			id: result.id,
 			username: result.username,
-			bio: result.bio,
 		})
-	
+
 		console.log(token)
-	
+
 		reply.setCookie('token', token, {
 			httpOnly: true,
 			secure: true,

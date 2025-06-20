@@ -29,7 +29,6 @@ export function AddColleagueDialog() {
 	const [open, setOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 
-	// Créez le schéma Zod à l'intérieur du composant pour avoir accès à t()
 	const formSchema = z.object({
 		username: z.string()
 			.min(3, t("dashboard.colleagues.addDialog.errors.tooShort"))

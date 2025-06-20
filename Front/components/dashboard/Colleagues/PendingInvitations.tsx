@@ -24,7 +24,7 @@ export function PendingInvitations() {
 			setLoading(true);
 			const response = await fetch("/api/friends/pending", {
 				method: "GET",
-				credentials: "include", // ✅ cookies only
+				credentials: "include",
 			});
 
 			if (!response.ok) {
@@ -54,7 +54,7 @@ export function PendingInvitations() {
 		try {
 			const response = await fetch(`/api/friends/accept`, {
 				method: 'POST',
-				credentials: 'include', // ✅ cookies only
+				credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -120,11 +120,14 @@ export function PendingInvitations() {
 							<div key={invitation.id} className="flex items-center justify-between">
 								<div className="flex items-center">
 									<Avatar className="h-8 w-8 mr-2">
-										<AvatarImage
-											src={`/profilepicture/${invitation.id}.webp`}
-											alt={invitation.username}
-										/>
-										<AvatarFallback>{invitation.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+										{invitation.avatar ? (
+											<AvatarImage
+												src={`data:image/webp;base64,${invitation.avatar}`}
+												alt={invitation.username}
+											/>
+										) : (
+											<AvatarFallback>{invitation.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+										)}
 									</Avatar>
 									<p className="text-sm font-medium">{invitation.username}</p>
 								</div>

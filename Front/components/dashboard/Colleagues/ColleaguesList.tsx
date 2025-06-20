@@ -15,12 +15,11 @@ interface Friend {
 	id: number;
 	username: string;
 	status: boolean;
-	avatar?: string;
+	avatar?: string; // base64 string
 }
 
 export function ColleaguesList({ locale }: { locale: string }) {
 	const t = useI18n()
-
 	const [friends, setFriends] = useState<Friend[]>([])
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState<boolean>(true)
@@ -28,16 +27,15 @@ export function ColleaguesList({ locale }: { locale: string }) {
 	const fetchFriends = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/friends`, {
-				credentials: 'include', // ✅ Utilisation des cookies
+				credentials: 'include',
 			})
-			if (!response.ok) {
-				throw new Error('Failed to fetch friends')
-			}
+			if (!response.ok) throw new Error('Failed to fetch friends')
+
 			const data = await response.json() as Array<{
-				id: number;
-				username: string;
-				onlineStatus: boolean;
-				avatar?: string;
+				id: number
+				username: string
+				onlineStatus: boolean
+				avatar?: string // base64 string
 			}>
 
 			const transformed = data.map((friend): Friend => ({
@@ -112,11 +110,16 @@ export function ColleaguesList({ locale }: { locale: string }) {
 							<div key={friend.id} className="flex items-center justify-between">
 								<div className="flex items-center min-w-[125px]">
 									<Avatar className="h-8 w-8 mr-2">
-										<AvatarImage
-											src={`/profilepicture/${friend.id}.webp`}
-											alt={friend.username}
-										/>
-										<AvatarFallback>{friend.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+										{friend.avatar ? (
+											<AvatarImage
+												src={`data:image/webp;base64,${friend.avatar}`}
+												alt={friend.username}
+											/>
+										) : (
+											<AvatarFallback>
+												{friend.username.slice(0, 2).toUpperCase()}
+											</AvatarFallback>
+										)}
 									</Avatar>
 									<div>
 										<p className="text-sm font-medium">{friend.username}</p>
@@ -149,10 +152,11 @@ export function ColleaguesList({ locale }: { locale: string }) {
 							</div>
 						))
 					) : (
-						<p className="text-sm text-muted-foreground">{t('dashboard.colleagues.noFriends')}</p>
+						<p className="text-sm text-muted-foreground">
+							{t('dashboard.colleagues.noFriends')}
+						</p>
 					)}
 				</div>
-
 				<PendingInvitations />
 			</CardContent>
 			<CardFooter>
