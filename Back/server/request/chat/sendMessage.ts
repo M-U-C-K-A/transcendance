@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client'
+import { error } from 'console';
 
 const Prisma = new PrismaClient()
 
 export default async function sendMessage(sender: number, recipient: number, content: string, messageType: string ) {
+
+	if (sender == recipient) {
+		throw new Error("You can't send message to yourself")
+	}
 
 	const userInfo = await Prisma.user.findUnique({
 		where: {

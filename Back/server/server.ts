@@ -25,7 +25,7 @@ import blockUserRoute from './routes/chat/blockUserRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import { googleLogin } from './routes/auth/google/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
-import { friendsWebSocketHandler } from './routes/friends/websocketFriends';
+import { friendsWebSocketHandler } from './websocket/websocketFriends';
 import gameCreationRoute from './routes/match/gameCreation';
 import register2FARoute from './routes/auth/register/2FAregisterRoute';
 import Check2FARoute from './routes/auth/register/2FACheckRoute';

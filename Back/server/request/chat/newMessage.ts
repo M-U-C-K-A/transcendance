@@ -17,6 +17,9 @@ export default async function newMessage(recipient: string, userId: number) {
 		throw new Error ("No User found")
 	}
 
+	if (userInfo.id == userId) {
+		throw new Error ("You can't send message to yourself")
+	}
 	const isBlocked = await Prisma.block.findFirst({
 		where: {
 			OR: [

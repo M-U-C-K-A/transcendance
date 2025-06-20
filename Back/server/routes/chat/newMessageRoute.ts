@@ -26,7 +26,9 @@ export default async function newMessageRoute(server: FastifyInstance) {
 		} catch (err: any) {
 			if (err.message == 'Internal server error')
 				return reply.code(500).send({ error: err.message })
-			else {
+			else if (err.message == "You can't send message to yourself") {
+				return reply.code(403).send({ error : err.message })
+			} else {
 				return reply.code(409).send({ error: err.message })
 			}
 		}

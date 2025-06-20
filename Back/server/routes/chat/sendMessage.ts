@@ -1,9 +1,9 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import sendMessage from "@/server/request/chat/sendMessage";
 import authMiddleware from "@/server/authMiddleware";
-import { broadcastMessage } from './websocketChat';
 import { PrismaClient } from "@prisma/client";
 import { sendMessageData } from "@/types/chat";
+import { broadcastMessage } from "@/server/websocket/notifications";
 
 const Prisma = new PrismaClient()
 
@@ -63,12 +63,9 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 		} catch (err: any) {
 			if (err.message === 'User not found , Could not send message') {
 				return reply.code(404).send({ error: 'User not found , Could not send message' });
-			} else if (err.message === "You blocked this user") {
-				return reply.code(403).send({ error: "You blocked this user" });
-			} else if (err.message === "This user blocked you") {
-				return reply.code(403).send({ error: "This user blocked you" });
-			}
-			return reply.code(500).send({ error: 'Internal server error' });
+			} else if (err.message != 'Internal server error') {
+				return reply.code(403).send({ error: err.message });
+			} return reply.code(500).send({ error: 'Internal server error' });
 		}
 	});
 }
