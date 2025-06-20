@@ -33,6 +33,7 @@ interface ButtonsProps {
   winner: string | null;
   setWinner: (winner: string | null) => void;
   enableAI: boolean;
+  setGameStarted: (started: boolean) => void;
 }
 
 export default function Buttons({
@@ -62,6 +63,7 @@ export default function Buttons({
   winner,
   setWinner,
   enableAI,
+  setGameStarted,
 }: ButtonsProps): JSX.Element {
   useEffect(() => {
     if (
@@ -70,15 +72,57 @@ export default function Buttons({
       winner &&
       currentMatch.status !== "completed"
     ) {
-      const winnerId = winner === "player1"
-        ? currentMatch.player1.id
+      // Vérifier que le match a des joueurs
+      if (!currentMatch.player1 || !currentMatch.player2) {
+        console.error("Match sans joueurs, impossible de déterminer le gagnant");
+        return;
+      }
+
+      const winnerUsername = winner === "player1"
+        ? currentMatch.player1.username
         : winner === "player2"
-          ? currentMatch.player2.id
+          ? currentMatch.player2.username
           : winner;
 
-      updateBracketAfterMatch(currentMatch.id, winnerId);
+      if (winnerUsername) {
+        updateBracketAfterMatch(currentMatch.id, winnerUsername);
+      }
     }
   }, [winner, currentMatch, gamemode, updateBracketAfterMatch]);
+
+  // Gestion de la fin des matchs en mode tournoi
+  const handleMatchEnd = (winner: string, matchScore: { player1: number; player2: number }) => {
+    if (gamemode === "tournament" && currentMatch) {
+      console.log(`Fin du match - Gagnant: ${winner}, Score: ${matchScore.player1}-${matchScore.player2}`);
+
+      // Vérifier que le match a des joueurs
+      if (!currentMatch.player1 || !currentMatch.player2) {
+        console.error("Match sans joueurs, impossible de déterminer le gagnant");
+        return;
+      }
+
+      // Mettre à jour le bracket avec le gagnant (utiliser le username)
+      const winnerUsername = winner === "player1"
+        ? currentMatch.player1.username
+        : winner === "player2"
+          ? currentMatch.player2.username
+          : winner;
+
+      if (winnerUsername) {
+        console.log(`Mise à jour du bracket avec le gagnant: ${winnerUsername}`);
+        updateBracketAfterMatch(currentMatch.id, winnerUsername);
+
+        // Retourner aux options pour le prochain match
+        setTimeout(() => {
+          setGameStarted(false);
+          setScore({ player1: 0, player2: 0 });
+          setWinner(null);
+        }, 1000);
+      } else {
+        console.error("Impossible de déterminer le gagnant du match");
+      }
+    }
+  };
 
   return (
     <div className="w-[80vw] h-[80vh] relative bg-background rounded-lg border mt-4 flex justify-center items-center mx-auto">
@@ -195,6 +239,7 @@ export default function Buttons({
         winner={winner}
         setWinner={setWinner}
         enableAI={enableAI}
+        onMatchEnd={handleMatchEnd}
       />
 
 

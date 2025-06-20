@@ -32,7 +32,7 @@ interface GameUIProps {
   lastScoreType: 'goal' | 'malus';
   malusSystem?: MalusSystem;
   gamemode?: string;
-  onMatchEnd?: (winner: string) => void;
+  onMatchEnd?: (winner: string, score: { player1: number; player2: number }) => void;
 }
 
 
@@ -195,10 +195,10 @@ export const GameUI = ({
     if (winner !== null && onMatchEnd) {
       // Attendre un peu pour que l'utilisateur voie le résultat
       setTimeout(() => {
-        onMatchEnd(winner === "player1" ? "player1" : "player2");
+        onMatchEnd(winner === "player1" ? "player1" : "player2", score);
       }, 2000);
     }
-  }, [winner, onMatchEnd]);
+  }, [winner, onMatchEnd, score]);
 
 
 
@@ -410,10 +410,11 @@ export const GameUI = ({
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     // Pour les tournois, on retourne à l'écran de sélection des options
+                    // Le bracket sera mis à jour automatiquement via onMatchEnd
                     window.location.href = "/game/tournament";
                   }
                 }}
-                className="w-full py-6 text-lg"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors"
               >
                 {t('game.create.backoptions')}
               </Button>
@@ -424,7 +425,7 @@ export const GameUI = ({
                     window.history.back();
                   }
                 }}
-                className="w-full py-6 text-lg"
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
               >
                 {t('game.create.quit')}
               </Button>

@@ -9,6 +9,11 @@ export default async function joinTournament(username: string) {
 		},
 		select: {
 			id: true,
+			username: true,
+			avatar: true,
+			elo: true,
+			win: true,
+			lose: true,
 		}
 	})
 

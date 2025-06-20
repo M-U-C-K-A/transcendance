@@ -6,11 +6,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -22,436 +22,560 @@ import { QuickMatchSettings, QuickMatchSettingsProps } from "./QuickMatchSetting
 import { BracketMatch } from "@/types/BracketMatch";
 
 const gameCreationSchema = z.object({
-	name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
-	playerCount: z.number().min(2).max(8).refine(val => val % 2 === 0, {
-		message: "Le nombre de joueurs doit être un multiple de 2",
-	}),
+  name: z.string().min(3, "Le nom doit faire au moins 3 caractères").max(30),
+  playerCount: z.number().min(2).max(8).refine(val => val % 2 === 0, {
+    message: "Le nombre de joueurs doit être un multiple de 2",
+  }),
 });
 
 interface TournamentSettingsProps extends QuickMatchSettingsProps {
-	bracket: BracketMatch[];
-	setBracket: Dispatch<SetStateAction<BracketMatch[]>>;
-	currentMatch: BracketMatch | null;
-	setCurrentMatch: Dispatch<SetStateAction<BracketMatch | null>>;
-	currentMatchIndex: number;
-	setCurrentMatchIndex: Dispatch<SetStateAction<number>>;
-	tournamentStarted: boolean;
-	setTournamentStarted: Dispatch<SetStateAction<boolean>>;
-	updateBracketAfterMatch: (matchId: string, winner: string) => void;
-	locale: string;
+  bracket: BracketMatch[];
+  setBracket: Dispatch<SetStateAction<BracketMatch[]>>;
+  currentMatch: BracketMatch | null;
+  setCurrentMatch: Dispatch<SetStateAction<BracketMatch | null>>;
+  currentMatchIndex: number;
+  setCurrentMatchIndex: Dispatch<SetStateAction<number>>;
+  tournamentStarted: boolean;
+  setTournamentStarted: Dispatch<SetStateAction<boolean>>;
+  updateBracketAfterMatch: (matchId: string, winner: string) => void;
+  locale: string;
+}
+
+interface Participant {
+  id: string;
+  username: string;
+  avatar: string;
+  elo: number;
+  win: number;
+  lose: number;
 }
 
 export default function TournamentSettings({
-	bracket,
-	setBracket,
-	currentMatch,
-	setCurrentMatch,
-	currentMatchIndex,
-	setCurrentMatchIndex,
-	tournamentStarted,
-	setTournamentStarted,
-	updateBracketAfterMatch,
-	...props
+  bracket,
+  setBracket,
+  currentMatch,
+  setCurrentMatch,
+  currentMatchIndex,
+  setCurrentMatchIndex,
+  tournamentStarted,
+  setTournamentStarted,
+  updateBracketAfterMatch,
+  ...props
 }: TournamentSettingsProps) {
-	const [isLoading, setIsLoading] = useState(false);
-	const [showJoinDialog, setShowJoinDialog] = useState(false);
-	const [participants, setParticipants] = useState<Array<{
-		id: string;
-		username: string;
-		elo: number;
-		win: number;
-		lose: number;
-	}>>([]);
-	const [showWinnerDialog, setShowWinnerDialog] = useState(false);
-	const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
-	const [showCreationDialog, setShowCreationDialog] = useState(false);
-	const router = useRouter();
-	const form = useForm({
-		resolver: zodResolver(gameCreationSchema),
-		defaultValues: {
-			name: "",
-			playerCount: 4,
-		},
-	});
-	const t = useI18n();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showJoinDialog, setShowJoinDialog] = useState(false);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [showWinnerDialog, setShowWinnerDialog] = useState(false);
+  const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
+  const [showCreationDialog, setShowCreationDialog] = useState(false);
+  const [joinError, setJoinError] = useState<string | null>(null);
+  const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(gameCreationSchema),
+    defaultValues: {
+      name: "",
+      playerCount: 4,
+    },
+  });
+  const t = useI18n();
 
-	// Vérifier si nous devons afficher la popup de création
-	useEffect(() => {
-		if (typeof window !== "undefined" && !localStorage.getItem("tournamentId")) {
-			setShowCreationDialog(true);
-		}
-	}, []);
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("tournamentId")) {
+      setShowCreationDialog(true);
+    }
+  }, []);
 
-	// Initialiser le tournoi depuis le localStorage
-	useEffect(() => {
-		const storedBracket = localStorage.getItem("tournamentBracket");
-		const storedParticipants = localStorage.getItem("tournamentParticipants");
+  // Initialize bracket and participants from storage
+  useEffect(() => {
+    const storedBracket = localStorage.getItem("tournamentBracket");
+    const storedParticipants = localStorage.getItem("tournamentParticipants");
 
-		if (storedParticipants) {
-			setParticipants(JSON.parse(storedParticipants));
-		}
+    if (storedParticipants) {
+      console.log("Récupération des participants depuis le localStorage");
+      setParticipants(JSON.parse(storedParticipants));
+    }
 
-		if (storedBracket) {
-			const parsedBracket = JSON.parse(storedBracket);
+    if (storedBracket) {
+      console.log("Récupération du bracket depuis le localStorage");
+      const parsedBracket = JSON.parse(storedBracket);
+      const updatedBracket = parsedBracket.map((match: BracketMatch) => {
+        if (match.status === "ongoing" && !match.winner) {
+          return { ...match, status: "pending" };
+        }
+        return match;
+      });
+      setBracket(updatedBracket);
 
-			// Réinitialiser les matchs en cours sans gagnant
-			const updatedBracket = parsedBracket.map((match: BracketMatch) => {
-				if (match.status === "ongoing" && !match.winner) {
-					return { ...match, status: "pending" };
-				}
-				return match;
-			});
+      const nextMatch = updatedBracket.find((m: BracketMatch) => m.status === "pending" && m.player1 && m.player2);
+      if (nextMatch) {
+        console.log("Match suivant trouvé:", nextMatch.id, "avec", nextMatch.player1?.username, "vs", nextMatch.player2?.username);
+        setCurrentMatch(nextMatch);
+        setCurrentMatchIndex(updatedBracket.findIndex((m: BracketMatch) => m.id === nextMatch.id));
+        setTournamentStarted(true);
+      } else {
+        console.log("Aucun match en attente trouvé dans le bracket");
+      }
+    }
+  }, [setBracket, setCurrentMatch, setCurrentMatchIndex, setTournamentStarted]);
 
-			setBracket(updatedBracket);
+  useEffect(() => {
+    if (bracket.length > 0) {
+      localStorage.setItem("tournamentBracket", JSON.stringify(bracket));
+    }
+  }, [bracket]);
 
-			// Trouver le prochain match à jouer
-			const nextMatch = updatedBracket.find((match: BracketMatch) =>
-				match.status === "pending" && match.player1 && match.player2
-			);
+  // Détecter quand le tournoi est terminé
+  useEffect(() => {
+    if (tournamentStarted && bracket.length > 0) {
+      const finalMatch = bracket[bracket.length - 1];
+      if (finalMatch && finalMatch.status === "completed" && finalMatch.winner) {
+        setTournamentWinner(finalMatch.winner);
+        setShowWinnerDialog(true);
+      }
+    }
+  }, [bracket, tournamentStarted]);
 
-			if (nextMatch) {
-				const nextMatchIndex = updatedBracket.findIndex((m: BracketMatch) => m.id === nextMatch.id);
-				setCurrentMatch(nextMatch);
-				setCurrentMatchIndex(nextMatchIndex);
-				setTournamentStarted(true);
-			}
-		}
-	}, [setBracket, setCurrentMatch, setCurrentMatchIndex, setTournamentStarted]);
+  const createLocalTournament = (data: any) => {
+    setIsLoading(true);
+    const tournamentId = `local-tournament-${Date.now()}`;
+    localStorage.setItem("tournamentId", tournamentId);
+    localStorage.setItem("tournamentSlot", data.playerCount.toString());
 
-	// Sauvegarder le bracket dans localStorage quand il change
-	useEffect(() => {
-		if (bracket.length > 0) {
-			localStorage.setItem("tournamentBracket", JSON.stringify(bracket));
-		}
-	}, [bracket]);
+    setParticipants([]);
+    localStorage.setItem("tournamentParticipants", JSON.stringify([]));
+    setShowCreationDialog(false);
+    setShowJoinDialog(true);
+    setIsLoading(false);
+  };
 
-	// Créer un tournoi local
-	const createLocalTournament = (data: any) => {
-		setIsLoading(true);
-		const tournamentId = `local-tournament-${Date.now()}`;
-		localStorage.setItem("tournamentId", tournamentId);
-		localStorage.setItem("tournamentSlot", data.playerCount.toString());
+  // Join tournament via API
+  const joinTournament = async (username: string) => {
+    setIsLoading(true);
+    setJoinError(null);
+    setJoinSuccess(null);
 
-		const hostParticipant = {
-			id: `user-${Date.now()}`,
-			username: data.name || "Host Player",
-			elo: Math.floor(Math.random() * 500) + 800,
-			win: 0,
-			lose: 0
-		};
+    try {
+      // Vérifier si l'utilisateur est déjà dans le tournoi
+      const isAlreadyParticipant = participants.some(p => p.username.toLowerCase() === username.toLowerCase());
+      if (isAlreadyParticipant) {
+        throw new Error('Ce joueur est déjà dans le tournoi');
+      }
 
-		localStorage.setItem("tournamentParticipants", JSON.stringify([hostParticipant]));
-		setParticipants([hostParticipant]);
-		setShowCreationDialog(false);
-		setShowJoinDialog(true);
-		setIsLoading(false);
-	};
+      const response = await fetch('/api/tournament/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
 
-	// Rejoindre un tournoi
-	const joinLocalTournament = (username: string) => {
-		const newParticipant = {
-			id: `user-${Date.now()}`,
-			username,
-			elo: Math.floor(Math.random() * 500) + 800,
-			win: 0,
-			lose: 0
-		};
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Erreur lors de la connexion au tournoi');
+      }
 
-		setParticipants(prev => {
-			const newParticipants = [...prev, newParticipant];
-			localStorage.setItem("tournamentParticipants", JSON.stringify(newParticipants));
-			return newParticipants;
-		});
-	};
+      const user = await response.json();
 
-	// Démarrer le tournoi quand tous les joueurs sont prêts
-	useEffect(() => {
-		const tournamentSlot = Number(localStorage.getItem("tournamentSlot") || "0");
-		if (participants.length >= tournamentSlot && tournamentSlot > 0) {
-			const matches = createBracket(participants);
-			setBracket(matches);
-			setCurrentMatch(matches[0]);
-			setCurrentMatchIndex(0);
-			setShowJoinDialog(false);
-			setTournamentStarted(true);
-			localStorage.setItem("tournamentBracket", JSON.stringify(matches));
-		}
-	}, [participants, setBracket, setCurrentMatch, setCurrentMatchIndex, setTournamentStarted]);
+      // Vérifier à nouveau si l'utilisateur n'a pas été ajouté entre temps
+      const isAlreadyParticipantAfterAPI = participants.some(p => p.username.toLowerCase() === user.username.toLowerCase());
+      if (isAlreadyParticipantAfterAPI) {
+        throw new Error('Ce joueur est déjà dans le tournoi');
+      }
 
-	// Créer le bracket
-	const createBracket = (players: any[]) => {
-		const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
-		const matches: BracketMatch[] = [];
-		const totalRounds = Math.ceil(Math.log2(players.length));
+      // Convert base64 avatar to webp
+      const avatarSrc = `data:image/webp;base64,${user.avatar}`;
 
-		// Créer les matchs du premier tour
-		for (let i = 0; i < players.length; i += 2) {
-			if (i + 1 < players.length) {
-				matches.push({
-					id: `match-${matches.length + 1}`,
-					round: 1,
-					matchNumber: matches.length + 1,
-					player1: shuffledPlayers[i],
-					player2: shuffledPlayers[i + 1],
-					status: "pending",
-					winner: null
-				});
-			}
-		}
+      setParticipants(prev => {
+        const updated = [...prev, {
+          id: user.id,
+          username: user.username, // Utilise le username retourné par le backend
+          avatar: avatarSrc,
+          elo: user.elo,
+          win: user.win,
+          lose: user.lose
+        }];
+        localStorage.setItem("tournamentParticipants", JSON.stringify(updated));
+        return updated;
+      });
 
-		// Créer les matchs suivants
-		let currentRoundMatches = matches.length;
-		for (let round = 2; round <= totalRounds; round++) {
-			const matchesInRound = Math.ceil(currentRoundMatches / 2);
-			for (let i = 0; i < matchesInRound; i++) {
-				matches.push({
-					id: `match-${matches.length + 1}`,
-					round,
-					matchNumber: i + 1,
-					player1: null,
-					player2: null,
-					status: "pending",
-					winner: null
-				});
-			}
-			currentRoundMatches = matchesInRound;
-		}
+      // Afficher un message de succès
+      console.log(`Joueur ${user.username} ajouté au tournoi avec succès!`);
+      setJoinSuccess(`Joueur ${user.username} ajouté au tournoi avec succès!`);
 
-		return matches;
-	};
+      // Nettoyer le message de succès après 3 secondes
+      setTimeout(() => setJoinSuccess(null), 3000);
+    } catch (error) {
+      console.error('Erreur lors de la connexion:', error);
+      setJoinError(error instanceof Error ? error.message : 'Erreur inconnue');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-	// Fonction pour simuler la fin d'un match
-	const simulateMatchEnd = () => {
-		if (!currentMatch) return;
+  useEffect(() => {
+    const tournamentSlot = Number(localStorage.getItem("tournamentSlot") || "0");
+    const existingBracket = localStorage.getItem("tournamentBracket");
 
-		// Choisir un gagnant aléatoire
-		const winner = Math.random() > 0.5
-			? currentMatch.player1?.username
-			: currentMatch.player2?.username;
+    // Ne créer le bracket que si on a assez de participants ET qu'il n'existe pas déjà
+    if (participants.length >= tournamentSlot && tournamentSlot > 0 && !existingBracket) {
+      console.log("Création du nouveau bracket avec", participants.length, "participants");
+      const matches = createBracket(participants);
+      setBracket(matches);
+      setCurrentMatch(matches[0]);
+      setCurrentMatchIndex(0);
+      setShowJoinDialog(false);
+      setTournamentStarted(true);
+      localStorage.setItem("tournamentBracket", JSON.stringify(matches));
+    } else if (participants.length >= tournamentSlot && tournamentSlot > 0 && existingBracket) {
+      // Si le bracket existe déjà, on ferme juste le dialog de connexion
+      console.log("Bracket existant trouvé, fermeture du dialog de connexion");
+      setShowJoinDialog(false);
+      setTournamentStarted(true);
+    }
+  }, [participants]);
 
-		if (winner) {
-			updateBracketAfterMatch(currentMatch.id, winner);
+  const createBracket = (players: Participant[]) => {
+    // Utiliser un ordre déterministe basé sur l'ordre d'arrivée des joueurs
+    // plutôt qu'un mélange aléatoire pour éviter les problèmes de cohérence
+    const orderedPlayers = [...players];
+    const matches: BracketMatch[] = [];
+    const totalRounds = Math.ceil(Math.log2(players.length));
 
-			// Vérifier si c'est le dernier match
-			const nextMatch = bracket.find(match =>
-				match.status === "pending" && match.player1 && match.player2
-			);
+    console.log("Création du bracket avec l'ordre des joueurs:", orderedPlayers.map(p => p.username));
 
-			if (!nextMatch) {
-				// Trouver le match final
-				const finalMatch = bracket[bracket.length - 1];
-				if (finalMatch.winner) {
-					setTournamentWinner(finalMatch.winner);
-					setShowWinnerDialog(true);
-				}
-			}
-		}
-	};
+    // Premier tour
+    for (let i = 0; i < orderedPlayers.length; i += 2) {
+      matches.push({
+        id: `match-${matches.length+1}`,
+        round: 1,
+        matchNumber: matches.length+1,
+        player1: orderedPlayers[i],
+        player2: orderedPlayers[i+1] || null,
+        status: "pending",
+        winner: null
+      });
+    }
 
-	// Fermer le tournoi et nettoyer
-	const closeTournament = () => {
-		setShowWinnerDialog(false);
-		setTournamentStarted(false);
-		setBracket([]);
-		setCurrentMatch(null);
-		setParticipants([]);
-		localStorage.removeItem("tournamentId");
-		localStorage.removeItem("tournamentParticipants");
-		localStorage.removeItem("tournamentBracket");
-		localStorage.removeItem("tournamentSlot");
-		router.push("/");
-	};
+    // Tours suivants
+    let currentCount = matches.length;
+    for (let round = 2; round <= totalRounds; round++) {
+      const nextCount = Math.ceil(currentCount/2);
+      for (let i = 0; i < nextCount; i++) {
+        matches.push({
+          id: `match-${matches.length+1}`,
+          round,
+          matchNumber: i+1,
+          player1: null,
+          player2: null,
+          status: "pending",
+          winner: null
+        });
+      }
+      currentCount = nextCount;
+    }
+    return matches;
+  };
 
-	return (
-		<div className="container mx-auto px-4 py-8 max-w-10xl">
-			{/* Popup de création de tournoi */}
-			<Dialog
-				open={showCreationDialog}
-				onOpenChange={(open) => {
-					if (!open && typeof window !== 'undefined' && !localStorage.getItem("tournamentId")) {
-						router.push("/");
-					} else {
-						setShowCreationDialog(open);
-					}
-				}}
-			>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{t('game.tournament.create.title')}</DialogTitle>
-						<DialogDescription>
-							{t('game.tournament.create.description')}
-						</DialogDescription>
-					</DialogHeader>
+  const closeTournament = () => {
+    setShowWinnerDialog(false);
+    setTournamentStarted(false);
+    setBracket([]);
+    setCurrentMatch(null);
+    setParticipants([]);
+    localStorage.clear();
+    router.push("/");
+  };
 
-					<form
-						onSubmit={form.handleSubmit(createLocalTournament)}
-						className="space-y-6"
-					>
-						<div className="space-y-3">
-							<Label htmlFor="gameName">{t('game.tournament.create.name')}</Label>
-							<Input
-								id="gameName"
-								placeholder={t('game.tournament.create.placeholder')}
-								{...form.register("name")}
-								disabled={isLoading}
-							/>
-							{form.formState.errors.name && (
-								<p className="text-sm text-red-500">
-									{form.formState.errors.name.message}
-								</p>
-							)}
-						</div>
+  const removeParticipant = (participantId: string) => {
+    setParticipants(prev => {
+      const updated = prev.filter(p => p.id !== participantId);
+      localStorage.setItem("tournamentParticipants", JSON.stringify(updated));
+      return updated;
+    });
+  };
 
-						<div className="space-y-4">
-							<div className="flex justify-between items-center">
-								<Label>{t('game.tournament.create.playerCount')}</Label>
-								<span className="font-bold text-lg">
-									{form.watch("playerCount")}
-								</span>
-							</div>
-							<Slider
-								defaultValue={[4]}
-								min={4}
-								max={8}
-								step={4}
-								onValueChange={(value) => form.setValue("playerCount", value[0])}
-								value={[form.watch("playerCount")]}
-								className="w-full"
-							/>
-							<div className="flex justify-between text-xs text-muted-foreground px-2">
-								{[4, 8].map(num => (
-									<span key={num}>{num}</span>
-								))}
-							</div>
-						</div>
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-10xl">
+      {/* Creation Dialog */}
+      <Dialog open={showCreationDialog} onOpenChange={open => {
+        if (!open && !localStorage.getItem("tournamentId")) router.push("/");
+        else setShowCreationDialog(open);
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('game.tournament.create.title')}</DialogTitle>
+            <DialogDescription>{t('game.tournament.create.description')}</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={form.handleSubmit(createLocalTournament)} className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="gameName">{t('game.tournament.create.name')}</Label>
+              <Input id="gameName" placeholder={t('game.tournament.create.placeholder')} {...form.register("name")} disabled={isLoading} />
+              {form.formState.errors.name && <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>}
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <Label>{t('game.tournament.create.playerCount')}</Label>
+                <span className="font-bold text-lg">{form.watch("playerCount")}</span>
+              </div>
+              <Slider defaultValue={[4]} min={4} max={8} step={2} onValueChange={v => form.setValue("playerCount", v[0])} value={[form.watch("playerCount")]} className="w-full" />
+              <div className="flex justify-between text-xs text-muted-foreground px-2"><span>4</span><span>6</span><span>8</span></div>
+            </div>
+            <Button type="submit" className="w-full py-6 text-lg" disabled={isLoading}>
+              {isLoading ? <span className="animate-pulse">{t('game.tournament.create.loading')}</span> : t('game.tournament.create.create')}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-						<Button
-							type="submit"
-							className="w-full py-6 text-lg"
-							disabled={isLoading}
-						>
-							{isLoading ? (
-								<span className="animate-pulse">{t('game.tournament.create.loading')}</span>
-							) : (
-								t('game.tournament.create.create')
-							)}
-						</Button>
-					</form>
-				</DialogContent>
-			</Dialog>
+      {/* Join Dialog */}
+      <Dialog open={showJoinDialog} onOpenChange={open => setShowJoinDialog(open)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('game.tournament.create.join')}</DialogTitle>
+            <DialogDescription>{t('game.tournament.create.joinDescription')}</DialogDescription>
+          </DialogHeader>
 
-			{/* Popup de join */}
-			<Dialog
-				open={showJoinDialog}
-				onOpenChange={(open) => {
-					if (!open && participants.length < Number(localStorage.getItem("tournamentSlot") || "0")) {
-						return;
-					}
-					setShowJoinDialog(open);
-				}}
-			>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{t('game.tournament.create.join')}</DialogTitle>
-						<DialogDescription>
-							{t('game.tournament.create.joinDescription')}
-						</DialogDescription>
-					</DialogHeader>
+          <form onSubmit={e => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const name = (fd.get("username")||"").toString().trim();
+            if (name) joinTournament(name);
+            e.currentTarget.reset();
+          }} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                id="username"
+                name="username"
+                placeholder={t('game.tournament.create.username')}
+                required
+                disabled={isLoading}
+              />
+              {joinError && <p className="text-sm text-red-500">{joinError}</p>}
+              {joinSuccess && <p className="text-sm text-green-600 dark:text-green-400">{joinSuccess}</p>}
+            </div>
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? "Connexion..." : t('game.tournament.create.joinBtn')}
+            </Button>
+          </form>
 
-					<form onSubmit={(e) => {
-						e.preventDefault();
-						const formData = new FormData(e.target as HTMLFormElement);
-						const username = formData.get("username") as string;
-						if (username.trim()) {
-							joinLocalTournament(username.trim());
-							(e.target as HTMLFormElement).reset();
-						}
-					}}>
-						<Input
-							id="username"
-							name="username"
-							placeholder={t('game.tournament.create.username')}
-							required
-						/>
-						<Button className="w-full mt-4" type="submit">
-							{t('game.tournament.create.joinBtn')}
-						</Button>
-					</form>
+          <div className="mt-6">
+            <h3 className="mb-4 font-semibold text-lg">
+              Participants ({participants.length}/{localStorage.getItem("tournamentSlot")})
+            </h3>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {participants.map((participant, index) => (
+                <div key={participant.id} className="flex items-center justify-between p-3 bg-muted rounded-lg border border-border">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold">
+                      {index + 1}
+                    </div>
+                    <img
+                      src={participant.avatar}
+                      alt={participant.username}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-primary/20"
+                    />
+                    <div>
+                      <p className="font-medium text-sm text-primary">{participant.username}</p>
+                      <p className="text-xs text-muted-foreground">
+                        ELO: {participant.elo} | {participant.win}W/{participant.lose}L
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeParticipant(participant.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Retirer
+                  </Button>
+                </div>
+              ))}
+              {participants.length === 0 && (
+                <p className="text-center text-muted-foreground py-4">
+                  Aucun participant pour le moment
+                </p>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-					<div className="mt-6">
-						<h3 className="mb-2 font-semibold">{t('game.tournament.create.players')} ({participants.length}/{localStorage.getItem("tournamentSlot")})</h3>
-						<ul className="space-y-2">
-							{participants.map((player) => (
-								<li key={player.id} className="flex justify-between items-center p-2 bg-muted rounded">
-									<span>{player.username}</span>
-									<span className="text-sm text-muted-foreground">ELO: {player.elo}</span>
-								</li>
-							))}
-						</ul>
-					</div>
-				</DialogContent>
-			</Dialog>
+      {/* Winner Dialog */}
+      <Dialog open={showWinnerDialog} onOpenChange={setShowWinnerDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('game.tournament.winner.title')}</DialogTitle>
+            <DialogDescription>{t('game.tournament.winner.congratulations')}</DialogDescription>
+          </DialogHeader>
+          <div className="text-center py-4">
+            <div className="text-2xl font-bold text-primary mb-2">{tournamentWinner}</div>
+            <p className="text-muted-foreground">{t('game.tournament.winner.champion')}</p>
+          </div>
+          <Button onClick={closeTournament} className="w-full mt-6">{t('game.tournament.winner.close')}</Button>
+        </DialogContent>
+      </Dialog>
 
-			{/* Popup du gagnant */}
-			<Dialog open={showWinnerDialog} onOpenChange={setShowWinnerDialog}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{t('game.tournament.winner.title')}</DialogTitle>
-						<DialogDescription>
-							{t('game.tournament.winner.congratulations')}
-						</DialogDescription>
-					</DialogHeader>
-					<div className="text-center py-4">
-						<div className="text-2xl font-bold text-primary mb-2">{tournamentWinner}</div>
-						<p className="text-muted-foreground">{t('game.tournament.winner.champion')}</p>
-					</div>
-					<Button onClick={closeTournament} className="w-full mt-6">
-						{t('game.tournament.winner.close')}
-					</Button>
-				</DialogContent>
-			</Dialog>
+      {/* QuickMatchSettings */}
+      <QuickMatchSettings
+        {...props}
+        tournamentWinner={tournamentWinner}
+        showWinnerDialog={showWinnerDialog}
+        setShowWinnerDialog={setShowWinnerDialog}
+      />
 
-			{/* Affichage du tournoi */}
-			{tournamentStarted && currentMatch && (
-				<Card className="mb-6 p-6">
-					<h2 className="mb-4 font-semibold text-xl">
-						{t('game.tournament.currentMatch')} (Round {currentMatch.round}, Match {currentMatch.matchNumber})
-					</h2>
-					<div className="flex justify-between space-x-4">
-						<div className={`flex flex-col items-center w-1/2 p-4 rounded-lg ${currentMatch.winner === currentMatch.player1?.username ? "bg-green-100 dark:bg-green-900" : "bg-muted"}`}>
-							{currentMatch.player1 ? (
-								<div className="text-center">
-									<p className="font-medium text-lg">{currentMatch.player1.username}</p>
-									<p className="text-sm text-muted-foreground">
-										ELO: {currentMatch.player1.elo} | {currentMatch.player1.win}W/{currentMatch.player1.lose}L
-									</p>
-								</div>
-							) : (
-								<span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
-							)}
-						</div>
-						<div className="flex items-center justify-center text-xl font-bold">VS</div>
-						<div className={`flex flex-col items-center w-1/2 p-4 rounded-lg ${currentMatch.winner === currentMatch.player2?.username ? "bg-green-100 dark:bg-green-900" : "bg-muted"}`}>
-							{currentMatch.player2 ? (
-								<div className="text-center">
-									<p className="font-medium text-lg">{currentMatch.player2.username}</p>
-									<p className="text-sm text-muted-foreground">
-										ELO: {currentMatch.player2.elo} | {currentMatch.player2.win}W/{currentMatch.player2.lose}L
-									</p>
-								</div>
-							) : (
-								<span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
-							)}
-						</div>
-					</div>
-					<Button onClick={simulateMatchEnd} className="mt-6 w-full" disabled={currentMatch.status !== "pending"}>
-						{currentMatch.status === "ongoing" ? t('game.tournament.matchInProgress') : t('game.tournament.simulateMatch')}
-					</Button>
-				</Card>
-			)}
+      {/* Tournament Bracket Preview */}
+      {tournamentStarted && (
+        <Card className="mt-6 p-6">
+          <h2 className="mb-6 font-semibold text-xl text-center">Aperçu du Tournoi</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {bracket.map(match => (
+              <div key={match.id} className={`p-4 rounded-lg border-2 ${
+                match.status === "completed"
+                  ? "bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800"
+                  : match.status === "ongoing"
+                  ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
+                  : "bg-muted border-border"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="font-semibold text-sm">Round {match.round}</p>
+                  <p className="text-xs text-muted-foreground">Match {match.matchNumber}</p>
+                </div>
+                <div className="space-y-3">
+                  <div className={`flex items-center space-x-3 p-2 rounded ${
+                    match.winner === match.player1?.username ? "bg-green-100 dark:bg-green-800/30" : ""
+                  }`}>
+                    {match.player1 ? (
+                      <>
+                        <img
+                          src={match.player1.avatar}
+                          alt={match.player1.username}
+                          className="w-8 h-8 rounded-full object-cover border border-border"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{match.player1.username}</p>
+                          <p className="text-xs text-muted-foreground">ELO: {match.player1.elo}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center space-x-3 w-full">
+                        <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>
+                        <span className="text-sm text-muted-foreground">En attente...</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex justify-center">
+                    <span className="text-xs font-bold text-muted-foreground">VS</span>
+                  </div>
+                  <div className={`flex items-center space-x-3 p-2 rounded ${
+                    match.winner === match.player2?.username ? "bg-green-100 dark:bg-green-800/30" : ""
+                  }`}>
+                    {match.player2 ? (
+                      <>
+                        <img
+                          src={match.player2.avatar}
+                          alt={match.player2.username}
+                          className="w-8 h-8 rounded-full object-cover border border-border"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{match.player2.username}</p>
+                          <p className="text-xs text-muted-foreground">ELO: {match.player2.elo}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center space-x-3 w-full">
+                        <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>
+                        <span className="text-sm text-muted-foreground">En attente...</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {match.winner && (
+                  <div className="mt-3 pt-2 border-t border-border">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                      <p className="text-xs text-green-600 dark:text-green-400 font-medium truncate">
+                        Vainqueur: {match.winner}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {match.status === "ongoing" && (
+                  <div className="mt-2 pt-2 border-t border-border">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium text-center">
+                      Match en cours
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
-			{/* QuickMatchSettings */}
-			<QuickMatchSettings {...props} />
-		</div>
-	);
+      {/* Current Match */}
+      {tournamentStarted && currentMatch && (
+        <Card className="mt-6 p-6">
+          <h2 className="mb-4 font-semibold text-xl text-center">
+            Match en cours (Round {currentMatch.round}, Match {currentMatch.matchNumber})
+          </h2>
+          <div className="flex justify-between items-center space-x-6">
+            <div className={`flex flex-col items-center w-1/2 p-6 rounded-lg ${
+              currentMatch.winner === currentMatch.player1?.username
+                ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300 dark:border-green-700"
+                : "bg-muted border-2 border-border"
+            }`}>
+              {currentMatch.player1 ? (
+                <>
+                  <img
+                    src={currentMatch.player1.avatar}
+                    alt={currentMatch.player1.username}
+                    className="w-16 h-16 rounded-full object-cover mb-3 border-2 border-primary/20"
+                  />
+                  <p className="font-medium text-lg text-center">{currentMatch.player1.username}</p>
+                  <p className="text-sm text-muted-foreground text-center">
+                    ELO: {currentMatch.player1.elo} | {currentMatch.player1.win}W/{currentMatch.player1.lose}L
+                  </p>
+                </>
+              ) : (
+                <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
+              )}
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="text-3xl font-bold text-primary mb-2">VS</div>
+              <div className="text-sm text-muted-foreground">Match en cours</div>
+            </div>
+
+            <div className={`flex flex-col items-center w-1/2 p-6 rounded-lg ${
+              currentMatch.winner === currentMatch.player2?.username
+                ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300 dark:border-green-700"
+                : "bg-muted border-2 border-border"
+            }`}>
+              {currentMatch.player2 ? (
+                <>
+                  <img
+                    src={currentMatch.player2.avatar}
+                    alt={currentMatch.player2.username}
+                    className="w-16 h-16 rounded-full object-cover mb-3 border-2 border-primary/20"
+                  />
+                  <p className="font-medium text-lg text-center">{currentMatch.player2.username}</p>
+                  <p className="text-sm text-muted-foreground text-center">
+                    ELO: {currentMatch.player2.elo} | {currentMatch.player2.win}W/{currentMatch.player2.lose}L
+                  </p>
+                </>
+              ) : (
+                <span className="text-muted-foreground">{t('game.tournament.create.waiting')}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <p className="text-sm text-muted-foreground text-center">
+              Cliquez sur "Commencer le match" ci-dessus pour jouer ce match
+            </p>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
 }
