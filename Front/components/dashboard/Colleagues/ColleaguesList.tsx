@@ -6,7 +6,6 @@ import { Users, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useI18n } from "@/i18n-client"
 import { useEffect, useState, useCallback } from "react"
-import { useJWT } from "@/hooks/use-jwt"
 import { AddColleagueDialog } from "./AddColleagueDialog"
 import { PendingInvitations } from "./PendingInvitations"
 import { RemoveFriendDialog } from "./RemoveFriendDialog"
@@ -16,13 +15,11 @@ interface Friend {
 	id: number;
 	username: string;
 	status: boolean;
-	avatar?: string;
+	avatar?: string; // base64 string
 }
 
 export function ColleaguesList({ locale }: { locale: string }) {
-	const jwt = useJWT()
 	const t = useI18n()
-
 	const [friends, setFriends] = useState<Friend[]>([])
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState<boolean>(true)
@@ -30,37 +27,34 @@ export function ColleaguesList({ locale }: { locale: string }) {
 	const fetchFriends = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/friends`, {
-				headers: {
-					Authorization: `Bearer ${jwt}`,
-				},
+				credentials: 'include',
 			})
-			if (!response.ok) {
-				throw new Error('Failed to fetch friends')
-			}
-			const data = await response.json() as Array<{
-	id: number;
-	username: string;
-	onlineStatus: boolean;
-	avatar?: string;
-}>
+			if (!response.ok) throw new Error('Failed to fetch friends')
 
-const transformed = data.map((friend): Friend => ({
-	id: friend.id,
-	username: friend.username,
-	status: friend.onlineStatus,
-	avatar: friend.avatar ?? undefined,
-}))
+			const data = await response.json() as Array<{
+				id: number
+				username: string
+				onlineStatus: boolean
+				avatar?: string // base64 string
+			}>
+
+			const transformed = data.map((friend): Friend => ({
+				id: friend.id,
+				username: friend.username,
+				status: friend.onlineStatus,
+				avatar: friend.avatar ?? undefined,
+			}))
 			setFriends(transformed)
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Unknown error')
 		} finally {
 			setLoading(false)
 		}
-	}, [jwt])
+	}, [])
 
 	useEffect(() => {
-		if (jwt) fetchFriends()
-	}, [jwt, fetchFriends])
+		fetchFriends()
+	}, [fetchFriends])
 
 	useFriendSocket((data) => {
 		if (!data?.type) return
@@ -73,21 +67,6 @@ const transformed = data.map((friend): Friend => ({
 				break
 		}
 	})
-
-	if (!jwt) {
-		return (
-			<Card className="bg-card border shadow-sm mt-6">
-				<CardHeader>
-					<CardTitle className="flex items-center">
-						<Users className="mr-2 h-5 w-5" /> {t('dashboard.colleagues.title')}
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{t('dashboard.colleagues.notLoggedIn')}
-				</CardContent>
-			</Card>
-		)
-	}
 
 	if (error) {
 		return (
@@ -131,11 +110,16 @@ const transformed = data.map((friend): Friend => ({
 							<div key={friend.id} className="flex items-center justify-between">
 								<div className="flex items-center min-w-[125px]">
 									<Avatar className="h-8 w-8 mr-2">
-										<AvatarImage
-											src={`/profilepicture/${friend.id}.webp`}
-											alt={friend.username}
-										/>
-										<AvatarFallback>{friend.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+										{friend.avatar ? (
+											<AvatarImage
+												src={`data:image/webp;base64,${friend.avatar}`}
+												alt={friend.username}
+											/>
+										) : (
+											<AvatarFallback>
+												{friend.username.slice(0, 2).toUpperCase()}
+											</AvatarFallback>
+										)}
 									</Avatar>
 									<div>
 										<p className="text-sm font-medium">{friend.username}</p>
@@ -158,7 +142,6 @@ const transformed = data.map((friend): Friend => ({
 										</Button>
 									</Link>
 									<RemoveFriendDialog
-										jwt={jwt}
 										username={friend.username}
 										userId={friend.id}
 										onRemove={() =>
@@ -169,11 +152,11 @@ const transformed = data.map((friend): Friend => ({
 							</div>
 						))
 					) : (
-						<p className="text-sm text-muted-foreground">{t('dashboard.colleagues.noFriends')}</p>
+						<p className="text-sm text-muted-foreground">
+							{t('dashboard.colleagues.noFriends')}
+						</p>
 					)}
 				</div>
-
-				{/* ✅ Invitations en attente */}
 				<PendingInvitations />
 			</CardContent>
 			<CardFooter>

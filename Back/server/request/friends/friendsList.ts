@@ -30,6 +30,7 @@ export default async function friendsList(userId: number) {
 		select: {
 			id: true,
 			username: true,
+			avatar: true,
 			alias: true,
 			bio: true,
 			onlineStatus: true,

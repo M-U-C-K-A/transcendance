@@ -24,6 +24,7 @@ export default async function seeFriendRequest(userId: number) {
 		},
 		select: {
 			id: true,
+			avatar: true,
 			username: true,
 			elo: true,
 			bio: true,
