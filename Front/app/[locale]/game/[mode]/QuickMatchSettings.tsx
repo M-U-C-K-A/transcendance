@@ -92,19 +92,26 @@ export function QuickMatchSettings({
                 />
               </div>
 
-              <div className="flex items-center justify-center space-x-2">
-                <Label htmlFor="ai-switch" className={isAIDisabled ? "opacity-50" : ""}>VS AI</Label>
-                <Switch
-                  id="ai-switch"
-                  checked={enableAI}
-                  onCheckedChange={setEnableAI}
-                  disabled={isAIDisabled}
-                />
-                {isAIDisabled && (
-                  <span className="text-sm text-muted-foreground ml-2">
-                    (Non disponible en mode {gamemode})
-                  </span>
-                )}
+              <div className="flex items-center justify-center">
+                <Card className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">🤖</span>
+                    <Label htmlFor="ai-switch" className={isAIDisabled ? "opacity-50" : ""}>VS AI</Label>
+                    <Switch
+                      id="ai-switch"
+                      checked={enableAI}
+                      onCheckedChange={setEnableAI}
+                      disabled={isAIDisabled}
+                    />
+                  </div>
+                  {isAIDisabled && (
+                    <div className="text-center mt-2">
+                      <span className="text-sm text-muted-foreground">
+                        (Non disponible en mode {gamemode})
+                      </span>
+                    </div>
+                  )}
+                </Card>
               </div>
 
               <div>

@@ -50,8 +50,15 @@ export const setupGameObjects = (
   // couleur joueur pour neon
   if (MapStyle === "neon") {
     p1Mat.emissiveColor = p1Mat.diffuseColor;
-    p2Mat.emissiveColor = p2Mat.diffuseColor;
     ballMat.emissiveColor = Color3.White();
+
+    // Si la couleur du joueur 2 est blanche (ce qui est le cas pour l'IA),
+    // on lui donne une couleur émissive bleue/cyan pour un effet "glowing"
+    if (paddle2Color.toLowerCase() === "#ffffff") {
+      p2Mat.emissiveColor = new Color3(1, 1, 1); // glowing blanc
+    } else {
+      p2Mat.emissiveColor = p2Mat.diffuseColor;
+    }
   }
 
 
