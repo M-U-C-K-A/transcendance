@@ -37,14 +37,11 @@ model User {
 	wonMatches			Match[]				@relation("WonMatches")
 	hostedTournaments	Tournament[]		@relation("HostedTournaments")
 	tournamentWins		Tournament[]		@relation("TournamentWins")
-	matchHistory		MatchHistory[]
 	TournamentParticipants	TournamentParticipants[]
 	friendsAsUser1		Friends[]			@relation("User1Friends")
 	friendsAsUser2		Friends[]			@relation("User2Friends")
 	User1Block			Block[]				@relation("User1Block")
 	User2Block			Block[]				@relation("User2Block")
-	senderId			Invitation[]		@relation("senderId")
-	recipientId			Invitation[]		@relation("recipientId")
 	SentMessages		Message[]			@relation("SentMessages")
 	ReceivedMessages	Message[]			@relation("ReceivedMessages")
 
@@ -143,20 +140,8 @@ model Match {
 	player1		User		@relation("P1Matches", fields: [p1Id], references: [id])
 	player2		User?		@relation("P2Matches", fields: [p2Id], references: [id])
 	winner		User?		@relation("WonMatches", fields: [winnerId], references: [id])
-	matchHistory MatchHistory[]
 
 	@@map("Match")
-}
-
-model MatchHistory {
-	userId	Int
-	matchId	Int
-
-	user	User		@relation(fields: [userId], references: [id])
-	match	Match		@relation(fields: [matchId], references: [id])
-
-	@@id([userId, matchId])
-	@@map("MatchHistory")
 }
 
 // --   _____  _   _   ___ _____
@@ -166,28 +151,15 @@ model MatchHistory {
 // --  | \__/\| | | || | | || |
 // --   \____/\_| |_/\_| |_/\_/
 
-model Invitation {
-	id			Int			@id @default(autoincrement())
-	senderId	Int
-	recipientId	Int
-	matchType   String   @default("Quickplay")
-	createdAt	DateTime	@default(now())
-	expireAt	DateTime
-
-	sender			User		@relation("senderId", fields: [senderId], references: [id])
-	recipient		User		@relation("recipientId", fields: [recipientId], references: [id])
-}
-
 model Message {
   id          Int      @id @default(autoincrement())
   senderId    Int
-  recipientId Int?
+  recipientId Int
   content     String
   sendAt      DateTime @default(now())
   readStatus  Boolean  @default(false)
-  isGeneral   Boolean  @default(false)
   messageType String   @default("Message")
 
   sender      User     @relation("SentMessages", fields: [senderId], references: [id])
-  recipient   User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  recipient   User    @relation("ReceivedMessages", fields: [recipientId], references: [id])
 }

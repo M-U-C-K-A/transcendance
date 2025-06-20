@@ -9,7 +9,7 @@ import { onlyUsername } from "@/types/chat";
 type PrivateConversation = {
 	id: number;
 	userName: string;
-	avatar: string;
+	avatar: string; // Maintenant en base64
 	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
@@ -57,8 +57,8 @@ export function PrivateConversationList({
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
+				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 
@@ -136,14 +136,13 @@ export function PrivateConversationList({
 									onClick={() => onSelectUser(conversation.userName)}
 								>
 									<Avatar className="h-10 w-10">
+										{/* Utilisation directe de l'avatar base64 */}
 										<AvatarImage
-											src={`/profilepicture/${conversation.id}.webp`}
-											alt={"conversation"}
+											src={conversation.avatar}
+											alt={conversation.userName}
 										/>
 										<AvatarFallback>
-										{conversation.userName && conversation.userName.length > 0
-											? conversation.userName.charAt(0).toUpperCase()
-											: "?"}
+											{conversation.userName?.charAt(0)?.toUpperCase() || "?"}
 										</AvatarFallback>
 									</Avatar>
 									<div className="flex-1 min-w-0">

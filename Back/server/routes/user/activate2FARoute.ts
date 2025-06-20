@@ -16,7 +16,7 @@ export default async function enable2FARoute(server: FastifyInstance) {
 		return reply.code(200).send({ result });
 	} catch (err: any) {
 		 if (err.message === 'User not found') {
-			return reply.code(500).send({ error: err.message });
+			return reply.code(404).send({ error: err.message });
 		} return reply.code(500).send({ error: 'Internal server error' });
 	}
 });

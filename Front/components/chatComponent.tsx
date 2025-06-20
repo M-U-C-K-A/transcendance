@@ -38,17 +38,25 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
 
     privateMessages.forEach(msg => {
       const isCurrentUserSender = msg.user.name === currentUser;
-      const otherUser = isCurrentUserSender ? msg.recipient?.name : msg.user.name;
+      const otherUser = isCurrentUserSender
+        ? msg.recipient?.name
+        : msg.user.name;
 
       if (!otherUser) return;
 
+      // Calcul des messages non lus
       const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
       const existing = conversationsMap.get(otherUser);
+
+      // Utilisation de l'avatar de l'autre utilisateur
+      const avatar = isCurrentUserSender
+        ? msg.recipient?.avatar || ''
+        : msg.user.avatar || '';
 
       conversationsMap.set(otherUser, {
         id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
         userName: otherUser,
-        avatar: `/profilepicture/${isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id}.webp`,
+        avatar: avatar,
         unreadCount: (existing?.unreadCount || 0) + unreadCount,
         lastMessage: msg.text,
         lastMessageTime: msg.timestamp,
@@ -130,7 +138,7 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
       const newConversation: PrivateConversation = {
         id: contact.id,
         userName: contact.userName,
-        avatar: `/profilepicture/${contact.id}.webp`,
+        avatar: '', // Initialement vide, sera rempli par les messages
         unreadCount: 0,
         lastMessage: "",
         lastMessageTime: new Date(),

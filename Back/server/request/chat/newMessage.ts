@@ -9,7 +9,8 @@ export default async function newMessage(recipient: string, userId: number) {
 		},
 		select: {
 			id: true,
-			username: true
+			username: true,
+			avatar: true,
 		}
 	})
 
