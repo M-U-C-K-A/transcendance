@@ -159,9 +159,9 @@ export function QuickMatchSettings({
                 )}
 
                 {/* Bouton de démarrage ou retour au dashboard selon l'état du tournoi */}
-                {gamemode === "tournament" && showWinnerDialog && tournamentWinner ? (
+                {gamemode === "tournament" && tournamentWinner ? (
                   <Button
-                    onClick={() => router.push(`/${locale}/dashboard`)}
+                    onClick={() => router.push(`/dashboard`)}
                     className="w-full py-6 text-lg bg-green-600 hover:bg-green-700"
                   >
                     🏆 Retour au Dashboard

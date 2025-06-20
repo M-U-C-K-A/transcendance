@@ -21,7 +21,7 @@ interface ButtonsProps {
   setCameraKey: (key: number) => void;
   paddle1Color: string;
   paddle2Color: string;
-  MapStyle: string;
+  MapStyle: "classic" | "red" | "neon";
   enableMaluses: boolean;
   enableSpecial: boolean;
   baseSpeed: number;
@@ -65,39 +65,21 @@ export default function Buttons({
   enableAI,
   setGameStarted,
 }: ButtonsProps): JSX.Element {
-  useEffect(() => {
-    if (
-      gamemode === "tournament" &&
-      currentMatch &&
-      winner &&
-      currentMatch.status !== "completed"
-    ) {
+  // Gestion de la fin des matchs en mode tournoi
+  const handleMatchEnd = (winner: string, matchScore: { player1: number; player2: number }) => {
+    if (gamemode === "tournament" && currentMatch) {
+      console.log(`Fin du match - Gagnant: ${winner}, Score: ${matchScore.player1}-${matchScore.player2}`);
+      console.log(`🎮 Match en cours: ${currentMatch.id} - ${currentMatch.player1?.username} vs ${currentMatch.player2?.username}`);
+
       // Vérifier que le match a des joueurs
       if (!currentMatch.player1 || !currentMatch.player2) {
         console.error("Match sans joueurs, impossible de déterminer le gagnant");
         return;
       }
 
-      const winnerUsername = winner === "player1"
-        ? currentMatch.player1.username
-        : winner === "player2"
-          ? currentMatch.player2.username
-          : winner;
-
-      if (winnerUsername) {
-        updateBracketAfterMatch(currentMatch.id, winnerUsername);
-      }
-    }
-  }, [winner, currentMatch, gamemode, updateBracketAfterMatch]);
-
-  // Gestion de la fin des matchs en mode tournoi
-  const handleMatchEnd = (winner: string, matchScore: { player1: number; player2: number }) => {
-    if (gamemode === "tournament" && currentMatch) {
-      console.log(`Fin du match - Gagnant: ${winner}, Score: ${matchScore.player1}-${matchScore.player2}`);
-
-      // Vérifier que le match a des joueurs
-      if (!currentMatch.player1 || !currentMatch.player2) {
-        console.error("Match sans joueurs, impossible de déterminer le gagnant");
+      // Vérifier que le match n'est pas déjà terminé
+      if (currentMatch.status === "completed") {
+        console.log(`⚠️ Match ${currentMatch.id} déjà terminé, ignoré`);
         return;
       }
 
@@ -136,7 +118,7 @@ export default function Buttons({
         style={{ marginTop: "-12px" }}
       >
         <button
-          onClick={() => setShowVolumeSlider((prev) => !prev)}
+          onClick={() => setShowVolumeSlider(!showVolumeSlider)}
           className="bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"
           aria-label="Volume"
         >
@@ -160,7 +142,7 @@ export default function Buttons({
 
 
         <button
-          onClick={() => setShowTrackMenu((prev) => !prev)}
+          onClick={() => setShowTrackMenu(!showTrackMenu)}
           className="bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"
           aria-label="Changer musique"
         >
@@ -183,7 +165,7 @@ export default function Buttons({
 
         {/* Réinitialiser la caméra */}
         <button
-          onClick={() => setCameraKey((prev) => prev + 1)}
+          onClick={() => setCameraKey(cameraKey + 1)}
           className="ml-2 bg-card border border-border rounded p-1.5 hover:bg-card/80 text-sm"
           aria-label="Réinitialiser la caméra"
         >
@@ -234,10 +216,6 @@ export default function Buttons({
         volume={volume}
         baseSpeed={baseSpeed}
         gamemode={gamemode}
-        score={score}
-        setScore={setScore}
-        winner={winner}
-        setWinner={setWinner}
         enableAI={enableAI}
         onMatchEnd={handleMatchEnd}
       />
