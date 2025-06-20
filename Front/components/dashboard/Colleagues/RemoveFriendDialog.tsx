@@ -13,13 +13,12 @@ import { useState } from "react"
 import { useI18n } from "@/i18n-client"
 
 interface RemoveFriendDialogProps {
-  jwt: string
   username: string
   userId: number
   onRemove: () => void
 }
 
-export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFriendDialogProps) {
+export function RemoveFriendDialog({ username, userId, onRemove }: RemoveFriendDialogProps) {
   const t = useI18n()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -29,13 +28,14 @@ export function RemoveFriendDialog({ jwt, username, userId, onRemove }: RemoveFr
     try {
       setLoading(true)
       setError(null)
+
       const response = await fetch(`/api/friends/remove`, {
         method: 'POST',
+        credentials: 'include', // ✅ cookies only
         headers: {
-          Authorization: `Bearer ${jwt}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: userId })
+        body: JSON.stringify({ id: userId }),
       })
 
       if (!response.ok) {

@@ -35,12 +35,6 @@ export default async function getuser(profileId: number, userId: number) {
 		winRate = 0
 	}
 
-	const achievements = await Prisma.achievement.findUnique({
-		where: {
-			id: userInfo.id,
-		},
-	});
-
 	const isBlocked = await Prisma.block.findFirst({
 		where: {
 			id1: userId,
@@ -64,5 +58,5 @@ export default async function getuser(profileId: number, userId: number) {
 		}
 	  });
 
-	return {userInfo, gameNumber, winRate, achievements, matchHistory, isBlocked}
+	return {userInfo, gameNumber, winRate, matchHistory, isBlocked}
 }

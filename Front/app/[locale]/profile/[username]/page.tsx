@@ -79,15 +79,12 @@ export default function ProfilePage() {
 	const [isLoading, setIsLoading] = useState(true)
 	const [profileData, setProfileData] = useState<ProfileData | null>(null)
 	const [error, setError] = useState<string | null>(null)
-	const jwt = useJWT()
 
 	useEffect(() => {
 		const fetchProfileData = async () => {
 			try {
 				const response = await fetch(`/api/profile/${username}`, {
-					headers: {
-						Authorization: `Bearer ${jwt}`,
-					},
+					credentials: "include",
 				})
 				if (!response.ok) {
 					throw new Error(t('profile.errors.fetchFailed'))
@@ -101,10 +98,10 @@ export default function ProfilePage() {
 				setIsLoading(false)
 			}
 		}
-		if (jwt && username) {
+		if (username) {
 			fetchProfileData()
 		}
-	}, [jwt, username, t])
+	}, [username, t])
 
 	if (isLoading) {
 		return <ProfileSkeleton locale={locale} />
@@ -154,7 +151,7 @@ export default function ProfilePage() {
 	const winCount = userInfo.win || 0
 	const loseCount = userInfo.lose || 0
 	const winRate = winCount + loseCount > 0 ? Math.round((winCount / (winCount + loseCount)) * 100) : 0
-	
+
 	const formattedMatches = matchHistory.map((match) => {
 		const isPlayer1 = match.p1Id === userInfo.id
 		const opponentId = isPlayer1 ? match.p2Id : match.p1Id
@@ -227,10 +224,9 @@ export default function ProfilePage() {
 
 					<div className="lg:col-span-8">
 						<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-							<TabsList className="grid grid-cols-3 mb-6">
+							<TabsList className="grid grid-cols-2 mb-6">
 								<TabsTrigger value="overview">{t('profile.tabs.overview')}</TabsTrigger>
 								<TabsTrigger value="matches">{t('profile.tabs.matches')}</TabsTrigger>
-								<TabsTrigger value="achievements">{t('profile.tabs.achievements')}</TabsTrigger>
 							</TabsList>
 
 							<TabsContent value="overview">
@@ -356,132 +352,6 @@ export default function ProfilePage() {
 													))}
 												</tbody>
 											</table>
-										</div>
-									</CardContent>
-								</Card>
-							</TabsContent>
-
-							<TabsContent value="achievements">
-								<Card className="bg-card border shadow-sm">
-									<CardHeader>
-										<CardTitle>{t('profile.achievements.title')}</CardTitle>
-										<CardDescription>{t('profile.achievements.description')}</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-											{[
-												{
-													title: t('profile.achievements.beginner.title'),
-													description: t('profile.achievements.beginner.description'),
-													icon: "🏓",
-													unlocked: achievements.beginner,
-												},
-												{
-													title: t('profile.achievements.humiliation.title'),
-													description: t('profile.achievements.humiliation.description'),
-													icon: "😳",
-													unlocked: achievements.humiliation,
-												},
-												{
-													title: t('profile.achievements.shamefullLose.title'),
-													description: t('profile.achievements.shamefullLose.description'),
-													icon: "🤦",
-													unlocked: achievements.shamefullLose,
-												},
-												{
-													title: t('profile.achievements.rivality.title'),
-													description: t('profile.achievements.rivality.description'),
-													icon: "⚔️",
-													unlocked: achievements.rivality,
-												},
-												{
-													title: t('profile.achievements.fairPlay.title'),
-													description: t('profile.achievements.fairPlay.description'),
-													icon: "🤝",
-													unlocked: achievements.fairPlay,
-												},
-												{
-													title: t('profile.achievements.lastSecond.title'),
-													description: t('profile.achievements.lastSecond.description'),
-													icon: "⏱️",
-													unlocked: achievements.lastSecond,
-												},
-												{
-													title: t('profile.achievements.comeback.title'),
-													description: t('profile.achievements.comeback.description'),
-													icon: "🔄",
-													unlocked: achievements.comeback,
-												},
-												{
-													title: t('profile.achievements.longGame.title'),
-													description: t('profile.achievements.longGame.description'),
-													icon: "⏳",
-													unlocked: achievements.longGame,
-												},
-												{
-													title: t('profile.achievements.winTournament.title'),
-													description: t('profile.achievements.winTournament.description'),
-													icon: "🏆",
-													unlocked: achievements.winTournament,
-												},
-												{
-													title: t('profile.achievements.friendly.title'),
-													description: t('profile.achievements.friendly.description'),
-													icon: "🤗",
-													unlocked: achievements.friendly,
-												},
-												{
-													title: t('profile.achievements.rank1.title'),
-													description: t('profile.achievements.rank1.description'),
-													icon: "🥇",
-													unlocked: achievements.rank1,
-												},
-												{
-													title: t('profile.achievements.looser.title'),
-													description: t('profile.achievements.looser.description'),
-													icon: "😢",
-													unlocked: achievements.looser,
-												},
-												{
-													title: t('profile.achievements.winner.title'),
-													description: t('profile.achievements.winner.description'),
-													icon: "😎",
-													unlocked: achievements.winner,
-												},
-												{
-													title: t('profile.achievements.scorer.title'),
-													description: t('profile.achievements.scorer.description'),
-													icon: "🎯",
-													unlocked: achievements.scorer,
-												},
-												{
-													title: t('profile.achievements.emoji.title'),
-													description: t('profile.achievements.emoji.description'),
-													icon: "😊",
-													unlocked: achievements.emoji,
-												},
-												{
-													title: t('profile.achievements.rage.title'),
-													description: t('profile.achievements.rage.description'),
-													icon: "😠",
-													unlocked: achievements.rage,
-												},
-											].map((achievement, index) => (
-												<div
-													key={index}
-													className={`flex items-center p-4 rounded-lg border ${achievement.unlocked ? "bg-primary/10 border-primary/20" : "bg-muted/50 border-muted"}`}
-												>
-													<div
-														className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 text-2xl ${achievement.unlocked ? "bg-primary/20" : "bg-muted"}`}
-													>
-														{achievement.icon}
-													</div>
-													<div>
-														<h3 className="font-medium">{achievement.title}</h3>
-														<p className="text-sm text-muted-foreground">{achievement.description}</p>
-													</div>
-												</div>
-											))}
 										</div>
 									</CardContent>
 								</Card>

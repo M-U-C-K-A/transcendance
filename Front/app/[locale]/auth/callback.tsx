@@ -72,7 +72,6 @@ export function Login({
 				throw new Error(data.message || 'Erreur lors de la connexion');
 			}
 
-			localStorage.setItem('token', data.token);
 			router.push(`/en/dashboard`);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Une erreur est survenue');

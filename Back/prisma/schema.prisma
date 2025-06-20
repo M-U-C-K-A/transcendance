@@ -39,7 +39,6 @@ model User {
 	tournamentWins		Tournament[]		@relation("TournamentWins")
 	matchHistory		MatchHistory[]
 	TournamentParticipants	TournamentParticipants[]
-	achievements		Achievement?
 	friendsAsUser1		Friends[]			@relation("User1Friends")
 	friendsAsUser2		Friends[]			@relation("User2Friends")
 	User1Block			Block[]				@relation("User1Block")
@@ -83,30 +82,6 @@ model Block {
 
 	@@id([id1, id2])
 	@@map("Block")
-}
-
-model Achievement {
-	id				Int		@id
-	beginner		Boolean	@default(false)
-	humiliation		Boolean	@default(false)
-	shamefullLose	Boolean	@default(false)
-	rivality		Boolean	@default(false)
-	fairPlay		Boolean	@default(false)
-	lastSecond		Boolean	@default(false)
-	comeback		Boolean	@default(false)
-	longGame		Boolean	@default(false)
-	winTournament	Boolean	@default(false)
-	friendly		Boolean	@default(false)
-	rank1			Boolean	@default(false)
-	looser			Boolean	@default(false)
-	winner			Boolean	@default(false)
-	scorer			Boolean	@default(false)
-	emoji			Boolean	@default(false)
-	rage			Boolean	@default(false)
-
-	user User @relation(fields: [id], references: [id])
-
-	@@map("Achievement")
 }
 
 //   _____ _____ _   _______ _   _   ___  ___  ___ _____ _   _ _____

@@ -53,7 +53,7 @@ export function MessageInput({
 		};
 
 		const data = sendMessageData.safeParse(payload)
-		
+
 		const token = localStorage.getItem('token');
 
 		try {
@@ -61,8 +61,8 @@ export function MessageInput({
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': token ? `Bearer ${token}` : '',
 				},
+				credentials: "include",
 				body: JSON.stringify(data),
 			});
 

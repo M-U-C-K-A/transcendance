@@ -86,12 +86,6 @@ export async function register(email: string) {
 			},
 		})
 
-		await Prisma.achievement.create({
-			data: {
-				id: newUser.id,
-			},
-		})
-
 		const user = await Prisma.user.findUnique({
 			where: { username: data.username },
 			select: { id: true },

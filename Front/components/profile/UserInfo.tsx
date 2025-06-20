@@ -40,8 +40,8 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${jwt}`,
 				},
+				credentials: "include",
 				body: JSON.stringify({ id: user.id }),
 			});
 

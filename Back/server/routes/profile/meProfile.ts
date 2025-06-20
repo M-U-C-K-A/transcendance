@@ -1,10 +1,12 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import meProfileInfo from '@/server/request/profile/meProfile'
 import authMiddleware from '@/server/authMiddleware'
+import { JWTPayload } from '@/types/jwt'
 
 export default async function meProfile(server: FastifyInstance) {
 	server.get('/profile/me', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-		const user = request.user as { id: number }
+
+		const user = request.user as JWTPayload
 
 		if (!user) {
 			return reply.code(400).send({ error:"'User information not found in token" })

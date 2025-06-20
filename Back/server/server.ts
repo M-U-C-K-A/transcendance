@@ -25,7 +25,6 @@ import blockUserRoute from './routes/chat/blockUserRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import { googleLogin } from './routes/auth/google/google';
 import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
-import { friendsWebSocketHandler } from './websocket/websocketFriends';
 import gameCreationRoute from './routes/match/gameCreation';
 import register2FARoute from './routes/auth/register/2FAregisterRoute';
 import Check2FARoute from './routes/auth/register/2FACheckRoute';
@@ -36,6 +35,8 @@ import deleteDataRoute from './routes/gdpr/deleteDataRoute';
 import getDataRoute from './routes/gdpr/getDataRoute';
 import enable2FARoute from './routes/user/activate2FARoute';
 import get2FAStateRoute from './routes/user/get2FAState';
+import fastifyCookie from '@fastify/cookie';
+import { friendsWebSocketHandler } from './websocket/websocketFriends';
 
 dotenv.config();
 
@@ -61,6 +62,9 @@ app.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET || 'test',
 });
 
+app.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET || 'a_secret_key',
+});
 
 async function main() {
 	const port = 3001;

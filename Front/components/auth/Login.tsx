@@ -123,7 +123,6 @@ export function Login({ className, ...props }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || t('auth.2fa.incorrectCode'));
-      localStorage.setItem('token', data.token);
       localStorage.removeItem('temp_2fa_email');
       router.replace('/en/dashboard');
     } catch (err) {
