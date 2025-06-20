@@ -110,7 +110,6 @@ export const usePrivateMessages = (currentUser: string) => {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('token')}`
 				},
 				credentials: 'include'
 			});
