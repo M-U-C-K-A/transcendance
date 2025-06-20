@@ -35,6 +35,7 @@ export interface QuickMatchSettingsProps {
   locale: string;
   enableAI: boolean;
   setEnableAI: Dispatch<SetStateAction<boolean>>;
+  isAIDisabled: boolean;
   gamemode?: string;
   tournamentWinner?: string | null;
   showWinnerDialog?: boolean;
@@ -62,6 +63,7 @@ export function QuickMatchSettings({
   locale,
   enableAI,
   setEnableAI,
+  isAIDisabled,
   gamemode = "quickmatch",
   tournamentWinner,
   showWinnerDialog,
@@ -70,9 +72,6 @@ export function QuickMatchSettings({
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const t = useI18n();
   const router = useRouter();
-
-  // Désactive l'IA en mode tournoi et custom
-  const isAIDisabled = gamemode === "tournament" || gamemode === "custom";
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-10xl">
@@ -92,27 +91,21 @@ export function QuickMatchSettings({
                 />
               </div>
 
-              <div className="flex items-center justify-center">
-                <Card className="p-4">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">🤖</span>
-                    <Label htmlFor="ai-switch" className={isAIDisabled ? "opacity-50" : ""}>VS AI</Label>
-                    <Switch
-                      id="ai-switch"
-                      checked={enableAI}
-                      onCheckedChange={setEnableAI}
-                      disabled={isAIDisabled}
-                    />
-                  </div>
-                  {isAIDisabled && (
-                    <div className="text-center mt-2">
-                      <span className="text-sm text-muted-foreground">
-                        (Non disponible en mode {gamemode})
-                      </span>
+              {!isAIDisabled && (
+                <div className="flex items-center justify-center">
+                  <Card className="p-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl">🤖</span>
+                      <Label htmlFor="ai-switch">VS AI</Label>
+                      <Switch
+                        id="ai-switch"
+                        checked={enableAI}
+                        onCheckedChange={setEnableAI}
+                      />
                     </div>
-                  )}
-                </Card>
-              </div>
+                  </Card>
+                </div>
+              )}
 
               <div>
                 <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
@@ -166,9 +159,9 @@ export function QuickMatchSettings({
                 )}
 
                 {/* Bouton de démarrage ou retour au dashboard selon l'état du tournoi */}
-                {gamemode === "tournament" && tournamentWinner ? (
+                {gamemode === "tournament" && showWinnerDialog && tournamentWinner ? (
                   <Button
-                    onClick={() => router.push(`/dashboard`)}
+                    onClick={() => router.push(`/${locale}/dashboard`)}
                     className="w-full py-6 text-lg bg-green-600 hover:bg-green-700"
                   >
                     🏆 Retour au Dashboard
