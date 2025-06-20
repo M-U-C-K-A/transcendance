@@ -1,20 +1,11 @@
 import { PrismaClient } from '@prisma/client'
-import fs from 'fs'
-import path from 'path'
 import sharp from 'sharp'
 
 const Prisma = new PrismaClient()
 
-export async function createProfilePicture(username: string, id: number) {
-try {
-
+export async function createProfilePicture(username: string): Promise<string | null> {
+  try {
 	const defaultAvatar = `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${username}`;
-
-	const dir = path.resolve(process.cwd(), 'public', 'profilepicture');
-
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir, { recursive: true });
-	}
 
 	const response = await fetch(defaultAvatar);
 
@@ -23,7 +14,6 @@ try {
 	}
 
 	const svgText = await response.text();
-
 	const buffer = Buffer.from(svgText, 'utf-8');
 
 	const webpBuffer = await sharp(buffer, { density: 300 })
@@ -31,17 +21,18 @@ try {
 		.webp({ quality: 80 })
 		.toBuffer();
 
-	const filePath = path.join(dir, `${id}.webp`);
+	const base64Image = webpBuffer.toString('base64');
 
-	await fs.promises.writeFile(filePath, webpBuffer);
-
-	} catch (error) {
-			console.error('Erreur création avatar WebP:', {
-			message: (error as Error).message,
-			stack: (error as Error).stack,
-		});
-	}
+	return (base64Image);
+  } catch (error) {
+	console.error('Erreur création avatar WebP:', {
+		message: (error as Error).message,
+		stack: (error as Error).stack,
+	});
+	return (null);
+  }
 }
+
 
 export async function register(email: string) {
 
@@ -82,9 +73,12 @@ export async function register(email: string) {
 
 		const defaultBio = "👐 Hello i'm new here"
 
+		const avatar = await createProfilePicture(data.username)
+
 		const newUser = await Prisma.user.create({
 			data: {
 				username: data.username,
+				avatar: avatar,
 				email: data.email,
 				pass: data.pass,
 				alias: data.username,
@@ -108,8 +102,6 @@ export async function register(email: string) {
 		}
 
 		const id = user.id
-
-		await createProfilePicture(data.username, id)
 
 		return (newUser)
 	}

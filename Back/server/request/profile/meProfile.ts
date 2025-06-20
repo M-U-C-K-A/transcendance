@@ -10,6 +10,7 @@ export default async function meProfileInfo(userId: number) {
 		},
 		select: {
 			id: true,
+			avatar: true,
 			email: true,
 			username: true,
 			bio: true,

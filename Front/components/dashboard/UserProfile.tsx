@@ -14,7 +14,7 @@ import { useI18n } from "@/i18n-client"
 
 interface User {
 	username: string
-	avatar?: string
+	avatar?: string // base64 string attendue ici
 	bio?: string
 	onlineStatus: boolean
 	elo: number
@@ -57,7 +57,7 @@ export function UserProfile() {
 		fetchUser()
 	}, [jwt])
 
-	// 💡 Cas : pas de JWT
+	// Pas de JWT
 	if (!jwt && !loading) {
 		return (
 			<Card className="bg-card border shadow-sm p-6 text-center">
@@ -66,7 +66,7 @@ export function UserProfile() {
 		)
 	}
 
-	// 💡 Cas : chargement
+	// Chargement
 	if (loading) {
 		return (
 			<Card className="bg-card border shadow-sm">
@@ -91,7 +91,7 @@ export function UserProfile() {
 		)
 	}
 
-	// 💡 Cas : user non trouvé (JWT invalide, erreur backend...)
+	// User non trouvé
 	if (!user) {
 		return (
 			<Card className="bg-card border shadow-sm p-6 text-center">
@@ -100,7 +100,6 @@ export function UserProfile() {
 		)
 	}
 
-	// ✅ Cas normal : afficher le profil
 	return (
 		<Card className="bg-card border shadow-sm">
 			<CardHeader>
@@ -108,10 +107,16 @@ export function UserProfile() {
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
 				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage src={`/profilepicture/${id}.webp`} alt={user.username} />
-					<AvatarFallback className="text-2xl">
-						{user?.username?.slice(0, 2).toUpperCase() || "??"}
-					</AvatarFallback>
+					{user.avatar ? (
+						<AvatarImage
+							src={`data:image/webp;base64,${user.avatar}`}
+							alt={user.username}
+						/>
+					) : (
+						<AvatarFallback className="text-2xl">
+							{user?.username?.slice(0, 2).toUpperCase() || "??"}
+						</AvatarFallback>
+					)}
 				</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
 				<p className="text-muted-foreground mb-2">@{user.username}</p>
