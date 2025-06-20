@@ -6,6 +6,7 @@ import { editProfileData } from "@/types/profile";
 
 export default async function editProfileRoute(server: FastifyInstance) {
 	server.post('/editprofile', {preHandler: authMiddleware}, async function (request: FastifyRequest, reply: FastifyReply) {
+	console.log(request.body)
 	const user = request.user as { id: number; username: string; bio: string}
 	const data = editProfileData.safeParse(request.body)
 
@@ -14,6 +15,7 @@ export default async function editProfileRoute(server: FastifyInstance) {
 	}
 
 	if (!data.success) {
+		console.log(data.error)
 		return reply.status(400).send({
 			errors: data.error.flatten().fieldErrors,
 		})
@@ -33,12 +35,10 @@ export default async function editProfileRoute(server: FastifyInstance) {
 		return (reply.code(200).send({user: result, token}))
 	} catch (err: any) {
 		if (err.message == 'Username already taken' ) {
-			reply.code(403).send({ error: 'Username already taken' })
-		}
-		if (err.message == 'Failed to get user info') {
-			return reply.code(404).send({ error: 'User not found' })
-		}
-		reply.code(500).send({ error: 'Internal server error' })
+			reply.code(403).send({ error: err.message })
+		} else if (err.message == 'Failed to get user info') {
+			return reply.code(404).send({ error: err.message })
+		} reply.code(500).send({ error: err.message })
 	}
 })
 }

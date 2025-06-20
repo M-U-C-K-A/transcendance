@@ -10,6 +10,7 @@ export default async function getLoginData(email: string) {
 		select: {
 			id: true,
 			email: true,
+			avatar: true,
 			username: true,
 			bio: true
 		},

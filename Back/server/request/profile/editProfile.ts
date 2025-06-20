@@ -1,31 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import fs from 'fs'
-import path from 'path'
-import sharp from 'sharp'
 
 const Prisma = new PrismaClient()
-
-async function saveAvatarFromBase64(base64Data: string, id: number) {
-	try {
-		const buffer = Buffer.from(base64Data, 'base64')
-
-		const dir = path.resolve('public/profilepicture')
-		if (!fs.existsSync(dir)) {
-			fs.mkdirSync(dir, { recursive: true })
-		}
-
-		const filePath = path.join(dir, `${id}.webp`)
-
-		await sharp(buffer)
-		.resize(256, 256)
-		.webp({ quality: 80 })
-		.toFile(filePath)
-
-	} catch (error) {
-		console.error('Erreur lors de la sauvegarde de l\'avatar :', error)
-		throw error
-	}
-}
 
 export default async function editProfile(id: number, username: string, newAvatarBase64: string, newBio: string, newUsername: string){
 
@@ -38,15 +13,12 @@ export default async function editProfile(id: number, username: string, newAvata
 		}
 	}
 
-	if (newAvatarBase64 && newAvatarBase64.trim() !== '') {
-		await saveAvatarFromBase64(newAvatarBase64, id)
-	}
-
 	await Prisma.user.update({
 		where: {
 			id: id
 		},
 		data: {
+			avatar: newAvatarBase64,
 			username: newUsername || username,
 			bio: newBio,
 		}

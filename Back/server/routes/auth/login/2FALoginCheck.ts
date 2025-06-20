@@ -22,6 +22,7 @@ export default async function Check2FALoginRoute(server: FastifyInstance) {
 					id: result.id,
 					email: result.email,
 					username: result.username,
+					avatar: result.avatar,
 					bio: result.bio,
 				})
 				return reply.code(200).send({ token })

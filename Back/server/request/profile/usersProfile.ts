@@ -10,6 +10,7 @@ export default async function getuser(profileId: number, userId: number) {
 		},
 		select: {
 			id: true,
+			avatar: true,
 			username: true,
 			elo: true,
 			bio: true,
