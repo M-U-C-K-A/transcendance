@@ -1,6 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction, useState } from "react";
+import { useRouter } from "next/navigation";
 import MapChoice from "@/app/[locale]/game/[mode]/MapChoice";
 import ColorChoice from "@/app/[locale]/game/[mode]/ColorChoice";
 import { ControlsConfig } from "./ControlsConfig";
@@ -35,6 +36,9 @@ export interface QuickMatchSettingsProps {
   enableAI: boolean;
   setEnableAI: Dispatch<SetStateAction<boolean>>;
   gamemode?: string;
+  tournamentWinner?: string | null;
+  showWinnerDialog?: boolean;
+  setShowWinnerDialog?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function QuickMatchSettings({
@@ -59,9 +63,13 @@ export function QuickMatchSettings({
   enableAI,
   setEnableAI,
   gamemode = "quickmatch",
+  tournamentWinner,
+  showWinnerDialog,
+  setShowWinnerDialog,
 }: QuickMatchSettingsProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const t = useI18n();
+  const router = useRouter();
 
   // Désactive l'IA en mode tournoi et custom
   const isAIDisabled = gamemode === "tournament" || gamemode === "custom";
@@ -150,14 +158,24 @@ export function QuickMatchSettings({
                   </Alert>
                 )}
 
-                <Button
-                  onClick={onStart}
-                  disabled={!canStart}
-                  className="w-full py-6 text-lg"
-                  variant={canStart ? "default" : "secondary"}
-                >
-                  {t('game.tournament.create.start')}
-                </Button>
+                {/* Bouton de démarrage ou retour au dashboard selon l'état du tournoi */}
+                {gamemode === "tournament" && showWinnerDialog && tournamentWinner ? (
+                  <Button
+                    onClick={() => router.push(`/${locale}/dashboard`)}
+                    className="w-full py-6 text-lg bg-green-600 hover:bg-green-700"
+                  >
+                    🏆 Retour au Dashboard
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={onStart}
+                    disabled={!canStart}
+                    className="w-full py-6 text-lg"
+                    variant={canStart ? "default" : "secondary"}
+                  >
+                    {t('game.tournament.create.start')}
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

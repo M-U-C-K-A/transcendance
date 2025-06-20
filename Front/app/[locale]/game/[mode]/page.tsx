@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import SettingsPanel from "./SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
-import { BracketMatch } from "@/Shared/types/BracketMatch";	
+import { BracketMatch } from "@/Shared/types/BracketMatch";
 
 
 
@@ -58,6 +58,8 @@ export default function Page() {
 	const [currentMatch, setCurrentMatch] = useState<BracketMatch | null>(null);
 	const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
 	const [tournamentStarted, setTournamentStarted] = useState(false);
+	const [tournamentWinner, setTournamentWinner] = useState<string | null>(null);
+	const [showWinnerDialog, setShowWinnerDialog] = useState(false);
 	const [score, setScore] = useState<{ player1: number; player2: number }>({ player1: 0, player2: 0 });
 	const [winner, setWinner] = useState<string | null>(null);
 
@@ -139,6 +141,15 @@ export default function Page() {
 		}
 	}, [MapStyle]);
 
+	// Détecter quand le tournoi est terminé
+	useEffect(() => {
+		if (showWinnerDialog && tournamentWinner) {
+			// Afficher le gagnant du tournoi
+			console.log(`🎉 Tournoi terminé ! Vainqueur: ${tournamentWinner}`);
+			console.log("Affichage de la dialog du gagnant du tournoi");
+		}
+	}, [showWinnerDialog, tournamentWinner]);
+
 
 
 
@@ -185,15 +196,24 @@ export default function Page() {
 	const updateBracketAfterMatch = (matchId: string, winner: string) => {
 		if (gamemode !== "tournament") return;
 
+		console.log(`Mise à jour du bracket - Match: ${matchId}, Gagnant: ${winner}`);
 
 		setBracket(prevBracket => {
 			const newBracket = [...prevBracket];
 			const currentMatch = newBracket.find(m => m.id === matchId);
 
 			if (!currentMatch) {
+				console.error(`Match ${matchId} non trouvé dans le bracket`);
 				return prevBracket;
 			}
 
+			// Vérifier si le match n'est pas déjà terminé
+			if (currentMatch.status === "completed") {
+				console.log(`Match ${matchId} déjà terminé, ignoré`);
+				return prevBracket;
+			}
+
+			console.log(`Mise à jour du match ${matchId} - Round ${currentMatch.round}, Match ${currentMatch.matchNumber}`);
 
 			// Mettre à jour le statut du match actuel
 			currentMatch.status = "completed";
@@ -206,33 +226,53 @@ export default function Page() {
 			const nextMatch = newBracket.find(m => m.round === nextRound && m.matchNumber === nextMatchNumber);
 
 			if (nextMatch) {
+				console.log(`Match suivant trouvé - Round ${nextRound}, Match ${nextMatchNumber}`);
+
 				// Déterminer si le gagnant doit être player1 ou player2 dans le match suivant
 				const isFirstPlayer = currentMatch.matchNumber % 2 === 1;
 
-				// Mettre à jour le match suivant avec le gagnant
-				const winnerPlayer = currentMatch.player1?.id === winner ? currentMatch.player1 : currentMatch.player2;
+				// Trouver le joueur gagnant dans le match actuel
+				let winnerPlayer = null;
+				if (currentMatch.player1 && currentMatch.player1.username === winner) {
+					winnerPlayer = currentMatch.player1;
+				} else if (currentMatch.player2 && currentMatch.player2.username === winner) {
+					winnerPlayer = currentMatch.player2;
+				}
 
-				if (isFirstPlayer) {
-					nextMatch.player1 = winnerPlayer;
+				if (winnerPlayer) {
+					// Mettre à jour le match suivant avec le gagnant
+					if (isFirstPlayer) {
+						nextMatch.player1 = winnerPlayer;
+						console.log(`Gagnant ${winner} (${winnerPlayer.username}) assigné comme player1 du match suivant`);
+					} else {
+						nextMatch.player2 = winnerPlayer;
+						console.log(`Gagnant ${winner} (${winnerPlayer.username}) assigné comme player2 du match suivant`);
+					}
+
+					// Si les deux joueurs sont maintenant définis, marquer le match comme prêt
+					if (nextMatch.player1 && nextMatch.player2) {
+						nextMatch.status = "pending";
+						console.log(`Match suivant prêt avec ${nextMatch.player1.username} vs ${nextMatch.player2.username}`);
+					}
+
+					// Mettre à jour le match en cours
+					setCurrentMatch(nextMatch);
+					setCurrentMatchIndex(newBracket.indexOf(nextMatch));
+					console.log(`Match en cours mis à jour vers le match suivant: ${nextMatch.id}`);
 				} else {
-					nextMatch.player2 = winnerPlayer;
+					console.error(`Joueur gagnant ${winner} non trouvé dans le match actuel`);
 				}
-
-				// Si les deux joueurs sont maintenant définis, marquer le match comme prêt
-				if (nextMatch.player1 && nextMatch.player2) {
-					nextMatch.status = "pending";
-				}
-
-
-				// Mettre à jour le match en cours
-				setCurrentMatch(nextMatch);
-				setCurrentMatchIndex(newBracket.indexOf(nextMatch));
 			} else {
+				// C'est la finale, le tournoi est terminé
+				console.log(`Tournoi terminé ! Vainqueur final: ${winner}`);
 				setTournamentStarted(false);
+				setTournamentWinner(winner);
+				setShowWinnerDialog(true);
 			}
 
 			// Sauvegarder le bracket mis à jour dans le localStorage
 			localStorage.setItem("tournamentBracket", JSON.stringify(newBracket));
+			console.log("Bracket sauvegardé dans le localStorage");
 
 			return newBracket;
 		});
@@ -275,6 +315,10 @@ export default function Page() {
 						updateBracketAfterMatch={updateBracketAfterMatch}
 						enableAI={enableAI}
 						setEnableAI={setEnableAI}
+						tournamentWinner={tournamentWinner}
+						setTournamentWinner={setTournamentWinner}
+						showWinnerDialog={showWinnerDialog}
+						setShowWinnerDialog={setShowWinnerDialog}
 					/>
 				) : (
 					<Buttons
@@ -304,6 +348,7 @@ export default function Page() {
 						winner={winner}
 						setWinner={setWinner}
 						enableAI={enableAI}
+						setGameStarted={setGameStarted}
 					/>
 				)}
 			</ControlsProvider>

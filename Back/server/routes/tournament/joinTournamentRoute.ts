@@ -13,7 +13,7 @@ export default async function joinTournamentRoute(server: FastifyInstance) {
 
 	try {
 		const result = await joinTournament(username);
-
+		console.log(result);
 		return reply.code(200).send( result );
 	} catch (err: any) {
 		if (err.message === 'User not found') {

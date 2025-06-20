@@ -19,13 +19,15 @@ export default function Pong3D({
 	baseSpeed = 16,
 	gamemode,
 	enableAI = false,
+	onMatchEnd,
 }: Pong3DProps & {
 	enableSpecial?: boolean,
 	enableMaluses?: boolean,
 	volume?: number,
 	baseSpeed?: number,
 	gamemode?: string,
-	enableAI?: boolean
+	enableAI?: boolean,
+	onMatchEnd?: (winner: string, score: { player1: number; player2: number }) => void
 }) {
 
 
@@ -221,38 +223,46 @@ export default function Pong3D({
 		{
 			if (winner)
 			{
-				const sendScore = async () =>
+				if (gamemode !== "tournament")
 				{
-
-					try
+					const sendScore = async () =>
 					{
-						const response = await fetch('/api/game/result', {
-							method: 'POST',
-							headers:
-							{
-								'Content-Type': 'application/json',
-								'Authorization': `Bearer ${localStorage.getItem("token")}`
-							},
-							body: JSON.stringify({
-								player1Score: score.player1,
-								player2Score: score.player2,
-								gameId: localStorage.getItem("currentGameId") || -1,
-							})
-						});
 
-					}
+						try
+						{
+							const response = await fetch('/api/game/result', {
+								method: 'POST',
+								headers:
+								{
+									'Content-Type': 'application/json',
+									'Authorization': `Bearer ${localStorage.getItem("token")}`
+								},
+								body: JSON.stringify({
+									player1Score: score.player1,
+									player2Score: score.player2,
+									gameId: localStorage.getItem("currentGameId") || -1,
+								})
+							});
 
-					catch (error)
-					{
-						console.error('Erreur, winneur non envoye :', error);
-					}
+						}
+
+						catch (error)
+						{
+							console.error('Erreur, winneur non envoye :', error);
+						}
 
 
-				};
+					};
 
 				sendScore();
+				}
+				else if (gamemode === "tournament" && onMatchEnd)
+				{
+					console.log(`Match terminé en mode tournoi - Gagnant: ${winner}, Score: ${score.player1}-${score.player2}`);
+					onMatchEnd(winner, score);
+				}
 			}
-		}, [winner, score]);
+		}, [winner, score, gamemode, onMatchEnd]);
 
 
 
@@ -277,6 +287,7 @@ export default function Pong3D({
 				lastScoreType={lastScoreType}
 				malusSystem={MalusSystemRef.current}
 				gamemode={gamemode}
+				onMatchEnd={onMatchEnd}
 			/>
 		</div>
 	);
