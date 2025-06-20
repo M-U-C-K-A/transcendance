@@ -45,9 +45,9 @@ export function PrivateChat({
   const selectedConversation = conversations.find(
     (c) => c.userName === selectedUser
   );
-  const selectedAvatar = selectedConversation
-    ? `/profilepicture/${selectedConversation.id}.webp`
-    : "/profilepicture/0.webp";
+
+  // Utilisation directe de l'avatar base64
+  const selectedAvatar = selectedConversation?.avatar || "/profilepicture/0.webp";
 
   const filteredMessages = useMemo(() => {
     return messages.filter(

@@ -37,6 +37,7 @@ import enable2FARoute from './routes/user/activate2FARoute';
 import get2FAStateRoute from './routes/user/get2FAState';
 import fastifyCookie from '@fastify/cookie';
 import { friendsWebSocketHandler } from './websocket/websocketFriends';
+import joinTournamentRoute from './routes/tournament/joinTournamentRoute';
 
 dotenv.config();
 
@@ -97,6 +98,7 @@ async function main() {
 	await app.register(getDataRoute)
 	await app.register(get2FAStateRoute)
 	await app.register(enable2FARoute)
+	await app.register(joinTournamentRoute)
 
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);

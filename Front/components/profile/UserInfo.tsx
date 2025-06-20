@@ -8,7 +8,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useJWT } from "@/hooks/use-jwt";
 
 interface UserProfileCardProps {
 	user: UserInfo
@@ -20,7 +19,6 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 	const [blocked, setBlocked] = useState(!!isBlocked)
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const jwt = useJWT();
 
 	const getInitials = (name: string) => {
 		return name
@@ -68,17 +66,23 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 				<CardTitle>Profil</CardTitle>
 			</CardHeader>
 			<CardContent className="flex flex-col items-center">
-				<Avatar className="h-24 w-24 mb-4">
-					<AvatarImage
-						src={`/profilepicture/${user.id}.webp`}
-						alt={user.username}
-					/>
-					<AvatarFallback>{getInitials(user.username)}</AvatarFallback>
-				</Avatar>
+						<Avatar className="h-24 w-24 mb-4">
+							{user.avatar ? (
+							<AvatarImage
+								src={`data:image/webp;base64,${user.avatar}`}
+								alt={user.username}
+							/>
+							) : (
+							<AvatarFallback className="text-2xl">
+								{user?.username?.slice(0, 2).toUpperCase() || "??"}
+							</AvatarFallback>
+							)}
+					</Avatar>
 				<h2 className="text-xl font-bold mb-1">{user.username}</h2>
 				<p className="text-muted-foreground mb-2">@{user.username}</p>
 				<p className="text-sm text-center text-muted-foreground mb-4">{user.bio}</p>
 
+				{/* Statistiques de l'utilisateur */}
 				<div className="grid grid-cols-3 w-full gap-4 text-center mb-4">
 					<div>
 						<p className="text-2xl font-bold text-primary">{user.win}</p>
@@ -94,13 +98,15 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 					</div>
 				</div>
 
+				{/* Badges */}
 				<div className="flex flex-wrap justify-center gap-2 mb-6">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-					<Badge className="bg-yellow-500/20 text-yellow-500">Rang #1</Badge>
 					<Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
 						{user.onlineStatus ? 'En ligne' : 'Hors ligne'}
 					</Badge>
 				</div>
+
+				{/* Bouton de blocage/déblocage */}
 				<Button
 					variant={blocked ? "default" : "destructive"}
 					onClick={handleBlock}
@@ -115,6 +121,8 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 							? "Débloquer l'utilisateur"
 							: "Bloquer l'utilisateur"}
 				</Button>
+
+				{/* Affichage des erreurs */}
 				{error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
 			</CardContent>
 		</Card>

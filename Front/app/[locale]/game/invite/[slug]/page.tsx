@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { toast } from 'sonner' // Import de Sonner
+import { toast } from 'sonner'
 
 export default function InvitationPage({ params }: { params: { slug: string } }) {
   const router = useRouter()

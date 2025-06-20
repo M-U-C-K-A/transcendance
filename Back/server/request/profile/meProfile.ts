@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { User } from './interface'
 
 const Prisma = new PrismaClient()
 

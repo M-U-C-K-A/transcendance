@@ -5,97 +5,100 @@ const nextConfig: NextConfig = {
 		return [
 			{
 				source: "/api/profile/:path*",
-				destination: "http://backend:3001/profile/:path*"
+				destination: "https://backend:3001/profile/:path*"
 			},
 			{
 				source: "/api/auth/:path*",
-				destination: "http://backend:3001/auth/:path*"
+				destination: "https://backend:3001/auth/:path*"
 			},
 			{
 				source: "/api/profile/me",
-				destination: "http://backend:3001/profile/me"
+				destination: "https://backend:3001/profile/me"
 			},
 			{
 				source: "/api/editprofile",
-				destination: "http://backend:3001/editprofile"
+				destination: "https://backend:3001/editprofile"
 			},
 			{
 				source: "/api/friends/:path*",
-				destination: "http://backend:3001/friends/:path*"
+				destination: "https://backend:3001/friends/:path*"
 			},
 			{
 				source: "/api/friends/request",
-				destination: "http://backend:3001/friends/request"
+				destination: "https://backend:3001/friends/request"
 			},
 			{
 				source: "/api/friends/pending",
-				destination: "http://backend:3001/friends/pending"
+				destination: "https://backend:3001/friends/pending"
 			},
 			{
 				source: "/api/friends/remove",
-				destination: "http://backend:3001/friends/remove"
+				destination: "https://backend:3001/friends/remove"
 			},
 			{
 				source: "/api/friends/accept",
-				destination: "http://backend:3001/friends/accept"
+				destination: "https://backend:3001/friends/accept"
 			},
 			{
 				source: "/api/chat/receive/general",
-				destination: "http://backend:3001/chat/receive/general"
+				destination: "https://backend:3001/chat/receive/general"
 			},
 			{
 				source: "/api/chat/receive/private",
-				destination: "http://backend:3001/chat/receive/private"
+				destination: "https://backend:3001/chat/receive/private"
 			},
 			{
 				source: "/api/chat/create",
-				destination: "http://backend:3001/chat/create"
+				destination: "https://backend:3001/chat/create"
 			},
 			{
 				source: "/api/match/list",
-				destination: "http://backend:3001/match/list"
+				destination: "https://backend:3001/match/list"
 			},
 			{
 				source: "/api/match/create",
-				destination: "http://backend:3001/match/create"
+				destination: "https://backend:3001/match/create"
 			},
 			{
 				source: "/api/chat/send",
-				destination: "http://backend:3001/chat/send"
+				destination: "https://backend:3001/chat/send"
 			},
 			{
 				source: "/api/chat/block",
-				destination: "http://backend:3001/chat/block"
+				destination: "https://backend:3001/chat/block"
 			},
 			{
 				source: "/api/game/custom",
-				destination: "http://backend:3001/game/custom"
+				destination: "https://backend:3001/game/custom"
 			},
 			{
 				source: "/api/game/travel",
-				destination: "http://backend:3001/game/travel"
+				destination: "https://backend:3001/game/travel"
 			},
 			{
 				source: "/api/game/result",
-				destination: "http://backend:3001/game/result"
+				destination: "https://backend:3001/game/result"
 			},
 			{
 				source: "/api/gdpr/verify",
-				destination: "http://backend:3001/gdpr/verify"
+				destination: "https://backend:3001/gdpr/verify"
 			},
 			{
 				source: "/api/gdpr/delete",
-				destination: "http://backend:3001/gdpr/delete"
+				destination: "https://backend:3001/gdpr/delete"
 			},
 			{
 				source: "/api/gdpr/getdata",
-				destination: "http://backend:3001/gdpr/getdata"
+				destination: "https://backend:3001/gdpr/getdata"
 			},
 			{
 				source: "/api/gdpr/twofa",
-				destination: "http://backend:3001/gdpr/twofa"
+				destination: "https://backend:3001/gdpr/twofa"
 			},
-			// Images statiques VERSIO DEV
+			{
+				source: "/api/tournament/join",
+				destination: "https://backend:3001/tournament/join"
+			},
 			{
 				source: "/profilepicture/:path*",
 				destination: "/Shared/public/profilepicture/:path*"

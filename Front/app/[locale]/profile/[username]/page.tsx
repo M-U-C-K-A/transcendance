@@ -12,14 +12,13 @@ import { ArrowLeft } from "lucide-react"
 import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfileCard } from "@/components/profile/UserInfo"
-import { useJWT } from "@/hooks/use-jwt"
 import { useI18n } from "@/i18n-client"
 
 interface UserInfo {
 	id: number
+	avatar: string
 	username: string
 	elo: number
-	avatar?: string | null
 	win: number
 	lose: number
 	onlineStatus: boolean
@@ -41,32 +40,13 @@ interface Match {
 	p2EloGain: number
 	MDate: string
 	matchType: string
-}
-
-interface Achievements {
-	id: number
-	beginner: boolean
-	humiliation: boolean
-	shamefullLose: boolean
-	rivality: boolean
-	fairPlay: boolean
-	lastSecond: boolean
-	comeback: boolean
-	longGame: boolean
-	winTournament: boolean
-	friendly: boolean
-	rank1: boolean
-	looser: boolean
-	winner: boolean
-	scorer: boolean
-	emoji: boolean
-	rage: boolean
+	player1?: UserInfo
+	player2?: UserInfo
 }
 
 interface ProfileData {
 	userInfo: UserInfo
 	matchHistory: Match[]
-	achievements: Achievements
 	isBlocked: boolean
 }
 
@@ -90,6 +70,7 @@ export default function ProfilePage() {
 					throw new Error(t('profile.errors.fetchFailed'))
 				}
 				const data = await response.json()
+				console.log(data)
 				setProfileData(data)
 			} catch (err) {
 				setError(err instanceof Error ? err.message : t('profile.errors.unknown'))
@@ -147,7 +128,7 @@ export default function ProfilePage() {
 		)
 	}
 
-	const { userInfo, matchHistory, achievements } = profileData
+	const { userInfo, matchHistory } = profileData
 	const winCount = userInfo.win || 0
 	const loseCount = userInfo.lose || 0
 	const winRate = winCount + loseCount > 0 ? Math.round((winCount / (winCount + loseCount)) * 100) : 0
@@ -161,13 +142,13 @@ export default function ProfilePage() {
 
 		return {
 			id: match.id,
-			date: new Date(match.mDate).toLocaleDateString(),
+			date: new Date(match.MDate).toLocaleDateString(),
 			opponentId,
 			opponent: isPlayer1 ? match.player2?.username : match.player1?.username,
 			result: match.winnerId === userInfo.id ? t('profile.match.victory') : t('profile.match.defeat'),
 			score: `${playerScore}-${opponentScore}`,
 			eloChange: `${eloChange > 0 ? '+' : ''}${eloChange}`,
-			opponentAvatar: `/profilepicture/${opponentId}.webp`,
+			opponentAvatar: isPlayer1 ? match.player2?.avatar : match.player1?.avatar,
 		}
 	})
 
@@ -241,59 +222,6 @@ export default function ProfilePage() {
 										</div>
 									</CardContent>
 								</Card>
-
-								<Card className="bg-card border shadow-sm">
-									<CardHeader>
-										<CardTitle>{t('profile.recentMatches.title')}</CardTitle>
-										<CardDescription>
-											{t('profile.recentMatches.description')}
-										</CardDescription>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-4">
-											{formattedMatches.slice(0, 5).map((match) => (
-												<div key={match.id} className="flex items-center justify-between bg-muted p-4 rounded-lg">
-													<div>
-														<div className="flex items-center">
-															<p className="font-medium">
-																{t('profile.match.versus', { opponent: match.opponent })}
-															</p>
-															<span className="text-xs text-muted-foreground ml-2">{match.date}</span>
-														</div>
-														<p className="text-sm text-muted-foreground">
-															{t('profile.match.score', { score: match.score })}
-														</p>
-													</div>
-													<div className="flex items-center gap-3">
-														<Badge
-															className={
-																match.result === t('profile.match.victory')
-																	? "bg-green-500/20 text-green-500"
-																	: "bg-red-500/20 text-red-500"
-															}
-														>
-															{match.result}
-														</Badge>
-														<span
-															className={`font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"}`}
-														>
-															{match.eloChange}
-														</span>
-													</div>
-												</div>
-											))}
-										</div>
-									</CardContent>
-									<CardFooter>
-										<Button
-											variant="outline"
-											className="w-full"
-											onClick={() => setActiveTab("matches")}
-										>
-											{t('profile.viewAllMatches')}
-										</Button>
-									</CardFooter>
-								</Card>
 							</TabsContent>
 
 							<TabsContent value="matches">
@@ -323,12 +251,10 @@ export default function ProfilePage() {
 															<td className="py-3 px-4">
 																<div className="flex items-center">
 																	<Avatar className="h-6 w-6 mr-2">
-																		<AvatarImage src={`${match.opponentAvatar}`} />
-																		<AvatarFallback>{match.opponent.charAt(0)}</AvatarFallback>
+																		<AvatarImage src={match.opponentAvatar} />
+																		<AvatarFallback>{match.opponent?.charAt(0)}</AvatarFallback>
 																	</Avatar>
-																	<span className="hover:underline">
-																		{match.opponent}
-																	</span>
+																	<span className="hover:underline">{match.opponent}</span>
 																</div>
 															</td>
 															<td className="py-3 px-4">
@@ -343,9 +269,7 @@ export default function ProfilePage() {
 																</Badge>
 															</td>
 															<td className="py-3 px-4">{match.score}</td>
-															<td
-																className={`py-3 px-4 text-right font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"}`}
-															>
+															<td className={`py-3 px-4 text-right font-medium ${match.eloChange.startsWith("+") ? "text-green-500" : "text-red-500"}`}>
 																{match.eloChange}
 															</td>
 														</tr>
