@@ -32,6 +32,7 @@ interface ButtonsProps {
   setScore: (score: { player1: number; player2: number }) => void;
   winner: string | null;
   setWinner: (winner: string | null) => void;
+  enableAI: boolean;
 }
 
 export default function Buttons({
@@ -60,6 +61,7 @@ export default function Buttons({
   setScore,
   winner,
   setWinner,
+  enableAI,
 }: ButtonsProps): JSX.Element {
   useEffect(() => {
     if (
@@ -192,6 +194,7 @@ export default function Buttons({
         setScore={setScore}
         winner={winner}
         setWinner={setWinner}
+        enableAI={enableAI}
       />
 
 

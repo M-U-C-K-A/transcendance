@@ -5,15 +5,35 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { SetStaminaFunction, SetSuperPadFunction } from "../gameTypes";
 import React from "react";
 
-
-
 import {
-  // On reduit BUMPER_SPEED ici pour ralentir les bumpers
-  BUMPER_SPEED,           // ex. passe de 8 → 4
-  BUMPER_BOUND_LEFT,      // ex. -8
+  BUMPER_BOUND_LEFT,
   BUMPER_BOUND_RIGHT,     // ex. +8
-  BUMPER_MID_LEFT,        // ex. -4
-  BUMPER_MID_RIGHT,       // ex. +4
+  PADDLE_SPEED,
+  PADDLE_BOUND_LEFT,
+  PADDLE_BOUND_RIGHT,
+  AI_VISION_UPDATE_INTERVAL,
+  AI_MAX_PREDICTION_ERROR,
+  AI_MOVEMENT_TOLERANCE,
+  AI_DIRECTION_CHANGE_PAUSE,
+  AI_MIN_TOUCH_DURATION,
+  AI_MAX_TOUCH_DURATION,
+  AI_PAUSE_PROBABILITY,
+  AI_MIN_PAUSE_DURATION,
+  AI_MAX_PAUSE_DURATION,
+  AI_MIN_DIRECTION_CHANGE_INTERVAL,
+  AI_MIN_DIRECTION_CHANGE_DISTANCE,
+  AI_MIN_DECISION_TIME,
+  AI_DIRECTION_STABILITY_PROBABILITY,
+  AI_MAX_REACH_DISTANCE,
+  AI_ATTEMPT_RETURN_PROBABILITY,
+  AI_MIN_ATTEMPT_DISTANCE,
+  AI_CLOSE_MISS_DISTANCE,
+  AI_USE_SUPER_PAD_PROBABILITY,
+  AI_SUPER_PAD_MIN_DISTANCE,
+  AI_SUPER_PAD_COOLDOWN,
+  AI_TARGET_MALUS_PROBABILITY,
+  AI_MALUS_TARGET_DISTANCE,
+  AI_MALUS_PRIORITY,
 } from "./constants";
 
 import { serveBall } from "./movements/serveball";
@@ -43,6 +63,7 @@ export const initgamePhysic = (
   volumeRef?: React.MutableRefObject<number>,
   enableSpecial?: boolean,
   superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
+  enableAIRef?: React.MutableRefObject<boolean>,
 ): (() => void) => {
   const {
     ball,
@@ -379,7 +400,7 @@ export const initgamePhysic = (
 
 
 
-    movePaddles(paddle1, paddle2, deltaTime);
+    movePaddles(paddle1, paddle2, deltaTime, enableAIRef?.current || false);
 
 
 
@@ -456,7 +477,7 @@ export const initgamePhysic = (
       (winner: string | null) => gameRefs.setWinner(winner),
       resetBall,
       gameRefs,
-      volumeRef.current
+      volumeRef?.current || 0.5
     );
 
 
@@ -484,7 +505,7 @@ export const initgamePhysic = (
       leftTriOuterRight,
       gameRefs.stamina.current,
       setStamina,
-      volumeRef.current,
+      volumeRef?.current || 0.5,
       gameRefs.superPad.current,
       enableSpecial,
     );
@@ -496,9 +517,10 @@ export const initgamePhysic = (
       currentSpeed = collisionResult.newSpeed;
     }
 
-
-
-
+    // Déplacement fluide de l'IA (exécuté à chaque frame)
+    if (enableAIRef?.current && paddle2) {
+      simulateAIMovement(paddle2, deltaTime);
+    }
 
   });
 
@@ -508,29 +530,415 @@ export const initgamePhysic = (
   // ==================================================================================
   // ==================================================================================
 
+  // Logique de l'IA - simule des touches réelles comme un joueur humain
+  let aiInterval: NodeJS.Timeout | null = null;
+  let lastBallView = { position: new Vector3(0, 0, 0), velocity: new Vector3(0, 0, 0) };
+  let aiTargetX = 0; // Position cible calculée par l'IA
+  let aiPredictionError = 0; // Erreur de prédiction pour rendre l'IA moins parfaite
+  let aiLastDecisionTime = 0; // Dernière fois que l'IA a pris une décision
+  
+  // Variables pour simuler des touches réelles
+  let aiIsMovingUp = false; // L'IA appuie sur "haut"
+  let aiIsMovingDown = false; // L'IA appuie sur "bas"
+  let aiLastDirectionChange = 0; // Dernier changement de direction
+  let aiMovementDuration = 0; // Durée d'une touche
+  let aiPauseDuration = 0; // Durée de pause entre les touches
+  
+  // Variables anti-mouvements erratiques
+  let aiLastTargetX = 0; // Dernière cible calculée
+  let aiCurrentDirection = 'none'; // Direction actuelle: 'up', 'down', 'none'
+  let aiStableTargetX = 0; // Cible stabilisée pour éviter les changements fréquents
+  
+  // Variables pour la logique de renvoi de balle
+  let aiShouldAttemptReturn = false; // L'IA doit-elle essayer de renvoyer ?
+  let aiLastBallPosition = new Vector3(0, 0, 0); // Dernière position de la balle
+  let aiIsBallApproaching = false; // La balle s'approche-t-elle du paddle 2 ?
+  
+  // Variables pour éliminer les mouvements erratiques
+  let aiDirectionCommitment = 0; // Temps d'engagement dans une direction
+  let aiMinCommitmentTime = 400; // Temps minimum d'engagement (en ms) - réduit pour plus de réactivité
+  let aiLastStableDirection = 'none'; // Dernière direction stable
+  let aiDirectionChangeCount = 0; // Nombre de changements de direction récents
+  
+  // Variables pour les coups spéciaux de l'IA
+  let aiLastSuperPadUse = 0; // Dernière utilisation du coup spécial
+  let aiShouldUseSuperPad = false; // L'IA doit-elle utiliser son coup spécial ?
+  
+  // Variables pour le ciblage des malus
+  let aiTargetMalus: string | null = null; // Malus ciblé actuellement
+  let aiMalusTargetX = 0; // Position X du malus ciblé
+  let aiShouldTargetMalus = false; // L'IA doit-elle viser un malus ?
+  
+  const updateAIVision = () => {
+    if (!enableAIRef?.current || !ball) return;
+    
+    const currentTime = Date.now();
+    
+    // L'IA "voit" la balle seulement une fois par seconde
+    lastBallView.position = ball.position.clone();
+    lastBallView.velocity = ballV.clone();
+    
+    // Vérifier si la balle s'approche du paddle 2
+    aiIsBallApproaching = lastBallView.velocity.z > 0 && lastBallView.position.z < 20;
+    
+    // Précision aléatoire dans la prédiction (entre 0 et AI_MAX_PREDICTION_ERROR)
+    // Plus la valeur est élevée, moins l'IA est précise
+    aiPredictionError = Math.random() * AI_MAX_PREDICTION_ERROR;
+    
+    // Anticipe où la balle va arriver quand elle atteint z=20
+    const timeToReachPaddle = (20 - lastBallView.position.z) / lastBallView.velocity.z;
+    
+    if (timeToReachPaddle > 0 && lastBallView.velocity.z > 0) { // Balle va vers le paddle 2
+      // Calcul de la position cible avec erreur de prédiction
+      const predictedX = lastBallView.position.x + (lastBallView.velocity.x * timeToReachPaddle);
+      
+      // Ajouter l'erreur de précision dans une direction aléatoire
+      const errorDirection = Math.random() > 0.5 ? 1 : -1;
+      const newTargetX = predictedX + (aiPredictionError * errorDirection);
+      
+      // Limite la cible dans les bornes du paddle
+      const clampedTargetX = Math.max(PADDLE_BOUND_LEFT + 1, Math.min(PADDLE_BOUND_RIGHT - 1, newTargetX));
+      
+      // Calculer la distance entre la cible et la position actuelle du paddle 2
+      const distanceToTarget = Math.abs(clampedTargetX - (paddle2?.position.x || 0));
+      
+      // Logique de renvoi de balle : l'IA doit toujours essayer de renvoyer
+      if (distanceToTarget <= AI_MAX_REACH_DISTANCE) {
+        // L'IA peut atteindre la balle - elle doit essayer de renvoyer
+        aiShouldAttemptReturn = true;
+      } else if (distanceToTarget <= AI_MIN_ATTEMPT_DISTANCE) {
+        // L'IA est trop loin mais peut essayer (30% de chance)
+        aiShouldAttemptReturn = Math.random() < AI_ATTEMPT_RETURN_PROBABILITY;
+      } else {
+        // L'IA est très loin - elle ne peut pas renvoyer
+        aiShouldAttemptReturn = false;
+      }
+      
+      // Décider si l'IA doit utiliser son coup spécial
+      decideSuperPadUsage(distanceToTarget);
+      
+      // Décider si l'IA doit viser un malus
+      decideMalusTargeting();
+      
+      // Vérifier si on doit changer de cible (anti-mouvements erratiques)
+      const timeSinceLastDecision = currentTime - aiLastDecisionTime;
+      const distanceFromLastTarget = Math.abs(clampedTargetX - aiLastTargetX);
+      
+      // Si l'IA vise un malus, ajuster la cible
+      let finalTargetX = clampedTargetX;
+      if (aiShouldTargetMalus && aiTargetMalus) {
+        // Mélanger la cible normale avec la cible du malus (70% malus, 30% normale)
+        finalTargetX = aiMalusTargetX * 0.7 + clampedTargetX * 0.3;
+        // Limiter dans les bornes
+        finalTargetX = Math.max(PADDLE_BOUND_LEFT + 1, Math.min(PADDLE_BOUND_RIGHT - 1, finalTargetX));
+      }
+      
+      // Changer de cible seulement si :
+      // 1. Assez de temps s'est écoulé depuis la dernière décision
+      // 2. La nouvelle cible est suffisamment différente
+      // 3. Ou si c'est la première décision
+      // 4. OU si l'IA doit essayer de renvoyer la balle
+      if (aiLastDecisionTime === 0 || 
+          aiShouldAttemptReturn ||
+          (timeSinceLastDecision >= AI_MIN_DECISION_TIME && 
+           distanceFromLastTarget >= AI_MIN_DIRECTION_CHANGE_DISTANCE)) {
+        
+        aiTargetX = finalTargetX;
+        aiLastTargetX = finalTargetX;
+        aiLastDecisionTime = currentTime;
+        
+        // Stabiliser la cible pour éviter les changements fréquents
+        aiStableTargetX = finalTargetX;
+      } else {
+        // Maintenir la cible précédente pour la stabilité
+        aiTargetX = aiStableTargetX;
+      }
+    } else {
+      // La balle ne va pas vers le paddle 2
+      aiShouldAttemptReturn = false;
+      aiShouldTargetMalus = false;
+      aiTargetMalus = null;
+    }
+    
+    // Sauvegarder la position actuelle de la balle
+    aiLastBallPosition = lastBallView.position.clone();
+  };
 
+  // Fonction pour simuler des touches réelles de l'IA (comme un joueur humain)
+  const simulateAIMovement = (paddle2: Mesh, deltaTime: number) => {
+    if (!enableAIRef?.current || !paddle2) return;
+    
+    const currentTime = Date.now();
+    const currentX = paddle2.position.x;
+    const moveAmount = PADDLE_SPEED * deltaTime;
+    
+    // Calcul de la distance à la cible
+    const distanceToTarget = Math.abs(currentX - aiTargetX);
+    
+    // Si l'IA doit essayer de renvoyer la balle, elle doit bouger même si elle est proche
+    if (aiShouldAttemptReturn && aiIsBallApproaching) {
+      // L'IA doit essayer de renvoyer - réduire la zone de tolérance
+      const returnTolerance = AI_MOVEMENT_TOLERANCE * 0.5; // Tolérance réduite pour le renvoi
+      
+      if (distanceToTarget <= returnTolerance) {
+        // L'IA est très proche de sa cible - elle peut s'arrêter
+        aiIsMovingUp = false;
+        aiIsMovingDown = false;
+        aiCurrentDirection = 'none';
+        return;
+      }
+    } else {
+      // Zone de tolérance normale pour considérer que l'IA est proche de sa cible
+      if (distanceToTarget <= AI_MOVEMENT_TOLERANCE) {
+        // L'IA est proche de sa cible - elle arrête de bouger
+        aiIsMovingUp = false;
+        aiIsMovingDown = false;
+        aiCurrentDirection = 'none';
+        return;
+      }
+    }
+    
+    // Déterminer la direction nécessaire
+    let shouldMoveUp = currentX > aiTargetX;
+    let shouldMoveDown = currentX < aiTargetX;
+    
+    // Système de commitment pour éviter les mouvements erratiques
+    const timeSinceDirectionStart = currentTime - aiDirectionCommitment;
+    
+    // Si l'IA est engagée dans une direction, elle doit y rester un minimum de temps
+    if (aiCurrentDirection !== 'none' && timeSinceDirectionStart < aiMinCommitmentTime) {
+      // L'IA est engagée - maintenir sa direction actuelle
+      if (aiCurrentDirection === 'up') {
+        shouldMoveUp = true;
+        shouldMoveDown = false;
+      } else if (aiCurrentDirection === 'down') {
+        shouldMoveUp = false;
+        shouldMoveDown = true;
+      }
+    } else {
+      // L'IA peut changer de direction si nécessaire
+      // Vérifier si le changement est vraiment nécessaire
+      const directionChangeNeeded = (shouldMoveUp && aiCurrentDirection !== 'up') || 
+                                   (shouldMoveDown && aiCurrentDirection !== 'down');
+      
+      if (directionChangeNeeded) {
+        // Vérifier les conditions strictes pour changer de direction
+        const timeSinceLastChange = currentTime - aiLastDirectionChange;
+        const distanceFromLastTarget = Math.abs(aiTargetX - aiLastTargetX);
+        
+        // Changer de direction seulement si :
+        // 1. Assez de temps s'est écoulé depuis le dernier changement
+        // 2. La nouvelle cible est suffisamment différente
+        // 3. OU si l'IA doit essayer de renvoyer la balle
+        // 4. ET si on n'a pas trop changé de direction récemment
+        if ((aiShouldAttemptReturn || 
+             (timeSinceLastChange >= AI_MIN_DIRECTION_CHANGE_INTERVAL && 
+              distanceFromLastTarget >= AI_MIN_DIRECTION_CHANGE_DISTANCE)) &&
+            aiDirectionChangeCount < 3) { // Maximum 3 changements par période
+          
+          // Changer de direction
+          aiLastDirectionChange = currentTime;
+          aiDirectionCommitment = currentTime;
+          aiDirectionChangeCount++;
+          
+          // Réinitialiser le compteur après un certain temps
+          if (timeSinceLastChange > 2000) {
+            aiDirectionChangeCount = 0;
+          }
+        } else {
+          // Maintenir la direction actuelle pour éviter les changements fréquents
+          if (aiCurrentDirection === 'up') {
+            shouldMoveUp = true;
+            shouldMoveDown = false;
+          } else if (aiCurrentDirection === 'down') {
+            shouldMoveUp = false;
+            shouldMoveDown = true;
+          }
+        }
+      }
+    }
+    
+    // Stabilité de direction renforcée : 90% de chance de maintenir la direction actuelle
+    // Mais pas si l'IA doit essayer de renvoyer la balle
+    if (!aiShouldAttemptReturn && aiCurrentDirection !== 'none' && Math.random() < AI_DIRECTION_STABILITY_PROBABILITY) {
+      // 90% de chance de maintenir la direction actuelle (sauf si elle doit renvoyer)
+      if (aiCurrentDirection === 'up') {
+        shouldMoveUp = true;
+        shouldMoveDown = false;
+      } else if (aiCurrentDirection === 'down') {
+        shouldMoveUp = false;
+        shouldMoveDown = true;
+      }
+    }
+    
+    // Gestion des changements de direction avec pauses plus longues
+    if ((shouldMoveUp && aiIsMovingDown) || (shouldMoveDown && aiIsMovingUp)) {
+      const timeSinceDirectionChange = currentTime - aiLastDirectionChange;
+      if (timeSinceDirectionChange < AI_DIRECTION_CHANGE_PAUSE) { // Pause plus longue lors du changement de direction
+        aiIsMovingUp = false;
+        aiIsMovingDown = false;
+        return;
+      }
+    }
+    
+    // Simuler des touches avec des durées variables
+    if (shouldMoveUp && !aiIsMovingDown) {
+      // L'IA appuie sur "haut"
+      aiIsMovingUp = true;
+      aiIsMovingDown = false;
+      aiCurrentDirection = 'up';
+      
+      // Durée de la touche variable
+      aiMovementDuration = Math.random() * (AI_MAX_TOUCH_DURATION - AI_MIN_TOUCH_DURATION) + AI_MIN_TOUCH_DURATION;
+      
+      // Appliquer le mouvement comme un joueur humain
+      paddle2.position.x = Math.max(PADDLE_BOUND_LEFT, currentX - moveAmount);
+      
+    } else if (shouldMoveDown && !aiIsMovingUp) {
+      // L'IA appuie sur "bas"
+      aiIsMovingUp = false;
+      aiIsMovingDown = true;
+      aiCurrentDirection = 'down';
+      
+      // Durée de la touche variable
+      aiMovementDuration = Math.random() * (AI_MAX_TOUCH_DURATION - AI_MIN_TOUCH_DURATION) + AI_MIN_TOUCH_DURATION;
+      
+      // Appliquer le mouvement comme un joueur humain
+      paddle2.position.x = Math.min(PADDLE_BOUND_RIGHT, currentX + moveAmount);
+      
+    } else {
+      // L'IA relâche les touches
+      aiIsMovingUp = false;
+      aiIsMovingDown = false;
+      aiCurrentDirection = 'none';
+    }
+    
+    // Simuler des pauses entre les touches (comme un joueur qui réfléchit)
+    // Mais pas si l'IA doit essayer de renvoyer la balle
+    if (!aiShouldAttemptReturn && Math.random() < AI_PAUSE_PROBABILITY) {
+      aiIsMovingUp = false;
+      aiIsMovingDown = false;
+      aiCurrentDirection = 'none';
+      aiPauseDuration = Math.random() * (AI_MAX_PAUSE_DURATION - AI_MIN_PAUSE_DURATION) + AI_MIN_PAUSE_DURATION;
+    }
+    
+    // Respecter la durée de pause
+    if (aiPauseDuration > 0) {
+      aiPauseDuration -= deltaTime * 1000;
+      aiIsMovingUp = false;
+      aiIsMovingDown = false;
+      aiCurrentDirection = 'none';
+    }
+    
+    // Utiliser le coup spécial si l'IA a décidé de l'utiliser
+    if (aiShouldUseSuperPad && enableSpecial && gameRefs.triggerSuperPad) {
+      gameRefs.triggerSuperPad(2); // Activer le coup spécial pour le joueur 2 (IA)
+      aiShouldUseSuperPad = false; // Réinitialiser pour éviter les utilisations multiples
+    }
+  };
 
-
-
-
-
-
-
-
-
+  // Démarre l'IA si elle est activée
+  if (enableAIRef?.current) {
+    aiInterval = setInterval(updateAIVision, AI_VISION_UPDATE_INTERVAL);
+  }
 
   // 5 sec et serve  a la fin en random
   startCountdownWrapper(5, safeSetIsPaused, gameRefs.setCountdown, () =>
     serve(Math.random() > 0.5 ? "player1" : "player2")
   );
 
+  // Fonction pour décider si l'IA doit utiliser son coup spécial
+  const decideSuperPadUsage = (distanceToTarget: number) => {
+    if (!enableSpecial || !superPadRef?.current || !gameRefs.stamina.current) return;
+    
+    const currentTime = Date.now();
+    const timeSinceLastUse = currentTime - aiLastSuperPadUse;
+    const currentStamina = gameRefs.stamina.current.player2;
+    const isSuperPadActive = superPadRef.current.player2;
+    
+    // L'IA peut utiliser son coup spécial si :
+    // 1. Elle a 10 de stamina
+    // 2. Le coup spécial n'est pas déjà actif
+    // 3. Assez de temps s'est écoulé depuis la dernière utilisation
+    // 4. La balle est suffisamment loin (difficile à atteindre)
+    if (currentStamina === 10 && 
+        !isSuperPadActive && 
+        timeSinceLastUse >= AI_SUPER_PAD_COOLDOWN &&
+        aiShouldAttemptReturn &&
+        distanceToTarget >= AI_SUPER_PAD_MIN_DISTANCE) {
+      
+      // 70% de chance d'utiliser le coup spécial
+      if (Math.random() < AI_USE_SUPER_PAD_PROBABILITY) {
+        aiShouldUseSuperPad = true;
+        aiLastSuperPadUse = currentTime;
+      }
+    }
+  };
 
-
-
-
+  // Fonction pour décider si l'IA doit viser un malus
+  const decideMalusTargeting = () => {
+    if (!miniPaddle || !bumperLeft || !bumperRight) return;
+    
+    const currentTime = Date.now();
+    
+    // 40% de chance de considérer viser un malus
+    if (Math.random() < AI_TARGET_MALUS_PROBABILITY) {
+      
+      // Calculer les distances aux différents malus
+      const malusDistances = {
+        MINI_PADDLE: Math.abs(aiTargetX - miniPaddle.position.x),
+        BUMPER_LEFT: Math.abs(aiTargetX - bumperLeft.position.x),
+        BUMPER_RIGHT: Math.abs(aiTargetX - bumperRight.position.x)
+      };
+      
+      // Trouver le malus le plus proche et prioritaire
+      let bestMalus = null;
+      let bestScore = 0;
+      
+      for (const [malusType, distance] of Object.entries(malusDistances)) {
+        if (distance <= AI_MALUS_TARGET_DISTANCE) {
+          const priority = AI_MALUS_PRIORITY[malusType as keyof typeof AI_MALUS_PRIORITY];
+          const score = priority / (distance + 1); // Plus proche = meilleur score
+          
+          if (score > bestScore) {
+            bestScore = score;
+            bestMalus = malusType;
+          }
+        }
+      }
+      
+      // Si on a trouvé un malus intéressant, le cibler
+      if (bestMalus) {
+        aiShouldTargetMalus = true;
+        aiTargetMalus = bestMalus;
+        
+        // Définir la position cible du malus
+        switch (bestMalus) {
+          case 'MINI_PADDLE':
+            aiMalusTargetX = miniPaddle.position.x;
+            break;
+          case 'BUMPER_LEFT':
+            aiMalusTargetX = bumperLeft.position.x;
+            break;
+          case 'BUMPER_RIGHT':
+            aiMalusTargetX = bumperRight.position.x;
+            break;
+        }
+      } else {
+        aiShouldTargetMalus = false;
+        aiTargetMalus = null;
+      }
+    } else {
+      aiShouldTargetMalus = false;
+      aiTargetMalus = null;
+    }
+  };
 
   // clean l ecoute a la fin  (sans mettre de param == clean)
   return () => {
     unregisterInputs();
+    if (aiInterval) {
+      clearInterval(aiInterval);
+    }
   };
 };

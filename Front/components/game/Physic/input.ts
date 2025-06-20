@@ -66,8 +66,7 @@ export function onKeyUp(e: KeyboardEvent)
 
 
 
-// Pour la touche echape (considerer un touche global)
-export function onGlobalKeyDown(
+export function onEscapeKeyDown(
   e: KeyboardEvent,
   setIsPaused: (isPaused: boolean) => void,
   gameRefs: GameRefs
@@ -99,20 +98,20 @@ export function registerInputListeners(
   const up = (e: KeyboardEvent) => onKeyUp(e);
 
   // touche pour pause 
-  const global = (e: KeyboardEvent) => onGlobalKeyDown(e, setIsPaused, gameRefs);
+  const escape = (e: KeyboardEvent) => onEscapeKeyDown(e, setIsPaused, gameRefs);
 
 
   // deteecte touche partout dans le fenetre 
   // et envoyer ces touches aux ft 
   window.addEventListener("keydown", down, { passive: false }); // desactive les touches appuyes dans le nav
   window.addEventListener("keyup", up); 
-  window.addEventListener("keydown", global); // 
+  window.addEventListener("keydown", escape); // 
 
 
 
   return () => {
     window.removeEventListener("keydown", down);
     window.removeEventListener("keyup", up);
-    window.removeEventListener("keydown", global);
+    window.removeEventListener("keydown", escape);
   };
 }
