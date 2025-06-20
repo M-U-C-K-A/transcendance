@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useJWT } from "@/hooks/use-jwt"
 import { useI18n } from "@/i18n-client"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -26,7 +25,6 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 
 export function AddColleagueDialog() {
-	const jwt = useJWT()
 	const t = useI18n()
 	const [open, setOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
@@ -49,15 +47,14 @@ export function AddColleagueDialog() {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
 			setIsLoading(true)
+
 			const response = await fetch("/api/friends/request", {
-	method: "POST",
-	headers: {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${jwt}`,
-	},
-	body: JSON.stringify({
-		username: values.username,
-				}),
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include", // ✅ Cookies only
+				body: JSON.stringify({ username: values.username }),
 			})
 
 			if (!response.ok) {
