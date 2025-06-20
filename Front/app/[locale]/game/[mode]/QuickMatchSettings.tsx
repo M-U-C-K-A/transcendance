@@ -10,6 +10,8 @@ import { Toggle } from "@/components/ui/toggle";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ChatSection } from "@/components/dashboard/ChatSection";
 import { useI18n } from "@/i18n-client";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export interface QuickMatchSettingsProps {
   COLORS: string[];
@@ -30,6 +32,9 @@ export interface QuickMatchSettingsProps {
   setBaseSpeed: Dispatch<SetStateAction<number>>;
   canStart: boolean;
   locale: string;
+  enableAI: boolean;
+  setEnableAI: Dispatch<SetStateAction<boolean>>;
+  gamemode?: string;
 }
 
 export function QuickMatchSettings({
@@ -51,9 +56,15 @@ export function QuickMatchSettings({
   setBaseSpeed,
   canStart,
   locale,
+  enableAI,
+  setEnableAI,
+  gamemode = "quickmatch",
 }: QuickMatchSettingsProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const t = useI18n();
+
+  // Désactive l'IA en mode tournoi et custom
+  const isAIDisabled = gamemode === "tournament" || gamemode === "custom";
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-10xl">
@@ -73,6 +84,21 @@ export function QuickMatchSettings({
                 />
               </div>
 
+              <div className="flex items-center justify-center space-x-2">
+                <Label htmlFor="ai-switch" className={isAIDisabled ? "opacity-50" : ""}>VS AI</Label>
+                <Switch
+                  id="ai-switch"
+                  checked={enableAI}
+                  onCheckedChange={setEnableAI}
+                  disabled={isAIDisabled}
+                />
+                {isAIDisabled && (
+                  <span className="text-sm text-muted-foreground ml-2">
+                    (Non disponible en mode {gamemode})
+                  </span>
+                )}
+              </div>
+
               <div>
                 <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
                 <ColorChoice
@@ -83,6 +109,7 @@ export function QuickMatchSettings({
                   setColorP1={setColorP1}
                   colorP2={colorP2}
                   setColorP2={setColorP2}
+                  enableAI={enableAI}
                 />
               </div>
 
@@ -144,6 +171,7 @@ export function QuickMatchSettings({
       <ControlsConfig
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
+        enableAI={enableAI}
       />
     </div>
   );

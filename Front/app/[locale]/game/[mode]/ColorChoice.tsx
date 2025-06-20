@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useI18n } from "@/i18n-client";
 
 
@@ -14,6 +14,7 @@ interface ColorChoiceProps {
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
+  enableAI?: boolean;
 }
 
 
@@ -27,9 +28,19 @@ export default function ColorChoice({
   setColorP1,
   colorP2,
   setColorP2,
+  enableAI = false,
 }: ColorChoiceProps) {
 
   const t = useI18n();
+
+  useEffect(() => {
+    if (enableAI) {
+      setColorP2("#000000"); // Met la couleur de l'IA à noir par défaut
+      if(currentPlayer === 2) {
+        setCurrentPlayer(1); // Repasse au joueur 1 si c'était au tour de l'IA
+      }
+    }
+  }, [enableAI, setColorP2, setCurrentPlayer, currentPlayer]);
 
   return (
 
@@ -53,14 +64,15 @@ export default function ColorChoice({
 
 
         <button
-          onClick={() => setCurrentPlayer(2)}
+          onClick={() => !enableAI && setCurrentPlayer(2)}
+          disabled={enableAI}
           className={`px-4 py-2 rounded-lg font-semibold ${
             currentPlayer === 2
               ? "bg-yellow-500 text-white"
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
+          } ${enableAI ? "opacity-50 cursor-not-allowed" : ""}`}
         >
-          🎖️ {t('game.create.player2')}
+          🎖️ {t('game.create.player2')} {enableAI ? "(IA)" : ""}
         </button>
       </div>
 

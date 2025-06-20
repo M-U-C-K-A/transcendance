@@ -6,8 +6,6 @@ import CustomGameSettings from "./CustomGameSettings";
 import TournamentSettings from "./TournamentSettings";
 import {
 	SettingsPanelProps,
-	Player,
-	Match,
 	GameInfo
 } from "./SettingsPanelTypes";
 
@@ -33,24 +31,26 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 		setBaseSpeed: props.setBaseSpeed,
 		canStart: props.canStart,
 		locale: props.locale,
-		onStart: props.onStart
+		onStart: props.onStart,
+		enableAI: props.enableAI,
+		setEnableAI: props.setEnableAI
 	};
 
 	// Rendu conditionnel basé sur le mode de jeu
 	switch (props.gamemode) {
 		case "quickmatch":
-			return <QuickMatchSettings {...commonProps} />;
+			return <QuickMatchSettings {...commonProps} gamemode={props.gamemode} />;
 
 		case "custom":
 			return <CustomGameSettings
 				{...commonProps}
-				gameInfo={gameInfo}
-				setGameInfo={setGameInfo}
+				gamemode={props.gamemode}
 			/>;
 
 		case "tournament":
 			return <TournamentSettings
 				{...commonProps}
+				gamemode={props.gamemode}
 				bracket={props.bracket}
 				setBracket={props.setBracket}
 				currentMatch={props.currentMatch}
@@ -63,6 +63,6 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 			/>;
 
 		default:
-			return <QuickMatchSettings {...commonProps} />;
+			return <QuickMatchSettings {...commonProps} gamemode={props.gamemode} />;
 	}
 }

@@ -22,6 +22,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface ControlsConfigProps {
   isOpen: boolean;
   onClose: () => void;
+  enableAI: boolean;
 }
 
 
@@ -41,10 +42,11 @@ export function displayKey(key: string) {
 
 
 
-export const ControlsConfig = ({
+export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   isOpen,
   onClose,
-}: ControlsConfigProps) => {
+  enableAI,
+}) => {
 
 
   // Obj. control = le conxte,  et son setter.
@@ -234,11 +236,11 @@ export const ControlsConfig = ({
 
 
 
-          {/* same J2 */}
-          <Card>
+          {/* Joueur 2 */}
+          <Card className={enableAI ? "opacity-50 pointer-events-none" : ""}>
 
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">{t('game.controls.player2')}</CardTitle>
+              <CardTitle className="text-lg">Joueur 2 {enableAI ? "(IA)" : ""}</CardTitle>
             </CardHeader>
 
 
@@ -251,6 +253,7 @@ export const ControlsConfig = ({
                   onClick={() => setEditingKey('player2Up')}
                   onKeyDown={(e) => editingKey === 'player2Up' && handleKeyPress(e, 'player2Up')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Up)}
                 </Button>
@@ -267,6 +270,7 @@ export const ControlsConfig = ({
                   onClick={() => setEditingKey('player2Down')}
                   onKeyDown={(e) => editingKey === 'player2Down' && handleKeyPress(e, 'player2Down')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Down)}
                 </Button>
@@ -280,6 +284,7 @@ export const ControlsConfig = ({
                   onClick={() => setEditingKey('player2Special')}
                   onKeyDown={(e) => editingKey === 'player2Special' && handleKeyPress(e, 'player2Special')}
                   tabIndex={0}
+                  disabled={enableAI}
                 >
                   {editingKey === 'player2Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player2Special)}
                 </Button>
