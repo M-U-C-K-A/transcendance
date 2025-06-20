@@ -35,7 +35,7 @@ export default function ColorChoice({
 
   useEffect(() => {
     if (enableAI) {
-      setColorP2("#000000"); // Met la couleur de l'IA à noir par défaut
+      setColorP2("#FFFFFF"); // Met la couleur de l'IA à blanc par défaut
       if(currentPlayer === 2) {
         setCurrentPlayer(1); // Repasse au joueur 1 si c'était au tour de l'IA
       }
@@ -72,7 +72,7 @@ export default function ColorChoice({
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           } ${enableAI ? "opacity-50 cursor-not-allowed" : ""}`}
         >
-          🎖️ {t('game.create.player2')} {enableAI ? "(IA)" : ""}
+          {enableAI ? "🤖" : "🎖️"} {t('game.create.player2')} {enableAI ? "(IA)" : ""}
         </button>
       </div>
 
