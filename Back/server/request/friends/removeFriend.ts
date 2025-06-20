@@ -1,4 +1,3 @@
-import { broadcastMessage } from "@/server/websocket/notifications";
 import { notifyFriend } from "@/server/websocket/notifications";
 import { PrismaClient } from "@prisma/client";
 

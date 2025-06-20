@@ -1,5 +1,5 @@
+import { notifyFriend } from "@/server/websocket/notifications";
 import { PrismaClient } from "@prisma/client";
-import { notifyFriend } from "@/server/routes/friends/websocketFriends";
 
 const Prisma = new PrismaClient();
 
