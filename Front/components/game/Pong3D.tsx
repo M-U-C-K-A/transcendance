@@ -18,12 +18,14 @@ export default function Pong3D({
 	volume = 0.2,
 	baseSpeed = 16,
 	gamemode,
+	enableAI = false,
 }: Pong3DProps & {
 	enableSpecial?: boolean,
 	enableMaluses?: boolean,
 	volume?: number,
 	baseSpeed?: number,
-	gamemode?: string
+	gamemode?: string,
+	enableAI?: boolean
 }) {
 
 
@@ -61,6 +63,7 @@ export default function Pong3D({
 	const staminaRef = useRef(stamina);
 	const lastHitterRef = useRef<number | null>(null);
 	const volumeRef = useRef(volume);
+	const enableAIRef = useRef(enableAI);
 
 
 
@@ -73,6 +76,7 @@ export default function Pong3D({
 	useEffect(() => { superPadRef.current = superPad; }, [superPad]);
 	useEffect(() => { staminaRef.current = stamina; }, [stamina]);
 	useEffect(() => { volumeRef.current = volume; }, [volume]);
+	useEffect(() => { enableAIRef.current = enableAI; }, [enableAI]);
 
 
 
@@ -113,6 +117,7 @@ export default function Pong3D({
 			volumeRef,
 			enableSpecial,
 			superPadRef,
+			enableAIRef,
 		);
 		// 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
 		if (enableMaluses) {
@@ -137,7 +142,7 @@ export default function Pong3D({
 			}
 			engine.dispose();
 		};
-	}, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed]);
+	}, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed, enableAI]);
 
 
 

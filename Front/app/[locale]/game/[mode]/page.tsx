@@ -6,10 +6,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import SettingsPanel from "./SettingsPanel";
 import Buttons from "@/app/[locale]/game/[mode]/Buttons";
 import { ControlsProvider } from "./ControlsContext";
-import { BracketMatch } from "@/types/BracketMatch";
-import Pong3D from "@/components/game/Pong3D";
-
-
+import { BracketMatch } from "@/Shared/types/BracketMatch";	
 
 
 
@@ -124,7 +121,8 @@ export default function Page() {
 	const [MapStyle, setMapStyle] = useState<"classic" | "red" | "neon">("classic");
 	const [enableMaluses, setEnableMaluses] = useState(false);
 	const [enableSpecial, setEnableSpecial] = useState(false);
-	const [baseSpeed, setBaseSpeed] = useState(16);
+	const [enableAI, setEnableAI] = useState(false);
+	const [baseSpeed, setBaseSpeed] = useState(24);
 
 
 
@@ -275,6 +273,8 @@ export default function Page() {
 						tournamentStarted={tournamentStarted}
 						setTournamentStarted={setTournamentStarted}
 						updateBracketAfterMatch={updateBracketAfterMatch}
+						enableAI={enableAI}
+						setEnableAI={setEnableAI}
 					/>
 				) : (
 					<Buttons
@@ -300,7 +300,10 @@ export default function Page() {
 						currentMatch={currentMatch}
 						updateBracketAfterMatch={updateBracketAfterMatch}
 						score={score}
+						setScore={setScore}
 						winner={winner}
+						setWinner={setWinner}
+						enableAI={enableAI}
 					/>
 				)}
 			</ControlsProvider>

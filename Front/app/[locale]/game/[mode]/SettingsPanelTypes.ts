@@ -51,4 +51,6 @@ export interface SettingsPanelProps {
   setTournamentStarted: Dispatch<SetStateAction<boolean>>;
   updateBracketAfterMatch: (matchId: string, winner: string) => void;
   locale: string;
+  enableAI: boolean;
+  setEnableAI: Dispatch<SetStateAction<boolean>>;
 }
