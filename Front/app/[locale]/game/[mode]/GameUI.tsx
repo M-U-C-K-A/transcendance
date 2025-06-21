@@ -26,7 +26,7 @@ interface GameUIProps {
   enableMaluses: boolean;
   MalusBarKey: number;
   stamina: { player1: number; player2: number };
-  superPad: { player1: boolean; player2: boolean };
+  superPad: { player1: boolean; player2: boolean; player3: boolean; player4: boolean };
   enableSpecial: boolean;
   showGoal: boolean;
   lastScoreType: 'goal' | 'malus';
@@ -126,6 +126,8 @@ export const GameUI = ({
   // Timers pour le coup spécial
   const [specialTimer1, setSpecialTimer1] = useState(0);
   const [specialTimer2, setSpecialTimer2] = useState(0);
+  const [specialTimer3, setSpecialTimer3] = useState(0);
+  const [specialTimer4, setSpecialTimer4] = useState(0);
 
 
 
@@ -181,12 +183,49 @@ export const GameUI = ({
     };
   }, [superPad.player2]);
 
+  // Timer pour le special joueur 3
+  useEffect(() => {
+    let interval3: ReturnType<typeof setInterval> | null = null;
+    if (superPad.player3) {
+      setSpecialTimer3(5);
+      interval3 = setInterval(() => {
+        setSpecialTimer3((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval3!);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setSpecialTimer3(0);
+    }
+    return () => {
+      if (interval3) clearInterval(interval3);
+    };
+  }, [superPad.player3]);
 
-
-
-
-
-
+  // Timer pour le special joueur 4
+  useEffect(() => {
+    let interval4: ReturnType<typeof setInterval> | null = null;
+    if (superPad.player4) {
+      setSpecialTimer4(5);
+      interval4 = setInterval(() => {
+        setSpecialTimer4((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval4!);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setSpecialTimer4(0);
+    }
+    return () => {
+      if (interval4) clearInterval(interval4);
+    };
+  }, [superPad.player4]);
 
 
 
@@ -335,7 +374,12 @@ export const GameUI = ({
           {enableSpecial && (
             <>
               <div className="mt-4" />
-              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+              {superPad.player3 && (
+                <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">
+                  {t('game.create.specialcounter')}: {specialTimer3}s
+                </div>
+              )}
+              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player3 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
                 {displayKey(controls.player3Special)}
               </div>
             </>
@@ -428,7 +472,12 @@ export const GameUI = ({
           {enableSpecial && (
             <>
               <div className="mt-4" />
-              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+              {superPad.player4 && (
+                <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">
+                  {t('game.create.specialcounter')}: {specialTimer4}s
+                </div>
+              )}
+              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player4 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
                 {displayKey(controls.player4Special)}
               </div>
             </>

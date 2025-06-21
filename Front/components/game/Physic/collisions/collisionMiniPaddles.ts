@@ -39,8 +39,7 @@ export function collideMiniPaddle(
 
   // Les mini-pads sont plus petits (moitié de la taille des pads principaux)
   const miniPaddleWidth = PADDLE_HALF_WIDTH * 0.5;
-  const teamKey = isTeam1 ? 'player1' : 'player2';
-  const isSuperActive = enableSpecial && superPad?.current[teamKey as keyof typeof superPad.current];
+  const isSuperActive = enableSpecial && superPad?.current[playerKey as keyof typeof superPad.current];
   const paddleWidth = isSuperActive ? miniPaddleWidth * 2 : miniPaddleWidth;
 
   const inCollisionZone = isTeam1
@@ -72,12 +71,6 @@ export function collideMiniPaddle(
         }
         return prev;
       });
-    }
-
-    if (isSuperActive) {
-      miniPaddle.scaling.x = 2;
-    } else {
-      miniPaddle.scaling.x = 1;
     }
 
     const relativeIntersectX = (ball.position.x - miniPaddle.position.x) / paddleWidth;

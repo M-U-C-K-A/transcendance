@@ -126,11 +126,11 @@ export default function ColorChoice({
 
       <div className="flex justify-center">
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mx-auto">
-          {COLORS.map((hex) => {
+          {COLORS.map((hex) => { 
             const takenBy = [colorP1, colorP2, colorP3, colorP4].indexOf(hex) + 1;
             const isDisabled = isColorTaken(hex) && getPlayerColor(currentPlayer) !== hex;
 
-            return (
+              return (
               <button
                 key={hex}
                 onClick={() => handleSetColor(hex)}
