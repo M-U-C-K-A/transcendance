@@ -137,81 +137,61 @@ export const initgamePhysic = (
       const isTeam1 = player === 1 || player === 3;
       const teamKey = isTeam1 ? 'player1' : 'player2';
       
-      // On ne peut activer que si la stamina de l'équipe est exactement à 5 et le superPad n'est pas dejà actif
-      const isTeamActive = isTeam1 
-        ? (superPadRef?.current && (superPadRef.current.player1 || superPadRef.current.player3))
-        : (superPadRef?.current && (superPadRef.current.player2 || superPadRef.current.player4));
+      // On ne peut activer que si la stamina de l'équipe est exactement à 5 et le superPad du joueur n'est pas déjà actif
+      const playerKey = `player${player}`;
+      const isPlayerActive = superPadRef?.current && superPadRef.current[playerKey as keyof typeof superPadRef.current];
       
-      if (prev[teamKey] !== 5 || isTeamActive) {
+      if (prev[teamKey] !== 5 || isPlayerActive) {
         return prev;
       }
 
-      // Active 
+      // Active le super pad pour le joueur spécifique uniquement
       setSuperPad((prevPad) => 
       {
         // si on rappuye et que deja en cours, on ne fait rien
-        const isTeamActive = isTeam1 
-          ? (prevPad.player1 || prevPad.player3)
-          : (prevPad.player2 || prevPad.player4);
-          
-        if (isTeamActive) 
+        const isPlayerActive = prevPad[playerKey as keyof typeof prevPad];
+        if (isPlayerActive) 
           return prevPad;
 
-        // Active le super pad pour tous les joueurs de l'équipe
+        // Active le super pad pour le joueur spécifique uniquement
         const newPadState = { ...prevPad };
+        newPadState[playerKey as keyof typeof newPadState] = true;
         
-        if (isTeam1) {
-          // Équipe 1 : J1 et J3
-          if (paddle1) paddle1.scaling.x = 2;
-          if (paddle3) paddle3.scaling.x = 2;
-          newPadState.player1 = true;
-          newPadState.player3 = true;
-        } else {
-          // Équipe 2 : J2 et J4
-          if (paddle2) paddle2.scaling.x = 2;
-          if (paddle4) paddle4.scaling.x = 2;
-          newPadState.player2 = true;
-          newPadState.player4 = true;
-        }
+        // Double la taille du paddle du joueur spécifique
+        if (player === 1 && paddle1) paddle1.scaling.x = 2;
+        if (player === 2 && paddle2) paddle2.scaling.x = 2;
+        if (player === 3 && paddle3) paddle3.scaling.x = 2;
+        if (player === 4 && paddle4) paddle4.scaling.x = 2;
 
-        // retourne le pad actif 
         return newPadState;
       });
 
-      // clear  avant pour relancer le timout si deja re dispo 
-      if (superPadTimeouts[`player${player}`])
+      // clear avant pour relancer le timeout si déjà re dispo 
+      if (superPadTimeouts[playerKey])
       {
-        // ft ts donnee 
-        clearTimeout(superPadTimeouts[`player${player}`]!);
+        clearTimeout(superPadTimeouts[playerKey]!);
       }
 
-      // timeout  5 sec active une fois pdt 5 sec la fonction interne
-      superPadTimeouts[`player${player}`] = setTimeout(() => 
+      // timeout 5 sec active une fois pdt 5 sec la fonction interne
+      superPadTimeouts[playerKey] = setTimeout(() => 
       {
-        // met sur pad a activer
+        // remet le pad du joueur à la taille normale
         setSuperPad((prevPad) => 
         {
           const newPadState = { ...prevPad };
+          newPadState[playerKey as keyof typeof newPadState] = false;
           
-          if (isTeam1) {
-            // Équipe 1 : J1 et J3
-            if (paddle1) paddle1.scaling.x = 1;
-            if (paddle3) paddle3.scaling.x = 1;
-            newPadState.player1 = false;
-            newPadState.player3 = false;
-          } else {
-            // Équipe 2 : J2 et J4
-            if (paddle2) paddle2.scaling.x = 1;
-            if (paddle4) paddle4.scaling.x = 1;
-            newPadState.player2 = false;
-            newPadState.player4 = false;
-          }
+          // Remet la taille normale du paddle du joueur spécifique
+          if (player === 1 && paddle1) paddle1.scaling.x = 1;
+          if (player === 2 && paddle2) paddle2.scaling.x = 1;
+          if (player === 3 && paddle3) paddle3.scaling.x = 1;
+          if (player === 4 && paddle4) paddle4.scaling.x = 1;
           
           return newPadState;
         });
 
         // met fin 
-        superPadTimeouts[`player${player}`] = null;
+        superPadTimeouts[playerKey] = null;
 
       }, 5000);
 
@@ -289,6 +269,16 @@ export const initgamePhysic = (
     const deltaTime = scene.getEngine().getDeltaTime() / 1000; // en secondes
 
     movePaddles(paddle1, paddle2, miniPaddle3, miniPaddle4, deltaTime, enableAIRef?.current || false, is2v2Mode);
+
+    // Applique le scaling des mini-paddles selon l'état du super pad
+    if (enableSpecial && superPadRef?.current) {
+      if (miniPaddle3) {
+        miniPaddle3.scaling.x = superPadRef.current.player3 ? 2 : 1;
+      }
+      if (miniPaddle4) {
+        miniPaddle4.scaling.x = superPadRef.current.player4 ? 2 : 1;
+      }
+    }
 
     if (miniPaddle)
       updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);

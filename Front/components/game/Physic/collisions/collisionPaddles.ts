@@ -43,11 +43,11 @@ export function collidePaddle(
   // 1. Vérifier si la balle se dirige vers le paddle
   const isApproaching = isTeam1 ? ballV.z < 0 : ballV.z > 0;
   if (!isApproaching) {
-    return null;
+      return null;
   }
 
   if (lastPaddleCollision[player] && now - lastPaddleCollision[player] < cooldown) {
-    return null;
+  return null;
   }
 
   // Détermine si c'est un mini-pad (joueur 3 ou 4) ou un paddle principal

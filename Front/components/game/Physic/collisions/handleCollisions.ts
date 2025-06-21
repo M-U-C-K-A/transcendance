@@ -47,15 +47,15 @@ export function handleCollisions(
 
   for (const { mesh, player } of paddles) {
     const paddleCollision = collidePaddle(
-      ball,
+    ball,
       mesh,
       ballV,
       player as 1 | 2 | 3 | 4,
-      setStamina,
-      superPad,
-      enableSpecial,
-      volumeRef
-    );
+    setStamina,
+    superPad,
+    enableSpecial,
+    volumeRef
+  );
     if (paddleCollision) return paddleCollision;
   }
 
@@ -70,7 +70,7 @@ export function handleCollisions(
     );
     if (bumperLeftCollision) return bumperLeftCollision;
   }
-
+  
   if (bumperRight) {
     const bumperRightCollision = collideBumper(
       ball,
