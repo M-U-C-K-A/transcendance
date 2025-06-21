@@ -244,49 +244,68 @@ export const GameUI = ({
 
 
 
-    {/* touches visuelles + stamina joueur 1 */}
-    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
+    {/* CONTROLES GAUCHE (J1 & J3) */}
+    <div className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-4/5 flex flex-col ${is2v2Mode ? 'justify-between' : 'justify-center'} items-center z-20`}>
+      
+      {/* Touches J1 (Haut) */}
+      <div className="flex flex-col items-center">
+        {/* Flèches haut/bas */}
+        <div className="flex flex-col space-y-2">
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {displayKey(controls.player1Up)}
+          </div>
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {displayKey(controls.player1Down)}
+          </div>
+        </div>
 
-      {/* Flèches haut/bas */}
-      <div className="flex flex-col space-y-2">
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {displayKey(controls.player1Up)}
-        </div>
-        <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-          {displayKey(controls.player1Down)}
-        </div>
+        {/* Spécial J1 */}
+        {enableSpecial && (
+          <>
+            <div className="mt-4" />
+            {superPad.player1 && (
+              <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">
+                {t('game.create.specialcounter')}: {specialTimer1}s
+              </div>
+            )}
+            <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+              {displayKey(controls.player1Special)}
+            </div>
+            
+            {/* Barre de stamina (mode 1v1) */}
+            {!is2v2Mode && (
+              <>
+                <div className="mt-4" />
+                <div className="w-10 h-3 bg-gray-200 rounded-full border border-gray-300 relative">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
+                    style={{ width: `${(stamina.player1 / 5) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="text-xs text-center mt-1 font-semibold">
+                  {stamina.player1 < 5 ? (
+                    <span className="bg-black text-white px-2 py-0.5 rounded">
+                      {5 - stamina.player1} {t('game.create.strikesremaining')}
+                    </span>
+                  ) : (
+                    <span className="text-black">{t('game.create.specialready')}</span>
+                  )}
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
 
-
-
-      {/* surbrilannce du bouton coupe special et clignotte si active */}
-      {enableSpecial && (
-        <>
-          <div className="mt-4" />
-          {superPad.player1 && (
-            <div className="mb-1 text-cyan-700 font-bold text-xs text-center w-16">
-              {t('game.create.specialcounter')}: {specialTimer1}s
-            </div>
-          )}
-          <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
-            {displayKey(controls.player1Special)}
-          </div>
-        </>
-      )}
-
-
-
-      {/* Barre de stamina = par de 5 frappe . baisse (- la stamina stocker actuel en jeu) */}
-      {enableSpecial && (
-        <>
-          <div className="mt-4" />
+      {/* Barre de stamina (mode 2v2) */}
+      {is2v2Mode && enableSpecial && (
+        <div className="flex flex-col items-center">
           <div className="w-10 h-3 bg-gray-200 rounded-full border border-gray-300 relative">
             <div
               className={`h-full rounded-full transition-all duration-300 ${superPad.player1 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
               style={{ width: `${(stamina.player1 / 5) * 100}%` }}
             ></div>
           </div>
-
           <div className="text-xs text-center mt-1 font-semibold">
             {stamina.player1 < 5 ? (
               <span className="bg-black text-white px-2 py-0.5 rounded">
@@ -296,27 +315,48 @@ export const GameUI = ({
               <span className="text-black">{t('game.create.specialready')}</span>
             )}
           </div>
-        </>
+        </div>
       )}
 
+      {/* Touches J3 (Bas) */}
+      {is2v2Mode && (
+        <div className="flex flex-col items-center">
+          <div className="text-xs text-center mb-2 font-bold text-foreground bg-background/80 px-2 py-1 rounded">
+            J3
+          </div>
+          <div className="flex flex-col space-y-2">
+            <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+              {displayKey(controls.player3Up)}
+            </div>
+            <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+              {displayKey(controls.player3Down)}
+            </div>
+          </div>
+          {enableSpecial && (
+            <>
+              <div className="mt-4" />
+              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+                {displayKey(controls.player3Special)}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
 
-    {/*touche haut bas joueur 2*/}
-    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center z-20">
-
-      {/* Flèches haut/bas */}
+    {/* CONTROLES DROITE (J2 & J4) */}
+    <div className={`absolute right-4 top-1/2 transform -translate-y-1/2 h-4/5 flex flex-col ${is2v2Mode ? 'justify-between' : 'justify-center'} items-center z-20`}>
+      
+      {/* Touches J2 (Haut) */}
+      <div className="flex flex-col items-center">
         <div className="flex flex-col space-y-2">
-      <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-        {displayKey(controls.player2Up)}
-      </div>
-      <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-        {displayKey(controls.player2Down)}
-      </div>
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {displayKey(controls.player2Up)}
+          </div>
+          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+            {displayKey(controls.player2Down)}
+          </div>
         </div>
-
-
-
-        {/*surbrilannce du bouton coupe special et clignotte si active*/}
         {enableSpecial && (
           <>
             {superPad.player2 && (
@@ -325,91 +365,77 @@ export const GameUI = ({
             <div className={`w-10 h-10 mt-2 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
               {displayKey(controls.player2Special)}
             </div>
+            
+            {/* Barre de stamina (mode 1v1) */}
+            {!is2v2Mode && (
+              <>
+                <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
+                    style={{ width: `${(stamina.player2 / 5) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="text-xs text-center mt-1 font-semibold">
+                  {stamina.player2 < 5 ? (
+                    <span className="bg-black text-white px-2 py-0.5 rounded">
+                      {5 - stamina.player2} {t('game.create.strikesremaining')}
+                    </span>
+                  ) : (
+                    <span className="text-black">{t('game.create.specialready')}</span>
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
+      </div>
 
+      {/* Barre de stamina (mode 2v2) */}
+      {is2v2Mode && enableSpecial && (
+        <div className="flex flex-col items-center">
+          <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
+              style={{ width: `${(stamina.player2 / 5) * 100}%` }}
+            ></div>
+          </div>
+          <div className="text-xs text-center mt-1 font-semibold">
+            {stamina.player2 < 5 ? (
+              <span className="bg-black text-white px-2 py-0.5 rounded">
+                {5 - stamina.player2} {t('game.create.strikesremaining')}
+              </span>
+            ) : (
+              <span className="text-black">{t('game.create.specialready')}</span>
+            )}
+          </div>
+        </div>
+      )}
 
-
-        {/* barre de stamina joueur 2 */}
-        {enableSpecial && (
-          <>
-            <div className="w-10 h-3 mt-2 bg-gray-200 rounded-full border border-gray-300 relative">
-              <div
-                className={`h-full rounded-full transition-all duration-300 ${superPad.player2 ? 'bg-yellow-400 animate-pulse' : 'bg-cyan-400'}`}
-                style={{ width: `${(stamina.player2 / 5) * 100}%` }}
-              ></div>
+      {/* Touches J4 (Bas) */}
+      {is2v2Mode && (
+        <div className="flex flex-col items-center">
+          <div className="text-xs text-center mb-2 font-bold text-foreground bg-background/80 px-2 py-1 rounded">
+            J4
+          </div>
+          <div className="flex flex-col space-y-2">
+            <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+              {displayKey(controls.player4Up)}
             </div>
-            <div className="text-xs text-center mt-1 font-semibold">
-              {stamina.player2 < 5 ? (
-                <span className="bg-black text-white px-2 py-0.5 rounded">
-                  {5 - stamina.player2} {t('game.create.strikesremaining')}
-                </span>
-              ) : (
-                <span className="text-black">{t('game.create.specialready')}</span>
-              )}
+            <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
+              {displayKey(controls.player4Down)}
             </div>
-          </>
-        )}
-
+          </div>
+          {enableSpecial && (
+            <>
+              <div className="mt-4" />
+              <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
+                {displayKey(controls.player4Special)}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
-
-    {/* touches visuelles + stamina joueur 3 (mode 2v2) */}
-    {is2v2Mode && (
-      <div className="absolute left-4 bottom-1/4 transform flex flex-col items-center z-20">
-        <div className="text-xs text-center mb-2 font-bold text-foreground bg-background/80 px-2 py-1 rounded">
-          J3
-        </div>
-
-        {/* Flèches haut/bas */}
-        <div className="flex flex-col space-y-2">
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-            {displayKey(controls.player3Up)}
-          </div>
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-            {displayKey(controls.player3Down)}
-          </div>
-        </div>
-
-        {/* surbrilannce du bouton coupe special et clignotte si active */}
-        {enableSpecial && (
-          <>
-            <div className="mt-4" />
-            <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player1 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player1 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
-              {displayKey(controls.player3Special)}
-            </div>
-          </>
-        )}
-      </div>
-    )}
-
-    {/* touches visuelles + stamina joueur 4 (mode 2v2) */}
-    {is2v2Mode && (
-      <div className="absolute right-4 bottom-1/4 transform flex flex-col items-center z-20">
-        <div className="text-xs text-center mb-2 font-bold text-foreground bg-background/80 px-2 py-1 rounded">
-          J4
-        </div>
-
-        {/* Flèches haut/bas */}
-        <div className="flex flex-col space-y-2">
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-            {displayKey(controls.player4Up)}
-          </div>
-          <div className="w-10 h-10 bg-background border border-gray-300 flex items-center justify-center text-foreground font-bold">
-            {displayKey(controls.player4Down)}
-          </div>
-        </div>
-
-        {/* surbrilannce du bouton coupe special et clignotte si active */}
-        {enableSpecial && (
-          <>
-            <div className="mt-4" />
-            <div className={`w-10 h-10 flex items-center justify-center font-bold rounded ${superPad.player2 ? 'bg-cyan-400 border-2 border-cyan-700 text-white animate-pulse' : (stamina.player2 === 5 ? 'bg-yellow-300 border-2 border-yellow-600 text-yellow-800' : 'bg-yellow-100 border-2 border-yellow-400 text-yellow-700')}`}>
-              {displayKey(controls.player4Special)}
-            </div>
-          </>
-        )}
-      </div>
-    )}
 
 
 
