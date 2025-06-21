@@ -17419,3 +17419,816 @@ INFO [21-06-2025 01:33:52]: request completed
       "statusCode": 400
     }
     responseTime: 0.5573610067367554
+INFO [21-06-2025 01:37:10]: incoming request
+    reqId: "req-ed"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:10]: incoming request
+    reqId: "req-ee"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:10]: request completed
+    reqId: "req-ee"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 1.7429960072040558
+INFO [21-06-2025 01:37:10]: request completed
+    reqId: "req-ed"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.3022200167179108
+INFO [21-06-2025 01:37:16]: incoming request
+    reqId: "req-ef"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:16]: request completed
+    reqId: "req-ef"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.161212980747223
+INFO [21-06-2025 01:37:16]: incoming request
+    reqId: "req-eg"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:16]: request completed
+    reqId: "req-eg"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.386397004127502
+INFO [21-06-2025 01:37:25]: incoming request
+    reqId: "req-eh"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:25]: request completed
+    reqId: "req-eh"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.2356849908828735
+INFO [21-06-2025 01:37:25]: incoming request
+    reqId: "req-ei"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:37:25]: request completed
+    reqId: "req-ei"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.14826700091362
+INFO [21-06-2025 01:39:36]: incoming request
+    reqId: "req-ej"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:36]: incoming request
+    reqId: "req-ek"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:36]: request completed
+    reqId: "req-ej"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.996057003736496
+INFO [21-06-2025 01:39:36]: request completed
+    reqId: "req-ek"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.758168011903763
+INFO [21-06-2025 01:39:44]: incoming request
+    reqId: "req-el"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:44]: request completed
+    reqId: "req-el"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.9862239956855774
+INFO [21-06-2025 01:39:44]: incoming request
+    reqId: "req-em"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:44]: request completed
+    reqId: "req-em"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.589962005615234
+INFO [21-06-2025 01:39:51]: incoming request
+    reqId: "req-en"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:51]: request completed
+    reqId: "req-en"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.379939019680023
+INFO [21-06-2025 01:39:51]: incoming request
+    reqId: "req-eo"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:51]: request completed
+    reqId: "req-eo"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.111326992511749
+INFO [21-06-2025 01:39:58]: incoming request
+    reqId: "req-ep"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:58]: request completed
+    reqId: "req-ep"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.741010993719101
+INFO [21-06-2025 01:39:58]: incoming request
+    reqId: "req-eq"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:39:58]: request completed
+    reqId: "req-eq"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.93342599272728
+INFO [21-06-2025 01:41:45]: incoming request
+    reqId: "req-er"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:41:45]: request completed
+    reqId: "req-er"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.612553000450134
+INFO [21-06-2025 01:41:45]: incoming request
+    reqId: "req-es"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:41:45]: request completed
+    reqId: "req-es"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.01680600643158
+INFO [21-06-2025 01:42:11]: incoming request
+    reqId: "req-et"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:11]: request completed
+    reqId: "req-et"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.873852998018265
+INFO [21-06-2025 01:42:11]: incoming request
+    reqId: "req-eu"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:11]: request completed
+    reqId: "req-eu"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.3289400041103363
+INFO [21-06-2025 01:42:23]: incoming request
+    reqId: "req-ev"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:23]: incoming request
+    reqId: "req-ew"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:23]: request completed
+    reqId: "req-ew"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.26774799823761
+INFO [21-06-2025 01:42:23]: request completed
+    reqId: "req-ev"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.771545022726059
+INFO [21-06-2025 01:42:35]: incoming request
+    reqId: "req-ex"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:35]: request completed
+    reqId: "req-ex"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.512655019760132
+INFO [21-06-2025 01:42:35]: incoming request
+    reqId: "req-ey"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:35]: request completed
+    reqId: "req-ey"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.065522998571396
+INFO [21-06-2025 01:42:48]: incoming request
+    reqId: "req-ez"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:48]: request completed
+    reqId: "req-ez"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.004983007907867
+INFO [21-06-2025 01:42:48]: incoming request
+    reqId: "req-f0"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "172.21.0.5",
+      "headers": {
+        "connection": "upgrade",
+        "host": "localhost",
+        "x-real-ip": "172.21.0.1",
+        "x-forwarded-for": "172.21.0.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "dnt": "1",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://localhost:8443/en/game/quickmatch",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "es-ES,es;q=0.9,fr;q=0.8",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJRd2Vxd2UiLCJpYXQiOjE3NTA0NjIzODZ9.uriGctPBrBbc_o1iuJvVOOF5QcfAYnD8L0wxSuKg_KA"
+      }
+    }
+INFO [21-06-2025 01:42:48]: request completed
+    reqId: "req-f0"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.6522459983825684
