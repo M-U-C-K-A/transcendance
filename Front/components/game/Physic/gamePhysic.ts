@@ -113,10 +113,10 @@ export const initgamePhysic = (
   };
 
   // acces dynamique 
-  // on pourra use superPadTimeouts.P1 = settimetoute = a la fin redeviendra null
-  // fil str p1 ou 2 et prend le return de la ft.
-  // soit tu prend en dynamique le timer 
-  // sinon ca redevient null
+    // on pourra use superPadTimeouts.P1 = settimetoute = a la fin redeviendra null
+    // fil str p1 ou 2 et prend le return de la ft.
+    // soit tu prend en dynamique le timer 
+    // sinon ca redevient null
   const superPadTimeouts: { [key: string]: ReturnType<typeof setTimeout> | null } = 
   {
     player1: null,
@@ -264,7 +264,7 @@ export const initgamePhysic = (
   // ==================================================================================
   // =========================================  observables 
 
-  // observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
+// observe le rendu JUSTE avant l image. verif si tout va bien JUSTE AVANT LE RENDU
   scene.onBeforeRenderObservable.add(() => 
   {
     const isPausedNow   = gameRefs.isPaused.current;
@@ -310,7 +310,7 @@ export const initgamePhysic = (
     // mvt des bumpers
     if (bumperLeft && bumperRight)
         movebumper(bumperLeft, bumperRight, bumperDirRef, deltaTime);
-  
+
     // BalleV = vecteur 3d de la balle , ajuste selon le deltaTime
     // si au service ou si a subit collision  (collision result)
     // add in place permet le deplacement, il use le vecteur (plus il )
@@ -318,7 +318,7 @@ export const initgamePhysic = (
     // plus c est loin plus il va aller vite pour y etre en 1 frame.
     ball.position.addInPlace(ballV.scale(deltaTime));
 
-    // historique de touche de balle  = pour les malus (dif de last hitter pour les points)
+// historique de touche de balle  = pour les malus (dif de last hitter pour les points)
 
     // detecte distance qui separe balle et paddle (avec limite, si trop proche = true)
     if (
@@ -378,7 +378,7 @@ export const initgamePhysic = (
            gameRefs.touchHistory.shift();
       }
     }
-
+  
     handleScoring(
       ball,
       scoreLocal,
@@ -388,7 +388,7 @@ export const initgamePhysic = (
       gameRefs,
       volumeRef?.current
     );
-
+    
     // recupere le vecteur de la balle selon colision avec quoi
     const collisionResult = handleCollisions(
       ball, 
@@ -400,7 +400,7 @@ export const initgamePhysic = (
       miniPaddle3,
       miniPaddle4,
       bumperLeft,
-      bumperRight, 
+      bumperRight,
       leftTri,
       rightTri,
       rightTriOuterLeft,

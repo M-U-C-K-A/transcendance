@@ -3,6 +3,7 @@
 
 import { Vector3, Mesh, StandardMaterial } from "@babylonjs/core";
 import {
+  BALL_DIAMETER,
   PADDLE_HALF_WIDTH,
   MINI_PADDLE_HALF_WIDTH,
   MAX_BOUNCE_ANGLE,
@@ -39,6 +40,12 @@ export function collidePaddle(
     
   const zFactor = isTeam1 ? 1 : -1;
 
+  // 1. Vérifier si la balle se dirige vers le paddle
+  const isApproaching = isTeam1 ? ballV.z < 0 : ballV.z > 0;
+  if (!isApproaching) {
+    return null;
+  }
+
   if (lastPaddleCollision[player] && now - lastPaddleCollision[player] < cooldown) {
     return null;
   }
@@ -49,13 +56,17 @@ export function collidePaddle(
   const isSuperActive = enableSpecial && superPad?.current[playerKey as keyof typeof superPad.current];
   const paddleWidth = isSuperActive ? basePaddleWidth * 2 : basePaddleWidth;
 
-  const inCollisionZone = isTeam1
-    ? ball.position.z < collisionDepth
-    : ball.position.z > collisionDepth;
+  // 2. Vérifier si la balle est dans la zone de collision (profondeur et largeur)
+  const paddleHalfDepth = 0.25; // La profondeur du paddle est 0.5
+  const collisionThreshold = (BALL_DIAMETER / 2) + paddleHalfDepth;
+  const inDepthZone = Math.abs(ball.position.z - collisionDepth) < collisionThreshold;
+  const inLateralZone = Math.abs(ball.position.x - paddle.position.x) < paddleWidth;
 
-  if (inCollisionZone && Math.abs(ball.position.x - paddle.position.x) < paddleWidth) {
+  if (inDepthZone && inLateralZone) {
     lastPaddleCollision[player] = now;
-    ball.position.z = collisionDepth;
+    
+    // Repositionne la balle sur le bord du paddle pour éviter qu'elle ne le traverse
+    ball.position.z = collisionDepth + (zFactor * -1 * (BALL_DIAMETER / 2));
 
     if (enableSpecial && setStamina) {
       setStamina((prev) => {

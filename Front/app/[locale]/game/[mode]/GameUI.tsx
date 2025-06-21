@@ -379,11 +379,6 @@ export const GameUI = ({
             </div>
           </>
         )}
-        
-        {/* Espacement fixe pour aligner avec J1 */}
-        {!enableSpecial && (
-          <div className="mt-4" />
-        )}
       </div>
     )}
 
@@ -412,11 +407,6 @@ export const GameUI = ({
               {displayKey(controls.player4Special)}
             </div>
           </>
-        )}
-        
-        {/* Espacement fixe pour aligner avec J2 */}
-        {!enableSpecial && (
-          <div className="mt-4" />
         )}
       </div>
     )}
