@@ -15,6 +15,7 @@ import { startCountdown } from "./countdown";
 import { handleScoring } from "./collisions/scoring";
 import { registerInputListeners } from "./input";
 import { movePaddles } from "./movements/paddleMovement";
+import { moveMiniPaddles } from "./movements/miniPaddleMovement";
 import { updateMiniPaddle } from "./movements/miniPaddleLogic";
 import { handleCollisions } from "./collisions/handleCollisions";
 import type { GameRefs, GameObjects } from "../gameTypes";
@@ -30,14 +31,19 @@ export const initgamePhysic = (
   baseSpeed: number,
   volumeRef?: React.MutableRefObject<number>,
   enableSpecial?: boolean,
-  superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean }>,
+  superPadRef?: React.MutableRefObject<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>,
   enableAIRef?: React.MutableRefObject<boolean>,
+  is2v2Mode?: boolean,
 ): (() => void) => {
   const {
     ball,
     paddle1,
     paddle2,
+    paddle3,
+    paddle4,
     miniPaddle,
+    miniPaddle3,
+    miniPaddle4,
     bumperLeft,
     bumperRight,
     leftTri,
@@ -115,18 +121,28 @@ export const initgamePhysic = (
   {
     player1: null,
     player2: null,
+    player3: null,
+    player4: null,
   };
 
   // Gestion du coup special
-  const triggerSuperPad = (player: 1 | 2) => 
+  const triggerSuperPad = (player: 1 | 2 | 3 | 4) => 
   {
     if (!enableSpecial)   // Ne rien faire si les coups speciaux sont desactives
       return;
     
     setStamina((prev) => 
     {
-      // On ne peut activer que si la stamina est exactement à 5 et le superPad n'est pas dejà actif
-      if (prev[`player${player}`] !== 5 || (superPadRef?.current && superPadRef.current[`player${player}`])) {
+      // Détermine quelle équipe le joueur appartient
+      const isTeam1 = player === 1 || player === 3;
+      const teamKey = isTeam1 ? 'player1' : 'player2';
+      
+      // On ne peut activer que si la stamina de l'équipe est exactement à 5 et le superPad n'est pas dejà actif
+      const isTeamActive = isTeam1 
+        ? (superPadRef?.current && (superPadRef.current.player1 || superPadRef.current.player3))
+        : (superPadRef?.current && (superPadRef.current.player2 || superPadRef.current.player4));
+      
+      if (prev[teamKey] !== 5 || isTeamActive) {
         return prev;
       }
 
@@ -134,18 +150,32 @@ export const initgamePhysic = (
       setSuperPad((prevPad) => 
       {
         // si on rappuye et que deja en cours, on ne fait rien
-        if (prevPad[`player${player}`]) 
+        const isTeamActive = isTeam1 
+          ? (prevPad.player1 || prevPad.player3)
+          : (prevPad.player2 || prevPad.player4);
+          
+        if (isTeamActive) 
           return prevPad;
 
-        // double les taille en x
-        if (player === 1 && paddle1) 
-          paddle1.scaling.x = 2;
-
-        if (player === 2 && paddle2) 
-          paddle2.scaling.x = 2;
+        // Active le super pad pour tous les joueurs de l'équipe
+        const newPadState = { ...prevPad };
+        
+        if (isTeam1) {
+          // Équipe 1 : J1 et J3
+          if (paddle1) paddle1.scaling.x = 2;
+          if (paddle3) paddle3.scaling.x = 2;
+          newPadState.player1 = true;
+          newPadState.player3 = true;
+        } else {
+          // Équipe 2 : J2 et J4
+          if (paddle2) paddle2.scaling.x = 2;
+          if (paddle4) paddle4.scaling.x = 2;
+          newPadState.player2 = true;
+          newPadState.player4 = true;
+        }
 
         // retourne le pad actif 
-        return { ...prevPad, [`player${player}`]: true };
+        return newPadState;
       });
 
       // clear  avant pour relancer le timout si deja re dispo 
@@ -161,11 +191,23 @@ export const initgamePhysic = (
         // met sur pad a activer
         setSuperPad((prevPad) => 
         {
-          if (player === 1 && paddle1) 
-            paddle1.scaling.x = 1;
-          if (player === 2 && paddle2) 
-            paddle2.scaling.x = 1;
-          return { ...prevPad, [`player${player}`]: false };
+          const newPadState = { ...prevPad };
+          
+          if (isTeam1) {
+            // Équipe 1 : J1 et J3
+            if (paddle1) paddle1.scaling.x = 1;
+            if (paddle3) paddle3.scaling.x = 1;
+            newPadState.player1 = false;
+            newPadState.player3 = false;
+          } else {
+            // Équipe 2 : J2 et J4
+            if (paddle2) paddle2.scaling.x = 1;
+            if (paddle4) paddle4.scaling.x = 1;
+            newPadState.player2 = false;
+            newPadState.player4 = false;
+          }
+          
+          return newPadState;
         });
 
         // met fin 
@@ -173,13 +215,13 @@ export const initgamePhysic = (
 
       }, 5000);
 
-      // Reset la stamina du joueur à 0
-      return { ...prev, [`player${player}`]: 0 };
+      // Reset la stamina de l'équipe entière à 0
+      return { ...prev, [teamKey]: 0 };
     });
   };
 
   // verifie si pad a ete trigger ( dans registerInputListeners )
-  gameRefs.triggerSuperPad = triggerSuperPad;
+  gameRefs.triggerSuperPad.current = triggerSuperPad;
 
   // ecoute les touche par input en permanence 
   const unregisterInputs = registerInputListeners(gameRefs, safeSetIsPaused, enableAIRef);
@@ -246,7 +288,10 @@ export const initgamePhysic = (
     //  MVT base sur deltatime pour uniformiser
     const deltaTime = scene.getEngine().getDeltaTime() / 1000; // en secondes
 
-    movePaddles(paddle1, paddle2, deltaTime, enableAIRef?.current || false);
+    movePaddles(paddle1, paddle2, miniPaddle3, miniPaddle4, deltaTime, enableAIRef?.current || false, is2v2Mode);
+
+    if (miniPaddle)
+      updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);
 
     if (enableAIRef?.current && paddle2 && ball && aiState) {
       updateAIMovement(
@@ -257,13 +302,9 @@ export const initgamePhysic = (
         deltaTime,
         gameRefs.stamina.current,
         gameRefs.superPad.current,
-        gameRefs.triggerSuperPad,
+        gameRefs.triggerSuperPad.current,
         enableSpecial || false
       );
-    }
-
-    if (miniPaddle) {
-      updateMiniPaddle(miniPaddle, miniDirRef, deltaTime);
     }
 
     // mvt des bumpers
@@ -285,7 +326,7 @@ export const initgamePhysic = (
       Math.abs(ball.position.x - paddle1.position.x) < 3 
     ) 
     {
-      // met a jour le dernier hitter de la balle 
+      // met a jour le dernier hitter de la balle (équipe 1)
       if (gameRefs.touchHistory) 
       {
         // met en dernier elem du tableau
@@ -306,38 +347,75 @@ export const initgamePhysic = (
            gameRefs.touchHistory.shift();
       }
     }
+    // Vérification des paddles 3 et 4 en mode 2v2 - partagent l'historique avec leur équipe
+    else if (
+      is2v2Mode &&
+      miniPaddle3 &&
+      Math.abs(ball.position.z - miniPaddle3.position.z) < 0.5 &&
+      Math.abs(ball.position.x - miniPaddle3.position.x) < 3
+    ) 
+    {
+      if (gameRefs.touchHistory) 
+      {
+        // J3 partage l'historique avec J1 (équipe 1)
+        gameRefs.touchHistory.push({ player: 1, timestamp: Date.now() });
+        if (gameRefs.touchHistory.length > 10)
+           gameRefs.touchHistory.shift();
+      }
+    }
+    else if (
+      is2v2Mode &&
+      miniPaddle4 &&
+      Math.abs(ball.position.z - miniPaddle4.position.z) < 0.5 &&
+      Math.abs(ball.position.x - miniPaddle4.position.x) < 3
+    ) 
+    {
+      if (gameRefs.touchHistory) 
+      {
+        // J4 partage l'historique avec J2 (équipe 2)
+        gameRefs.touchHistory.push({ player: 2, timestamp: Date.now() });
+        if (gameRefs.touchHistory.length > 10)
+           gameRefs.touchHistory.shift();
+      }
+    }
 
     handleScoring(
       ball,
       scoreLocal,
       gameRefs.setScore,
-      (winner: string | null) => gameRefs.setWinner(winner),
-      resetBall,
+      gameRefs.setWinner,
+      () => resetBall("player1"),
       gameRefs,
-      volumeRef?.current || 0.5
+      volumeRef?.current
     );
 
     // recupere le vecteur de la balle selon colision avec quoi
     const collisionResult = handleCollisions(
-      ball as Mesh,
-      paddle1 as Mesh,
-      paddle2 as Mesh,
-      miniPaddle,
+      ball, 
+      ballV, 
+      paddle1, 
+      paddle2,
+      null, // paddle3 n'existe plus
+      null, // paddle4 n'existe plus
+      miniPaddle3,
+      miniPaddle4,
       bumperLeft,
-      bumperRight,
-      ballV,
-      currentSpeed,
-      rightTri,
+      bumperRight, 
       leftTri,
+      rightTri,
       rightTriOuterLeft,
       leftTriOuterLeft,
       rightTriOuterRight,
       leftTriOuterRight,
+      miniPaddle,
       gameRefs.stamina.current,
       setStamina,
-      volumeRef?.current || 0.5,
-      gameRefs.superPad.current,
+      volumeRef,
       enableSpecial,
+      superPadRef,
+      is2v2Mode,
+      gameRefs,
+      currentSpeed
     );
 
     // change le vecteur de balle selon la collision

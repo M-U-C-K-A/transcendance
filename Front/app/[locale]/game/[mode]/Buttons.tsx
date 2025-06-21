@@ -21,6 +21,8 @@ interface ButtonsProps {
   setCameraKey: (key: number) => void;
   paddle1Color: string;
   paddle2Color: string;
+  colorP3: string;
+  colorP4: string;
   MapStyle: "classic" | "red" | "neon";
   enableMaluses: boolean;
   enableSpecial: boolean;
@@ -34,6 +36,7 @@ interface ButtonsProps {
   setWinner: (winner: string | null) => void;
   enableAI: boolean;
   setGameStarted: (started: boolean) => void;
+  is2v2Mode: boolean;
 }
 
 export default function Buttons({
@@ -51,6 +54,8 @@ export default function Buttons({
   setCameraKey,
   paddle1Color,
   paddle2Color,
+  colorP3,
+  colorP4,
   MapStyle,
   enableMaluses,
   enableSpecial,
@@ -64,6 +69,7 @@ export default function Buttons({
   setWinner,
   enableAI,
   setGameStarted,
+  is2v2Mode,
 }: ButtonsProps): JSX.Element {
   // Gestion de la fin des matchs en mode tournoi
   const handleMatchEnd = (winner: string, matchScore: { player1: number; player2: number }) => {
@@ -210,6 +216,8 @@ export default function Buttons({
         resetCamFlag={cameraKey}
         paddle1Color={paddle1Color}
         paddle2Color={paddle2Color}
+        paddle3Color={colorP3}
+        paddle4Color={colorP4}
         MapStyle={MapStyle}
         enableMaluses={enableMaluses}
         enableSpecial={enableSpecial}
@@ -217,6 +225,7 @@ export default function Buttons({
         baseSpeed={baseSpeed}
         gamemode={gamemode}
         enableAI={enableAI}
+        is2v2Mode={is2v2Mode}
         onMatchEnd={handleMatchEnd}
       />
 

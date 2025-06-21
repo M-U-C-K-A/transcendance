@@ -120,9 +120,12 @@ export default function Page() {
 	const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
 	const [colorP1, setColorP1] = useState<string | null>(null);
 	const [colorP2, setColorP2] = useState<string | null>(null);
+	const [colorP3, setColorP3] = useState<string | null>(null);
+	const [colorP4, setColorP4] = useState<string | null>(null);
 	const [MapStyle, setMapStyle] = useState<"classic" | "red" | "neon">("classic");
 	const [enableMaluses, setEnableMaluses] = useState(false);
 	const [enableSpecial, setEnableSpecial] = useState(false);
+	const [is2v2Mode, setIs2v2Mode] = useState(false);
 	const [enableAI, setEnableAI] = useState(false);
 	const [baseSpeed, setBaseSpeed] = useState(24);
 
@@ -150,6 +153,21 @@ export default function Page() {
 		}
 	}, [showWinnerDialog, tournamentWinner]);
 
+	// Désactive l'IA si le mode 2v2 est activé.
+	useEffect(() => {
+		if (is2v2Mode) {
+			setEnableAI(false);
+		}
+	}, [is2v2Mode]);
+
+	// Réinitialise les couleurs des joueurs 3 et 4 si le mode 2v2 est désactivé
+	useEffect(() => {
+		if (!is2v2Mode) {
+			setColorP3(null);
+			setColorP4(null);
+		}
+	}, [is2v2Mode]);
+
 
 
 
@@ -157,7 +175,13 @@ export default function Page() {
 	const bothChosenAndDistinct =
 		colorP1 !== null && colorP2 !== null && colorP1 !== colorP2;
 
-	const canStart = bothChosenAndDistinct && MapStyle !== null;
+	const allFourChosenAndDistinct = is2v2Mode 
+		? colorP1 !== null && colorP2 !== null && colorP3 !== null && colorP4 !== null &&
+		  colorP1 !== colorP2 && colorP1 !== colorP3 && colorP1 !== colorP4 &&
+		  colorP2 !== colorP3 && colorP2 !== colorP4 && colorP3 !== colorP4
+		: bothChosenAndDistinct;
+
+	const canStart = allFourChosenAndDistinct && MapStyle !== null;
 
 
 
@@ -166,6 +190,8 @@ export default function Page() {
 		setGameStarted(false);
 		setColorP1(null);
 		setColorP2(null);
+		setColorP3(null);
+		setColorP4(null);
 		setMapStyle("classic");
 		setEnableMaluses(false);
 		setEnableSpecial(false);
@@ -302,6 +328,10 @@ export default function Page() {
 						setColorP1={setColorP1}
 						colorP2={colorP2}
 						setColorP2={setColorP2}
+						colorP3={colorP3}
+						setColorP3={setColorP3}
+						colorP4={colorP4}
+						setColorP4={setColorP4}
 						MapStyle={MapStyle}
 						setMapStyle={setMapStyle}
 						canStart={canStart}
@@ -327,6 +357,8 @@ export default function Page() {
 						setTournamentWinner={setTournamentWinner}
 						showWinnerDialog={showWinnerDialog}
 						setShowWinnerDialog={setShowWinnerDialog}
+						is2v2Mode={is2v2Mode}
+						setIs2v2Mode={setIs2v2Mode}
 					/>
 				) : (
 					<Buttons
@@ -344,6 +376,8 @@ export default function Page() {
 						setCameraKey={setCameraKey}
 						paddle1Color={colorP1 || "#FF0000"}
 						paddle2Color={colorP2 || "#0000FF"}
+						colorP3={colorP3 || "#FF6B6B"}
+						colorP4={colorP4 || "#4ECDC4"}
 						MapStyle={MapStyle}
 						enableMaluses={enableMaluses}
 						enableSpecial={enableSpecial}
@@ -357,6 +391,7 @@ export default function Page() {
 						setWinner={setWinner}
 						enableAI={enableAI}
 						setGameStarted={setGameStarted}
+						is2v2Mode={is2v2Mode}
 					/>
 				)}
 			</ControlsProvider>

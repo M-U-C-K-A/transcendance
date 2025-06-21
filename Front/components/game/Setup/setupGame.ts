@@ -9,6 +9,9 @@ export const setupGame = (
   MapStyle: "classic" | "red" | "neon",
   paddle1Color: string,
   paddle2Color: string,
+  paddle3Color: string | null,
+  paddle4Color: string | null,
+  is2v2Mode: boolean,
 ) => {
   
   // obs destructures
@@ -19,7 +22,11 @@ export const setupGame = (
     camera,
     paddle1,
     paddle2,
+    paddle3,
+    paddle4,
     miniPaddle,
+    miniPaddle3,
+    miniPaddle4,
     ball,
     leftTri,
     rightTri,
@@ -32,24 +39,18 @@ export const setupGame = (
     leftTriOuterLeft,
     rightTriOuterRight,
     leftTriOuterRight
-  } = setupGameObjects(scene, MapStyle, paddle1Color, paddle2Color);
+  } = setupGameObjects(scene, MapStyle, paddle1Color, paddle2Color, paddle3Color, paddle4Color, is2v2Mode);
 
-
-
-
-
-
-
-
-
-
-  
   return {
     scene: scn,
     camera,
     paddle1,
     paddle2,
+    paddle3,
+    paddle4,
     miniPaddle,
+    miniPaddle3,
+    miniPaddle4,
     ball,
     bumperLeft,
     bumperRight,

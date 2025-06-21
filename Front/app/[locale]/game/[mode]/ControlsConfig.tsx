@@ -23,6 +23,7 @@ interface ControlsConfigProps {
   isOpen: boolean;
   onClose: () => void;
   enableAI: boolean;
+  is2v2Mode: boolean;
 }
 
 
@@ -30,6 +31,8 @@ interface ControlsConfigProps {
 // if multi branche
 // default si aucun case 
 export function displayKey(key: string) {
+  if (!key) return '?';
+  
   switch (key) {
     case 'ArrowUp': return '🡅';
     case 'ArrowDown': return '🡇';
@@ -46,6 +49,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
   isOpen,
   onClose,
   enableAI,
+  is2v2Mode,
 }) => {
 
 
@@ -240,7 +244,7 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
           <Card className={enableAI ? "opacity-50 pointer-events-none" : ""}>
 
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Joueur 2 {enableAI ? "(IA)" : ""}</CardTitle>
+              <CardTitle className="text-lg text-center">{t('game.controls.player2')} {enableAI ? "(IA)" : ""}</CardTitle>
             </CardHeader>
 
 
@@ -293,12 +297,102 @@ export const ControlsConfig: React.FC<ControlsConfigProps> = ({
           </Card>
         </div>
 
+        {is2v2Mode && (
+          <div className="grid grid-cols-2 gap-6 mt-6">
+            {/* Joueur 3 */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg text-center">{t('game.controls.player3')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="player3Up">{t('game.controls.up')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player3Up')}
+                    onKeyDown={(e) => editingKey === 'player3Up' && handleKeyPress(e, 'player3Up')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player3Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player3Up)}
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="player3Down">{t('game.controls.down')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player3Down')}
+                    onKeyDown={(e) => editingKey === 'player3Down' && handleKeyPress(e, 'player3Down')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player3Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player3Down)}
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="player3Special">{t('game.controls.special')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player3Special')}
+                    onKeyDown={(e) => editingKey === 'player3Special' && handleKeyPress(e, 'player3Special')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player3Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player3Special)}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
+            {/* Joueur 4 */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg text-center">{t('game.controls.player4')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="player4Up">{t('game.controls.up')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player4Up')}
+                    onKeyDown={(e) => editingKey === 'player4Up' && handleKeyPress(e, 'player4Up')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player4Up' ? 'Appuyez sur une touche...' : displayKey(localControls.player4Up)}
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="player4Down">{t('game.controls.down')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player4Down')}
+                    onKeyDown={(e) => editingKey === 'player4Down' && handleKeyPress(e, 'player4Down')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player4Down' ? 'Appuyez sur une touche...' : displayKey(localControls.player4Down)}
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="player4Special">{t('game.controls.special')}</Label>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 text-lg font-mono"
+                    onClick={() => setEditingKey('player4Special')}
+                    onKeyDown={(e) => editingKey === 'player4Special' && handleKeyPress(e, 'player4Special')}
+                    tabIndex={0}
+                  >
+                    {editingKey === 'player4Special' ? 'Appuyez sur une touche...' : displayKey(localControls.player4Special)}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
-
-        <div className="flex justify-end gap-2 mt-6">
-
-          <Button variant="outline" onClick={handleCancel}>
+        <div className="flex justify-end space-x-4 pt-6">
+          <Button variant="ghost" onClick={handleCancel}>
             Annuler
           </Button>
 

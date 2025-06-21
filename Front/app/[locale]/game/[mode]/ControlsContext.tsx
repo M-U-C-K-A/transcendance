@@ -8,6 +8,12 @@ interface Controls {
   player2Down: string;
   player1Special: string;
   player2Special: string;
+  player3Up: string;
+  player3Down: string;
+  player4Up: string;
+  player4Down: string;
+  player3Special: string;
+  player4Special: string;
 }
 
 interface ControlsContextType { // Structure du contexte
@@ -22,6 +28,12 @@ const defaultControls: Controls = {
   player2Down: 'ArrowDown',
   player1Special: 'E',
   player2Special: 'ArrowLeft',
+  player3Up: 'T',
+  player3Down: 'G',
+  player4Up: 'O',
+  player4Down: 'L',
+  player3Special: 'Y',
+  player4Special: 'P',
 };
 
 
@@ -50,7 +62,18 @@ function ControlsProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       const savedControls = localStorage.getItem('gameControls'); //  recup  controls save dans le navigateur (local storage = stockage local du navigateur), je cree la clef gameControls. pour stocker les controls.
       if (savedControls) {
-        return JSON.parse(savedControls); // met en json
+        const parsedControls = JSON.parse(savedControls);
+
+
+
+
+        
+        // Fusionne les contrôles sauvegardés avec les contrôles par défaut
+        // pour s'assurer que les nouvelles touches des joueurs 3 et 4 sont présentes
+        const mergedControls = { ...defaultControls, ...parsedControls };
+        // Sauvegarde immédiatement les contrôles fusionnés pour éviter les problèmes futurs
+        localStorage.setItem('gameControls', JSON.stringify(mergedControls));
+        return mergedControls;
       }
     }
     return defaultControls; // sinon control par defaut

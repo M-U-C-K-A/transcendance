@@ -1,24 +1,23 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useI18n } from "@/i18n-client";
 
-
-
-
-// Dispatch  recoit une action qui prend en param 1 / 2
+type Player = 1 | 2 | 3 | 4;
 
 interface ColorChoiceProps {
   COLORS: string[];
-  currentPlayer: 1 | 2;
-  setCurrentPlayer: Dispatch<SetStateAction<1 | 2>>;
+  currentPlayer: Player;
+  setCurrentPlayer: Dispatch<SetStateAction<Player>>;
   colorP1: string | null;
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
+  colorP3: string | null;
+  setColorP3: Dispatch<SetStateAction<string | null>>;
+  colorP4: string | null;
+  setColorP4: Dispatch<SetStateAction<string | null>>;
   enableAI?: boolean;
+  is2v2Mode: boolean;
 }
-
-
-
 
 export default function ColorChoice({
   COLORS,
@@ -28,131 +27,134 @@ export default function ColorChoice({
   setColorP1,
   colorP2,
   setColorP2,
+  colorP3,
+  setColorP3,
+  colorP4,
+  setColorP4,
   enableAI = false,
+  is2v2Mode,
 }: ColorChoiceProps) {
-
   const t = useI18n();
 
   useEffect(() => {
     if (enableAI) {
       setColorP2("#FFFFFF"); // Met la couleur de l'IA à blanc par défaut
-      if(currentPlayer === 2) {
+      if (currentPlayer === 2) {
         setCurrentPlayer(1); // Repasse au joueur 1 si c'était au tour de l'IA
       }
     }
   }, [enableAI, setColorP2, setCurrentPlayer, currentPlayer]);
 
+  const handleSetColor = (hex: string) => {
+    switch (currentPlayer) {
+      case 1: setColorP1(hex); break;
+      case 2: setColorP2(hex); break;
+      case 3: setColorP3(hex); break;
+      case 4: setColorP4(hex); break;
+    }
+  };
+
+  const getPlayerColor = (player: Player) => {
+    switch (player) {
+      case 1: return colorP1;
+      case 2: return colorP2;
+      case 3: return colorP3;
+      case 4: return colorP4;
+    }
+  }
+
+  const isColorTaken = (hex: string) => {
+    return colorP1 === hex || colorP2 === hex || colorP3 === hex || colorP4 === hex;
+  };
+
+  const PlayerButton = ({ player, label }: { player: Player, label: string }) => {
+    // Le joueur 2 est désactivé si l'IA est activée
+    const isPlayer2Disabled = player === 2 && enableAI;
+    // Les joueurs 3 et 4 sont désactivés si le mode 2v2 n'est PAS activé
+    const isPlayer34Disabled = (player === 3 || player === 4) && !is2v2Mode;
+    const isDisabled = isPlayer2Disabled || isPlayer34Disabled;
+
+    return (
+      <button
+        onClick={() => !isDisabled && setCurrentPlayer(player)}
+        disabled={isDisabled}
+        className={`px-4 py-2 rounded-lg font-semibold ${
+          currentPlayer === player
+            ? "bg-yellow-500 text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      >
+        {label}
+      </button>
+    );
+  };
+
   return (
-
-
     <div className="space-y-4">
-
-
-
-      {/* couleurs joueurs . met le current player + met en jaune*/}
       <div className="mb-4 flex justify-center space-x-4">
-        <button
-          onClick={() => setCurrentPlayer(1)}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            currentPlayer === 1
-              ? "bg-yellow-500 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          🎖️ {t('game.create.player1')}
-        </button>
-
-
-        <button
-          onClick={() => !enableAI && setCurrentPlayer(2)}
-          disabled={enableAI}
-          className={`px-4 py-2 rounded-lg font-semibold ${
-            currentPlayer === 2
-              ? "bg-yellow-500 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          } ${enableAI ? "opacity-50 cursor-not-allowed" : ""}`}
-        >
-          {enableAI ? "🤖" : "🎖️"} {t('game.create.player2')} {enableAI ? "(IA)" : ""}
-        </button>
+        {is2v2Mode ? (
+          <>
+            <div className="flex flex-col items-center space-y-2">
+              <span className="font-bold text-blue-500">Équipe 1</span>
+              <div className="flex space-x-2">
+                <PlayerButton player={1} label="J1" />
+                <PlayerButton player={3} label="J3" />
+              </div>
+            </div>
+            <div className="flex flex-col items-center space-y-2">
+              <span className="font-bold text-red-500">Équipe 2</span>
+              <div className="flex space-x-2">
+                <PlayerButton player={2} label="J2" />
+                <PlayerButton player={4} label="J4" />
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <PlayerButton player={1} label={`🎖️ ${t('game.create.player1')}`} />
+            <PlayerButton player={2} label={`${enableAI ? "🤖" : "🎖️"} ${t('game.create.player2')} ${enableAI ? "(IA)" : ""}`} />
+          </>
+        )}
       </div>
-
-
-
-
-
 
       <div className="text-center mb-4 text-lg font-medium text-foreground">
         {t('game.create.colorfor')} {" "}
         <span className="font-bold">
-          {currentPlayer === 1 ? t('game.create.player1') : t('game.create.player2')}
+          {`Joueur ${currentPlayer}`}
         </span>
       </div>
 
-
-
-
-
-
-
-
-
       <div className="flex justify-center">
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mx-auto">
+          {COLORS.map((hex) => {
+            const takenBy = [colorP1, colorP2, colorP3, colorP4].indexOf(hex) + 1;
+            const isDisabled = isColorTaken(hex) && getPlayerColor(currentPlayer) !== hex;
 
-          {/* colors utilise map qui prend les 6 couleur definit dans page.tsx*/}
-          {/* map sa parcorout les 6 et applique la meme chose a toute */}
-  
-          {COLORS.map((hex) => { 
-            const takenByP1 = colorP1 === hex;
-            const takenByP2 = colorP2 === hex;
-            const isDisabled =
-              (currentPlayer === 1 && takenByP2) ||
-              (currentPlayer === 2 && takenByP1);
-            
-
-
-              return (
+            return (
               <button
                 key={hex}
-                onClick={() => {
-
-                  if (currentPlayer === 1) 
-                    setColorP1(hex);
-
-                  else 
-                    setColorP2(hex);
-                }}
-
+                onClick={() => handleSetColor(hex)}
                 disabled={isDisabled}
                 aria-label={`Couleur ${hex} ${isDisabled ? "(déjà prise)" : ""}`}
                 className="relative h-12 w-12 rounded-lg focus:outline-none"
-
                 style={{
                   backgroundColor: hex,
                   opacity: isDisabled ? 0.4 : 1,
-                  border: (currentPlayer === 1 && colorP1 === hex) || (currentPlayer === 2 && colorP2 === hex)
+                  border: getPlayerColor(currentPlayer) === hex
                     ? "3px solid yellow"
                     : "2px solid transparent"
                 }}
               >
-
-                {(takenByP1 || takenByP2) && (
+                {takenBy > 0 && (
                   <span className="absolute -top-1 -left-1 bg-foreground text-background text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                    {takenByP1 ? "1" : "2"}
+                    {takenBy}
                   </span>
                 )}
-
               </button>
             );
-
-          })
-          }
-
+          })}
         </div>
       </div>
-
-
-
     </div>
   );
 }

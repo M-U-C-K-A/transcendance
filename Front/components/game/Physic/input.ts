@@ -38,7 +38,7 @@ export function onKeyDown(
       gameRefs.triggerSuperPad
     ) 
     {
-      gameRefs.triggerSuperPad(1);
+      gameRefs.triggerSuperPad.current(1);
     }
 
 
@@ -51,8 +51,29 @@ export function onKeyDown(
       gameRefs.triggerSuperPad
     ) {
       if (enableAIRef?.current) return; // Ne fait rien si l'IA est activée pour le joueur 2
-      gameRefs.triggerSuperPad(2);
+      gameRefs.triggerSuperPad.current(2);
     }
+
+    // Coup special joueur 3
+    if (
+      gameRefs.controls &&
+      e.key.toLowerCase() ===
+        gameRefs.controls.current.player3Special?.toLowerCase() &&
+      gameRefs.triggerSuperPad
+    ) {
+      gameRefs.triggerSuperPad.current(3);
+    }
+
+    // Coup special joueur 4
+    if (
+      gameRefs.controls &&
+      e.key.toLowerCase() ===
+        gameRefs.controls.current.player4Special?.toLowerCase() &&
+      gameRefs.triggerSuperPad
+    ) {
+      gameRefs.triggerSuperPad.current(4);
+    }
+    
     e.preventDefault();
   }
 
