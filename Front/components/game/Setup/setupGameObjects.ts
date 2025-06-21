@@ -17,6 +17,9 @@ export const setupGameObjects = (
   MapStyle: "classic" | "red" | "neon",
   paddle1Color: string,
   paddle2Color: string,
+  paddle3Color: string | null,
+  paddle4Color: string | null,
+  is2v2Mode: boolean,
 ) => {
 
 
@@ -42,6 +45,26 @@ export const setupGameObjects = (
   p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
   ballMat.diffuseColor = Color3.White();
 
+  // Matériaux pour les joueurs 3 et 4
+  const p3Mat = p1Mat.clone("p3Mat");
+  const p4Mat = p2Mat.clone("p4Mat");
+
+  if (is2v2Mode) {
+    if (paddle3Color) {
+      p3Mat.diffuseColor = Color3.FromHexString(paddle3Color);
+    } else {
+      // Couleur par défaut pour le joueur 3 si non spécifiée
+      p3Mat.diffuseColor = Color3.FromHexString("#FF6B6B"); // Rouge clair
+    }
+    
+    if (paddle4Color) {
+      p4Mat.diffuseColor = Color3.FromHexString(paddle4Color);
+    } else {
+      // Couleur par défaut pour le joueur 4 si non spécifiée
+      p4Mat.diffuseColor = Color3.FromHexString("#4ECDC4"); // Cyan
+    }
+  }
+
 
 
 
@@ -59,6 +82,10 @@ export const setupGameObjects = (
     } else {
       p2Mat.emissiveColor = p2Mat.diffuseColor;
     }
+    if (is2v2Mode) {
+      p3Mat.emissiveColor = p3Mat.diffuseColor;
+      p4Mat.emissiveColor = p4Mat.diffuseColor;
+    }
   }
 
 
@@ -73,12 +100,32 @@ export const setupGameObjects = (
   const paddle1 = MeshBuilder.CreateBox("p1", paddleOpts, scene);
 
   // position = par rapport au centre du 
-  paddle1.position.set(0, 0.25, -19);
+  paddle1.position.set(is2v2Mode ? -5 : 0, 0.25, -19);
   paddle1.material = p1Mat;
 
   const paddle2 = paddle1.clone("p2");
-  paddle2.position.set(0, 0.25, 19);
+  paddle2.position.set(is2v2Mode ? -5 : 0, 0.25, 19);
   paddle2.material = p2Mat;
+
+  let paddle3: Mesh | null = null;
+  let paddle4: Mesh | null = null;
+  let miniPaddle3: Mesh | null = null;
+  let miniPaddle4: Mesh | null = null;
+
+  if (is2v2Mode) {
+    // Mini-pads pour les joueurs 3 et 4 (plus petits et positionnés devant)
+    const miniPaddleOpts = { width: 3, height: 0.5, depth: 0.5 }; // Moitié de la taille des pads principaux
+    
+    miniPaddle3 = MeshBuilder.CreateBox("miniP3", miniPaddleOpts, scene);
+    miniPaddle3.position.set(5, 0.25, -17); // Devant le pad du joueur 3
+    miniPaddle3.material = p3Mat;
+    miniPaddle3.isVisible = true;
+
+    miniPaddle4 = MeshBuilder.CreateBox("miniP4", miniPaddleOpts, scene);
+    miniPaddle4.position.set(5, 0.25, 17); // Devant le pad du joueur 4
+    miniPaddle4.material = p4Mat;
+    miniPaddle4.isVisible = true;
+  }
 
   
 
@@ -374,7 +421,11 @@ export const setupGameObjects = (
     camera,
     paddle1,
     paddle2,
+    paddle3,
+    paddle4,
     miniPaddle,
+    miniPaddle3,
+    miniPaddle4,
     ball,
     ballV: new Vector3(0, 0, 0),
     currentSpeed: 0.2,
@@ -382,6 +433,8 @@ export const setupGameObjects = (
     bumperRight,
     p1Mat,
     p2Mat,
+    p3Mat,
+    p4Mat,
     ballMat,
     leftTri,
     rightTri,

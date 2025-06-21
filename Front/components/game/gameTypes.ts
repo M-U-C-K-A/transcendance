@@ -20,8 +20,11 @@ interface Controls {
 export interface Pong3DProps {
   paddle1Color: string;
   paddle2Color: string;
+  paddle3Color: string | null;
+  paddle4Color: string | null;
   MapStyle: "classic" | "red" | "neon";
   resetCamFlag: number;
+  is2v2Mode: boolean;
 }
 
 
@@ -44,10 +47,10 @@ export interface GameRefs {
   setIsPaused: (isPaused: boolean) => void;
   controls: React.MutableRefObject<Controls>;
   touchHistory: TouchHistory[];
-  superPad: MutableRefObject<{ player1: boolean; player2: boolean }>;
-  stamina: MutableRefObject<{ player1: number; player2: number }>;
+  superPad: MutableRefObject<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>;
+  stamina: MutableRefObject<{ player1: number; player2: number; player3: number; player4: number; }>;
   lastHitter: MutableRefObject<number | null>;
-  triggerSuperPad: (player: 1 | 2) => void;
+  triggerSuperPad: MutableRefObject<(player: 1 | 2 | 3 | 4) => void>;
 }
 
 
@@ -57,7 +60,11 @@ export interface GameObjects {
   camera: ArcRotateCamera;
   paddle1: Mesh;
   paddle2: Mesh;
+  paddle3: Mesh | null;
+  paddle4: Mesh | null;
   miniPaddle: Mesh | null;
+  miniPaddle3: Mesh | null;
+  miniPaddle4: Mesh | null;
   ball: Mesh;
   ballV: Vector3;
   currentSpeed: number;
@@ -82,7 +89,7 @@ export interface TouchHistory {
 }
 
 // type qui prend une ft qui elle meme prend des param precis
-export type SetStaminaFunction = React.Dispatch<React.SetStateAction<{ player1: number; player2: number }>>;
+export type SetStaminaFunction = React.Dispatch<React.SetStateAction<{ player1: number; player2: number; player3: number; player4: number; }>>;
 
 
-export type SetSuperPadFunction = React.Dispatch<React.SetStateAction<{ player1: boolean; player2: boolean }>>;
+export type SetSuperPadFunction = React.Dispatch<React.SetStateAction<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>>;

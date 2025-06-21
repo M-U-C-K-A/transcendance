@@ -14,7 +14,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
 	// Désactive l'IA en mode tournoi et custom.
 	// Cette logique est placée ici pour s'appliquer à tous les modes de jeu.
-	const isAIDisabled = props.gamemode === "tournament" || props.gamemode === "custom";
+	const isAIDisabled = props.gamemode === "tournament" || props.gamemode === "custom" || props.is2v2Mode;
 
 	// Logique commune à tous les modes
 	const commonProps = {
@@ -25,6 +25,10 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 		setColorP1: props.setColorP1,
 		colorP2: props.colorP2,
 		setColorP2: props.setColorP2,
+		colorP3: props.colorP3,
+		setColorP3: props.setColorP3,
+		colorP4: props.colorP4,
+		setColorP4: props.setColorP4,
 		MapStyle: props.MapStyle,
 		setMapStyle: props.setMapStyle,
 		enableMaluses: props.enableMaluses,
@@ -38,6 +42,8 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 		onStart: props.onStart,
 		enableAI: props.enableAI,
 		setEnableAI: props.setEnableAI,
+		is2v2Mode: props.is2v2Mode,
+		setIs2v2Mode: props.setIs2v2Mode,
 		isAIDisabled, // Passe la valeur au composant enfant
 	};
 

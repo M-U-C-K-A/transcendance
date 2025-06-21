@@ -1,66 +1,69 @@
-// collisionPaddles.ts
-// --------------------
+// collisionMiniPaddles.ts
+// ----------------------
 
-import { Vector3, Mesh, StandardMaterial } from "@babylonjs/core";
+import { Vector3, Mesh } from "@babylonjs/core";
 import {
   PADDLE_HALF_WIDTH,
-  MINI_PADDLE_HALF_WIDTH,
   MAX_BOUNCE_ANGLE,
 } from "../constants";
 import type { SetStaminaFunction } from "../../gameTypes";
 import { PlayRandomHitSound } from "../sound";
 import React from "react";
 
-// Cooldown de collision par paddle
-const lastPaddleCollision: { [key: number]: number } = {};
+// Cooldown de collision par mini-paddle
+const lastMiniPaddleCollision: { [key: number]: number } = {};
 
-export function collidePaddle(
+export function collideMiniPaddle(
   ball: Mesh,
-  paddle: Mesh,
+  miniPaddle: Mesh,
   ballV: Vector3,
-  player: 1 | 2 | 3 | 4,
+  player: 3 | 4,
   setStamina: SetStaminaFunction,
   superPad?: React.MutableRefObject<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>,
   enableSpecial?: boolean,
-  volumeRef?: React.MutableRefObject<number>
+  volumeRef?: React.MutableRefObject<number>,
+  gameRefs?: any
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50;
   const now = Date.now();
   const playerKey = `player${player}`;
 
   // Détermine de quel côté du terrain on se trouve
-  const isTeam1 = player === 1 || player === 3;
-  const isMiniPaddle = player === 3 || player === 4;
-  
-  // Profondeur de collision différente pour les mini-pads
-  const collisionDepth = isMiniPaddle 
-    ? (isTeam1 ? -17 : 17)  // Mini-pads positionnés à z = -17 et z = 17
-    : (isTeam1 ? -19 : 19); // Paddles principaux positionnés à z = -19 et z = 19
-    
+  const isTeam1 = player === 3;
+  const collisionDepth = isTeam1 ? -17 : 17; // Plus proche du centre que les pads principaux
   const zFactor = isTeam1 ? 1 : -1;
 
-  if (lastPaddleCollision[player] && now - lastPaddleCollision[player] < cooldown) {
+  if (lastMiniPaddleCollision[player] && now - lastMiniPaddleCollision[player] < cooldown) {
     return null;
   }
 
-  // Détermine si c'est un mini-pad (joueur 3 ou 4) ou un paddle principal
-  const basePaddleWidth = isMiniPaddle ? MINI_PADDLE_HALF_WIDTH : PADDLE_HALF_WIDTH;
-  
-  const isSuperActive = enableSpecial && superPad?.current[playerKey as keyof typeof superPad.current];
-  const paddleWidth = isSuperActive ? basePaddleWidth * 2 : basePaddleWidth;
+  // Les mini-pads sont plus petits (moitié de la taille des pads principaux)
+  const miniPaddleWidth = PADDLE_HALF_WIDTH * 0.5;
+  const teamKey = isTeam1 ? 'player1' : 'player2';
+  const isSuperActive = enableSpecial && superPad?.current[teamKey as keyof typeof superPad.current];
+  const paddleWidth = isSuperActive ? miniPaddleWidth * 2 : miniPaddleWidth;
 
   const inCollisionZone = isTeam1
     ? ball.position.z < collisionDepth
     : ball.position.z > collisionDepth;
 
-  if (inCollisionZone && Math.abs(ball.position.x - paddle.position.x) < paddleWidth) {
-    lastPaddleCollision[player] = now;
+  if (inCollisionZone && Math.abs(ball.position.x - miniPaddle.position.x) < paddleWidth) {
+    lastMiniPaddleCollision[player] = now;
     ball.position.z = collisionDepth;
+
+    // Mise à jour de l'historique des touches de l'équipe
+    if (gameRefs?.touchHistory) {
+      const teamPlayer = isTeam1 ? 1 : 2; // J3 -> équipe 1 (J1), J4 -> équipe 2 (J2)
+      gameRefs.touchHistory.push({ player: teamPlayer, timestamp: Date.now() });
+      if (gameRefs.touchHistory.length > 10) {
+        gameRefs.touchHistory.shift();
+      }
+    }
 
     if (enableSpecial && setStamina) {
       setStamina((prev) => {
         // Détermine quelle équipe le joueur appartient
-        const isTeam1 = player === 1 || player === 3;
+        const isTeam1 = player === 3;
         const teamKey = isTeam1 ? 'player1' : 'player2'; // Utilise la stamina de l'équipe
         const currentStamina = prev[teamKey];
         
@@ -72,12 +75,12 @@ export function collidePaddle(
     }
 
     if (isSuperActive) {
-      paddle.scaling.x = 2;
+      miniPaddle.scaling.x = 2;
     } else {
-      paddle.scaling.x = 1;
+      miniPaddle.scaling.x = 1;
     }
 
-    const relativeIntersectX = (ball.position.x - paddle.position.x) / paddleWidth;
+    const relativeIntersectX = (ball.position.x - miniPaddle.position.x) / paddleWidth;
     const bounceAngle = relativeIntersectX * MAX_BOUNCE_ANGLE;
     const dirX = Math.sin(bounceAngle);
     const dirZ = Math.cos(bounceAngle) * zFactor;
@@ -85,7 +88,7 @@ export function collidePaddle(
     
     let newSpeed = ballV.length();
     if (isSuperActive) {
-      newSpeed *= 2;
+      newSpeed *= 1.5; // Boost moins important que les pads principaux
     }
 
     const newVelocity = newDirection.scale(newSpeed);
@@ -98,4 +101,4 @@ export function collidePaddle(
   }
 
   return null;
-}
+} 

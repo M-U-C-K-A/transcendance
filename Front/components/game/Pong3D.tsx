@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { Engine, Scene, Color3, Vector3, Color4 } from "@babylonjs/core";
+import { Engine, Scene, Color3, Vector3, Color4, StandardMaterial } from "@babylonjs/core";
 import { setupGame } from "./Setup/setupGame";
 import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
@@ -11,6 +11,8 @@ import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
 export default function Pong3D({
 	paddle1Color,
 	paddle2Color,
+	paddle3Color,
+	paddle4Color,
 	MapStyle,
 	resetCamFlag,
 	enableSpecial = false,
@@ -19,6 +21,7 @@ export default function Pong3D({
 	baseSpeed = 16,
 	gamemode,
 	enableAI = false,
+	is2v2Mode = false,
 	onMatchEnd,
 }: Pong3DProps & {
 	enableSpecial?: boolean,
@@ -27,6 +30,7 @@ export default function Pong3D({
 	baseSpeed?: number,
 	gamemode?: string,
 	enableAI?: boolean,
+	is2v2Mode?: boolean,
 	onMatchEnd?: (winner: string, score: { player1: number; player2: number }) => void
 }) {
 
@@ -49,8 +53,8 @@ export default function Pong3D({
 	const [countdown, setCountdown] = useState<GameState["countdown"]>(0);
 	const [isPaused, setIsPaused] = useState<GameState["isPaused"]>(false);
 	const [MalusBarKey, setMalusBarKey] = useState(0);
-	const [stamina, setStamina] = useState({ player1: 0, player2: 0 });
-	const [superPad, setSuperPad] = useState({ player1: false, player2: false });
+	const [stamina, setStamina] = useState({ player1: 0, player2: 0, player3: 0, player4: 0 });
+	const [superPad, setSuperPad] = useState({ player1: false, player2: false, player3: false, player4: false });
 	const touchHistory = useRef<TouchHistory[]>([]);
 	const [showGoal, setShowGoal] = useState(false);
 	const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
@@ -66,6 +70,7 @@ export default function Pong3D({
 	const lastHitterRef = useRef<number | null>(null);
 	const volumeRef = useRef(volume);
 	const enableAIRef = useRef(enableAI);
+	const triggerSuperPadRef = useRef<(player: 1 | 2 | 3 | 4) => void>(() => {});
 
 
 
@@ -89,7 +94,7 @@ export default function Pong3D({
 		const scene = new Scene(engine);
 		scene.clearColor = new Color4(0, 0, 0, 0);
 		sceneRef.current = scene;
-		const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color);
+		const objs = setupGame(scene, MapStyle, paddle1Color, paddle2Color, paddle3Color, paddle4Color, is2v2Mode);
 		cameraRef.current = objs.camera;
 		gameObjectsRef.current = objs;
 		// objet qui stock les ref et fera le lien avec les donnes
@@ -107,8 +112,9 @@ export default function Pong3D({
 			superPad: superPadRef,
 			stamina: staminaRef,
 			lastHitter: lastHitterRef,
-			triggerSuperPad: () => {},
+			triggerSuperPad: triggerSuperPadRef,
 		}; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
+		
 		const cleanupPhysic = initgamePhysic(
 			scene,
 			objs,
@@ -120,6 +126,7 @@ export default function Pong3D({
 			enableSpecial,
 			superPadRef,
 			enableAIRef,
+			is2v2Mode,
 		);
 		// 3EME FT EXTERNE APPELE POUR LANCER LA LOGIC DES MALUS ( 2 argument la scene et ensemble de valeur brut au debut (photo des valeur),  les game refs. pour suivre les valeur (si valeur ) . securite plus modulable a l avenir)
 		if (enableMaluses) {
@@ -144,7 +151,7 @@ export default function Pong3D({
 			}
 			engine.dispose();
 		};
-	}, [paddle1Color, paddle2Color, MapStyle, enableMaluses, enableSpecial, baseSpeed, enableAI]);
+	}, [paddle1Color, paddle2Color, paddle3Color, paddle4Color, MapStyle, enableMaluses, enableSpecial, baseSpeed, enableAI, is2v2Mode]);
 
 
 
@@ -206,6 +213,27 @@ export default function Pong3D({
 			p2Mat.diffuseColor = Color3.FromHexString(paddle2Color);
 		}
 	}, [paddle1Color, paddle2Color]);
+
+	// couleur paddle 3 et 4 in game maj (mode 2v2)
+	useEffect(() => {
+		if (gameObjectsRef.current && is2v2Mode) {
+			const { paddle3, paddle4, p3Mat, p4Mat } = gameObjectsRef.current;
+			
+			if (paddle3 && paddle4 && p3Mat && p4Mat) {
+				// Utiliser les matériaux déjà créés dans setupGameObjects
+				paddle3.material = p3Mat;
+				paddle4.material = p4Mat;
+				
+				// Appliquer aussi aux mini-pads si ils existent
+				if (gameObjectsRef.current.miniPaddle3) {
+					gameObjectsRef.current.miniPaddle3.material = p3Mat;
+				}
+				if (gameObjectsRef.current.miniPaddle4) {
+					gameObjectsRef.current.miniPaddle4.material = p4Mat;
+				}
+			}
+		}
+	}, [is2v2Mode]);
 
 
 
@@ -288,6 +316,8 @@ export default function Pong3D({
 				malusSystem={MalusSystemRef.current}
 				gamemode={gamemode}
 				onMatchEnd={onMatchEnd}
+				enableAI={enableAI}
+				is2v2Mode={is2v2Mode}
 			/>
 		</div>
 	);

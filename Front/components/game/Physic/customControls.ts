@@ -7,6 +7,12 @@ interface Controls {
   player2Down: string;
   player1Special: string;
   player2Special: string;
+  player3Up: string;
+  player3Down: string;
+  player4Up: string;
+  player4Down: string;
+  player3Special: string;
+  player4Special: string;
 }
 
 let currentControls: Controls = {
@@ -16,6 +22,12 @@ let currentControls: Controls = {
   player2Down: 'ArrowDown',
   player1Special: 'E',
   player2Special: 'ArrowLeft',
+  player3Up: 'T',
+  player3Down: 'G',
+  player4Up: 'O',
+  player4Down: 'L',
+  player3Special: 'Y',
+  player4Special: 'P',
 };
 
 
@@ -49,6 +61,26 @@ export function isPlayer2UpPressed(): boolean {
 
 export function isPlayer2DownPressed(): boolean {
   return keys.has(currentControls.player2Down.toLowerCase());
+}
+
+
+export function isPlayer3UpPressed(): boolean {
+  return keys.has(currentControls.player3Up.toLowerCase());
+}
+
+
+export function isPlayer3DownPressed(): boolean {
+  return keys.has(currentControls.player3Down.toLowerCase());
+}
+
+
+export function isPlayer4UpPressed(): boolean {
+  return keys.has(currentControls.player4Up.toLowerCase());
+}
+
+
+export function isPlayer4DownPressed(): boolean {
+  return keys.has(currentControls.player4Down.toLowerCase());
 }
 
 

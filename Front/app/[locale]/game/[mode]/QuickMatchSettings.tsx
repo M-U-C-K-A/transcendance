@@ -16,12 +16,16 @@ import { Label } from "@/components/ui/label";
 
 export interface QuickMatchSettingsProps {
   COLORS: string[];
-  currentPlayer: 1 | 2;
-  setCurrentPlayer: Dispatch<SetStateAction<1 | 2>>;
+  currentPlayer: 1 | 2 | 3 | 4;
+  setCurrentPlayer: Dispatch<SetStateAction<1 | 2 | 3 | 4>>;
   colorP1: string | null;
   setColorP1: Dispatch<SetStateAction<string | null>>;
   colorP2: string | null;
   setColorP2: Dispatch<SetStateAction<string | null>>;
+  colorP3: string | null;
+  setColorP3: Dispatch<SetStateAction<string | null>>;
+  colorP4: string | null;
+  setColorP4: Dispatch<SetStateAction<string | null>>;
   MapStyle: "classic" | "red" | "neon";
   setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
   onStart: () => void;
@@ -36,10 +40,13 @@ export interface QuickMatchSettingsProps {
   enableAI: boolean;
   setEnableAI: Dispatch<SetStateAction<boolean>>;
   isAIDisabled: boolean;
+  is2v2Mode: boolean;
+  setIs2v2Mode: Dispatch<SetStateAction<boolean>>;
   gamemode?: string;
   tournamentWinner?: string | null;
   showWinnerDialog?: boolean;
   setShowWinnerDialog?: Dispatch<SetStateAction<boolean>>;
+  currentUser?: any;
 }
 
 export function QuickMatchSettings({
@@ -50,6 +57,10 @@ export function QuickMatchSettings({
   setColorP1,
   colorP2,
   setColorP2,
+  colorP3,
+  setColorP3,
+  colorP4,
+  setColorP4,
   MapStyle,
   setMapStyle,
   onStart,
@@ -64,10 +75,13 @@ export function QuickMatchSettings({
   enableAI,
   setEnableAI,
   isAIDisabled,
+  is2v2Mode,
+  setIs2v2Mode,
   gamemode = "quickmatch",
   tournamentWinner,
   showWinnerDialog,
   setShowWinnerDialog,
+  currentUser,
 }: QuickMatchSettingsProps) {
   const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
   const t = useI18n();
@@ -91,8 +105,8 @@ export function QuickMatchSettings({
                 />
               </div>
 
-              {!isAIDisabled && (
-                <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center space-x-4">
+                {!isAIDisabled && (
                   <Card className="p-3">
                     <div className="flex items-center space-x-2">
                       <span className="text-xl">🤖</span>
@@ -104,8 +118,22 @@ export function QuickMatchSettings({
                       />
                     </div>
                   </Card>
-                </div>
-              )}
+                )}
+
+                {gamemode !== "tournament" && (
+                  <Card className="p-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl">👥</span>
+                      <Label htmlFor="2v2-switch">2v2</Label>
+                      <Switch
+                        id="2v2-switch"
+                        checked={is2v2Mode}
+                        onCheckedChange={setIs2v2Mode}
+                      />
+                    </div>
+                  </Card>
+                )}
+              </div>
 
               <div>
                 <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
@@ -117,7 +145,12 @@ export function QuickMatchSettings({
                   setColorP1={setColorP1}
                   colorP2={colorP2}
                   setColorP2={setColorP2}
+                  colorP3={colorP3}
+                  setColorP3={setColorP3}
+                  colorP4={colorP4}
+                  setColorP4={setColorP4}
                   enableAI={enableAI}
+                  is2v2Mode={is2v2Mode}
                 />
               </div>
 
@@ -153,7 +186,10 @@ export function QuickMatchSettings({
                 {!canStart && (
                   <Alert variant="destructive">
                     <AlertDescription className="w-full flex justify-center items-center text-center">
-                      {t('game.tournament.create.select')}
+                      {is2v2Mode 
+                        ? "Veuillez sélectionner des couleurs distinctes pour les 4 joueurs"
+                        : t('game.tournament.create.select')
+                      }
                     </AlertDescription>
                   </Alert>
                 )}
@@ -182,7 +218,7 @@ export function QuickMatchSettings({
         </div>
 
         <div className="lg:col-span-4">
-          <ChatSection />
+          <ChatSection currentUser={currentUser} />
         </div>
       </div>
 
@@ -190,6 +226,7 @@ export function QuickMatchSettings({
         isOpen={isControlsConfigOpen}
         onClose={() => setIsControlsConfigOpen(false)}
         enableAI={enableAI}
+        is2v2Mode={is2v2Mode}
       />
     </div>
   );
