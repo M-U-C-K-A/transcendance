@@ -248,7 +248,6 @@ export default function TournamentSettings({
 			// Nettoyer le message de succès après 3 secondes
 			setTimeout(() => setJoinSuccess(null), 3000);
 		} catch (error) {
-			console.error("Erreur lors de la connexion:", error);
 			setJoinError(error instanceof Error ? error.message : "Erreur inconnue");
 		} finally {
 			setIsLoading(false);
