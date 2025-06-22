@@ -175,7 +175,7 @@ export default function Page() {
 	const bothChosenAndDistinct =
 		colorP1 !== null && colorP2 !== null && colorP1 !== colorP2;
 
-	const allFourChosenAndDistinct = is2v2Mode 
+	const allFourChosenAndDistinct = is2v2Mode
 		? colorP1 !== null && colorP2 !== null && colorP3 !== null && colorP4 !== null &&
 		  colorP1 !== colorP2 && colorP1 !== colorP3 && colorP1 !== colorP4 &&
 		  colorP2 !== colorP3 && colorP2 !== colorP4 && colorP3 !== colorP4
