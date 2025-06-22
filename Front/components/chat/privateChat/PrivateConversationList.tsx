@@ -4,12 +4,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n-client";
-import { onlyUsername } from "@/types/chat";
+
+// Schéma de validation pour l'ajout de contact
+const AddContactSchema = z.object({
+	username: z.string()
+		.min(3, "Le nom doit contenir au moins 3 caractères")
+		.max(20, "Le nom ne peut pas dépasser 20 caractères")
+		.regex(/^[a-zA-Z0-9_]+$/, "Caractères alphanumériques seulement"),
+});
 
 type PrivateConversation = {
 	id: number;
 	userName: string;
-	avatar: string; // Maintenant en base64
+	avatar: string;
 	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
@@ -47,9 +54,9 @@ export function PrivateConversationList({
 				return;
 			}
 
-			const { username: validatedUsername } = onlyUsername.parse({
+			const validatedUsername = AddContactSchema.parse({
 				username: newPrivateUser.trim(),
-			});
+			}).username;
 
 			setIsLoading(true);
 
@@ -57,8 +64,8 @@ export function PrivateConversationList({
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 
@@ -136,13 +143,14 @@ export function PrivateConversationList({
 									onClick={() => onSelectUser(conversation.userName)}
 								>
 									<Avatar className="h-10 w-10">
-										{/* Utilisation directe de l'avatar base64 */}
 										<AvatarImage
-											src={conversation.avatar}
-											alt={conversation.userName}
+											src={`/profilepicture/${conversation.id}.webp`}
+											alt={"conversation"}
 										/>
 										<AvatarFallback>
-											{conversation.userName?.charAt(0)?.toUpperCase() || "?"}
+										{conversation.userName && conversation.userName.length > 0
+											? conversation.userName.charAt(0).toUpperCase()
+											: "?"}
 										</AvatarFallback>
 									</Avatar>
 									<div className="flex-1 min-w-0">
