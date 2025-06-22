@@ -31,8 +31,8 @@ export default function InvitationPage({ params }: { params: { slug: string } })
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
+          credentials: "include",
           body: JSON.stringify({
             code: params.slug,
           }),
