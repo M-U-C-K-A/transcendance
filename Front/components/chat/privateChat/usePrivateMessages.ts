@@ -64,13 +64,11 @@ export const usePrivateMessages = (currentUser: string) => {
 	}, [currentUser]);
 
 	const setupWebSocket = useCallback(() => {
-
 		const newSocket = new WebSocket(WS_URL);
 
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'NEW_PRIVATE_MESSAGE') {
-				const isSender = data.message.user?.username === currentUser;
 				const rawMessage = {
 					id: data.message.id,
 					sender: data.message.user,
@@ -80,6 +78,11 @@ export const usePrivateMessages = (currentUser: string) => {
 					isRead: false,
 					messageType: data.message.messageType
 				};
+
+				if (rawMessage.sender?.id === rawMessage.collegue?.id) {
+					return;
+				}
+
 				const newMessage = transformMessage(rawMessage);
 				setMessages(prev => [...prev, newMessage]);
 			}
@@ -113,7 +116,12 @@ export const usePrivateMessages = (currentUser: string) => {
 			if (!response.ok) throw new Error("Erreur serveur");
 
 			const rawData: RawMessage[] = await response.json();
-			const transformed = rawData.map(transformMessage);
+
+			const filteredRaw = rawData.filter(
+				msg => msg.sender?.id !== msg.collegue?.id
+			);
+
+			const transformed = filteredRaw.map(transformMessage);
 			setMessages(transformed);
 		} catch (err: unknown) {
 			const errorMessage = err instanceof Error

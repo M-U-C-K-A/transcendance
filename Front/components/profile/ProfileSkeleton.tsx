@@ -35,7 +35,7 @@ export function ProfileSkeleton({ locale }: { locale: string }) {
                   ))}
                 </div>
                 <div className="flex gap-2 mb-4">
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(1)].map((_, i) => (
                     <Skeleton key={i} className="h-6 w-20" />
                   ))}
                 </div>

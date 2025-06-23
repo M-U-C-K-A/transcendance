@@ -101,9 +101,6 @@ export function UserProfileCard({ user, isBlocked }: UserProfileCardProps) {
 				{/* Badges */}
 				<div className="flex flex-wrap justify-center gap-2 mb-6">
 					<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-					<Badge className={`${user.onlineStatus ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-						{user.onlineStatus ? 'En ligne' : 'Hors ligne'}
-					</Badge>
 				</div>
 
 				{/* Bouton de blocage/déblocage */}
