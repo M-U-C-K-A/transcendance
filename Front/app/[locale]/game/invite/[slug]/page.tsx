@@ -22,11 +22,6 @@ export default function InvitationPage({ params }: { params: { slug: string } })
   useEffect(() => {
     const joinGame = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          router.push('/auth')
-          return
-        }
         const response = await fetch('/api/game/travel', {
           method: 'POST',
           headers: {
