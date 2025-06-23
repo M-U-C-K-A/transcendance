@@ -1,5 +1,5 @@
 services:
-  
+
   backend:
     build:
       context: .
@@ -16,6 +16,8 @@ services:
       - ./Back/tsconfig.json:/app/tsconfig.json
       - ./Shared:/app/Shared
       - ssl_certs:/app/Shared/certs
+    env_file:
+      - .env
     command: sh -c "pnpm install && pnpx prisma generate --schema=./prisma/schema.prisma && pnpx prisma db push --schema=./prisma/schema.prisma && pnpm run dev:server"
 
 
@@ -25,8 +27,10 @@ services:
       dockerfile: Front/Dockerfile.devfront
     container_name: transcendance-front-dev
     volumes:
-      - ./Front:/app      
+      - ./Front:/app
       - ./Shared:/app/Shared
+    env_file:
+      - .env
     command: sh -c "ln -sf /app/Shared/public /app/public && pnpm install && pnpm run dev"
 
 

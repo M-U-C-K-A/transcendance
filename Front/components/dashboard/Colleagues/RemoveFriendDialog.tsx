@@ -31,7 +31,7 @@ export function RemoveFriendDialog({ username, userId, onRemove }: RemoveFriendD
 
       const response = await fetch(`/api/friends/remove`, {
         method: 'POST',
-        credentials: 'include', // ✅ cookies only
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

@@ -15,7 +15,7 @@ interface Friend {
 	id: number;
 	username: string;
 	status: boolean;
-	avatar?: string; // base64 string
+	avatar?: string;
 }
 
 export function ColleaguesList({ locale }: { locale: string }) {
@@ -35,7 +35,7 @@ export function ColleaguesList({ locale }: { locale: string }) {
 				id: number
 				username: string
 				onlineStatus: boolean
-				avatar?: string // base64 string
+				avatar?: string
 			}>
 
 			const transformed = data.map((friend): Friend => ({

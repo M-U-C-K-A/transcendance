@@ -24,8 +24,6 @@ export default async function Check2FARoute(server: FastifyInstance) {
 			username: result.username,
 		})
 
-		console.log(token)
-
 		reply.setCookie('token', token, {
 			httpOnly: true,
 			secure: true,
