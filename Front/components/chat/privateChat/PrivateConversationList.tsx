@@ -102,30 +102,25 @@ export function PrivateConversationList({
 	const t = useI18n();
 	return (
 		<div className="flex-1 overflow-y-auto max-h-[600px]">
-			<div className="p-4"><div className="flex gap-2 mb-4">
-				<div className="flex-1">
-					<label htmlFor="username-input" className="sr-only">
-						Nom d'utilisateur
-					</label>
+			<div className="p-4">
+				<div className="flex gap-2 mb-4">
 					<Input
-						id="username-input"
 						placeholder="Nom d'utilisateur"
 						value={newPrivateUser}
 						onChange={(e) => {
 							onNewPrivateUserChange(e.target.value);
 							setError(null);
 						}}
-						className="w-full"
+						className="flex-1"
 						onKeyDown={(e) => e.key === 'Enter' && handleAddContact()}
 					/>
+					<Button
+						onClick={handleAddContact}
+						disabled={!newPrivateUser.trim() || isLoading}
+					>
+						{isLoading ? "Ajout..." : "Ajouter"}
+					</Button>
 				</div>
-				<Button
-					onClick={handleAddContact}
-					disabled={!newPrivateUser.trim() || isLoading}
-				>
-					{isLoading ? "Ajout..." : "Ajouter"}
-				</Button>
-			</div>
 
 				{error && (
 					<p className="text-red-500 text-sm mb-4">{error}</p>
@@ -153,9 +148,9 @@ export function PrivateConversationList({
 											alt={"conversation"}
 										/>
 										<AvatarFallback>
-											{conversation.userName && conversation.userName.length > 0
-												? conversation.userName.charAt(0).toUpperCase()
-												: "?"}
+										{conversation.userName && conversation.userName.length > 0
+											? conversation.userName.charAt(0).toUpperCase()
+											: "?"}
 										</AvatarFallback>
 									</Avatar>
 									<div className="flex-1 min-w-0">

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PrivateChat } from "./chat/privateChat/PrivateChat";
 import { usePrivateMessages } from "./chat/privateChat/usePrivateMessages";
 import { PrivateConversation } from "./chat/privateChat/type";
@@ -38,25 +37,17 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
 
     privateMessages.forEach(msg => {
       const isCurrentUserSender = msg.user.name === currentUser;
-      const otherUser = isCurrentUserSender
-        ? msg.recipient?.name
-        : msg.user.name;
+      const otherUser = isCurrentUserSender ? msg.recipient?.name : msg.user.name;
 
       if (!otherUser) return;
 
-      // Calcul des messages non lus
       const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
       const existing = conversationsMap.get(otherUser);
-
-      // Utilisation de l'avatar de l'autre utilisateur
-      const avatar = isCurrentUserSender
-        ? msg.recipient?.avatar || ''
-        : msg.user.avatar || '';
 
       conversationsMap.set(otherUser, {
         id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
         userName: otherUser,
-        avatar: avatar,
+        avatar: `/profilepicture/${isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id}.webp`,
         unreadCount: (existing?.unreadCount || 0) + unreadCount,
         lastMessage: msg.text,
         lastMessageTime: msg.timestamp,
@@ -138,7 +129,7 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
       const newConversation: PrivateConversation = {
         id: contact.id,
         userName: contact.userName,
-        avatar: '', // Initialement vide, sera rempli par les messages
+        avatar: `/profilepicture/${contact.id}.webp`,
         unreadCount: 0,
         lastMessage: "",
         lastMessageTime: new Date(),
