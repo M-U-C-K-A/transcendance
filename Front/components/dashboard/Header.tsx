@@ -23,29 +23,53 @@ export function Header({ locale }: HeaderProps) {
 	return (
 		<header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
 			<div className="container mx-auto py-4 flex justify-between items-center">
-				<Link href={`/dashboard`} className="items-center gap-2 hidden md:flex">
-					<Activity className="h-6 w-6 text-primary" />
-					<h1 className="text-xl font-bold">{t('common.appName')}</h1>
+				{/* App Logo/Link - Clear purpose from text */}
+				<Link
+					href={`/dashboard`}
+					className="items-center gap-2 hidden md:flex"
+					aria-label={`${t('common.appName')} - ${t('nav.home')}`}
+				>
+					<Activity className="h-6 w-6 text-primary" aria-hidden="true" />
+					<h1 className="text-xl font-bold">
+						{t('common.appName')}
+						<span className="sr-only"> - {t('nav.home')}</span>
+					</h1>
 				</Link>
-				<div className="flex items-center gap-4 w-full justify-center md:justify-end">
-					{/* Bouton GDPR toujours visible */}
-					<Link href="/GDPR">
-						<Button variant="ghost" size="sm" aria-label="GDPR">
-							<Shield className="h-5 w-5" />
+
+				<nav aria-label="Primary navigation" className="flex items-center gap-4 w-full justify-center md:justify-end">
+					{/* GDPR Button - Clear purpose from visible text */}
+					<Link href="/GDPR" passHref legacyBehavior>
+						<Button
+							asChild
+							variant="ghost"
+							size="sm"
+						>
+							<a>
+								<Shield className="h-5 w-5 mr-2" aria-hidden="true" />
+								<span className="sr-only"> gdpr</span>
+							</a>
 						</Button>
 					</Link>
 
+					{/* These components should handle their own accessibility */}
 					<ProfileEditDialog />
 					<LanguageSwitcher />
 					<ThemeToggle />
 
-					{/* Ici on affiche uniquement le bouton "Se connecter" */}
+					{/* Sign In Button - Clear purpose from visible text */}
 					<Link href={`/auth`}>
-						<Button variant="ghost" size="sm" aria-label="Sign In">
-							<LogIn className="h-5 w-5" /> {t('Log.in')}
+						<Button
+							asChild
+							variant="ghost"
+							size="sm"
+						>
+							<a>
+								<LogIn className="h-5 w-5 mr-2" aria-hidden="true" />
+								{t('nav.signIn') || "Sign in"}
+							</a>
 						</Button>
 					</Link>
-				</div>
+				</nav>
 			</div>
 		</header>
 	)

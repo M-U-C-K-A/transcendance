@@ -10,7 +10,7 @@ import Link from "next/link"
 const creators = [
   {
     initials: "HD",
-    image: "https://cdn.intra.42.fr/users/a2a7276c3000e4c1180a0f7c975b3e32/hdelacou.jpg",
+    image: "/other/hdelacou.jpg",
     name: "Hugo Delacour",
     role: "Frontend Developer",
     email: "hdelacou@student.42lehavre.fr",
@@ -18,7 +18,7 @@ const creators = [
   },
   {
     initials: "RB",
-    image: "https://cdn.intra.42.fr/users/71cfca25335ff0dd421f5d6a4377dbd9/rbardet-.jpg",
+    image: "/other/rbardet-.jpg",
     name: "Robin Bardet-Tomczak",
     role: "Backend Developer",
     email: "rbarde-t@student.42lehavre.fr",
@@ -26,7 +26,7 @@ const creators = [
   },
   {
     initials: "TR",
-    image: "https://cdn.intra.42.fr/users/817d138365bfd981b4037301445eccfd/throbert.jpg",
+    image: "/other/throbert.jpg",
     name: "Thomas Robert",
     role: "Game & Docker",
     email: "throbert@student.42lehavre.fr",
@@ -65,4 +65,3 @@ export function CreatorsCard() {
     </Card>
   )
 }
-
