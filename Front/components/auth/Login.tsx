@@ -75,7 +75,7 @@ export function Login({ className, ...props }) {
     }
   }, [router, searchParams, t]);
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
@@ -91,11 +91,17 @@ export function Login({ className, ...props }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password: password }),
       });
+      const data = await res.json();
       if (res.ok) {
-        localStorage.setItem('temp_2fa_email', email);
-        setShow2FAModal(true);
+        // Vérifie si la réponse contient as2FA et si c'est true
+        if (data.as2FA === true) {
+          localStorage.setItem('temp_2fa_email', email);
+          setShow2FAModal(true);
+        } else {
+          // Si pas de 2FA, redirige directement
+          router.replace('/en/dashboard');
+        }
       } else {
-        const data = await res.json();
         throw new Error(data.message || t('auth.errors.loginFailed'));
       }
     } catch (err) {
