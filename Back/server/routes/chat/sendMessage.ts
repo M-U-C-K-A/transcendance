@@ -45,6 +45,7 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 						username: sender.username,
 					},
 				};
+				
 				broadcastMessage(recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage

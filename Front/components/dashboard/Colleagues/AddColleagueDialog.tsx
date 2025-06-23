@@ -52,7 +52,7 @@ export function AddColleagueDialog() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				credentials: "include", // ✅ Cookies only
+				credentials: "include",
 				body: JSON.stringify({ username: values.username }),
 			})
 

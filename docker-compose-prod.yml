@@ -1,13 +1,13 @@
 services:
   copier:
     build:
-      context: . 
+      context: .
       dockerfile: Dockerfile.copier
     container_name: transcendance-copier
     volumes:
       - shared_code:/app/Shared
     entrypoint: ["sh", "-c", "cp -r Shared/* /app/Shared"]
-  
+
   backend:
     build:
       context: .
@@ -21,6 +21,8 @@ services:
       - prisma_data:/app/prisma/data
       - shared_code:/app/Shared
       - ssl_certs:/app/Shared/certs
+    env_file:
+      - .env
     command: pnpm run dev:server
 
 
@@ -33,6 +35,8 @@ services:
       - copier
     volumes:
       - shared_code:/app/Shared
+    env_file:
+      - .env
     command: pnpm run dev
 
 
