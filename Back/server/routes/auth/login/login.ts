@@ -16,7 +16,25 @@ export default async function loginRoute(server: FastifyInstance) {
 
 		try {
 			const result = await login(email, password)
-			return reply.code(200).send({ result })
+			console.log(result)
+			if (result?.as2FA == false) {
+				const token = server.jwt.sign({
+					id: result.id,
+					username: result.username,
+				})
+
+				reply.setCookie('token', token, {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'lax',
+					path: '/',
+					maxAge: 60 * 60 * 24 * 7,
+				})
+
+				return reply.code(200).send({ as2FA: false })
+			} else {
+				return reply.code(200).send({ as2FA: true })
+			}
 		} catch (err: any) {
 			if (err.message === 'This account does not exist') {
 				return reply.code(400).send({ error: 'This account does not exist' })

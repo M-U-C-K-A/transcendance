@@ -11,7 +11,10 @@ export default async function login(email: string, pass: string) {
 		},
 		select: {
 			email: true,
-			pass: true
+			pass: true,
+			as2FA: true,
+			id: true,
+			username: true,
 		},
 	});
 
@@ -26,8 +29,8 @@ export default async function login(email: string, pass: string) {
 
 	const goodPass = await bcrypt.compare(pass, existingUser.pass)
 
-	if (goodPass) {
-
+	if (goodPass && existingUser.as2FA == true) {
+		console.log("A LE 2FA ACTIVERRRRR")
 		const userInfo = await Prisma.user.findFirst({
 			where: {
 				email: email,
@@ -61,8 +64,12 @@ export default async function login(email: string, pass: string) {
 				<br/>
 				<p>— The Pong Master Team</p>`,})
 
-				return (true)
+			return {id: existingUser.id, username: existingUser.username, as2FA: true}
 		}
+	}
+	else if (goodPass && existingUser.as2FA == false) {
+		console.log("NOOOOOOOOOOOOOOO 2FA")
+		return {id: existingUser.id, username: existingUser.username, as2FA: false}
 	}
 	else {
 		throw new Error ('Wrong password')

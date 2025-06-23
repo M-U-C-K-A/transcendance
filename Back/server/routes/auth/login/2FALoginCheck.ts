@@ -23,7 +23,6 @@ export default async function Check2FALoginRoute(server: FastifyInstance) {
 		const token = server.jwt.sign({
 			id: result.id,
 			username: result.username,
-			bio: result.bio,
 		})
 
 		reply.setCookie('token', token, {
@@ -37,14 +36,15 @@ export default async function Check2FALoginRoute(server: FastifyInstance) {
 		return reply.code(200).send({ message: 'Login successful' })
 	}
 
-	return reply.code(404).send({ error: 'User not found' })
-
 	} catch (err: any) {
-	  if (err.message === 'Wrong Code') {
+	if (err.message === 'Wrong Code') {
 		return reply.code(403).send({ error: 'Wrong Code' })
-	  } else {
+	} else if (err.message == 'User not found') {
+		return reply.code(404).send({ error: err.message })
+	}
+	else {
 		return reply.code(500).send({ error: 'Internal server error' })
-	  }
+	}
 	}
   })
 }
