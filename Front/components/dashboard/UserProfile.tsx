@@ -71,7 +71,6 @@ import {
 			</div>
 			<div className="flex gap-2 mb-4">
 			  <Skeleton className="h-6 w-20" />
-			  <Skeleton className="h-6 w-20" />
 			</div>
 		  </CardContent>
 		</Card>
@@ -123,11 +122,6 @@ import {
 		  </div>
 		  <div className="flex gap-2 mb-4">
 			<Badge className="bg-primary/20 text-primary">ELO: {user.elo}</Badge>
-			<Badge variant={user.onlineStatus ? "offline" : "online"}>
-			  {user.onlineStatus
-				? t('Profile.status.offline')
-				: t('Profile.status.online')}
-			</Badge>
 		  </div>
 		</CardContent>
 	  </Card>
