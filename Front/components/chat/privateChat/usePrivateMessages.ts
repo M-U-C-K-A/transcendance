@@ -64,13 +64,8 @@ export const usePrivateMessages = (currentUser: string) => {
 	}, [currentUser]);
 
 	const setupWebSocket = useCallback(() => {
-		const token = localStorage.getItem("token");
-		if (!token) return;
 
-		const newSocket = new WebSocket(WS_URL, [token]);
-
-		newSocket.onopen = () => {
-		};
+		const newSocket = new WebSocket(WS_URL);
 
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);

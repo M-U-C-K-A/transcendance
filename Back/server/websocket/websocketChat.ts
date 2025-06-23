@@ -11,24 +11,24 @@ connection: WebSocket,
 request: FastifyRequest
 ) {
 try {
-	console.log("TEST WEBSOCKET FRIENDS👺👺👺👺👺")
-	const token = request.cookies.token
+
+	const token = request.cookies.token;
 
 	if (!token) {
-		console.log("TOKEN NON TROUVEE👺👺👺👺👺👺")
-		throw new Error('Token manquant dans les cookies')
+		throw new Error('Token manquant dans les cookies');
 	}
 
-	const decoded = await request.jwtVerify<JwtPayload>()
-	const userId = decoded.id
+	const decoded = request.server.jwt.verify<JwtPayload>(token);
+
+	const userId = decoded.id;
 
 	setChatConnection(userId, connection);
-	console.log("USER", userId, "CONNECTER AU FRIEND WEBSOCKET")
-	await changeOnlineStatus(userId, true)
+
+	await changeOnlineStatus(userId, true);
 
 	connection.on('close', () => {
 		removeChatConnection(userId);
-		changeOnlineStatus(userId, false)
+		changeOnlineStatus(userId, false);
 	});
 
 	} catch (error) {
