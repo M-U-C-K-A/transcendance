@@ -24,7 +24,6 @@ import matchResultRoute from './routes/match/matchResultRoute';
 import blockUserRoute from './routes/chat/blockUserRoute';
 import privateChatRoute from './routes/chat/privateChatRoute';
 import { googleLogin } from './routes/auth/google/google';
-import { chatWebSocketHandler } from '@/server/routes/chat/websocketChat';
 import gameCreationRoute from './routes/match/gameCreation';
 import register2FARoute from './routes/auth/register/2FAregisterRoute';
 import Check2FARoute from './routes/auth/register/2FACheckRoute';
@@ -38,6 +37,7 @@ import get2FAStateRoute from './routes/user/get2FAState';
 import fastifyCookie from '@fastify/cookie';
 import { friendsWebSocketHandler } from './websocket/websocketFriends';
 import joinTournamentRoute from './routes/tournament/joinTournamentRoute';
+import { chatWebSocketHandler } from './websocket/websocketChat';
 
 dotenv.config();
 
