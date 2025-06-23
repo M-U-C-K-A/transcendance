@@ -25,6 +25,7 @@ import {
 import { useI18n } from "@/i18n-client";
 import { registerData } from '@/types/auth';
 import { Checkbox } from '../ui/checkbox';
+import { TypographySection } from '../gdpr/TypographySection';
 
 export function Register({
   className,
@@ -215,22 +216,11 @@ export function Register({
 
       {/* GDPR Dialog */}
       <AlertDialog open={showGdprDialog} onOpenChange={setShowGdprDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="min-w-[800px]">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('auth.gdpr.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('auth.gdpr.description')}
-              {/* Vous pouvez ajouter ici le texte complet des RGPD */}
-              <div className="mt-4 p-4 max-h-60 overflow-y-auto text-sm border rounded">
-                <h3 className="font-bold mb-2">{t('auth.gdpr.dataCollectionTitle')}</h3>
-                <p className="mb-4">{t('auth.gdpr.dataCollectionText')}</p>
-
-                <h3 className="font-bold mb-2">{t('auth.gdpr.dataUsageTitle')}</h3>
-                <p className="mb-4">{t('auth.gdpr.dataUsageText')}</p>
-
-                <h3 className="font-bold mb-2">{t('auth.gdpr.dataRightsTitle')}</h3>
-                <p>{t('auth.gdpr.dataRightsText')}</p>
-              </div>
+              <TypographySection />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

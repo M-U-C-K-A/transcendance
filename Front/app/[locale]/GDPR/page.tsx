@@ -487,19 +487,24 @@ export default function GdprPage() {
                     {t('gdpr.sections.security.description')}
                   </p>
                 </div>
-                <div className="flex items-center space-x-2">
+                <Label className="flex items-center space-x-2 cursor-pointer">
                   <Switch
                     id="twofa-toggle"
                     checked={twoFAEnabled}
                     onCheckedChange={handleToggle2FA}
                     disabled={isLoading2FA}
+                    aria-label={
+                      twoFAEnabled
+                        ? t('gdpr.sections.security.twoFAEnabled')
+                        : t('gdpr.sections.security.twoFADisabled')
+                    }
                   />
-                  <Label htmlFor="twofa-toggle">
+                  <span>
                     {twoFAEnabled
                       ? t('gdpr.sections.security.twoFAEnabled')
                       : t('gdpr.sections.security.twoFADisabled')}
-                  </Label>
-                </div>
+                  </span>
+                </Label>
               </div>
             </section>
 
