@@ -137,24 +137,7 @@ export function QuickMatchContent({ locale }: GameTabsContentProps) {
 
 export function CustomGameContent({ locale }: GameTabsContentProps) {
   const t = useI18n()
-  const jwt = useJWT()
-  const [matches, setMatches] = useState<Match[]>([])
   const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        const res = await fetch("/api/match/list", {
-          headers: { Authorization: `Bearer ${jwt}` },
-        })
-        if (!res.ok) throw new Error("Failed to fetch matches")
-        setMatches(await res.json())
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error")
-      }
-    }
-    if (jwt) fetchMatches()
-  }, [jwt])
 
   return (
     <Card className="flex h-full min-h-[700px] max-h-[700px] flex-col justify-between border bg-card shadow-sm">

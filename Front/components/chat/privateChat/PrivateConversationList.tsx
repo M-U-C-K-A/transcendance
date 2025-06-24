@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n-client";
 
-// Schéma de validation pour l'ajout de contact
 const AddContactSchema = z.object({
 	username: z.string()
 		.min(3, "Le nom doit contenir au moins 3 caractères")

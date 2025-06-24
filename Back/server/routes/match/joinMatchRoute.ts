@@ -26,12 +26,12 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 		return (reply.code(200).send({ result }))
 	} catch (err: any) {
 		console.error('Error in joinMatch:', err);
-		if (err.message === 'User not found') {
-			return reply.code(404).send({ error: 'User not found' })
-		} else if (err.message === 'Not valid invitation') {
-			return reply.code(404).send({ error: 'Not valid invitation' })
+		if (err.message === 'User does not exist') {
+			return reply.code(404).send({ error: 'User does not exist' })
 		} else if (err.message == 'Match already finished') {
 			return reply.code(401).send({ error: 'Match already finished' })
+		} else if (err.message == 'Not valid Match') {
+			return reply.code(404).send({ error: 'Not valid Match' })
 		}
 		return reply.code(500).send({ error: 'Internal server error' })
 	}
