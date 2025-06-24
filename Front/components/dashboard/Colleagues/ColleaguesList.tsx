@@ -70,15 +70,9 @@ export function ColleaguesList({ locale }: { locale: string }) {
 
 	if (error) {
 		return (
-			<div className="space-y-4 border rounded-lg mt-4 px-4 py-6">
-				<p className="text-red-500 font-semibold">{error}</p>
-				{[...Array(3)].map((_, i) => (
-					<div key={i} className="flex items-center space-x-3">
-						<Skeleton className="h-10 w-10 rounded-full bg-red-700 opacity-50" />
-						<Skeleton className="h-4 w-24 bg-red-700 opacity-50" />
-					</div>
-				))}
-			</div>
+      <Card className="mt-4 bg-card border shadow-sm p-6 text-center">
+        <p className="text-muted-foreground">{t('profileEdit.errors.loadFriends')}</p>
+      </Card>
 		)
 	}
 

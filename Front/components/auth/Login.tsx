@@ -21,7 +21,10 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useI18n } from "@/i18n-client";
 
-export function Login({ className, ...props }) {
+export function Login({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"form">) {
   const t = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -186,9 +189,6 @@ export function Login({ className, ...props }) {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">{t('auth.login.passwordLabel')}</Label>
-              <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
-                {t('auth.login.forgotPassword')}
-              </a>
             </div>
             <div className="relative">
               <Input
