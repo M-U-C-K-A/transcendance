@@ -21,17 +21,15 @@ server.post("/game/result", { preHandler: authMiddleware }, async function (requ
 
 	const { player1Score, player2Score, gameId} = data.data
 
-	let decodedID: number;
-	if (gameId == "-1") {
-		decodedID = -1;
-	} else {
-		decodedID = decodeMatchId(gameId);
-	}
+	const decodedID = decodeMatchId(gameId);
 
 	try {
 		const result = await matchResult( player1Score, player2Score, decodedID, user.id );
 		return reply.code(200).send(result);
 		} catch (err: any) {
+			if (err.message == 'Player not found') {
+				return reply.code(404).send({ error: err.message });
+			}
 			return reply.code(500).send({ error: "Internal server error" });
 	  }
 	}
