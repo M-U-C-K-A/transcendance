@@ -19,8 +19,32 @@ export function Header({ locale }: HeaderProps) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false)
 
 	useEffect(() => {
-		setIsAuthenticated(hasCookie("token"))
+		const checkAuth = async () => {
+			try {
+				const res = await fetch("/api/profile/me", {
+					method: "GET",
+					credentials: "include",
+				})
+
+				if (res.ok) {
+					const data = await res.json()
+					if (data && data.id) {
+						setIsAuthenticated(true)
+					} else {
+						setIsAuthenticated(false)
+					}
+				} else {
+					setIsAuthenticated(false)
+				}
+			} catch (error) {
+				console.error("Erreur lors de la vérification de l'authentification", error)
+				setIsAuthenticated(false)
+			}
+		}
+
+		checkAuth()
 	}, [])
+
 
 	const handleLogout = () => {
 		deleteCookie("token")
@@ -58,14 +82,14 @@ export function Header({ locale }: HeaderProps) {
 
 					{isAuthenticated ? (
 						<Button variant="ghost" size="sm" onClick={handleLogout}>
-							<LogOut className="h-5 w-5 mr-2" aria-hidden="true" />
-							{t('nav.signOut') || "Logout"}
+							<LogOut className="h-5 w-5" aria-hidden="true" />
+							<span className="sr-only">{t('nav.signOut') || "Logout"}</span>
 						</Button>
 					) : (
 						<Button asChild variant="ghost" size="sm">
 							<Link href="/auth">
-								<LogIn className="h-5 w-5 mr-2" aria-hidden="true" />
-								{t('nav.signIn') || "Sign in"}
+								<LogIn className="h-5 w-5" aria-hidden="true" />
+								<span className="sr-only">{t('nav.signIn') || "Sign in"}</span>
 							</Link>
 						</Button>
 					)}
