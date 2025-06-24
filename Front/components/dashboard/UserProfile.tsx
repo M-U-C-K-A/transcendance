@@ -90,7 +90,7 @@ export function UserProfile() {
   return (
     <Card className="bg-card border shadow-sm">
       <CardHeader>
-        <CardTitle asChild>
+        <CardTitle>
           <h1>{t('Profile.title')}</h1>
         </CardTitle>
       </CardHeader>

@@ -9,6 +9,7 @@ export default {
 		"appName": "ft_transcendance",
 		"login": "Login",
 		"verify": "Verify",
+		"error": "Error",
 		"register": "Register",
 		"freeRegister": "Register for free",
 		"statistics": "Statistics",
@@ -19,24 +20,51 @@ export default {
 		"remove": "Remove",
 		"copyright": "© 2025 PongMaster Enterprise. All rights reserved."
 	},
-
 	"gdpr": {
 		"title": "Personal Data Management",
+		"modals" : {
+			"userData": {
+				"title": "Update your informations",
+				"avatarLabel": "Avatar",
+				"avatarAlt": "Your current avatar",
+				"removeAvatar": "Remove avatar",
+				"personalInfo": "Personal informations",
+				"usernameLabel": "Username",
+				"emailLabel": "Email address",
+				"passwordLabel": "Password",
+				"newPasswordLabel": "New password",
+				"passwordPlaceholder": "At least 8 characters",
+				"passwordHint": "Password must be at least 8 characters",
+				"saveChanges": "Save changes",
+				"cancel": "Cancel",
+				"saving": "Saving..."
+			},
+			"password": {
+				"title": "Password",
+				"label": "Enter your current password",
+				"description": "You need to enter your current password to update your informations",
+				"placeholder": "**********",
+			}
+		},
 		"validation": {
 			"passwordRequired": "Password is required",
 			"usernameRequired": "Username is required",
 			"invalidEmail": "Invalid email",
 			"passwordMinLength": "Password must be at least 8 characters"
 		},
-			"modals": {
-				"password": {
-					"title": "Password",
-					"label": "Enter your new password",
-					"description": "Change your password",
-					"placeholder": "********",
-					}
-				},
-		"sections" : {
+		"sections": {
+			"security": {
+				"title": "Security 2FA",
+				"description": "Update your security settings with 2FA",
+				"twoFADisabled": "2FA Disabled",
+				"twoFAEnabled": " 2FA Enabled ",
+			},
+			"exportData": {
+				"title": "Export Data",
+				"description": "Export your personal data",
+				"requestButton": "Manage my data",
+				"exportButton": "Export my data"
+			},
 			"personalData": {
 				"title": "Personal Data",
 				"firstName": "First Name",
@@ -47,26 +75,35 @@ export default {
 				"username": "Username",
 				"update": "Update",
 			},
-				"critical": {
-					"title": "Critical Data",
-					"deleteAccount": "Delete Account",
-					"deleteWarning": "Are you sure you want to delete your account? This action is irreversible.",
-					"deleteButton": "Delete Account",
-				},
+			"critical": {
+				"title": "Critical Data",
+				"deleteAccount": "Delete Account",
+				"deleteWarning": "Are you sure you want to delete your account? This action is irreversible.",
+				"deleteButton": "Delete Account",
+			},
 			"password": "Password",
 			"deleteAccount": "Delete Account"
 		},
 		"alerts": {
-			"delete":{
+			"getData": {
+				"title": "Export Personal Data",
+				"description": "Your personal data will be sent to your email.",
+				"confirm": "Confirm",
+			},
+			"delete": {
 				"title": "Delete Account",
 				"description": "Are you sure you want to delete your account? This action is irreversible.",
-				"confirm":  "Confirm",
+				"confirm": "Confirm",
 			}
 		},
 		"toasts": {
 			"verificationSuccess": "Verification successful",
 			"updateSuccess": "Your information has been updated",
-			"deleteSuccess": "Your account has been successfully deleted"
+			"deleteSuccess": "Your account has been successfully deleted",
+			"getDataSuccess": "Your personal data has been sent to your email",
+			"genericSuccess": "Operation successful",
+			"twoFAEnabled": "Two-Factor Authentication is enabled",
+			"twoFADisabled": "Two-Factor Authentication is disabled"
 		},
 		"errors": {
 			"incorrectPassword": "Incorrect password",
@@ -112,6 +149,7 @@ export default {
 		"email": "Email",
 		"username": "Username",
 		"password": "Password",
+		"loadError": "Error loading profile",
 		"status": {
 			"online": "Online",
 			"offline": "Offline",
@@ -133,7 +171,7 @@ export default {
 			"submitting": "Submitting...",
 			"title": "Login",
 			"subtitle": "Sign in to access your PongMaster account",
-			"emailLabel":"Email",
+			"emailLabel": "Email",
 			"description": "Sign in to access your PongMaster account",
 			"emailPlaceholder": "example@gmail.com",
 			"password": "Password",
@@ -147,6 +185,8 @@ export default {
 			"passwordTooLong": "Password must be less than 20 characters",
 		},
 		"register": {
+			"acceptGdpr": "I accept the terms",
+			"viewGdpr": "View terms and conditions",
 			"title": "Register",
 			"usernameLabel": "Username",
 			"subtitle": "Create an account to start playing PongMaster",
@@ -173,21 +213,26 @@ export default {
 			"invalidConfirmPasswordLength": "Passwords do not match",
 
 		},
-		"errors":{
-				"loginFailed": "Login failed",
-				"registrationFailed": "Registration failed",
-				"verificationFailed": "Verification failed",
-				"updateFailed": "Update failed",
-				"deleteFailed": "Account deletion failed",
-				"genericError": "An error occurred",
-				"invalidEmail": "Invalid email",
-				"invalidUsername": "Invalid username",
-				"sessionExpired": "Session expired",
+		"errors": {
+			"loginFailed": "Login failed",
+			"registrationFailed": "Registration failed",
+			"verificationFailed": "Verification failed",
+			"updateFailed": "Update failed",
+			"deleteFailed": "Account deletion failed",
+			"genericError": "An error occurred",
+			"invalidEmail": "Invalid email",
+			"invalidUsername": "Invalid username",
+			"sessionExpired": "Session expired",
 		},
-		"haveAccount":"Already have an account? ",
+		"haveAccount": "Already have an account? ",
 		"noAccount": "No account? ",
 		"registertext": "Register",
 		"logintext": "Login",
+		"gdpr": {
+			"title": "GDPR Consent",
+			"accept": "Accept",
+			"description": "By continuing, you accept the terms of service and acknowledge that you have read and understand the privacy policy.",
+		},
 		"2fa": {
 			"title": "Two-Factor Authentication",
 			"description": "Enter the code sent to your email",
@@ -202,10 +247,23 @@ export default {
 		"description": "Edit your profile",
 		"submit": "Save",
 		"bioLabel": "Bio",
+		"bioPlaceholder": "Enter your bio",
 		"upload": {
 			"dragDrop": "Drag and drop",
 			"clickToSelect": "drag and drop your avatar here or click to upload",
 
+		},
+		"errors": {
+			"validation": {
+				"invalidChars": "Only letters, numbers and underscores are allowed",
+				"invalidUsernameLength": "Username must be at least 3 characters",
+				"title": "Profile update failed"
+			},
+			"updateFailed": "Update failed",
+			"deleteFailed": "Account deletion failed",
+			"genericError": "An error occurred",
+			"fetchFailed": "Failed to fetch profile data",
+			"loadFriends": "Failed to load friends",
 		}
 	},
 
@@ -213,7 +271,13 @@ export default {
 		"in": "Sign in",
 		"out": "Log out",
 	},
-
+	"nav": {
+		"signIn": "Sign in",
+		"signup": "Sign up",
+		"dashboard": "Dashboard",
+		"profile": "Profile",
+		"logout": "Log out",
+	},
 	"dashboard": {
 		"title": "Dashboard",
 		"welcome": "Welcome",

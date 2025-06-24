@@ -520,7 +520,7 @@ export default function GdprPage() {
                   </p>
                 </div>
                 <Button variant="outline" onClick={() => setShowGetDataAlert(true)}>
-                  {t('gdpr.sections.exportData.requestButton')}
+                  {t('gdpr.sections.exportData.exportButton')}
                 </Button>
               </div>
             </section>
