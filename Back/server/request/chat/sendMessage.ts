@@ -57,6 +57,7 @@ export default async function sendMessage(sender: number, recipient: number, con
 		where: { id: message.senderId },
 		select: {
 			id: true,
+			avatar: true,
 			username: true,
 			win: true,
 			lose: true,
@@ -76,10 +77,10 @@ export default async function sendMessage(sender: number, recipient: number, con
 		sender: {
 			id: senderInfo.id,
 			username: senderInfo.username,
-			win: senderInfo.win ?? 0,
-			lose: senderInfo.lose ?? 0,
-			elo: senderInfo.elo ?? 1000,
-			avatar: `/profilepicture/${senderInfo.id}.webp`,
+			win: senderInfo.win,
+			lose: senderInfo.lose,
+			elo: senderInfo.elo,
+			avatar: senderInfo.avatar,
 		},
 	};
 
