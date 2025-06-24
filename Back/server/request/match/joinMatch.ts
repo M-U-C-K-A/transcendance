@@ -10,7 +10,7 @@ export function decodeMatchId(hashedId: string): number {
 	}
 	const decoded = hashids.decode(hashedId);
 	if (!decoded.length) {
-		throw new Error(`Impossible de décoder l'ID du match: ${hashedId}`);
+		throw new Error(`Not valid Match`);
 	}
 	return Number(decoded[0]);
 }
@@ -28,33 +28,16 @@ export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
 		throw new Error('User does not exist');
 	}
 
-	const findMatch = await Prisma.match.findFirst({
-		where: {
-			OR: [
-				{ p1Id: userId },
-				{ p2Id: userId }
-			],
-			winnerId: { not: null }
-		},
-		select: {
-			id: true,
-		},
-	});
-
-	if (findMatch?.id) {
-		throw new Error('User already in game')
-	}
-
 	const matchState = await Prisma.match.findFirst({
 		where: {
-			p2Id: { not: null},
+			id: matchId,
 		},
 		select: {
 			p2Id: true,
 		},
 	});
 
-	if (matchState) {
+	if (matchState?.p2Id) {
 		throw new Error('Match already finished')
 	}
 
