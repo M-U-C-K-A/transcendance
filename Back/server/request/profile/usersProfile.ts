@@ -44,19 +44,29 @@ export default async function getuser(profileId: number, userId: number) {
 
 	const matchHistory = await Prisma.match.findMany({
 		where: {
-		  OR: [
+		OR: [
 			{ p1Id: userInfo.id },
 			{ p2Id: userInfo.id },
-		  ],
-		  winnerId: {
-			not: null
-		  }
+		],
+		winnerId: {
+				not: null
+			}
 		},
 		include: {
-		  player1: { select: { username: true } },
-		  player2: { select: { username: true } }
+			player1: {
+				select: {
+					username: true,
+					avatar: true,
+				}
+			},
+			player2: {
+				select: {
+					username: true,
+					avatar: true,
+				}
+			}
 		}
-	  });
+	});
 
 	return {userInfo, gameNumber, winRate, matchHistory, isBlocked}
 }

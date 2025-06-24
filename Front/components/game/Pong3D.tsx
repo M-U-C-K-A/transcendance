@@ -114,7 +114,7 @@ export default function Pong3D({
 			lastHitter: lastHitterRef,
 			triggerSuperPad: triggerSuperPadRef,
 		}; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
-		
+
 		const cleanupPhysic = initgamePhysic(
 			scene,
 			objs,
@@ -218,12 +218,12 @@ export default function Pong3D({
 	useEffect(() => {
 		if (gameObjectsRef.current && is2v2Mode) {
 			const { paddle3, paddle4, p3Mat, p4Mat } = gameObjectsRef.current;
-			
+
 			if (paddle3 && paddle4 && p3Mat && p4Mat) {
 				// Utiliser les matériaux déjà créés dans setupGameObjects
 				paddle3.material = p3Mat;
 				paddle4.material = p4Mat;
-				
+
 				// Appliquer aussi aux mini-pads si ils existent
 				if (gameObjectsRef.current.miniPaddle3) {
 					gameObjectsRef.current.miniPaddle3.material = p3Mat;
@@ -251,7 +251,7 @@ export default function Pong3D({
 		{
 			if (winner)
 			{
-				if (gamemode !== "tournament")
+				if (gamemode == "custom" && !!localStorage.getItem("currentGameId"))
 				{
 					const sendScore = async () =>
 					{
@@ -263,12 +263,12 @@ export default function Pong3D({
 								headers:
 								{
 									'Content-Type': 'application/json',
-									'Authorization': `Bearer ${localStorage.getItem("token")}`
 								},
+								credentials: 'include',
 								body: JSON.stringify({
 									player1Score: score.player1,
 									player2Score: score.player2,
-									gameId: localStorage.getItem("currentGameId") || -1,
+									gameId: localStorage.getItem("currentGameId"),
 								})
 							});
 
