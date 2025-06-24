@@ -16,7 +16,6 @@ type PrivateConversation = {
 	id: number;
 	userName: string;
 	avatar: string;
-	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
 };
@@ -63,8 +62,8 @@ export function PrivateConversationList({
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
+				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 
@@ -143,7 +142,7 @@ export function PrivateConversationList({
 								>
 									<Avatar className="h-10 w-10">
 										<AvatarImage
-											src={`/profilepicture/${conversation.id}.webp`}
+											src={conversation.avatar}
 											alt={"conversation"}
 										/>
 										<AvatarFallback>

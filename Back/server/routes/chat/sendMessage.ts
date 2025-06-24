@@ -35,6 +35,10 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					user: {
 						id: sender.id,
 						username: sender.username,
+						avatar: wsMessage.sender.avatar,
+						win: wsMessage.sender.win,
+						lose: wsMessage.sender.lose,
+						elo: wsMessage.sender.elo,
 					},
 					recipient: {
 						id: sender.id,
@@ -43,9 +47,13 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					sender: {
 						id: sender.id,
 						username: sender.username,
+						avatar: wsMessage.sender.avatar,
+						win: wsMessage.sender.win,
+						lose: wsMessage.sender.lose,
+						elo: wsMessage.sender.elo,
 					},
 				};
-				
+
 				broadcastMessage(recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage

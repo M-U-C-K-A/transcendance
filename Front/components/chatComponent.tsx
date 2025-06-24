@@ -6,164 +6,167 @@ import { PrivateConversation } from "./chat/privateChat/type";
 import { useI18n } from "@/i18n-client";
 
 interface ChatComponentProps {
-  placeholder?: string;
-  currentUser: string;
+	placeholder?: string;
+	currentUser: string;
 }
 
 interface SendMessageData {
-  recipient?: number;
-  content: string;
-  messageType: string;
+	recipient?: number;
+	content: string;
+	messageType: string;
 }
 
 export function ChatComponent({ placeholder = "\u00c9crivez un message...", currentUser }: ChatComponentProps) {
-  const [selectedPrivateUser, setSelectedPrivateUser] = useState<string | null>(null);
-  const [newMessage, setNewMessage] = useState("");
-  const [newPrivateUser, setNewPrivateUser] = useState("");
-  const [privateConversations, setPrivateConversations] = useState<PrivateConversation[]>([]);
-  const [sendError, setSendError] = useState<string | null>(null);
+	const [selectedPrivateUser, setSelectedPrivateUser] = useState<string | null>(null);
+	const [newMessage, setNewMessage] = useState("");
+	const [newPrivateUser, setNewPrivateUser] = useState("");
+	const [privateConversations, setPrivateConversations] = useState<PrivateConversation[]>([]);
+	const [sendError, setSendError] = useState<string | null>(null);
 
-  const t = useI18n();
+	const t = useI18n();
 
-  const {
-    messages: privateMessages,
-    fetchPrivateMessages,
-    isLoading,
-    error: currentError
-  } = usePrivateMessages(currentUser);
+	const {
+		messages: privateMessages,
+		fetchPrivateMessages,
+		isLoading,
+		error: currentError
+	} = usePrivateMessages(currentUser);
 
-  useEffect(() => {
-    const conversationsMap = new Map<string, PrivateConversation>();
+	useEffect(() => {
+		const conversationsMap = new Map<string, PrivateConversation>();
 
-    privateMessages.forEach(msg => {
-      const isCurrentUserSender = msg.user.name === currentUser;
-      const otherUser = isCurrentUserSender ? msg.recipient?.name : msg.user.name;
+		privateMessages.forEach(msg => {
+			const isCurrentUserSender = msg.user.name === currentUser;
+			const otherUser = isCurrentUserSender ? msg.recipient?.name : msg.user.name;
 
-      if (!otherUser) return;
+			if (!otherUser) return;
 
-      const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
-      const existing = conversationsMap.get(otherUser);
+			const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
+			const existing = conversationsMap.get(otherUser);
+			console.log(otherUser)
 
-      conversationsMap.set(otherUser, {
-        id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
-        userName: otherUser,
-        avatar: `/profilepicture/${isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id}.webp`,
-        unreadCount: (existing?.unreadCount || 0) + unreadCount,
-        lastMessage: msg.text,
-        lastMessageTime: msg.timestamp,
-      });
-    });
+			if (otherUser == msg.me.username) {
+				return;
+			}
 
-    setPrivateConversations(Array.from(conversationsMap.values()));
-  }, [privateMessages, currentUser]);
+			conversationsMap.set(otherUser, {
+				id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
+				userName: otherUser,
+				avatar: msg.user.avatar || '',
+				lastMessage: msg.text,
+				lastMessageTime: msg.timestamp,
+			});
+		});
 
-  const sendMessage = useCallback(async () => {
-    if (!newMessage.trim()) {
-      setSendError("Le message ne peut pas \u00eatre vide");
-      return;
-    }
+		setPrivateConversations(Array.from(conversationsMap.values()));
+	}, [privateMessages, currentUser]);
 
-    setSendError(null);
+	const sendMessage = useCallback(async () => {
+		if (!newMessage.trim()) {
+			setSendError("Le message ne peut pas \u00eatre vide");
+			return;
+		}
 
-    const payload: SendMessageData = {
-      content: newMessage,
-      messageType: "PRIVATE",
-    };
+		setSendError(null);
 
-    if (!selectedPrivateUser) {
-      setSendError("Aucun destinataire s\u00e9lectionn\u00e9.");
-      return;
-    }
+		const payload: SendMessageData = {
+			content: newMessage,
+			messageType: "PRIVATE",
+		};
 
-    const recipientConversation = privateConversations.find(
-      conv => conv.userName === selectedPrivateUser
-    );
-    const recipientId = recipientConversation?.id;
+		if (!selectedPrivateUser) {
+			setSendError("Aucun destinataire s\u00e9lectionn\u00e9.");
+			return;
+		}
 
-    if (!recipientId) {
-      setSendError("Destinataire introuvable.");
-      return;
-    }
+		const recipientConversation = privateConversations.find(
+			conv => conv.userName === selectedPrivateUser
+		);
+		const recipientId = recipientConversation?.id;
 
-    payload.recipient = recipientId;
+		if (!recipientId) {
+			setSendError("Destinataire introuvable.");
+			return;
+		}
 
-    try {
-      const res = await fetch("/api/chat/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(payload),
-      });
+		payload.recipient = recipientId;
 
-      const responseBody = await res.json();
+		try {
+			const res = await fetch("/api/chat/send", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify(payload),
+			});
 
-      if (!res.ok) {
-        if (responseBody.error === "This user blocked you") {
-          setSendError("Cet utilisateur vous a bloqu\u00e9.");
-        } else if (responseBody.error === "You blocked this user") {
-          setSendError("Vous avez bloqu\u00e9 cet utilisateur.");
-        } else {
-          setSendError(responseBody.error || "\u00c9chec de l'envoi du message.");
-        }
-        return;
-      }
+			const responseBody = await res.json();
 
-      setNewMessage("");
-      await fetchPrivateMessages();
-    } catch (err) {
-      setSendError("Une erreur est survenue lors de l'envoi.");
-      console.error("Erreur lors de l'envoi du message :", err);
-    }
-  }, [newMessage, selectedPrivateUser, fetchPrivateMessages, privateConversations]);
+			if (!res.ok) {
+				if (responseBody.error === "This user blocked you") {
+					setSendError("Cet utilisateur vous a bloqu\u00e9.");
+				} else if (responseBody.error === "You blocked this user") {
+					setSendError("Vous avez bloqu\u00e9 cet utilisateur.");
+				} else {
+					setSendError(responseBody.error || "\u00c9chec de l'envoi du message.");
+				}
+				return;
+			}
 
-  const handleContactAdded = (contact: { id: number; userName: string }) => {
-    setSelectedPrivateUser(contact.userName);
+			setNewMessage("");
+			await fetchPrivateMessages();
+		} catch (err) {
+			setSendError("Une erreur est survenue lors de l'envoi.");
+			console.error("Erreur lors de l'envoi du message :", err);
+		}
+	}, [newMessage, selectedPrivateUser, fetchPrivateMessages, privateConversations]);
 
-    const alreadyExists = privateConversations.some(
-      conv => conv.userName === contact.userName
-    );
+	const handleContactAdded = (contact: { id: number; userName: string }) => {
+		setSelectedPrivateUser(contact.userName);
 
-    if (!alreadyExists) {
-      const newConversation: PrivateConversation = {
-        id: contact.id,
-        userName: contact.userName,
-        avatar: `/profilepicture/${contact.id}.webp`,
-        unreadCount: 0,
-        lastMessage: "",
-        lastMessageTime: new Date(),
-      };
+		const alreadyExists = privateConversations.some(
+			conv => conv.userName === contact.userName
+		);
 
-      setPrivateConversations(prev => [newConversation, ...prev]);
-    }
-  };
+		if (!alreadyExists) {
+			const newConversation: PrivateConversation = {
+				id: contact.id,
+				userName: contact.userName,
+				avatar: `/profilepicture/${contact.id}.webp`,
+				lastMessage: "",
+				lastMessageTime: new Date(),
+			};
 
-  return (
-    <div className="h-full flex flex-col overflow-y-hidden">
-      <PrivateChat
-        messages={privateMessages}
-        conversations={privateConversations}
-        selectedUser={selectedPrivateUser}
-        currentUser={currentUser}
-        newMessage={newMessage}
-        newPrivateUser={newPrivateUser}
-        onNewMessageChange={setNewMessage}
-        onNewPrivateUserChange={setNewPrivateUser}
-        onSendMessage={(e) => {
-          e.preventDefault();
-          sendMessage();
-        }}
-        onAddNewUser={() => {
-          if (newPrivateUser.trim()) {
-            setNewPrivateUser("");
-          }
-        }}
-        onSelectUser={setSelectedPrivateUser}
-        onBack={() => setSelectedPrivateUser(null)}
-        onContactAdded={handleContactAdded}
-        sendError={sendError}
-      />
-    </div>
-  );
+			setPrivateConversations(prev => [newConversation, ...prev]);
+		}
+	};
+
+	return (
+		<div className="h-full flex flex-col overflow-y-hidden">
+			<PrivateChat
+				messages={privateMessages}
+				conversations={privateConversations}
+				selectedUser={selectedPrivateUser}
+				currentUser={currentUser}
+				newMessage={newMessage}
+				newPrivateUser={newPrivateUser}
+				onNewMessageChange={setNewMessage}
+				onNewPrivateUserChange={setNewPrivateUser}
+				onSendMessage={(e) => {
+					e.preventDefault();
+					sendMessage();
+				}}
+				onAddNewUser={() => {
+					if (newPrivateUser.trim()) {
+						setNewPrivateUser("");
+					}
+				}}
+				onSelectUser={setSelectedPrivateUser}
+				onBack={() => setSelectedPrivateUser(null)}
+				onContactAdded={handleContactAdded}
+				sendError={sendError}
+			/>
+		</div>
+	);
 }
