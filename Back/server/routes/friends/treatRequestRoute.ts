@@ -5,7 +5,7 @@ import { acceptFriend } from "@/types/friends";
 
 export default async function acceptRequestRoute(server: FastifyInstance) {
 	server.post('/friends/accept', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log(request.body)
+
 	const user = request.user as { id: number, username: string }
 	const data = acceptFriend.safeParse(request.body)
 

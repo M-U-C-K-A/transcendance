@@ -5,7 +5,7 @@ import { matchCode } from "@/types/match";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/travel', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log("TESSSSSSSSSSSST")
+
 	const user = request.user as { id: number }
 	const data = matchCode.safeParse(request.body)
 

@@ -11,13 +11,41 @@ export default async function editData(
 	pass: string,
 	resetAvatar: boolean)
 {
+	const oldData = await Prisma.user.findFirst({
+		where: {
+			id: userId,
+		},
+		select: {
+			username: true,
+			email: true,
+		},
+	});
+
+	if (oldData?.email != email || oldData?.username != username) {
+		const alreadyTaken = await Prisma.user.findFirst({
+			where: {
+				OR: [
+					{ email: email },
+					{ username: username }
+				],
+				NOT: {
+					id: userId
+				}
+			}
+		});
+
+		if (alreadyTaken) {
+			throw new Error('New email or username already taken')
+		}
+	}
+
 	const hashedPass = await bcrypt.hash(pass, 10)
 
 	if (resetAvatar) {
-		createProfilePicture(username, userId)
+		createProfilePicture(username)
 	}
 
-	await Prisma.user.updateMany({
+	await Prisma.user.update({
 		where: {
 			id: userId,
 		},
@@ -34,9 +62,7 @@ export default async function editData(
 		},
 		select: {
 			id: true,
-			email: true,
 			username: true,
-			bio: true,
 		},
 	});
 
