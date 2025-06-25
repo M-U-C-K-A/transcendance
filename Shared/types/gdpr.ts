@@ -21,6 +21,7 @@ export const editDataGdpr = z.object({
 	removeAvatar: z.boolean(),
 });
 
+// /gdpr/verify
 export const passwordCheck = z.object({
 	password: z.string()
 	.min(6, { message: 'Password too short'})
