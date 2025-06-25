@@ -7,12 +7,13 @@ export default async function editDataRoute(server: FastifyInstance) {
 	server.post('/gdpr/send', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 	const user = request.user as { id: number }
 	const data = editDataGdpr.safeParse(request.body)
-
+	console.log(request.body)
 	if (!user) {
 		return reply.code(400).send({ error: 'parameter is required' })
 	}
 
 	if (!data.success) {
+		console.log(data.error.flatten().fieldErrors)
 		return reply.status(400).send({
 			errors: data.error.flatten().fieldErrors,
 		})
