@@ -1,33 +1,48 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfile } from "@/components/dashboard/UserProfile"
 import { ColleaguesList } from "@/components/dashboard/Colleagues/ColleaguesList"
 import { GameTabs } from "@/components/dashboard/GameTabs"
 import { ChatSection } from "@/components/dashboard/ChatSection"
 
-export default function DashboardClient({ locale, jwtToken }: { locale: string, jwtToken: string }) {
+export default function DashboardClient({ locale }: { locale: string }) {
+	const [username, setUsername] = useState<string | null>(null)
+
 	useEffect(() => {
-		if (localStorage.getItem("currentGameId")) {
-			localStorage.removeItem("currentGameId");
+		const keysToRemove = [
+			"currentGameId",
+			"currentGameName",
+			"tournamentBracket",
+			"tournamentId",
+			"tournamentParticipants",
+			"tournamentSlot"
+		]
+		keysToRemove.forEach(key => localStorage.removeItem(key))
+	}, [])
+
+useEffect(() => {
+	const fetchProfile = async () => {
+		try {
+			const res = await fetch("/api/profile/me", {
+				method: "GET",
+				credentials: "include",
+			})
+
+			if (res.ok) {
+				const data = await res.json()
+				setUsername(data.username)
+			} else {
+				console.error("Erreur lors de la récupération du profil")
+			}
+		} catch (err) {
+			console.error("Erreur fetch /api/profile/me :", err)
 		}
-		if (localStorage.getItem("currentGameName")) {
-			localStorage.removeItem("currentGameName");
-		}
-		if (localStorage.getItem("tournamentBracket")) {
-			localStorage.removeItem("tournamentBracket");
-		}
-		if (localStorage.getItem("tournamentId")) {
-			localStorage.removeItem("tournamentId");
-		}
-		if (localStorage.getItem("tournamentParticipants")) {
-			localStorage.removeItem("tournamentParticipants");
-		}
-		if (localStorage.getItem("tournamentSlot")) {
-			localStorage.removeItem("tournamentSlot");
-		}
-	}, []);
+	}
+
+	fetchProfile()
+}, [])
 
 	return (
 		<div className="bg-background min-h-screen">
@@ -47,10 +62,10 @@ export default function DashboardClient({ locale, jwtToken }: { locale: string, 
 
 				{/* Right Sidebar */}
 				<div className="lg:col-span-3">
-					<ChatSection currentUser={jwtToken} />
+					{/* 🔹 Attendre d’avoir le username avant de rendre le chat */}
+					{username && <ChatSection currentUser={username} />}
 				</div>
 			</div>
 		</div>
-	);
+	)
 }
-

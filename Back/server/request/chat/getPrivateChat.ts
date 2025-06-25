@@ -20,50 +20,37 @@ export default async function getPrivateChat(userId: number) {
 					id: true,
 					username: true,
 					avatar: true,
+					win: true,
+					lose: true,
+					elo: true,
 				},
 			},
 			recipient: {
 				select: {
 					id: true,
 					username: true,
-					avatar: true
+					avatar: true,
+					win: true,
+					lose: true,
+					elo: true,
 				},
 			}
 		},
 		orderBy: { sendAt: 'asc' }
 	});
 
-	const username = await prisma.user.findFirst({
-		where: {
-			id: userId,
-		},
-		select: {
-			username: true,
-		},
-	});
-
 	const chat = rawMessages.map(msg => {
 		const isSender = msg.sender.id === userId;
 		return {
-		id: msg.id,
-		content: msg.content,
-		sendAt: msg.sendAt,
-		messageType: msg.messageType,
-		sender: {
-			id: msg.sender.id,
-			username: msg.sender.username,
-			avatar: msg.sender.avatar,
-		},
-		recipient: {
-				id: msg.recipient.id,
-				username: msg.recipient.username,
-				avatar: msg.recipient.avatar,
-			},
-		user: {
-			id: userId,
-			username: username?.username,
-		},
-	}});
+			id: msg.id,
+			content: msg.content,
+			sendAt: msg.sendAt,
+			messageType: msg.messageType,
+			user: isSender ? msg.sender : msg.recipient,
+			collegue: isSender ? msg.recipient : msg.sender,
+			sender: msg.sender
+		};
+	});
 
 	return (chat);
 }

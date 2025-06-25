@@ -32,26 +32,8 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					content: wsMessage.content,
 					sendAt: wsMessage.sendAt,
 					messageType: wsMessage.messageType,
-					user: {
-						id: sender.id,
-						username: sender.username,
-						avatar: wsMessage.sender.avatar,
-						win: wsMessage.sender.win,
-						lose: wsMessage.sender.lose,
-						elo: wsMessage.sender.elo,
-					},
-					recipient: {
-						id: sender.id,
-						username: sender.username,
-					},
-					sender: {
-						id: sender.id,
-						username: sender.username,
-						avatar: wsMessage.sender.avatar,
-						win: wsMessage.sender.win,
-						lose: wsMessage.sender.lose,
-						elo: wsMessage.sender.elo,
-					},
+					recipient: wsMessage.recipient,
+					sender: wsMessage.sender
 				};
 
 				broadcastMessage(recipient, {

@@ -36,6 +36,7 @@ export type Conversation = {
 	id: number;
 	userName: string;
 	avatar: string;
+	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
 };
@@ -44,6 +45,7 @@ export type PrivateConversation = {
 	id: number;
 	userName: string;
 	avatar: string;
+	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
 };
@@ -65,10 +67,6 @@ export type Message = {
 		win: number | null;
 		lose: number | null;
 		elo: number | null;
-	};
-	me: {
-		id: number;
-		username: string;
 	};
 	text: string;
 	timestamp: Date;

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n-client";
 
+// Schéma de validation pour l'ajout de contact
 const AddContactSchema = z.object({
 	username: z.string()
 		.min(3, "Le nom doit contenir au moins 3 caractères")
@@ -16,6 +17,7 @@ type PrivateConversation = {
 	id: number;
 	userName: string;
 	avatar: string;
+	unreadCount: number;
 	lastMessage?: string;
 	lastMessageTime?: Date;
 };
@@ -26,7 +28,7 @@ type PrivateConversationListProps = {
 	onNewPrivateUserChange: (value: string) => void;
 	onAddNewUser: () => void;
 	onSelectUser: (userName: string) => void;
-	onContactAdded: (contact: { id: number; userName: string }) => void;
+	onContactAdded: (contact: { id: number; userName: string; avatar: string }) => void;
 };
 
 export function PrivateConversationList({
@@ -83,6 +85,7 @@ export function PrivateConversationList({
 			onContactAdded({
 				id: data.id,
 				userName: data.username,
+				avatar: data.avatar,
 			});
 			onAddNewUser();
 

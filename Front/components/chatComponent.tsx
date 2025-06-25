@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PrivateChat } from "./chat/privateChat/PrivateChat";
 import { usePrivateMessages } from "./chat/privateChat/usePrivateMessages";
 import { PrivateConversation } from "./chat/privateChat/type";
@@ -43,16 +44,12 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
 
 			const unreadCount = !isCurrentUserSender && !msg.isRead ? 1 : 0;
 			const existing = conversationsMap.get(otherUser);
-			console.log(otherUser)
-
-			if (otherUser == msg.me.username) {
-				return;
-			}
 
 			conversationsMap.set(otherUser, {
 				id: isCurrentUserSender ? msg.recipient?.id ?? 0 : msg.user.id,
 				userName: otherUser,
-				avatar: msg.user.avatar || '',
+				avatar: (isCurrentUserSender ? msg.recipient?.avatar ?? 0 : msg.user.avatar) || '',
+				unreadCount: (existing?.unreadCount || 0) + unreadCount,
 				lastMessage: msg.text,
 				lastMessageTime: msg.timestamp,
 			});
@@ -122,7 +119,7 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
 		}
 	}, [newMessage, selectedPrivateUser, fetchPrivateMessages, privateConversations]);
 
-	const handleContactAdded = (contact: { id: number; userName: string }) => {
+	const handleContactAdded = (contact: { id: number; userName: string; avatar: string }) => {
 		setSelectedPrivateUser(contact.userName);
 
 		const alreadyExists = privateConversations.some(
@@ -133,7 +130,8 @@ export function ChatComponent({ placeholder = "\u00c9crivez un message...", curr
 			const newConversation: PrivateConversation = {
 				id: contact.id,
 				userName: contact.userName,
-				avatar: `/profilepicture/${contact.id}.webp`,
+				avatar: `data:image/webp;base64,${contact.avatar}`,
+				unreadCount: 0,
 				lastMessage: "",
 				lastMessageTime: new Date(),
 			};
