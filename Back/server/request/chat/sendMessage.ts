@@ -65,6 +65,20 @@ export default async function sendMessage(sender: number, recipient: number, con
 		}
 	});
 
+	const recipientInfo = await Prisma.user.findFirst({
+		where: {
+			id: message.recipientId,
+		},
+		select: {
+			id: true,
+			avatar: true,
+			username: true,
+			win: true,
+			lose: true,
+			elo: true,
+		},
+	});
+
 	if (!senderInfo) {
 		throw new Error("Sender not found");
 	}
@@ -81,6 +95,14 @@ export default async function sendMessage(sender: number, recipient: number, con
 			lose: senderInfo.lose,
 			elo: senderInfo.elo,
 			avatar: senderInfo.avatar,
+		},
+		recipient: {
+			id: recipientInfo?.id,
+			username: recipientInfo?.username,
+			win: recipientInfo?.win,
+			lose: recipientInfo?.lose,
+			elo: recipientInfo?.elo,
+			avatar: recipientInfo?.avatar,
 		},
 	};
 

@@ -88,9 +88,6 @@ export function Message({ message, currentUser }: MessageProps) {
       Read: message.isRead ? "Oui" : "Non",
       typeMessage: message.typeMessage ?? "message",
     };
-    // Print styled header
-    // Print table
-    console.table([logData]);
   }
   const t = useI18n();
 if (message.typeMessage === "INVITATION") {
