@@ -1,4 +1,3 @@
-import { Select } from "@/components/ui/select";
 import { PrismaClient } from "@prisma/client";
 
 const Prisma = new PrismaClient()
@@ -29,7 +28,7 @@ export default async function deleteData(userId: number, username: string) {
 
 	const random2 = "deleteduser_" + Math.floor(100000 + Math.random() * 900000).toString()
 
-	if (isNotGoogle.pass) {
+	if (isNotGoogle?.pass) {
 		await Prisma.tmpUser.update({
 			where: {
 				username: username,

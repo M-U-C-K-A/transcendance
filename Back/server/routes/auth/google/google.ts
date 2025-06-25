@@ -17,7 +17,7 @@ export async function googleLogin(server: FastifyInstance) {
 				code,
 				client_id: process.env.GOOGLE_CLIENT_ID || '',
 				client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
-				redirect_uri: "https://c1r6p9.42lehavre.fr:3001/auth/google/callback",
+				redirect_uri: process.env.GOOGLE_REDIRECT_URI || '',
 				grant_type: 'authorization_code',
 			}),
 		});
@@ -45,12 +45,18 @@ export async function googleLogin(server: FastifyInstance) {
 
 		const token = server.jwt.sign({
 			id: result.id,
-			email: result.email,
 			username: result.username,
-			bio: result.bio,
 		});
 
-		reply.redirect(`https://c1r6p9.42lehavre.fr:8443/en/auth?token=${token}`);
+		reply.setCookie('token', token, {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'lax',
+					path: '/',
+					maxAge: 60 * 60 * 24 * 7,
+			})
+
+		reply.redirect(process.env.GOOGLE_AFTER_LOGIN || '');
 	} catch (err: any) {
 		console.error('Google login error:', err);
 		reply.redirect('/en/auth?error=internal_error');
