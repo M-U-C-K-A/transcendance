@@ -1,11 +1,13 @@
 import changeOnlineStatus from '@/server/request/profile/changeOnlineStatus';
 import { setChatConnection, removeChatConnection } from '@/server/websocket/notifications';
+import { PrismaClient } from '@prisma/client';
 import { FastifyRequest } from 'fastify';
 import { WebSocket } from 'ws';
 
 interface ChatQuery { token?: string; }
 interface JwtPayload { id: number; [key: string]: any; }
 
+const Prisma = new PrismaClient()
 export async function chatWebSocketHandler(
   connection: WebSocket,
   request: FastifyRequest
@@ -27,11 +29,24 @@ export async function chatWebSocketHandler(
 	await changeOnlineStatus(userId, true);
 
 	connection.on('close', () => {
-	  removeChatConnection(userId);
-	  changeOnlineStatus(userId, false);
+	(async () => {
+		const user = await Prisma.user.findFirst({
+			where: {
+				id: userId,
+			},
+		});
+
+		if (!user) {
+			return;
+		}
+			removeChatConnection(userId);
+			await changeOnlineStatus(userId, false);
+		})().catch(err => {
+			console.error('Erreur dans le close:', err);
+		});
 	});
 
-  } catch (error) {
+} catch (error) {
 	console.error("🔴 [Erreur WebSocket CHAT]", error);
   }
 }

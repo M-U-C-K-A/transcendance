@@ -51,7 +51,7 @@ export default async function login(email: string, pass: string) {
 
 		if (userInfo?.username) {
 			await transporter.sendMail({
-				from: `"Your App Name" <pongmaster12345@gmail.com>`,
+				from: `"Pong Master" <pongmaster12345@gmail.com>`,
 				to: email,
 				subject: 'Your Two‑Factor Authentication Code',
 				text: `Hello ${userInfo.username},\n\nYour authentication code is: ${authCode}\n\nEnter this code to complete your registration.`,

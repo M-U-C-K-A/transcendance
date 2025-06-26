@@ -12,6 +12,12 @@ export default async function deleteDataRoute(server: FastifyInstance) {
 
 	try {
 		const result = await deleteData(user.id, user.username)
+		reply.clearCookie('token', {
+			path: '/',
+			httpOnly: true,
+			secure: true,
+			sameSite: 'lax',
+		})
 		return (reply.code(200).send(result))
 	} catch (err: any) {
 			return reply.code(500).send({ error: 'Internal server error' })
