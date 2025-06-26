@@ -8,16 +8,16 @@ export function decodeMatchId(hashedId: string): number {
 	if (hashedId == "-1") {
 		return -1
 	}
+	console.log(hashedId)
 	const decoded = hashids.decode(hashedId);
+	console.log(decoded)
 	if (!decoded.length) {
-		throw new Error(`Not valid Match`);
+		throw new Error('Not valid Match');
 	}
 	return Number(decoded[0]);
 }
 
-export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
-	const matchId = decodeMatchId(inviteUrl);
-
+export async function joinMatchFromInvite(userId: number, matchId: number) {
 
 	const userInfo = await Prisma.user.findUnique({
 		where: { id: userId },
@@ -33,11 +33,15 @@ export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
 			id: matchId,
 		},
 		select: {
+			id: true,
 			p2Id: true,
 		},
 	});
 
-	if (matchState?.p2Id) {
+	if (!matchState?.id) {
+		throw new Error('Match Does not exist')
+	}
+	else if (matchState?.p2Id) {
 		throw new Error('Match already finished')
 	}
 
@@ -49,6 +53,12 @@ export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
 		},
 		select: {
 			p1Id: true,
+			player1: {
+				select: {
+					avatar: true,
+					username: true,
+				}
+			}
 		},
 	});
 
@@ -61,5 +71,10 @@ export async function joinMatchFromInvite(userId: number, inviteUrl: string) {
 		},
 	});
 
-	return {matchId: matchId, p2Id: userId, p2Username: userInfo.username, hostId: updatedMatch.p1Id};
+	return {matchId: matchId,
+		p2Id: userId,
+		p2Username: userInfo.username,
+		hostId: updatedMatch.p1Id,
+		avatar: updatedMatch.player1.avatar,
+		hostName: updatedMatch.player1.username};
 }
