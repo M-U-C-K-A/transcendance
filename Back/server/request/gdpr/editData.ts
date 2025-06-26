@@ -42,19 +42,30 @@ export default async function editData(
 	const hashedPass = await bcrypt.hash(pass, 10)
 
 	if (resetAvatar) {
-		createProfilePicture(username)
+		const avatar = await createProfilePicture(username)
+		await Prisma.user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				username: username,
+				email: email,
+				pass: hashedPass,
+				avatar: avatar,
+			},
+		});
+	} else {
+		await Prisma.user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				username: username,
+				email: email,
+				pass: hashedPass,
+			},
+		});
 	}
-
-	await Prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			username: username,
-			email: email,
-			pass: hashedPass,
-		},
-	});
 
 	const newToken = await Prisma.user.findFirst({
 		where: {
