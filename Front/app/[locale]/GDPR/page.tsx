@@ -49,9 +49,7 @@ export default function GdprPage() {
 			try {
 				const response = await fetch("/api/gdpr/twofa", {
 					method: "GET",
-					headers: {
-						"Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
-					},
+					credentials: "include",
 				})
 
 				if (response.ok) {
@@ -102,8 +100,8 @@ export default function GdprPage() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
 				},
+				credentials: "include",
 				body: JSON.stringify({ enabled: newState }),
 			})
 
@@ -178,7 +176,7 @@ export default function GdprPage() {
 			// Construire le body à envoyer en incluant password
 			const bodyToSend = {
 				...validatedUserData,
-				password: userData.password || "",
+				password: userData.password || password,
 			}
 
 			const response = await fetch("/api/gdpr/send", {
