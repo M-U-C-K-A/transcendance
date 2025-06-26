@@ -37,6 +37,16 @@ export async function googleConnexion(email: string, username: string, googleId:
 	})
 
 	if (isAlreadyRegister) {
+
+		await Prisma.user.update({
+			where: {
+				id: isAlreadyRegister.id,
+			},
+			data: {
+				lastLogin: new Date()
+			},
+		});
+
 		return {
 			id: isAlreadyRegister.id,
 			username: isAlreadyRegister.username,
