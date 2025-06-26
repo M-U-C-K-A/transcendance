@@ -17,6 +17,8 @@ export default function InvitationPage({ params }: { params: { slug: string } })
     p2Id: number;
     p2Username: string;
     hostId: number;
+    avatar: string;
+    hostName: string;
   } | null>(null)
 
   useEffect(() => {
@@ -86,7 +88,7 @@ export default function InvitationPage({ params }: { params: { slug: string } })
             <p>Impossible de rejoindre cette partie</p>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button onClick={() => router.push('/')}>Retour à l'accueil</Button>
+            <Button onClick={() => router.push(`/${locale}/dashboard`)}>Retour à l'accueil</Button>
           </CardFooter>
         </Card>
       </div>
@@ -104,16 +106,16 @@ export default function InvitationPage({ params }: { params: { slug: string } })
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={`/profilepicture/${joinInfo.hostId}.webp`} alt={`Photo de l'hôte`} />
+            <AvatarImage src={`data:image/webp;base64,${joinInfo.avatar}`} alt={`Photo de l'hôte`} />
             <AvatarFallback>
               {joinInfo.hostId}
             </AvatarFallback>
           </Avatar>
           <p className="text-center text-lg">
-            <span className="font-semibold">{joinInfo.p2Username}</span>, tu as bien rejoint la partie !
+            tu as bien rejoint la partie de  <span className="font-semibold">{joinInfo.hostName}</span> !
           </p>
           <p className="text-center text-sm text-gray-500">
-            Hôte de la partie : <span className="font-semibold">{joinInfo.hostId}</span>
+            Hôte de la partie : <span className="font-semibold">{joinInfo.hostName}</span>
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">
