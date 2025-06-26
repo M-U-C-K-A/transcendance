@@ -1,0 +1,3470 @@
+=============================================
+Server Log - 2025-06-26T23:26:50.922Z
+Version: 1.0.0
+Node: v18.20.3
+Platform: linux
+=============================================
+
+INFO [26-06-2025 23:26:51]: Server listening at https://127.0.0.1:3001
+INFO [26-06-2025 23:26:51]: Server listening at https://192.168.64.3:3001
+INFO [26-06-2025 23:26:52]: incoming request
+    reqId: "req-1"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "msQqp3reMbY5nH9MG7w/sw==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-2"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-3"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-2"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.67700707912445
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-4"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-4"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.021335005760193
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-5"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-3"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 30.45339298248291
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-5"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.094681978225708
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-6"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-7"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-7"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 1.689978003501892
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-6"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.264244079589844
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-8"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-8"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.132436990737915
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-9"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-a"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-a"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.84472393989563
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-b"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-b"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.5143789052963257
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-c"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-c"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.681460976600647
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-9"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 26.249698996543884
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-d"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-e"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-d"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.553745985031128
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-f"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-e"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.376658916473389
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-f"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.8879189491271973
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-g"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-g"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.2257899045944214
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-h"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-h"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.9106600284576416
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-i"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-i"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.91012704372406
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-j"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-j"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.7350080013275146
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-k"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-k"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.519637942314148
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-l"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-l"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.375256061553955
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-m"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-m"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 29.901811957359314
+INFO [26-06-2025 23:26:53]: incoming request
+    reqId: "req-n"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:53]: request completed
+    reqId: "req-n"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.375748991966248
+INFO [26-06-2025 23:26:54]: incoming request
+    reqId: "req-o"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "cxg2TVxfBdq9cnCIo3ZIbg==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:55]: incoming request
+    reqId: "req-p"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "EVICFVlVTcgruQ9e7TdBbA==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:55]: incoming request
+    reqId: "req-q"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "S59LOMdaEP0Y2Qp2kzM/uw==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:55]: incoming request
+    reqId: "req-r"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "EOQ3iWx++WZvxyBImiiQXg==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:57]: incoming request
+    reqId: "req-s"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "rJuq8XNvI+Kx0jgmCvBABQ==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:57]: incoming request
+    reqId: "req-t"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "J3fBBa/xMmktz/4mFrh4Tw==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:57]: incoming request
+    reqId: "req-u"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "xmStXeh0Is+MmQ4FhQvAow==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:26:58]: incoming request
+    reqId: "req-v"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "b8d1BUm5ScT1hR9VfvKnYA==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:26:58]: incoming request
+    reqId: "req-w"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:58]: request completed
+    reqId: "req-w"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.378669023513794
+INFO [26-06-2025 23:26:58]: incoming request
+    reqId: "req-x"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "Mck+66jzXXQYAvt1M2rHtg==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:26:58]: incoming request
+    reqId: "req-y"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:26:58]: request completed
+    reqId: "req-y"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.723355054855347
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-z"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-10"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-z"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.459463953971863
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-10"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.762297987937927
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-11"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-12"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-12"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.9521539211273193
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-11"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.676980972290039
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-13"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-13"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.599511981010437
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-14"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "/nklbZJlaTbPxBALWrtDuQ==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-15"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-15"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 1.7153799533843994
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-16"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-16"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.759060978889465
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-17"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-18"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-17"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 12.449830889701843
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-18"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 10.243861079216003
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-19"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-19"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.790266990661621
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1a"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1b"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-1a"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.56488299369812
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-1b"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.948599934577942
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1c"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "2h6XkUByYCg8QKuxPunDAg==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1d"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-1d"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 7.0394110679626465
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1e"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1f"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "Yzv2fMJgJXTlKqsvkW10rw==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:04]: request completed
+    reqId: "req-1e"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.575160026550293
+INFO [26-06-2025 23:27:04]: incoming request
+    reqId: "req-1g"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "5jHjPNX0G1ckc+I4sJy0dQ==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1h"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1h"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.8711369037628174
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1i"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1i"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.4547430276870728
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1j"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1k"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1l"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "application/json",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1k"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.802031993865967
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1m"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1j"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 12.363459944725037
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1l"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.585288047790527
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1n"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1o"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "application/json",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1m"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.008752942085266
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1p"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1n"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 7.605120062828064
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1o"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 10.792618989944458
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1q"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1p"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.580948948860168
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1q"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 7.7239789962768555
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1r"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "application/json",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1s"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1t"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "application/json",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1u"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1r"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 16.93417000770569
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1t"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.858902931213379
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1s"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 26.441954016685486
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1u"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 17.314931988716125
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1v"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "content-type": "application/json",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:16]: request completed
+    reqId: "req-1v"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 42.47508108615875
+INFO [26-06-2025 23:27:16]: incoming request
+    reqId: "req-1w"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "content-type": "application/json",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-1w"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 65.71223199367523
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-1x"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "aeWZME60YPy7ovWmXJGbFg==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-1y"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "3X6Xrk4sFQZ/cmOYEiQODg==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-1z"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "3jPfXCMK2QOUROkslw3rZw==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-20"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-websocket-version": "13",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-extensions": "permessage-deflate",
+        "sec-websocket-key": "GqxSCRQT9pN2DmfbKP8CWw==",
+        "connection": "keep-alive, Upgrade",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "websocket",
+        "sec-fetch-site": "same-site",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "upgrade": "websocket"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-21"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-21"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 7.105613946914673
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-22"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-22"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.32020902633667
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-23"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-23"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.9714590311050415
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-24"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-24"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 10.072898983955383
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-25"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-25"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.613424062728882
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-26"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-26"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.187348008155823
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-27"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-27"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.364251017570496
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-28"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-28"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.8139309883117676
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-29"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2a"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2a"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.717436909675598
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-29"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.774187922477722
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2b"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2c"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2b"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.037472009658813
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2d"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2c"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 12.989099025726318
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2d"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.485234975814819
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2e"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2e"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.7444459199905396
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2f"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "LF9QpwCniXMWrKXIgtD2bA==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2g"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2g"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.838313102722168
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2h"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2i"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2h"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.225865960121155
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2j"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2i"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 14.16017496585846
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2k"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2j"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 16.9221510887146
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2k"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.547206997871399
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2l"
+    req: {
+      "method": "GET",
+      "url": "/friends/pending",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2m"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2l"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 9.960371017456055
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2m"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 3.942718029022217
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2n"
+    req: {
+      "method": "GET",
+      "url": "/wss/friends",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "rMXcqcKDGoKqt8GWPMaZuA==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2o"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2p"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2o"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.864629983901978
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2p"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.88847291469574
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2q"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2q"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 12.612608075141907
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2r"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "CXaQMp5jCO/1Hke3NRW9kg==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2s"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2t"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "IUMmTxJghjexr/jWHgL+Tg==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2s"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 12.9252769947052
+INFO [26-06-2025 23:27:17]: incoming request
+    reqId: "req-2u"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:17]: request completed
+    reqId: "req-2u"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.114573955535889
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-2v"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-2w"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-2x"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-2y"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-2w"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.387669086456299
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-2v"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 15.08759093284607
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-2x"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5.8168439865112305
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-2z"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "RTpLpAsnHMQM+/tRvryXsQ==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-30"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-2y"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 11.696567058563232
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-30"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.699458003044128
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-31"
+    req: {
+      "method": "GET",
+      "url": "/chat/receive/private",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-31"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.864261031150818
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-32"
+    req: {
+      "method": "GET",
+      "url": "/wss/chat",
+      "ip": "192.168.64.1",
+      "headers": {
+        "host": "c2r8p6.42lehavre.fr:3001",
+        "connection": "Upgrade",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "upgrade": "websocket",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-websocket-version": "13",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k",
+        "sec-websocket-key": "UMNVaHshHlQNZEquXEr2uw==",
+        "sec-websocket-extensions": "permessage-deflate; client_max_window_bits"
+      }
+    }
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-33"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-33"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8.016924023628235
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-34"
+    req: {
+      "method": "GET",
+      "url": "/friends",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.5",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/dashboard",
+        "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJST0JJTlJPQklOIiwiaWF0IjoxNzUwOTc2MzE5fQ.oMVQ_Cj07_ImhsUhII_bVRIvV7zqC7ZrIbHMyCSdAtk; Next-Locale=en",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "priority": "u=4"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-34"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 6.635159969329834
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-35"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-35"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 4.282427072525024
+INFO [26-06-2025 23:27:44]: incoming request
+    reqId: "req-36"
+    req: {
+      "method": "GET",
+      "url": "/profile/me",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "accept": "application/json",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:44]: request completed
+    reqId: "req-36"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 2.9546499252319336
+INFO [26-06-2025 23:27:57]: incoming request
+    reqId: "req-37"
+    req: {
+      "method": "POST",
+      "url": "/game/custom",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "content-length": "15",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "authorization": "Bearer",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:27:57]: request completed
+    reqId: "req-37"
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 35.26872801780701
+INFO [26-06-2025 23:28:06]: incoming request
+    reqId: "req-38"
+    req: {
+      "method": "POST",
+      "url": "/game/start",
+      "ip": "192.168.64.4",
+      "headers": {
+        "connection": "upgrade",
+        "host": "c2r8p6.42lehavre.fr",
+        "x-real-ip": "192.168.64.1",
+        "x-forwarded-for": "192.168.64.1",
+        "x-forwarded-proto": "https",
+        "content-length": "22",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+        "content-type": "application/json",
+        "sec-ch-ua-mobile": "?0",
+        "accept": "*/*",
+        "origin": "https://c2r8p6.42lehavre.fr:8443",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://c2r8p6.42lehavre.fr:8443/en/game/custom",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,sq;q=0.6",
+        "cookie": "Next-Locale=en; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInVzZXJuYW1lIjoiUk9CSU4iLCJpYXQiOjE3NTA5NzYzMDJ9.rAQGghDg6aOmU-BhW7qm9LPjkVlBh8bzwtJBAM4FR5k"
+      }
+    }
+INFO [26-06-2025 23:28:06]: request completed
+    reqId: "req-38"
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 2.6391680240631104
