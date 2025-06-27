@@ -102,7 +102,6 @@ async function main() {
 	await app.register(enable2FARoute)
 	await app.register(joinTournamentRoute)
 	await app.register(startMatchRoute)
-	await app.register(leaderboardRoute)
 
 	await deleteInactive()
 	app.register(async (fastify) => {
