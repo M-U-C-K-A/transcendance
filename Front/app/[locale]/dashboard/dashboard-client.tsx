@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { Header } from "@/components/dashboard/Header"
 import { UserProfile } from "@/components/dashboard/UserProfile"
 import { ColleaguesList } from "@/components/dashboard/Colleagues/ColleaguesList"
@@ -22,27 +22,27 @@ export default function DashboardClient({ locale }: { locale: string }) {
 		keysToRemove.forEach(key => localStorage.removeItem(key))
 	}, [])
 
-useEffect(() => {
-	const fetchProfile = async () => {
-		try {
-			const res = await fetch("/api/profile/me", {
-				method: "GET",
-				credentials: "include",
-			})
+	useEffect(() => {
+		const fetchProfile = async () => {
+			try {
+				const res = await fetch("/api/profile/me", {
+					method: "GET",
+					credentials: "include",
+				})
 
-			if (res.ok) {
-				const data = await res.json()
-				setUsername(data.username)
-			} else {
-				console.error("Erreur lors de la récupération du profil")
+				if (res.ok) {
+					const data = await res.json()
+					setUsername(data.username)
+				} else {
+					console.error("Erreur lors de la récupération du profil")
+				}
+			} catch (err) {
+				console.error("Erreur fetch /api/profile/me :", err)
 			}
-		} catch (err) {
-			console.error("Erreur fetch /api/profile/me :", err)
 		}
-	}
 
-	fetchProfile()
-}, [])
+		fetchProfile()
+	}, [])
 
 	return (
 		<div className="bg-background min-h-screen">
@@ -63,9 +63,10 @@ useEffect(() => {
 				{/* Right Sidebar */}
 				<div className="lg:col-span-3">
 					{/* 🔹 Attendre d’avoir le username avant de rendre le chat */}
-					{username && <ChatSection currentUser={username} />}
+					<ChatSection currentUser={username} />
 				</div>
 			</div>
 		</div>
 	)
 }
+

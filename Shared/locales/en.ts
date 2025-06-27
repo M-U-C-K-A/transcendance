@@ -274,6 +274,7 @@ export default {
 	"nav": {
 		"signIn": "Sign in",
 		"signup": "Sign up",
+		"signOut": "Sign out",
 		"dashboard": "Dashboard",
 		"profile": "Profile",
 		"logout": "Log out",

@@ -19,6 +19,14 @@ interface ChatSectionProps {
 export function ChatSection({ currentUser }: ChatSectionProps) {
 	const t = useI18n()
 
+	if (!currentUser) {
+		return (
+			<Card className="bg-card border shadow-sm p-6 text-center">
+				<p className="text-muted-foreground">{t('Profile.loadError')}</p>
+			</Card>
+		)
+	}
+
 	return (
 		<Card className="bg-card border shadow-sm h-full max-h-[768px] min-h-[768px] min-w-[400px]">
 			<CardHeader>
