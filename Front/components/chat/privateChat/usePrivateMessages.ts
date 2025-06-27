@@ -2,12 +2,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Message } from "./type";
 
-const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || '';
+const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_FOR_CHAT || "";
 
 interface RawMessage {
 	id: number;
 	sender?: {
 		id: number;
+		avatar: string;
 		username: string;
 		win?: number;
 		lose?: number;
@@ -15,6 +16,7 @@ interface RawMessage {
 	};
 	collegue?: {
 		id: number;
+		avatar: string;
 		username: string;
 		win?: number;
 		lose?: number;
@@ -32,56 +34,62 @@ export const usePrivateMessages = (currentUser: string) => {
 	const [error, setError] = useState<string | null>(null);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
-	const transformMessage = useCallback((rawMsg: RawMessage): Message => {
-		const isSender = rawMsg.sender?.username === currentUser;
-		const sender = isSender ? rawMsg.sender : rawMsg.collegue;
-		const recipient = isSender ? rawMsg.collegue : rawMsg.sender;
+	const transformMessage = useCallback(
+		(rawMsg: RawMessage): Message => {
+			const isSender = rawMsg.sender?.username === currentUser;
 
-		return {
-			id: rawMsg.id,
-			user: {
-				id: sender?.id || 0,
-				name: sender?.username || "Unknown",
-				avatar: `/profilepicture/${sender?.id}.webp`,
-				win: sender?.win ?? 0,
-				lose: sender?.lose ?? 0,
-				elo: sender?.elo ?? 1000,
-			},
-			recipient: recipient ? {
-				id: recipient.id,
-				name: recipient.username,
-				avatar: `/profilepicture/${recipient.id}.webp`,
-				win: recipient.win ?? 0,
-				lose: recipient.lose ?? 0,
-				elo: recipient.elo ?? 1000,
-			} : undefined,
-			text: rawMsg.content,
-			timestamp: new Date(rawMsg.sendAt),
-			isPrivate: true,
-			isRead: rawMsg.isRead || false,
-			typeMessage: rawMsg.messageType,
-		};
-	}, [currentUser]);
+			const user = isSender ? rawMsg.sender! : rawMsg.collegue!;
+			const recipient = isSender ? rawMsg.collegue! : rawMsg.sender!;
+
+			return {
+				id: rawMsg.id,
+				user: {
+					id: user.id,
+					name: user.username,
+					avatar: `data:image/webp;base64,${user.avatar}`,
+					win: user.win ?? 0,
+					lose: user.lose ?? 0,
+					elo: user.elo ?? 1000,
+				},
+				recipient: {
+					id: recipient.id,
+					name: recipient.username,
+					avatar: `data:image/webp;base64,${recipient.avatar}`,
+					win: recipient.win ?? 0,
+					lose: recipient.lose ?? 0,
+					elo: recipient.elo ?? 1000,
+				},
+				text: rawMsg.content,
+				timestamp: new Date(rawMsg.sendAt),
+				isPrivate: true,
+				typeMessage: rawMsg.messageType,
+			};
+		},
+		[currentUser]
+	);
 
 	const setupWebSocket = useCallback(() => {
-
 		const newSocket = new WebSocket(WS_URL);
 
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
-			if (data.type === 'NEW_PRIVATE_MESSAGE') {
-				const isSender = data.message.user?.username === currentUser;
-				const rawMessage = {
+			if (data.type === "NEW_PRIVATE_MESSAGE") {
+				const { sender, recipient } = data.message;
+
+				const other = sender.username === currentUser ? recipient : sender;
+
+				const rawMessage: RawMessage = {
 					id: data.message.id,
-					sender: data.message.user,
-					collegue: data.message.recipient,
+					sender,
+					collegue: other,
 					content: data.message.content,
 					sendAt: data.message.sendAt,
 					isRead: false,
-					messageType: data.message.messageType
+					messageType: data.message.messageType,
 				};
+
 				const newMessage = transformMessage(rawMessage);
-				setMessages(prev => [...prev, newMessage]);
+				setMessages((prev) => [...prev, newMessage]);
 			}
 		};
 
@@ -94,20 +102,19 @@ export const usePrivateMessages = (currentUser: string) => {
 		return () => {
 			newSocket.close();
 		};
-	}, [transformMessage]);
+	}, [transformMessage, currentUser]);
 
 	const fetchPrivateMessages = useCallback(async () => {
 		setIsLoading(true);
 		setError(null);
 
 		try {
-			const response = await fetch('/api/chat/receive/private', {
-				method: 'GET',
+			const response = await fetch("/api/chat/receive/private", {
+				method: "GET",
 				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('token')}`
+					"Content-Type": "application/json",
 				},
-				credentials: 'include'
+				credentials: "include",
 			});
 
 			if (!response.ok) throw new Error("Erreur serveur");
@@ -116,9 +123,10 @@ export const usePrivateMessages = (currentUser: string) => {
 			const transformed = rawData.map(transformMessage);
 			setMessages(transformed);
 		} catch (err: unknown) {
-			const errorMessage = err instanceof Error
-				? err.message
-				: "Erreur de récupération des messages privés.";
+			const errorMessage =
+				err instanceof Error
+					? err.message
+					: "Erreur de récupération des messages privés.";
 			setError(errorMessage);
 		} finally {
 			setIsLoading(false);
@@ -141,6 +149,6 @@ export const usePrivateMessages = (currentUser: string) => {
 		fetchPrivateMessages,
 		isLoading,
 		error,
-		socketStatus: socket?.readyState
+		socketStatus: socket?.readyState,
 	};
 };

@@ -32,20 +32,10 @@ export default async function sendMessageRoute(server: FastifyInstance) {
 					content: wsMessage.content,
 					sendAt: wsMessage.sendAt,
 					messageType: wsMessage.messageType,
-					user: {
-						id: sender.id,
-						username: sender.username,
-					},
-					recipient: {
-						id: sender.id,
-						username: sender.username,
-					},
-					sender: {
-						id: sender.id,
-						username: sender.username,
-					},
+					recipient: wsMessage.recipient,
+					sender: wsMessage.sender
 				};
-				
+
 				broadcastMessage(recipient, {
 					type: 'NEW_PRIVATE_MESSAGE',
 					message: privateMessage

@@ -1,12 +1,13 @@
 import authMiddleware from "@/server/authMiddleware";
 import { decodeMatchId } from "@/server/request/match/joinMatch";
-import matchResult from "@/server/request/match/matchResult";
-import { matchResultData } from "@/types/match";
+import startMatch from "@/server/request/match/startMatch";
+import { matchIdOnly } from "@/types/match";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export default async function matchResultRoute(server: FastifyInstance) {
-server.post("/game/result", { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	const data = matchResultData.safeParse(request.body)
+export default async function startMatchRoute(server: FastifyInstance) {
+server.post("/game/start", { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
+
+	const data = matchIdOnly.safeParse(request.body)
 	const user = request.user as { id: number };
 
 	if (!user) {
@@ -19,21 +20,20 @@ server.post("/game/result", { preHandler: authMiddleware }, async function (requ
 		})
 	}
 
-	const { player1Score, player2Score, gameId} = data.data
-
+	const { matchId } = data.data
 
 	try {
-		const decodedID = decodeMatchId(gameId);
-		const result = await matchResult( player1Score, player2Score, decodedID, user.id );
+		const decodedID = decodeMatchId(matchId);
+		const result = await startMatch(decodedID)
 		return reply.code(200).send(result);
 		} catch (err: any) {
-			if (err.message == 'Player not found') {
-				return reply.code(404).send({ error: err.message });
+			if (err.message == 'Match not full') {
+				return reply.code(403).send({ error: err.message });
 			} else if (err.message == 'Not valid Match') {
 				return reply.code(404).send({ error: err.message });
 			}
 			return reply.code(500).send({ error: "Internal server error" });
-	  }
-	}
-  );
+			}
+		}
+	);
 }

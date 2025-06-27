@@ -31,6 +31,7 @@ model User {
 	tournamentWon	Int			@default(0)
 	pointScored		Int			@default(0)
 	pointConcede	Int			@default(0)
+	lastLogin		DateTime	@default(now())
 
 	matchesAsP1			Match[]				@relation("P1Matches")
 	matchesAsP2			Match[]				@relation("P2Matches")

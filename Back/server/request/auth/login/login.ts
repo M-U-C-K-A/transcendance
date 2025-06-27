@@ -30,7 +30,6 @@ export default async function login(email: string, pass: string) {
 	const goodPass = await bcrypt.compare(pass, existingUser.pass)
 
 	if (goodPass && existingUser.as2FA == true) {
-		console.log("A LE 2FA ACTIVERRRRR")
 		const userInfo = await Prisma.user.findFirst({
 			where: {
 				email: email,
@@ -52,7 +51,7 @@ export default async function login(email: string, pass: string) {
 
 		if (userInfo?.username) {
 			await transporter.sendMail({
-				from: `"Your App Name" <pongmaster12345@gmail.com>`,
+				from: `"Pong Master" <pongmaster12345@gmail.com>`,
 				to: email,
 				subject: 'Your Two‑Factor Authentication Code',
 				text: `Hello ${userInfo.username},\n\nYour authentication code is: ${authCode}\n\nEnter this code to complete your registration.`,
@@ -68,7 +67,6 @@ export default async function login(email: string, pass: string) {
 		}
 	}
 	else if (goodPass && existingUser.as2FA == false) {
-		console.log("NOOOOOOOOOOOOOOO 2FA")
 		return {id: existingUser.id, username: existingUser.username, as2FA: false}
 	}
 	else {

@@ -1,11 +1,11 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import authMiddleware from '@/server/authMiddleware';
-import { joinMatchFromInvite } from "@/server/request/match/joinMatch";
+import { decodeMatchId, joinMatchFromInvite } from "@/server/request/match/joinMatch";
 import { matchCode } from "@/types/match";
 
 export default async function joinMatchRoute(server: FastifyInstance) {
 	server.post('/game/travel', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log("TESSSSSSSSSSSST")
+
 	const user = request.user as { id: number }
 	const data = matchCode.safeParse(request.body)
 
@@ -21,19 +21,20 @@ export default async function joinMatchRoute(server: FastifyInstance) {
 
 	const { code } = data.data
 
+
 	try {
-		const result = await joinMatchFromInvite(user.id, code)
+		const matchId = decodeMatchId(code)
+		const result = await joinMatchFromInvite(user.id, matchId)
 		return (reply.code(200).send({ result }))
 	} catch (err: any) {
 		console.error('Error in joinMatch:', err);
-		if (err.message === 'User does not exist') {
-			return reply.code(404).send({ error: 'User does not exist' })
-		} else if (err.message == 'Match already finished') {
+		if (err.message == 'Match already finished') {
 			return reply.code(401).send({ error: 'Match already finished' })
-		} else if (err.message == 'Not valid Match') {
-			return reply.code(404).send({ error: 'Not valid Match' })
-		}
-		return reply.code(500).send({ error: 'Internal server error' })
+		} else if (err.message == 'Not valid Match' ||
+			err.message == 'Match Does not exist' ||
+			err.message == 'User does not exist') {
+			return reply.code(404).send({ error: err.message })
+		} return reply.code(500).send({ error: 'Internal server error' })
 	}
 })
 }

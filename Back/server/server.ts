@@ -38,6 +38,8 @@ import fastifyCookie from '@fastify/cookie';
 import { friendsWebSocketHandler } from './websocket/websocketFriends';
 import joinTournamentRoute from './routes/tournament/joinTournamentRoute';
 import { chatWebSocketHandler } from './websocket/websocketChat';
+import deleteInactive from './request/gdpr/deleteInactive';
+import startMatchRoute from './routes/match/startMatchRoute';
 
 dotenv.config();
 
@@ -99,7 +101,9 @@ async function main() {
 	await app.register(get2FAStateRoute)
 	await app.register(enable2FARoute)
 	await app.register(joinTournamentRoute)
+	await app.register(startMatchRoute)
 
+	await deleteInactive()
 	app.register(async (fastify) => {
 		fastify.get('/wss/chat', { websocket: true }, chatWebSocketHandler);
 	});

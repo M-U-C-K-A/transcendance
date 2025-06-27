@@ -16,7 +16,7 @@ export default async function loginRoute(server: FastifyInstance) {
 
 		try {
 			const result = await login(email, password)
-			console.log(result)
+
 			if (result?.as2FA == false) {
 				const token = server.jwt.sign({
 					id: result.id,

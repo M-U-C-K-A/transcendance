@@ -286,7 +286,6 @@ export default function Pong3D({
 				}
 				else if (gamemode === "tournament" && onMatchEnd)
 				{
-					console.log(`Match terminé en mode tournoi - Gagnant: ${winner}, Score: ${score.player1}-${score.player2}`);
 					onMatchEnd(winner, score);
 				}
 			}

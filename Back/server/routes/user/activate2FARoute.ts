@@ -12,7 +12,6 @@ export default async function enable2FARoute(server: FastifyInstance) {
 
 	try {
 		const result = await enable2FA(user.id);
-		console.log({result})
 		return reply.code(200).send({ result });
 	} catch (err: any) {
 		 if (err.message === 'User not found') {

@@ -6,7 +6,7 @@ import { z } from "zod";
 export const editProfileData = z.object({
 	newAvatar: z.string()
 	.min(1, { message: "Avatar can't be empty"})
-	.max(100000, { message: 'Avatar too large'}),
+	.max(300000, { message: 'Avatar too large'}),
 	newUsername: z.string()
 	.min(3, { message: 'Username too short'})
 	.max(20, { message: 'Username too long'})

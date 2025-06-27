@@ -74,8 +74,6 @@ export default function Buttons({
   // Gestion de la fin des matchs en mode tournoi
   const handleMatchEnd = (winner: string, matchScore: { player1: number; player2: number }) => {
     if (gamemode === "tournament" && currentMatch) {
-      console.log(`Fin du match - Gagnant: ${winner}, Score: ${matchScore.player1}-${matchScore.player2}`);
-      console.log(`🎮 Match en cours: ${currentMatch.id} - ${currentMatch.player1?.username} vs ${currentMatch.player2?.username}`);
 
       // Vérifier que le match a des joueurs
       if (!currentMatch.player1 || !currentMatch.player2) {
@@ -85,7 +83,6 @@ export default function Buttons({
 
       // Vérifier que le match n'est pas déjà terminé
       if (currentMatch.status === "completed") {
-        console.log(`⚠️ Match ${currentMatch.id} déjà terminé, ignoré`);
         return;
       }
 
@@ -97,7 +94,6 @@ export default function Buttons({
           : winner;
 
       if (winnerUsername) {
-        console.log(`Mise à jour du bracket avec le gagnant: ${winnerUsername}`);
         updateBracketAfterMatch(currentMatch.id, winnerUsername);
 
         // Retourner aux options pour le prochain match

@@ -13,6 +13,14 @@ export default async function checkLogin2FA(email: string, code: string) {
 	});
 
 	if (isValid?.code == code) {
+		await Prisma.user.update({
+			where: {
+				email: email,
+			},
+			data: {
+				lastLogin: new Date()
+			}
+		});
 		return (true)
 	}
 	else {

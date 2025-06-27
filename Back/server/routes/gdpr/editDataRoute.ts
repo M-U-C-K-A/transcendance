@@ -25,11 +25,18 @@ export default async function editDataRoute(server: FastifyInstance) {
 		if (result) {
 			const token = server.jwt.sign({
 				id: result.id,
-				email: result.email,
 				username: result.username,
-				bio: result.bio,
 			})
-			return (reply.code(200).send({ token}))
+
+			reply.setCookie('token', token, {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'lax',
+					path: '/',
+					maxAge: 60 * 60 * 24 * 7,
+			})
+
+			return (reply.code(200).send(true))
 		} else {
 			throw new Error("Internal server error")
 		}
@@ -40,8 +47,9 @@ export default async function editDataRoute(server: FastifyInstance) {
 				return reply.code(403).send({ error: 'This user does not exist' })
 			} else if (err.message == "Google account can't edit their data") {
 				return reply.code(403).send({ error: "Google account can't edit their data" })
-			}
-			return reply.code(500).send({ error: 'Internal server error' })
+			} else if (err.message == 'New email or username already taken') {
+				return reply.code(403).send({ error: "New email or username already taken" })
+			} return reply.code(500).send({ error: 'Internal server error' })
 		}
 	})
 }
