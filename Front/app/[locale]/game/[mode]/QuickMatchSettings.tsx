@@ -88,13 +88,13 @@ export function QuickMatchSettings({
   const router = useRouter();
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-10xl">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div className="container px-2 py-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-8">
-          <Card className="p-6 rounded-xl">
-            <div className="space-y-6">
+          <Card className="p-4 rounded-lg">
+            <div className="space-y-4">
               <div>
-                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.map.title')}</h2>
+                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.map.title')}</h2>
                 <MapChoice
                   MapStyle={MapStyle}
                   setMapStyle={setMapStyle}
@@ -105,11 +105,11 @@ export function QuickMatchSettings({
                 />
               </div>
 
-              <div className="flex items-center justify-center space-x-4">
+              <div className="flex items-center justify-center space-x-3">
                 {!isAIDisabled && (
-                  <Card className="p-3">
+                  <Card className="p-2">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xl">🤖</span>
+                      <span className="text-lg">🤖</span>
                       <Label htmlFor="ai-switch">VS AI</Label>
                       <Switch
                         id="ai-switch"
@@ -121,22 +121,23 @@ export function QuickMatchSettings({
                 )}
 
                 {gamemode !== "tournament" && (
-                  <Card className="p-3">
+                  <Card className="p-2">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xl">👥</span>
+                      <span className="text-lg">👥</span>
                       <Label htmlFor="2v2-switch">2v2</Label>
                       <Switch
                         id="2v2-switch"
                         checked={is2v2Mode}
                         onCheckedChange={setIs2v2Mode}
                       />
+                  <Label htmlFor="2v2-switch" className="sr-only">2v2 switch</Label>
                     </div>
                   </Card>
                 )}
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
+                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.create.color')}</h2>
                 <ColorChoice
                   COLORS={COLORS}
                   currentPlayer={currentPlayer}
@@ -155,8 +156,8 @@ export function QuickMatchSettings({
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.speed')}</h2>
-                <div className="flex flex-wrap gap-2 justify-center">
+                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.create.speed')}</h2>
+                <div className="flex flex-wrap gap-1 justify-center">
                   {[
                     { speed: 16, label: t('game.create.slow'), color: "bg-green-500" },
                     { speed: 24, label: t('game.create.medium'), color: "bg-yellow-400" },
@@ -166,7 +167,7 @@ export function QuickMatchSettings({
                       key={item.speed}
                       pressed={baseSpeed === item.speed}
                       onPressedChange={() => setBaseSpeed(item.speed)}
-                      className={`px-4 py-2 ${baseSpeed === item.speed ? item.color : ''}`}
+                      className={`px-3 py-1 text-sm ${baseSpeed === item.speed ? item.color : ''}`}
                     >
                       {item.label}
                     </Toggle>
@@ -174,18 +175,19 @@ export function QuickMatchSettings({
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <Button
                   variant="outline"
                   onClick={() => setIsControlsConfigOpen(true)}
-                  className="w-full py-6 text-lg"
+                  className="w-full py-3"
+                  size="sm"
                 >
                   {t('game.controls.title')}
                 </Button>
 
                 {!canStart && (
-                  <Alert variant="destructive">
-                    <AlertDescription className="w-full flex justify-center items-center text-center">
+                  <Alert variant="destructive" className="py-2">
+                    <AlertDescription className="text-sm text-center">
                       {is2v2Mode
                         ? "Veuillez sélectionner des couleurs distinctes pour les 4 joueurs"
                         : t('game.tournament.create.select')
@@ -194,11 +196,11 @@ export function QuickMatchSettings({
                   </Alert>
                 )}
 
-                {/* Bouton de démarrage ou retour au dashboard selon l'état du tournoi */}
                 {gamemode === "tournament" && tournamentWinner ? (
                   <Button
                     onClick={() => router.push(`/dashboard`)}
-                    className="w-full py-6 text-lg bg-green-600 hover:bg-green-700"
+                    className="w-full py-3 bg-green-600 hover:bg-green-700"
+                    size="sm"
                   >
                     🏆 Retour au Dashboard
                   </Button>
@@ -206,8 +208,9 @@ export function QuickMatchSettings({
                   <Button
                     onClick={onStart}
                     disabled={!canStart}
-                    className="w-full py-6 text-lg"
+                    className="w-full py-3"
                     variant={canStart ? "default" : "secondary"}
+                    size="sm"
                   >
                     {t('game.tournament.create.start')}
                   </Button>
