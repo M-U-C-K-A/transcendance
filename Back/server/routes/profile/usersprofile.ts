@@ -6,7 +6,7 @@ export default async function profileRoute(server: FastifyInstance) {
 	server.get('/profile/:username', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
 
 	const id = parseInt(request.params.username, 10)
-	const userId = request.user
+	const userId = request.user as { id: number }
 
 	if (!id || !userId) {
 		return reply.code(400).send({ error: 'Valid user ID is required' })

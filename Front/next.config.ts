@@ -104,6 +104,10 @@ const nextConfig: NextConfig = {
 				destination: "http://backend:3001/tournament/join"
 			},
 			{
+				source: "/leaderboard",
+				destination: "http://backend:3001/leaderboard"
+			},
+			{
 				source: "/profilepicture/:path*",
 				destination: "/Shared/public/profilepicture/:path*"
 			},
