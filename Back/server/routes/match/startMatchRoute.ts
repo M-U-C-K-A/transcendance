@@ -6,7 +6,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function startMatchRoute(server: FastifyInstance) {
 server.post("/game/start", { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log(request.body)
+
 	const data = matchIdOnly.safeParse(request.body)
 	const user = request.user as { id: number };
 
@@ -19,7 +19,7 @@ server.post("/game/start", { preHandler: authMiddleware }, async function (reque
 			errors: data.error.flatten().fieldErrors,
 		})
 	}
-	console.log(data)
+
 	const { matchId } = data.data
 
 	try {

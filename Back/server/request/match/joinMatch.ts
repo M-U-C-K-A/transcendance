@@ -8,9 +8,9 @@ export function decodeMatchId(hashedId: string): number {
 	if (hashedId == "-1") {
 		return -1
 	}
-	console.log(hashedId)
+
 	const decoded = hashids.decode(hashedId);
-	console.log(decoded)
+
 	if (!decoded.length) {
 		throw new Error('Not valid Match');
 	}
