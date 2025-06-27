@@ -88,138 +88,168 @@ export function QuickMatchSettings({
 	const t = useI18n();
 	const router = useRouter();
 
-  return (
-    <div className="container px-2 py-4">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div className="lg:col-span-8">
-          <Card className="p-4 rounded-lg">
-            <div className="space-y-4">
-              <div>
-                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.map.title')}</h2>
-                <MapChoice
-                  MapStyle={MapStyle}
-                  setMapStyle={setMapStyle}
-                  enableMaluses={enableMaluses}
-                  setEnableMaluses={setEnableMaluses}
-                  enableSpecial={enableSpecial}
-                  setEnableSpecial={setEnableSpecial}
-                />
-              </div>
+	return (
+		<div className="container mx-auto px-4 py-8 max-w-10xl">
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+				<div className="lg:col-span-8">
+					<Card className="p-6 rounded-xl">
+						<div className="space-y-6">
+							<div>
+								<h2 className="text-xl font-semibold mb-4 text-center">{t('game.map.title')}</h2>
+								<MapChoice
+									MapStyle={MapStyle}
+									setMapStyle={setMapStyle}
+									enableMaluses={enableMaluses}
+									setEnableMaluses={setEnableMaluses}
+									enableSpecial={enableSpecial}
+									setEnableSpecial={setEnableSpecial}
+								/>
+							</div>
 
-              <div className="flex items-center justify-center space-x-3">
-                {!isAIDisabled && (
-                  <Card className="p-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-lg">🤖</span>
-                      <Label htmlFor="ai-switch">VS AI</Label>
-                      <Switch
-                        id="ai-switch"
-                        checked={enableAI}
-                        onCheckedChange={setEnableAI}
-                      />
-                    </div>
-                  </Card>
-                )}
+							<div className="flex items-center justify-center space-x-4">
+								{!isAIDisabled && (
+									<Card className="p-3">
+										<div className="flex items-center space-x-2">
+											<span className="text-xl">🤖</span>
+											<Label htmlFor="ai-switch">VS AI</Label>
+											<Switch
+												id="ai-switch"
+												checked={enableAI}
+												onCheckedChange={setEnableAI}
+											/>
+										</div>
+									</Card>
+								)}
 
-                {gamemode !== "tournament" && (
-                  <Card className="p-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-lg">👥</span>
-                      <Label htmlFor="2v2-switch">2v2</Label>
-                      <Switch
-                        id="2v2-switch"
-                        checked={is2v2Mode}
-                        onCheckedChange={setIs2v2Mode}
-                      />
-                  <Label htmlFor="2v2-switch" className="sr-only">2v2 switch</Label>
-                    </div>
-                  </Card>
-                )}
-              </div>
+								{gamemode !== "tournament" && (
+									<Card className="p-3">
+										<div className="flex items-center space-x-2">
+											<span className="text-xl">👥</span>
+											<Label htmlFor="2v2-switch">2v2</Label>
+											<Switch
+												id="2v2-switch"
+												checked={is2v2Mode}
+												onCheckedChange={setIs2v2Mode}
+											/>
+										</div>
+									</Card>
+								)}
+							</div>
 
-              <div>
-                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.create.color')}</h2>
-                <ColorChoice
-                  COLORS={COLORS}
-                  currentPlayer={currentPlayer}
-                  setCurrentPlayer={setCurrentPlayer}
-                  colorP1={colorP1}
-                  setColorP1={setColorP1}
-                  colorP2={colorP2}
-                  setColorP2={setColorP2}
-                  colorP3={colorP3}
-                  setColorP3={setColorP3}
-                  colorP4={colorP4}
-                  setColorP4={setColorP4}
-                  enableAI={enableAI}
-                  is2v2Mode={is2v2Mode}
-                />
-              </div>
+							<div>
+								<h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.color')}</h2>
+								<ColorChoice
+									COLORS={COLORS}
+									currentPlayer={currentPlayer}
+									setCurrentPlayer={setCurrentPlayer}
+									colorP1={colorP1}
+									setColorP1={setColorP1}
+									colorP2={colorP2}
+									setColorP2={setColorP2}
+									colorP3={colorP3}
+									setColorP3={setColorP3}
+									colorP4={colorP4}
+									setColorP4={setColorP4}
+									enableAI={enableAI}
+									is2v2Mode={is2v2Mode}
+								/>
+							</div>
 
-              <div>
-                <h2 className="text-lg font-semibold mb-2 text-center">{t('game.create.speed')}</h2>
-                <div className="flex flex-wrap gap-1 justify-center">
-                  {[
-                    { speed: 16, label: t('game.create.slow'), color: "bg-green-500" },
-                    { speed: 24, label: t('game.create.medium'), color: "bg-yellow-400" },
-                    { speed: 36, label: t('game.create.fast'), color: "bg-red-500" },
-                  ].map((item) => (
-                    <Toggle
-                      key={item.speed}
-                      pressed={baseSpeed === item.speed}
-                      onPressedChange={() => setBaseSpeed(item.speed)}
-                      className={`px-3 py-1 text-sm ${baseSpeed === item.speed ? item.color : ''}`}
-                    >
-                      {item.label}
-                    </Toggle>
-                  ))}
-                </div>
-              </div>
+							<div>
+								<h2 className="text-xl font-semibold mb-4 text-center">{t('game.create.speed')}</h2>
+								<div className="flex flex-wrap gap-2 justify-center">
+									{[
+										{ speed: 16, label: t('game.create.slow'), color: "bg-green-500" },
+										{ speed: 24, label: t('game.create.medium'), color: "bg-yellow-400" },
+										{ speed: 36, label: t('game.create.fast'), color: "bg-red-500" },
+									].map((item) => (
+										<Toggle
+											key={item.speed}
+											pressed={baseSpeed === item.speed}
+											onPressedChange={() => setBaseSpeed(item.speed)}
+											className={`px-4 py-2 ${baseSpeed === item.speed ? item.color : ''}`}
+										>
+											{item.label}
+										</Toggle>
+									))}
+								</div>
+							</div>
 
-              <div className="space-y-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsControlsConfigOpen(true)}
-                  className="w-full py-3"
-                  size="sm"
-                >
-                  {t('game.controls.title')}
-                </Button>
+							<div className="space-y-4">
+								<Button
+									variant="outline"
+									onClick={() => setIsControlsConfigOpen(true)}
+									className="w-full py-6 text-lg"
+								>
+									{t('game.controls.title')}
+								</Button>
 
-                {!canStart && (
-                  <Alert variant="destructive" className="py-2">
-                    <AlertDescription className="text-sm text-center">
-                      {is2v2Mode
-                        ? "Veuillez sélectionner des couleurs distinctes pour les 4 joueurs"
-                        : t('game.tournament.create.select')
-                      }
-                    </AlertDescription>
-                  </Alert>
-                )}
+								{!canStart && (
+									<Alert variant="destructive">
+										<AlertDescription className="w-full flex justify-center items-center text-center">
+											{is2v2Mode
+												? "Veuillez sélectionner des couleurs distinctes pour les 4 joueurs"
+												: t('game.tournament.create.select')
+											}
+										</AlertDescription>
+									</Alert>
+								)}
 
-                {gamemode === "tournament" && tournamentWinner ? (
-                  <Button
-                    onClick={() => router.push(`/dashboard`)}
-                    className="w-full py-3 bg-green-600 hover:bg-green-700"
-                    size="sm"
-                  >
-                    🏆 Retour au Dashboard
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={onStart}
-                    disabled={!canStart}
-                    className="w-full py-3"
-                    variant={canStart ? "default" : "secondary"}
-                    size="sm"
-                  >
-                    {t('game.tournament.create.start')}
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
+								{/* Bouton de démarrage ou retour au dashboard selon l'état du tournoi */}
+								{gamemode === "tournament" && tournamentWinner ? (
+									<Button
+										onClick={() => router.push(`/dashboard`)}
+										className="w-full py-6 text-lg bg-green-600 hover:bg-green-700"
+									>
+										🏆 Retour au Dashboard
+									</Button>
+								) : (
+									<Button
+										onClick={async () => {
+											if (gamemode === "custom") {
+												const matchId = localStorage.getItem("currentGameId");
+
+												if (!matchId) {
+													toast.error("Aucun ID de match trouvé dans le localStorage.");
+													return;
+												}
+
+												try {
+													const res = await fetch("/api/game/start", {
+														method: "POST",
+														headers: {
+															"Content-Type": "application/json",
+														},
+														credentials: "include",
+														body: JSON.stringify({ matchId }),
+													});
+
+													if (!res.ok) {
+														const error = await res.json().catch(() => ({}));
+														throw new Error("La partie n'est pas complete");
+													}
+
+													toast.success("Le match a bien démarré !");
+													onStart();
+												} catch (error: any) {
+													toast.error(error.message || "Une erreur est survenue.");
+												}
+											} else {
+												onStart();
+											}
+										}}
+										disabled={!canStart}
+										className="w-full py-6 text-lg"
+										variant={canStart ? "default" : "secondary"}
+									>
+										{t("game.tournament.create.start")}
+									</Button>
+
+								)}
+							</div>
+						</div>
+					</Card>
+				</div>
 
 				<div className="lg:col-span-4">
 					<ChatSection currentUser={currentUser} />
