@@ -13,7 +13,6 @@ export default async function editDataRoute(server: FastifyInstance) {
 	}
 
 	if (!data.success) {
-		console.log(data.error.flatten().fieldErrors)
 		return reply.status(400).send({
 			errors: data.error.flatten().fieldErrors,
 		})
