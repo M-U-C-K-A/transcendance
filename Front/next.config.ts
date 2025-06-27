@@ -104,7 +104,7 @@ const nextConfig: NextConfig = {
 				destination: "http://backend:3001/tournament/join"
 			},
 			{
-				source: "/leaderboard",
+				source: "/api/leaderboard",
 				destination: "http://backend:3001/leaderboard"
 			},
 			{
