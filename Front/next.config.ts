@@ -76,6 +76,10 @@ const nextConfig: NextConfig = {
 				destination: "http://backend:3001/game/travel"
 			},
 			{
+				source: "/api/game/start",
+				destination: "http://backend:3001/game/start"
+			},
+			{
 				source: "/api/game/result",
 				destination: "http://backend:3001/game/result"
 			},

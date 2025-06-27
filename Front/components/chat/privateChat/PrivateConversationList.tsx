@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n-client";
 
+// Schéma de validation pour l'ajout de contact
 const AddContactSchema = z.object({
 	username: z.string()
 		.min(3, "Le nom doit contenir au moins 3 caractères")
@@ -27,7 +28,7 @@ type PrivateConversationListProps = {
 	onNewPrivateUserChange: (value: string) => void;
 	onAddNewUser: () => void;
 	onSelectUser: (userName: string) => void;
-	onContactAdded: (contact: { id: number; userName: string }) => void;
+	onContactAdded: (contact: { id: number; userName: string; avatar: string }) => void;
 };
 
 export function PrivateConversationList({
@@ -63,8 +64,8 @@ export function PrivateConversationList({
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
+				credentials: "include",
 				body: JSON.stringify({ username: validatedUsername }),
 			});
 
@@ -84,6 +85,7 @@ export function PrivateConversationList({
 			onContactAdded({
 				id: data.id,
 				userName: data.username,
+				avatar: data.avatar,
 			});
 			onAddNewUser();
 
@@ -143,7 +145,7 @@ export function PrivateConversationList({
 								>
 									<Avatar className="h-10 w-10">
 										<AvatarImage
-											src={`/profilepicture/${conversation.id}.webp`}
+											src={conversation.avatar}
 											alt={"conversation"}
 										/>
 										<AvatarFallback>

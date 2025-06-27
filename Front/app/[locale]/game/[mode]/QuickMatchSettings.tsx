@@ -13,79 +13,80 @@ import { ChatSection } from "@/components/dashboard/ChatSection";
 import { useI18n } from "@/i18n-client";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner"
 
 export interface QuickMatchSettingsProps {
-  COLORS: string[];
-  currentPlayer: 1 | 2 | 3 | 4;
-  setCurrentPlayer: Dispatch<SetStateAction<1 | 2 | 3 | 4>>;
-  colorP1: string | null;
-  setColorP1: Dispatch<SetStateAction<string | null>>;
-  colorP2: string | null;
-  setColorP2: Dispatch<SetStateAction<string | null>>;
-  colorP3: string | null;
-  setColorP3: Dispatch<SetStateAction<string | null>>;
-  colorP4: string | null;
-  setColorP4: Dispatch<SetStateAction<string | null>>;
-  MapStyle: "classic" | "red" | "neon";
-  setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
-  onStart: () => void;
-  enableMaluses: boolean;
-  setEnableMaluses: Dispatch<SetStateAction<boolean>>;
-  enableSpecial: boolean;
-  setEnableSpecial: Dispatch<SetStateAction<boolean>>;
-  baseSpeed: number;
-  setBaseSpeed: Dispatch<SetStateAction<number>>;
-  canStart: boolean;
-  locale: string;
-  enableAI: boolean;
-  setEnableAI: Dispatch<SetStateAction<boolean>>;
-  isAIDisabled: boolean;
-  is2v2Mode: boolean;
-  setIs2v2Mode: Dispatch<SetStateAction<boolean>>;
-  gamemode?: string;
-  tournamentWinner?: string | null;
-  showWinnerDialog?: boolean;
-  setShowWinnerDialog?: Dispatch<SetStateAction<boolean>>;
-  currentUser?: any;
+	COLORS: string[];
+	currentPlayer: 1 | 2 | 3 | 4;
+	setCurrentPlayer: Dispatch<SetStateAction<1 | 2 | 3 | 4>>;
+	colorP1: string | null;
+	setColorP1: Dispatch<SetStateAction<string | null>>;
+	colorP2: string | null;
+	setColorP2: Dispatch<SetStateAction<string | null>>;
+	colorP3: string | null;
+	setColorP3: Dispatch<SetStateAction<string | null>>;
+	colorP4: string | null;
+	setColorP4: Dispatch<SetStateAction<string | null>>;
+	MapStyle: "classic" | "red" | "neon";
+	setMapStyle: Dispatch<SetStateAction<"classic" | "red" | "neon">>;
+	onStart: () => void;
+	enableMaluses: boolean;
+	setEnableMaluses: Dispatch<SetStateAction<boolean>>;
+	enableSpecial: boolean;
+	setEnableSpecial: Dispatch<SetStateAction<boolean>>;
+	baseSpeed: number;
+	setBaseSpeed: Dispatch<SetStateAction<number>>;
+	canStart: boolean;
+	locale: string;
+	enableAI: boolean;
+	setEnableAI: Dispatch<SetStateAction<boolean>>;
+	isAIDisabled: boolean;
+	is2v2Mode: boolean;
+	setIs2v2Mode: Dispatch<SetStateAction<boolean>>;
+	gamemode?: string;
+	tournamentWinner?: string | null;
+	showWinnerDialog?: boolean;
+	setShowWinnerDialog?: Dispatch<SetStateAction<boolean>>;
+	currentUser?: any;
 }
 
 export function QuickMatchSettings({
-  COLORS,
-  currentPlayer,
-  setCurrentPlayer,
-  colorP1,
-  setColorP1,
-  colorP2,
-  setColorP2,
-  colorP3,
-  setColorP3,
-  colorP4,
-  setColorP4,
-  MapStyle,
-  setMapStyle,
-  onStart,
-  enableMaluses,
-  setEnableMaluses,
-  enableSpecial,
-  setEnableSpecial,
-  baseSpeed,
-  setBaseSpeed,
-  canStart,
-  locale,
-  enableAI,
-  setEnableAI,
-  isAIDisabled,
-  is2v2Mode,
-  setIs2v2Mode,
-  gamemode = "quickmatch",
-  tournamentWinner,
-  showWinnerDialog,
-  setShowWinnerDialog,
-  currentUser,
+	COLORS,
+	currentPlayer,
+	setCurrentPlayer,
+	colorP1,
+	setColorP1,
+	colorP2,
+	setColorP2,
+	colorP3,
+	setColorP3,
+	colorP4,
+	setColorP4,
+	MapStyle,
+	setMapStyle,
+	onStart,
+	enableMaluses,
+	setEnableMaluses,
+	enableSpecial,
+	setEnableSpecial,
+	baseSpeed,
+	setBaseSpeed,
+	canStart,
+	locale,
+	enableAI,
+	setEnableAI,
+	isAIDisabled,
+	is2v2Mode,
+	setIs2v2Mode,
+	gamemode = "quickmatch",
+	tournamentWinner,
+	showWinnerDialog,
+	setShowWinnerDialog,
+	currentUser,
 }: QuickMatchSettingsProps) {
-  const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
-  const t = useI18n();
-  const router = useRouter();
+	const [isControlsConfigOpen, setIsControlsConfigOpen] = useState(false);
+	const t = useI18n();
+	const router = useRouter();
 
   return (
     <div className="container px-2 py-4">
@@ -220,17 +221,17 @@ export function QuickMatchSettings({
           </Card>
         </div>
 
-        <div className="lg:col-span-4">
-          <ChatSection currentUser={currentUser} />
-        </div>
-      </div>
+				<div className="lg:col-span-4">
+					<ChatSection currentUser={currentUser} />
+				</div>
+			</div>
 
-      <ControlsConfig
-        isOpen={isControlsConfigOpen}
-        onClose={() => setIsControlsConfigOpen(false)}
-        enableAI={enableAI}
-        is2v2Mode={is2v2Mode}
-      />
-    </div>
-  );
+			<ControlsConfig
+				isOpen={isControlsConfigOpen}
+				onClose={() => setIsControlsConfigOpen(false)}
+				enableAI={enableAI}
+				is2v2Mode={is2v2Mode}
+			/>
+		</div>
+	);
 }

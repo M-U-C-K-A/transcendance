@@ -35,9 +35,9 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 		await Prisma.user.update({
 			where: { id: userId },
 			data: {
-				pointScored: { increment: +p1Score },
-				pointConcede: { increment: +p2Score },
-				elo: { increment: +p1EloGain },
+				pointScored: { increment: p1Score },
+				pointConcede: { increment: p2Score },
+				elo: { increment: p1EloGain },
 				win: { increment: 1 },
 			},
 		});
@@ -45,9 +45,9 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 		await Prisma.user.update({
 			where: { id: user.p2Id },
 			data: {
-				pointScored: { increment: +p2Score },
-				pointConcede: { increment: +p1Score },
-				elo: { increment: +p2EloGain },
+				pointScored: { increment: p2Score },
+				pointConcede: { increment: p1Score },
+				elo: { increment: p2EloGain },
 				lose: { increment: 1 },
 			},
 		});
@@ -55,9 +55,9 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 		await Prisma.user.update({
 			where: { id: userId },
 			data: {
-				pointScored: { increment: +p1Score },
-				pointConcede: { increment: +p2Score },
-				elo: { increment: +p1EloGain },
+				pointScored: { increment: p1Score },
+				pointConcede: { increment: p2Score },
+				elo: { increment: p1EloGain },
 				lose: { increment: 1 },
 			},
 		});
@@ -65,9 +65,9 @@ export default async function matchResult(p1Score: number, p2Score: number, game
 		await Prisma.user.update({
 			where: { id: user.p2Id },
 			data: {
-				pointScored: { increment: +p2Score },
-				pointConcede: { increment: +p1Score },
-				elo: { increment: +p2EloGain },
+				pointScored: { increment: p2Score },
+				pointConcede: { increment: p1Score },
+				elo: { increment: p2EloGain },
 				win: { increment: 1 },
 			},
 		});

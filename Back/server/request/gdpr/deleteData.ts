@@ -1,4 +1,4 @@
-import { Select } from "@/components/ui/select";
+import { removeChatConnection, removeFriendConnection } from "@/server/websocket/notifications";
 import { PrismaClient } from "@prisma/client";
 
 const Prisma = new PrismaClient()
@@ -14,34 +14,55 @@ export default async function deleteData(userId: number, username: string) {
 		},
 	});
 
-	const random = "deleteduser_" + Math.floor(100000 + Math.random() * 900000).toString()
-	await Prisma.user.update({
+	await Prisma.friends.deleteMany({
+		where: {
+			OR: [
+				{id1: userId},
+				{id2: userId},
+			],
+		},
+	});
+
+	await Prisma.block.deleteMany({
+		where: {
+			OR: [
+				{id1: userId},
+				{id2: userId},
+			],
+		},
+	});
+
+	await Prisma.match.deleteMany({
+		where: {
+			OR: [
+				{p1Id: userId},
+				{p2Id: userId},
+			],
+		},
+	});
+
+	await Prisma.message.deleteMany({
+		where: {
+			OR: [
+				{senderId: userId},
+				{recipientId: userId},
+			],
+		},
+	});
+
+	await Prisma.user.delete({
 		where: {
 			id: userId,
 		},
-		data: {
-			email: random,
-			username: random,
-			pass: random,
-			alias: random,
-		}
 	});
 
-	const random2 = "deleteduser_" + Math.floor(100000 + Math.random() * 900000).toString()
-
-	if (isNotGoogle.pass) {
-		await Prisma.tmpUser.update({
+	if (isNotGoogle?.pass) {
+		await Prisma.tmpUser.delete({
 			where: {
 				username: username,
 			},
-			data: {
-				email: random2,
-				username: random2,
-				pass: random2,
-			}
 		});
 	}
-
 
 	return (true)
 }

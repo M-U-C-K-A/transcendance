@@ -24,3 +24,10 @@ export const matchResultData = z.object({
 	.min(1, { message: "gameId can't be empty"})
 	.max(50, { message: 'gameId too long'}),
 })
+
+// /game/start
+export const matchIdOnly = z.object({
+	matchId: z.string()
+	.min(8, { message: "gameId too short" })
+	.max(8, { message: "gameId too long" })
+})

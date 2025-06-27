@@ -4,12 +4,10 @@ import { registerData } from '@/types/auth';
 
 export default async function register2FARoute(server: FastifyInstance) {
 	server.post('/auth/register', async (request: FastifyRequest, reply: FastifyReply) => {
-		console.log(request.body);
+
 		const data = registerData.safeParse(request.body);
 
 		if (!data.success) {
-			console.log(data.data);
-			console.log(data.error);
 			return reply.status(400).send({
 				errors: data.error.flatten().fieldErrors,
 			});

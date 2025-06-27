@@ -6,7 +6,7 @@ import { editProfileData } from "@/types/profile";
 
 export default async function editProfileRoute(server: FastifyInstance) {
   server.post('/editprofile', { preHandler: authMiddleware }, async function (request: FastifyRequest, reply: FastifyReply) {
-	console.log(request.body)
+
 	const user = request.user as { id: number; username: string; bio: string }
 	const data = editProfileData.safeParse(request.body)
 

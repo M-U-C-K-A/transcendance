@@ -1,31 +1,27 @@
 import { PrismaClient } from '@prisma/client'
 import fetch from 'node-fetch';
-import { mkdir } from 'fs/promises';
-import path from 'path';
 import sharp from 'sharp';
 
 const Prisma = new PrismaClient()
 
-export async function downloadImage(url: string, filename: string) {
+export async function downloadImage(url: string): Promise<string> {
 	const res = await fetch(url);
 
 	if (!res.ok) {
 		throw new Error(`Failed to fetch image`);
 	}
 
-	const buffer = await res.buffer();
+	const buffer = await res.arrayBuffer();
 
-	const outputDir = path.join(process.cwd(), 'public', 'profilepicture');
-	await mkdir(outputDir, { recursive: true });
-
-	const filePath = path.join(outputDir, filename);
-
-	await sharp(buffer)
+	const optimizedBuffer = await sharp(Buffer.from(buffer))
 		.webp({ quality: 80 })
-		.toFile(filePath);
+		.toBuffer();
 
-	return (`/profilepicture/${filename}`);
+	const base64Image = `${optimizedBuffer.toString('base64')}`;
+
+	return (base64Image);
 }
+
 
 
 export async function googleConnexion(email: string, username: string, googleId: string, avatar: string) {
@@ -37,55 +33,47 @@ export async function googleConnexion(email: string, username: string, googleId:
 		select: {
 			id: true,
 			username: true,
-			email: true,
-			bio: true,
 		}
 	})
 
 	if (isAlreadyRegister) {
+
+		await Prisma.user.update({
+			where: {
+				id: isAlreadyRegister.id,
+			},
+			data: {
+				lastLogin: new Date()
+			},
+		});
+
 		return {
 			id: isAlreadyRegister.id,
 			username: isAlreadyRegister.username,
-			email: isAlreadyRegister.email,
-			bio: isAlreadyRegister.bio,
 		}
 	}
 
 	const defaultBio = "👐 Hello i'm new here"
-	const newName = username + '_' + googleId
+	const newName = username + '_' + Math.floor(100000 + Math.random() * 900000).toString()
+
+	const base64Avatar = await downloadImage(avatar)
 
 	const newUser = await Prisma.user.create({
 		data: {
 			username: newName,
+			avatar: base64Avatar,
 			email: email,
 			alias: newName,
 			bio: defaultBio,
 		},
-	})
-	const user = await Prisma.user.findUnique({
-		where: {
-			username: newUser.username
-		},
 		select: {
-			id: true
-		},
+			id: true,
+			username: true,
+		}
 	})
-
-	if (!user) {
-		throw new Error('User not found after insertion')
-	}
-
-	await Prisma.achievement.create({
-		data: {
-			id: newUser.id,
-		},
-	})
-	await downloadImage(avatar, user.id + ".webp")
 
 	return {
-		id: user.id,
+		id: newUser.id,
 		username: newUser.username,
-		email: newUser.email,
-		bio: newUser.bio,
 	}
 }

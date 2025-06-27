@@ -57,11 +57,26 @@ export default async function sendMessage(sender: number, recipient: number, con
 		where: { id: message.senderId },
 		select: {
 			id: true,
+			avatar: true,
 			username: true,
 			win: true,
 			lose: true,
 			elo: true,
 		}
+	});
+
+	const recipientInfo = await Prisma.user.findFirst({
+		where: {
+			id: message.recipientId,
+		},
+		select: {
+			id: true,
+			avatar: true,
+			username: true,
+			win: true,
+			lose: true,
+			elo: true,
+		},
 	});
 
 	if (!senderInfo) {
@@ -76,10 +91,18 @@ export default async function sendMessage(sender: number, recipient: number, con
 		sender: {
 			id: senderInfo.id,
 			username: senderInfo.username,
-			win: senderInfo.win ?? 0,
-			lose: senderInfo.lose ?? 0,
-			elo: senderInfo.elo ?? 1000,
-			avatar: `/profilepicture/${senderInfo.id}.webp`,
+			win: senderInfo.win,
+			lose: senderInfo.lose,
+			elo: senderInfo.elo,
+			avatar: senderInfo.avatar,
+		},
+		recipient: {
+			id: recipientInfo?.id,
+			username: recipientInfo?.username,
+			win: recipientInfo?.win,
+			lose: recipientInfo?.lose,
+			elo: recipientInfo?.elo,
+			avatar: recipientInfo?.avatar,
 		},
 	};
 
