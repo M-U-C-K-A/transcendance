@@ -163,6 +163,14 @@ export const initgamePhysic = (
         if (player === 3 && paddle3) paddle3.scaling.x = 2;
         if (player === 4 && paddle4) paddle4.scaling.x = 2;
 
+        // Mise à jour des statistiques - spécial utilisé (seulement si pas d'IA et mode custom)
+        if (!enableAIRef?.current && gameRefs.gamemode === "custom") {
+          gameRefs.setMatchStats(prev => ({
+            ...prev,
+            special: { ...prev.special, [teamKey]: prev.special[teamKey] + 1 }
+          }));
+        }
+
         return newPadState;
       });
 

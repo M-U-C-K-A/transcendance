@@ -54,9 +54,20 @@ export function handleCollisions(
     setStamina,
     superPad,
     enableSpecial,
-    volumeRef
+    volumeRef,
+    gameRefs,
+    gameRefs?.enableAIRef
   );
-    if (paddleCollision) return paddleCollision;
+    if (paddleCollision) {
+      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
+      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+        gameRefs.setMatchStats(prev => ({
+          ...prev,
+          rebondsTotal: prev.rebondsTotal + 1
+        }));
+      }
+      return paddleCollision;
+    }
   }
 
   // Collision avec les bumpers
@@ -68,7 +79,16 @@ export function handleCollisions(
       currentSpeed || ballV.length(),
       volumeRef?.current
     );
-    if (bumperLeftCollision) return bumperLeftCollision;
+    if (bumperLeftCollision) {
+      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
+      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+        gameRefs.setMatchStats(prev => ({
+          ...prev,
+          rebondsTotal: prev.rebondsTotal + 1
+        }));
+      }
+      return bumperLeftCollision;
+    }
   }
   
   if (bumperRight) {
@@ -79,7 +99,16 @@ export function handleCollisions(
       currentSpeed || ballV.length(),
       volumeRef?.current
     );
-    if (bumperRightCollision) return bumperRightCollision;
+    if (bumperRightCollision) {
+      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
+      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+        gameRefs.setMatchStats(prev => ({
+          ...prev,
+          rebondsTotal: prev.rebondsTotal + 1
+        }));
+      }
+      return bumperRightCollision;
+    }
   }
 
   // Collision avec le mini-paddle
@@ -103,13 +132,30 @@ export function handleCollisions(
         currentSpeed || ballV.length(),
         volumeRef?.current
       );
-      if (triangleCollision) 
+      if (triangleCollision) {
+        // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
+        if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+          gameRefs.setMatchStats(prev => ({
+            ...prev,
+            rebondsTotal: prev.rebondsTotal + 1
+          }));
+        }
         return triangleCollision;
+      }
     }
   }
 
   const wallCollision = collideWalls(ball, ballV, currentSpeed || ballV.length(), volumeRef?.current);
-  if (wallCollision) return wallCollision;
+  if (wallCollision) {
+    // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
+    if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+      gameRefs.setMatchStats(prev => ({
+        ...prev,
+        rebondsTotal: prev.rebondsTotal + 1
+      }));
+    }
+    return wallCollision;
+  }
 
   return null;
 }

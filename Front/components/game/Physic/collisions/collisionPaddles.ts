@@ -23,7 +23,9 @@ export function collidePaddle(
   setStamina: SetStaminaFunction,
   superPad?: React.MutableRefObject<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>,
   enableSpecial?: boolean,
-  volumeRef?: React.MutableRefObject<number>
+  volumeRef?: React.MutableRefObject<number>,
+  gameRefs?: any,
+  enableAIRef?: React.MutableRefObject<boolean>
 ): { newVelocity: Vector3; newSpeed: number } | null {
   const cooldown = 50;
   const now = Date.now();
@@ -64,6 +66,17 @@ export function collidePaddle(
 
   if (inDepthZone && inLateralZone) {
     lastPaddleCollision[player] = now;
+    
+    // Mise à jour des statistiques - touches de balles (seulement si pas d'IA et mode custom)
+    if (gameRefs?.setMatchStats && !enableAIRef?.current && gameRefs.gamemode === "custom") {
+      const isTeam1 = player === 1 || player === 3;
+      const teamKey = isTeam1 ? 'player1' : 'player2';
+      
+      gameRefs.setMatchStats(prev => ({
+        ...prev,
+        touches: { ...prev.touches, [teamKey]: prev.touches[teamKey] + 1 }
+      }));
+    }
     
     // Repositionne la balle sur le bord du paddle pour éviter qu'elle ne le traverse
     ball.position.z = collisionDepth + (zFactor * -1 * (BALL_DIAMETER / 2));
