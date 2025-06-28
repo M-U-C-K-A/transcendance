@@ -37,6 +37,15 @@ export function handleScoring(
       if (gameRefs.score.current)
         gameRefs.score.current = score;
 
+      // Mise à jour des statistiques - points marqués/concédés (seulement si pas d'IA et mode custom)
+      if (!gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+        gameRefs.setMatchStats(prev => ({
+          ...prev,
+          pointsMarques: { ...prev.pointsMarques, player2: prev.pointsMarques.player2 + 1 },
+          pointsConcedes: { ...prev.pointsConcedes, player1: prev.pointsConcedes.player1 + 1 }
+        }));
+      }
+
       if (score.player2 === 3)
         setWinner("player2");
 
@@ -56,6 +65,14 @@ export function handleScoring(
     if (gameRefs.score.current)
       gameRefs.score.current = score;
 
+    // Mise à jour des statistiques - points marqués/concédés (seulement si pas d'IA et mode custom)
+    if (!gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
+      gameRefs.setMatchStats(prev => ({
+        ...prev,
+        pointsMarques: { ...prev.pointsMarques, player1: prev.pointsMarques.player1 + 1 },
+        pointsConcedes: { ...prev.pointsConcedes, player2: prev.pointsConcedes.player2 + 1 }
+      }));
+    }
 
     if (score.player1 === 3)
       setWinner("player1");

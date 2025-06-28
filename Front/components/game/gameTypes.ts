@@ -51,6 +51,8 @@ export interface GameRefs {
   stamina: MutableRefObject<{ player1: number; player2: number; player3: number; player4: number; }>;
   lastHitter: MutableRefObject<number | null>;
   triggerSuperPad: MutableRefObject<(player: 1 | 2 | 3 | 4) => void>;
+  matchStats: MutableRefObject<MatchStats>;
+  setMatchStats: React.Dispatch<React.SetStateAction<MatchStats>>;
 }
 
 
@@ -93,3 +95,13 @@ export type SetStaminaFunction = React.Dispatch<React.SetStateAction<{ player1: 
 
 
 export type SetSuperPadFunction = React.Dispatch<React.SetStateAction<{ player1: boolean; player2: boolean; player3: boolean; player4: boolean; }>>;
+
+export interface MatchStats {
+  touches: { player1: number; player2: number };
+  pointsMarques: { player1: number; player2: number };
+  pointsConcedes: { player1: number; player2: number };
+  special: { player1: number; player2: number };
+  malusInfliges: { player1: number; player2: number };
+  malusRecus: { player1: number; player2: number };
+  rebondsTotal: number;
+}

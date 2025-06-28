@@ -193,8 +193,17 @@ export class MalusSystem {
               score.player1--;
           }
 
-
-
+          // Mise à jour des statistiques - malus infligés/reçus (seulement si pas d'IA et mode custom)
+          if (lastTouch && !this.gameRefs.enableAIRef?.current && this.gameRefs.gamemode === "custom") {
+            const malusInfligePlayer = lastTouch.player === 1 ? 'player1' : 'player2';
+            const malusRecuPlayer = lastTouch.player === 1 ? 'player2' : 'player1';
+            
+            this.gameRefs.setMatchStats(prev => ({
+              ...prev,
+              malusInfliges: { ...prev.malusInfliges, [malusInfligePlayer]: prev.malusInfliges[malusInfligePlayer] + 1 },
+              malusRecus: { ...prev.malusRecus, [malusRecuPlayer]: prev.malusRecus[malusRecuPlayer] + 1 }
+            }));
+          }
 
           if (this.setScore) 
             this.setScore(score);
