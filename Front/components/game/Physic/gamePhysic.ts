@@ -382,7 +382,7 @@ export const initgamePhysic = (
       scoreLocal,
       gameRefs.setScore,
       gameRefs.setWinner,
-      () => resetBall("player1"),
+      resetBall,
       gameRefs,
       volumeRef?.current
     );

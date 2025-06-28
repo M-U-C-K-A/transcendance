@@ -33,13 +33,17 @@ export const MINI_BOUND_X = 6;
 
 
 // Limites horizontales des paddles joueurs (en unites de position)
-export const PADDLE_BOUND_LEFT = -9;
-export const PADDLE_BOUND_RIGHT = 9;
+// Les paddles ont une hauteur de 6 unités (3 de chaque côté du centre)
+// Le terrain fait 18 unités de large (-9 à +9), donc les limites doivent être ajustées
+// Ces limites représentent les positions MINIMALES et MAXIMALES du CENTRE du paddle
+export const PADDLE_BOUND_LEFT = -7;  // -9 + 2 (centre du paddle ne peut pas aller plus à gauche)
+export const PADDLE_BOUND_RIGHT = 7;  // +9 - 2 (centre du paddle ne peut pas aller plus à droite)
 
 
 // Limites horizontales des bumpers (en unites de position)
-export const BUMPER_BOUND_LEFT  = -8;
-export const BUMPER_BOUND_RIGHT = +8;
+// Les bumpers ont une taille de 1x1x1, donc ils s'étendent de 0.5 de chaque côté
+export const BUMPER_BOUND_LEFT  = -8.5;  // -9 + 0.5 (moitié de la taille du bumper)
+export const BUMPER_BOUND_RIGHT = +8.5;  // +9 - 0.5 (moitié de la taille du bumper)
 // VRAI milieu (moitie du chemin) :
 export const BUMPER_MID_LEFT  = -2
 export const BUMPER_MID_RIGHT = +2
