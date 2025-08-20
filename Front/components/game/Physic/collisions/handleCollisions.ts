@@ -1,7 +1,8 @@
 import { Vector3, Mesh } from "@babylonjs/core";
 import React from "react";
 import { collideBumper } from "./collisionBumpers";
-import { collideMiniPaddle } from "./collisionMiniPaddles";
+import { collideMiniPaddle as collideMiniPaddle2v2 } from "./collisionMiniPaddles";
+import { collideMiniPaddle } from "./collisionMiniPaddle";
 import { collideTrianglePrism } from "./collisionTriangles";
 import { collideWalls } from "./collisionWalls";
 import { collidePaddle } from "./collisionPaddles";
@@ -54,20 +55,9 @@ export function handleCollisions(
     setStamina,
     superPad,
     enableSpecial,
-    volumeRef,
-    gameRefs,
-    gameRefs?.enableAIRef
+    volumeRef
   );
-    if (paddleCollision) {
-      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
-      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
-        gameRefs.setMatchStats(prev => ({
-          ...prev,
-          rebondsTotal: prev.rebondsTotal + 1
-        }));
-      }
-      return paddleCollision;
-    }
+    if (paddleCollision) return paddleCollision;
   }
 
   // Collision avec les bumpers
@@ -79,16 +69,7 @@ export function handleCollisions(
       currentSpeed || ballV.length(),
       volumeRef?.current
     );
-    if (bumperLeftCollision) {
-      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
-      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
-        gameRefs.setMatchStats(prev => ({
-          ...prev,
-          rebondsTotal: prev.rebondsTotal + 1
-        }));
-      }
-      return bumperLeftCollision;
-    }
+    if (bumperLeftCollision) return bumperLeftCollision;
   }
   
   if (bumperRight) {
@@ -99,23 +80,19 @@ export function handleCollisions(
       currentSpeed || ballV.length(),
       volumeRef?.current
     );
-    if (bumperRightCollision) {
-      // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
-      if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
-        gameRefs.setMatchStats(prev => ({
-          ...prev,
-          rebondsTotal: prev.rebondsTotal + 1
-        }));
-      }
-      return bumperRightCollision;
-    }
+    if (bumperRightCollision) return bumperRightCollision;
   }
 
   // Collision avec le mini-paddle
   if (miniPaddle) {
-    // Le mini-paddle normal n'est pas utilisé en mode 2v2
-    // et nécessite une logique différente
-    // TODO: Implémenter la collision pour le mini-paddle normal si nécessaire
+    const miniPaddleCollision = collideMiniPaddle(
+      ball,
+      miniPaddle,
+      ballV,
+      currentSpeed || ballV.length(),
+      volumeRef?.current
+    );
+    if (miniPaddleCollision) return miniPaddleCollision;
   }
 
   const triangles = [rightTri, leftTri, rightTriOuterLeft, leftTriOuterLeft, rightTriOuterRight, leftTriOuterRight];
@@ -132,30 +109,13 @@ export function handleCollisions(
         currentSpeed || ballV.length(),
         volumeRef?.current
       );
-      if (triangleCollision) {
-        // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
-        if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
-          gameRefs.setMatchStats(prev => ({
-            ...prev,
-            rebondsTotal: prev.rebondsTotal + 1
-          }));
-        }
+      if (triangleCollision) 
         return triangleCollision;
-      }
     }
   }
 
   const wallCollision = collideWalls(ball, ballV, currentSpeed || ballV.length(), volumeRef?.current);
-  if (wallCollision) {
-    // Mise à jour des statistiques - rebonds totaux (seulement si pas d'IA et mode custom)
-    if (gameRefs?.setMatchStats && !gameRefs.enableAIRef?.current && gameRefs.gamemode === "custom") {
-      gameRefs.setMatchStats(prev => ({
-        ...prev,
-        rebondsTotal: prev.rebondsTotal + 1
-      }));
-    }
-    return wallCollision;
-  }
+  if (wallCollision) return wallCollision;
 
   return null;
 }
