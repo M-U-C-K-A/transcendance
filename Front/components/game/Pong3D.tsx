@@ -4,7 +4,7 @@ import { Engine, Scene, Color3, Vector3, Color4, StandardMaterial } from "@babyl
 import { setupGame } from "./Setup/setupGame";
 import { initgamePhysic } from "./Physic/gamePhysic";
 import { GameUI } from "../../app/[locale]/game/[mode]/GameUI";
-import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory, MatchStats } from "./gameTypes";
+import type { Pong3DProps, GameState, GameRefs, GameObjects, TouchHistory } from "./gameTypes";
 import { MalusSystem } from "./Physic/MalusSystem";
 import { useControls } from "../../app/[locale]/game/[mode]/ControlsContext";
 
@@ -60,17 +60,6 @@ export default function Pong3D({
 	const [lastScoreType, setLastScoreType] = useState<'goal' | 'malus'>('goal');
 	const prevScore = useRef(score);
 
-	// ─── États pour les statistiques du match ─────────────────────────────────────────────
-	const [matchStats, setMatchStats] = useState<MatchStats>({
-		touches: { player1: 0, player2: 0 },
-		pointsMarques: { player1: 0, player2: 0 },
-		pointsConcedes: { player1: 0, player2: 0 },
-		special: { player1: 0, player2: 0 },
-		malusInfliges: { player1: 0, player2: 0 },
-		malusRecus: { player1: 0, player2: 0 },
-		rebondsTotal: 0
-	});
-
 	// ─── References pour synchroniser l'etat : accedes au valeurs dans la logique  ────────────────────
 	const scoreRef = useRef(score);
 	const winnerRef = useRef(winner);
@@ -82,7 +71,10 @@ export default function Pong3D({
 	const volumeRef = useRef(volume);
 	const enableAIRef = useRef(enableAI);
 	const triggerSuperPadRef = useRef<(player: 1 | 2 | 3 | 4) => void>(() => {});
-	const matchStatsRef = useRef(matchStats);
+
+
+
+	 // ─── References pour synchroniser l'etat : accedes au valeurs dans la logique  ────────────────────
 
 	useEffect(() => { scoreRef.current = score; }, [score]);
 	useEffect(() => { winnerRef.current = winner; }, [winner]);
@@ -92,7 +84,6 @@ export default function Pong3D({
 	useEffect(() => { staminaRef.current = stamina; }, [stamina]);
 	useEffect(() => { volumeRef.current = volume; }, [volume]);
 	useEffect(() => { enableAIRef.current = enableAI; }, [enableAI]);
-	useEffect(() => { matchStatsRef.current = matchStats; }, [matchStats]);
 
 
 
@@ -122,8 +113,6 @@ export default function Pong3D({
 			stamina: staminaRef,
 			lastHitter: lastHitterRef,
 			triggerSuperPad: triggerSuperPadRef,
-			matchStats: matchStatsRef,
-			setMatchStats,
 		}; // DEUXIEME FT EXTERNE APPELE POUR LANCER LA LOGIC DU JEU
 
 		const cleanupPhysic = initgamePhysic(
@@ -262,20 +251,6 @@ export default function Pong3D({
 		{
 			if (winner)
 			{
-				// Console log pour vérifier les statistiques du match
-				console.log("🎮 === FIN DE PARTIE ===");
-				console.log("🏆 Gagnant:", winner);
-				console.log("📊 Score final:", score);
-				console.log("📈 Statistiques complètes du match:", matchStats);
-				console.log("   🏓 Touches de balles:", matchStats.touches);
-				console.log("   ⚽ Points marqués:", matchStats.pointsMarques);
-				console.log("   🥅 Points concédés:", matchStats.pointsConcedes);
-				console.log("   ⚡ Specials utilisés:", matchStats.special);
-				console.log("   🟡 Malus infligés:", matchStats.malusInfliges);
-				console.log("   🟡 Malus reçus:", matchStats.malusRecus);
-				console.log("   🏓 Rebonds totaux:", matchStats.rebondsTotal);
-				console.log("================================");
-
 				if (gamemode == "custom" && !!localStorage.getItem("currentGameId"))
 				{
 					const sendScore = async () =>
@@ -294,7 +269,6 @@ export default function Pong3D({
 									player1Score: score.player1,
 									player2Score: score.player2,
 									gameId: localStorage.getItem("currentGameId"),
-									matchStats: matchStats,
 								})
 							});
 
@@ -315,7 +289,7 @@ export default function Pong3D({
 					onMatchEnd(winner, score);
 				}
 			}
-		}, [winner, score, gamemode, onMatchEnd, matchStats]);
+		}, [winner, score, gamemode, onMatchEnd]);
 
 
 
