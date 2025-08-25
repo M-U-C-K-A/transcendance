@@ -56,7 +56,7 @@ export default async function deleteData(userId: number, username: string) {
 		},
 	});
 
-	if (isNotGoogle?.pass) {
+	if (isNotGoogle) {
 		await Prisma.tmpUser.delete({
 			where: {
 				username: username,
