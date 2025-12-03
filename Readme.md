@@ -59,4 +59,4 @@ Ce projet est réalisé dans le cadre du cursus de l'École 42.
 
 - [@M-U-C-K-A](https://github.com/M-U-C-K-A)
 - [@rbardet](https://github.com/rbardet)
-- [@thomasrbm](https://github/thomasrbm)
+- [@Thomasrbm](https://github/Thomasrbm)
